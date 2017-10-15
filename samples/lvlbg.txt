@@ -1,0 +1,11 @@
+[good]
+version=0.3
+name=Level BgColor
+levels=1
+
+[scripts]
+2=./lvlbg.lua
+
+[level1]
+script=Level
+

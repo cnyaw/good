@@ -1,0 +1,13 @@
+[good]
+version=0.3
+name=Life
+window=256 256
+levels=1
+
+[scripts]
+2=./life.lua
+3=./Util.lua
+
+[level1]
+script=Game
+

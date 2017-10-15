@@ -1,0 +1,36 @@
+c/c++ to js
+-----------
+* more toturial info at http://kripken.github.io/emscripten-site/docs/getting_started/Tutorial.html
+* download Emscripten from https://kripken.github.io/emscripten-site/docs/getting_started/downloads.html
+ * select 'Emscripten SDK offline installer'
+ * install
+* run 'Emscripten command prompt'
+ * ~>emcc -v
+  INFO:root:(Emscripten: Running sanity checks)
+  emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 1.35.0
+  clang version 3.7.0 (https://github.com/kripken/emscripten-fastcomp-clang dbe68f
+  ecd03d6f646bd075963c3cc0e7130e5767) (https://github.com/kripken/emscripten-fastc
+  omp.git 4e83be90903250ec5142edc57971ed4c633c5e25)
+  Target: x86_64-pc-windows-msvc
+  Thread model: posix
+  INFO:root:(Emscripten: Running sanity checks)
+* create a cpp test under test/hello.cpp
+  #include<stdio.h>
+  int main() {
+    printf("hello, world!aaa\n");
+    return 0;
+  }
+* complie hello.cpp
+ * ~>em++ test/hello.cpp
+ * if everything is ok, you should get a.out.js
+  * run a.out.js
+  * ~>node a.out.js
+  hello, world!aaa
+* complie hello.cpp and output html page
+ * ~>em++ test/hello.cpp -o hello.html
+ * if everything is ok, you should get hello.html and hello.js
+ * open hello.html in a browser should see the same output
+* create and run sdl sample from the turorial
+ * create test/hello_sdl.cpp from sample code of the turorial page
+ * complie ~>em++ test/hello_sdl.cpp -o hello_sdl.html
+ * browser it, you should see a gradient color box

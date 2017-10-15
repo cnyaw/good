@@ -1,0 +1,64 @@
+
+script boss
+  userdata(10) ; boss
+  fire(shift)
+end
+
+script shift
+  fork(boss1_atk1)
+  fork(boss1_atk2)
+  changex(2,100)
+  sleep(2)
+  repeat(-1)
+    changex(4,-100)
+    sleep(4)
+    changex(4,100)
+    sleep(4)
+  end
+end
+
+script boss1_atk1
+  userdata(1) ; bullet2
+  speed(150)
+  repeat(-1)
+    sleep(1.5)
+    direction(0,aim)
+    fire(boss1_atk1a)
+  end
+end
+
+script boss1_atk1a
+  sleep(rand(1,1.2))
+  repeat(18)
+    direction($rep * 20)
+    fire()
+  end
+  clear()
+end
+
+script boss1_atk2
+  repeat(-1)
+    repeat(40)
+      direction(rand(-30,30),aim)
+      speed(rand(120,140))
+      fire()
+      sleep(0)
+    end
+    sleep(4.2)
+  end
+end
+
+script weapon_1
+  userdata(100) ; my bullet
+  speed(250)
+  repeat(-1)
+    direction(270)
+    fire(weapon_1_1,5)
+    fire(weapon_1_1,-5)
+    sleep(0.1)
+  end
+end
+
+script weapon_1_1
+  changex(0,$1,add)
+end

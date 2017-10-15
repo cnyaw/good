@@ -1,0 +1,19 @@
+script stge1
+  speed(120)
+  repeat(-1)
+    direction(30, add)
+    fire(sub1, rand(2,4), 1)
+    sleep(0.1)
+  end
+end
+
+script sub1
+  sleep($1)
+  speed(120)
+  userdata($2)
+  repeat(10)
+    direction(36, add)
+    fire()
+  end
+  clear()
+end

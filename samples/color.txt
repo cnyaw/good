@@ -1,0 +1,13 @@
+[good]
+version=0.3
+name=color
+levels=2
+
+[scripts]
+4=./color.lua
+1=./Util.lua
+
+[level2]
+bgColor=255 255 0
+script=Level
+

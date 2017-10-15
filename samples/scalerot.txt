@@ -1,0 +1,32 @@
+[good]
+version=0.3
+name=scale and rotate
+texs=1 2
+levels=3
+
+[scripts]
+6=./scalerot.lua
+
+[tex1]
+fileName=./res/face.png
+
+[tex2]
+fileName=./res/lace_0103.png
+
+[level3]
+bgColor=204 204 204
+objects=4 5
+
+[object4]
+texture=2
+repX=1
+repY=1
+x=32
+y=16
+
+[object5]
+texture=1
+x=176
+y=112
+script=Test
+

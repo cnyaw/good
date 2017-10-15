@@ -1,0 +1,18 @@
+[good]
+version=0.3
+name=Mine
+window=320 240
+texs=1
+levels=2
+
+[scripts]
+3=./mine.lua
+4=./Util.lua
+
+[tex1]
+fileName=./res/mine.bmp
+
+[level2]
+bgColor=128 128 128
+script=Level
+

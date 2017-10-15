@@ -1,0 +1,147 @@
+[good]
+version=0.3
+name=Link
+texs=1 2 21
+maps=9 3 12 17
+levels=10 14 4 18
+
+[scripts]
+6=./link.lua
+8=./Util.lua
+
+[tex1]
+name=mjcard
+fileName=./res/mjcard.png
+
+[tex2]
+name=bkgnd
+fileName=./res/green.bmp
+
+[tex21]
+name=font
+fileName=./res/font.png
+
+[map9]
+width=20
+height=12
+texture=1
+tileWidth=24
+tileHeight=34
+cxTile=9
+cyTile=5
+data=Y2AY2UCaRDxq3tAyb7gDAA==
+vgrid=1 128 128 128
+hgrid=1 128 128 128
+
+[map3]
+width=20
+height=12
+texture=1
+tileWidth=24
+tileHeight=34
+cxTile=9
+cyTile=5
+data=Y2CgPlCiEqa1eZS6mdbmDfbwG0jzGPCE/2Awj5Ad1AIA
+vgrid=1 128 128 128
+hgrid=1 128 128 128
+
+[map12]
+width=20
+height=12
+texture=1
+tileWidth=24
+tileHeight=34
+cxTile=9
+cyTile=5
+data=Y2CgPlAigEfVUUfdaLyNxhsA
+vgrid=1 128 128 128
+hgrid=1 128 128 128
+
+[map17]
+width=20
+height=12
+texture=1
+tileWidth=24
+tileHeight=34
+cxTile=9
+cyTile=5
+data=Y2CgPlCiEkY2j4FCc5Ro7L5R8waXeYM5vVATAAA=
+vgrid=1 128 128 128
+hgrid=1 128 128 128
+
+[level10]
+script=Game
+snapWidth=24
+snapHeight=34
+objects=13 11
+
+[object13]
+texture=2
+repX=1
+repY=1
+x=48
+y=68
+
+[object11]
+name=map
+map=9
+x=72
+y=34
+
+[level14]
+script=Game
+snapWidth=24
+snapHeight=34
+objects=16 15
+
+[object16]
+texture=2
+repX=1
+repY=1
+x=24
+y=34
+
+[object15]
+name=map
+map=12
+x=72
+y=34
+
+[level4]
+script=Game
+snapWidth=24
+snapHeight=34
+objects=7 5
+
+[object7]
+texture=2
+repX=1
+repY=1
+x=32
+y=48
+
+[object5]
+name=map
+map=3
+x=72
+y=34
+
+[level18]
+script=Game
+snapWidth=24
+snapHeight=34
+objects=20 19
+
+[object20]
+texture=2
+repX=1
+repY=1
+x=24
+y=34
+
+[object19]
+name=map
+map=17
+x=72
+y=34
+

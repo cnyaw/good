@@ -1,0 +1,36 @@
+[good]
+version=0.3
+name=stge2
+window=480 480
+texs=2 6
+sprites=7
+levels=1
+
+[scripts]
+3=./Util.lua
+4=./stge2.lua
+
+[stges]
+5=./stge2.stge
+
+[tex2]
+name=font
+fileName=./res/font.png
+
+[tex6]
+fileName=./res/bullet.png
+
+[sprite7]
+name=bullet
+texture=6
+tileWidth=16
+tileHeight=16
+cxTile=4
+cyTile=1
+data=3 60
+loop=1
+
+[level1]
+bgColor=0 0 64
+script=Level
+

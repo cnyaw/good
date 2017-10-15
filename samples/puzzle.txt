@@ -1,0 +1,17 @@
+[good]
+version=0.3
+name=puzzle
+texs=3
+levels=1
+
+[scripts]
+2=./puzzle.lua
+4=./Util.lua
+
+[tex3]
+fileName=./res/pzl.png
+
+[level1]
+bgColor=128 128 128
+script=Level
+

@@ -1,0 +1,78 @@
+[good]
+version=0.3
+name=stge
+window=400 400
+texs=4 6
+sprites=5 7 8 9 11
+levels=1
+
+[scripts]
+2=./stge.lua
+
+[stges]
+3=./stge.stge
+
+[tex4]
+fileName=./res/bullet.png
+
+[tex6]
+fileName=./res/weeder.png
+
+[sprite5]
+name=bullet
+texture=4
+tileWidth=16
+tileHeight=16
+cxTile=4
+cyTile=1
+data=3 60
+loop=1
+
+[sprite7]
+name=player
+texture=6
+tileWidth=32
+tileHeight=32
+cxTile=8
+cyTile=8
+data=6 60
+loop=1
+xOffset=-8
+yOffset=-5
+
+[sprite8]
+name=mybullet
+texture=4
+tileWidth=16
+tileHeight=16
+cxTile=4
+cyTile=1
+data=0 60
+loop=1
+
+[sprite9]
+name=boss
+texture=6
+tileWidth=32
+tileHeight=32
+cxTile=8
+cyTile=8
+data=32 13 33 13 34 13 35 13
+loop=1
+xOffset=-8
+yOffset=-8
+
+[sprite11]
+name=bullet2
+texture=6
+tileWidth=32
+tileHeight=32
+cxTile=8
+cyTile=8
+data=40 5 41 5 42 5 43 5
+loop=1
+
+[level1]
+bgColor=0 0 0
+script=Level
+

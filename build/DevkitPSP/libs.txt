@@ -1,0 +1,11 @@
+get svn://svn.pspdev.org/psp/trunk/zlib
+cd zlib
+make install
+
+get svn://svn.pspdev.org/psp/trunk/libpng
+cd libpng
+make install
+
+get libjpeg
+cd jpeg
+make install

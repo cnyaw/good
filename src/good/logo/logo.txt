@@ -1,0 +1,36 @@
+[good]
+version=0.3
+name={23272dad-96b0-44c9-ac2c-cf2e0a11bf87}
+window=400 400
+texs=1 3
+levels=0
+
+[scripts]
+5=./logo.lua
+
+[tex1]
+fileName=./good.png
+
+[tex3]
+fileName=./name.png
+
+[level0]
+name=logo
+script=Logo
+bgColor=70 160 220
+objects=2 4
+
+[object2]
+texture=1
+xscale=0.5
+yscale=0.5
+visible=0
+x=240
+y=128
+
+[object4]
+texture=3
+visible=0
+x=80
+y=192
+

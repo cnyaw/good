@@ -1,0 +1,46 @@
+[good]
+version=0.3
+name=bounce ball
+snds=8
+texs=1 2
+sprites=3
+levels=4
+
+[scripts]
+7=./bounceball.lua
+
+[snd8]
+name=hit
+fileName=./res/sfx_hit.ogg
+
+[tex1]
+fileName=./res/face.png
+
+[tex2]
+fileName=./res/lace_0103.png
+
+[sprite3]
+name=ball
+texture=1
+tileWidth=107
+tileHeight=107
+cxTile=1
+cyTile=1
+data=0 60
+loop=1
+
+[level4]
+script=Level
+objects=5 6
+
+[object5]
+texture=2
+repX=1
+repY=1
+
+[object6]
+name=ball
+sprite=3
+x=192
+y=144
+

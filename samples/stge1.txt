@@ -1,0 +1,16 @@
+[good]
+version=0.3
+name=stge1
+levels=1
+
+[scripts]
+2=./stge1.lua
+4=./Util.lua
+
+[stges]
+3=./stge1.stge
+
+[level1]
+bgColor=0 0 0
+script=Level
+

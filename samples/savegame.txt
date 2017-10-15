@@ -1,0 +1,31 @@
+[good]
+version=0.3
+name=Save Game
+texs=2
+levels=1
+
+[scripts]
+3=./savegame.lua
+5=./Util.lua
+
+[tex2]
+name=font
+fileName=./res/font.png
+
+[level1]
+bgColor=128 128 128
+script=Level
+objects=6 4
+
+[object6]
+bgColor=0 0 0
+x=320
+dim=0 0 320 480
+
+[object4]
+name=box
+bgColor=128 0 0
+x=96
+y=80
+dim=0 0 100 100
+

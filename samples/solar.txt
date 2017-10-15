@@ -1,0 +1,44 @@
+[good]
+version=0.3
+name=solar
+texs=1 2 3
+levels=4
+
+[scripts]
+10=./solar.lua
+
+[tex1]
+fileName=./res/sun.png
+
+[tex2]
+fileName=./res/earth.png
+
+[tex3]
+fileName=./res/moon.png
+
+[object8]
+name=moon
+texture=3
+x=64
+y=-48
+
+[object7]
+name=earth
+texture=2
+x=-80
+y=-48
+objects=8
+
+[object5]
+name=sun
+texture=1
+x=272
+y=176
+dim=160 7 80 69
+objects=7
+
+[level4]
+bgColor=0 0 0
+script=Level
+objects=5
+

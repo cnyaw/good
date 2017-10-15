@@ -1,0 +1,48 @@
+[good]
+version=0.3
+name=DoMiSo
+window=320 480
+snds=1 2 3
+levels=4
+
+[scripts]
+8=./domiso.lua
+
+[snd1]
+name=do
+fileName=./res/sfx_do.ogg
+
+[snd2]
+name=mi
+fileName=./res/sfx_mi.ogg
+
+[snd3]
+name=so
+fileName=./res/sfx_so.ogg
+
+[level4]
+bgColor=192 192 192
+script=DoMiSo
+objects=5 6 7
+
+[object5]
+name=do
+bgColor=255 255 0
+x=96
+y=64
+dim=0 0 128 64
+
+[object6]
+name=mi
+bgColor=255 0 0
+x=96
+y=176
+dim=0 0 128 64
+
+[object7]
+name=so
+bgColor=0 128 0
+x=96
+y=288
+dim=0 0 128 64
+

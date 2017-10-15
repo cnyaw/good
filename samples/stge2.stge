@@ -1,0 +1,93 @@
+script a
+  fire(a_emit)
+end
+
+script a_emit
+  fork(a_shape, 20, 18, 3, 0.2)
+  fork(a_move)
+end
+
+script a_move
+  changey(1, -50, obj)
+  sleep(2)
+  repeat(-1)
+    changex(1, 50, obj)
+    sleep(1)
+    changex(2, -100, obj)
+    sleep(2)
+    changex(1, 50, obj)
+    sleep(1)
+  end
+end
+
+script a_shape
+  speed(100)
+  direction(rand(360))
+  repeat(-1)
+    repeat($2)
+      direction($1, add)
+      fire()
+    end
+    direction($3, add)
+    sleep($4)
+  end
+end
+
+script b
+  fire(b_emit)
+end
+
+script b_emit
+  changey(1, -100, obj)
+  sleep(1)
+  direction(90)
+  speed(100)
+  repeat(-1)
+    repeat(12)
+      call(b_shape)
+      direction(3, add)
+      sleep(0.05)
+    end
+    repeat(12)
+      call(b_shape)
+      direction(-3, add)
+      sleep(0.05)
+    end
+  end
+end
+
+script b_shape
+  direction(-70, add)
+  repeat(6)
+    direction(20, add)
+    fire()
+  end
+end
+
+script c
+  fire(c_emit)
+end
+
+script c_emit
+  repeat(13)
+    fire(c_emit2, 30 * (-6 + $rep))
+  end
+end
+
+script c_emit2
+  changex(0.4, $1)
+  sleep(0.4)
+  call(c_shape)
+end
+
+script c_shape
+  speed(100)
+  direction(45)
+  repeat(-1)
+    direction(90, add)
+    fire()
+    direction(180, add)
+    fire()
+    sleep(0.4)
+  end
+end

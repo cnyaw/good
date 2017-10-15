@@ -1,0 +1,12 @@
+[good]
+version=0.3
+name=Fire
+window=200 200
+levels=1
+
+[scripts]
+2=./fire.lua
+
+[level1]
+script=Fire
+

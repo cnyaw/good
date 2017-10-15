@@ -1,0 +1,100 @@
+[good]
+version=0.3
+name=Snake
+window=320 320
+texs=1
+maps=2
+sprites=5 8 9 10 11 12
+levels=3
+
+[scripts]
+7=./snake.lua
+
+[tex1]
+fileName=./res/weeder.png
+
+[map2]
+width=10
+height=10
+texture=1
+tileWidth=32
+tileHeight=32
+cxTile=8
+cyTile=8
+data=k2VgYJAkgKWAWB6ILQlghVF1ONXJALEcASwNxAA=
+vgrid=1 128 128 128
+hgrid=1 128 128 128
+
+[sprite5]
+name=left
+texture=1
+tileWidth=32
+tileHeight=32
+cxTile=8
+cyTile=8
+data=4 30 5 30
+loop=1
+
+[sprite8]
+name=right
+texture=1
+tileWidth=32
+tileHeight=32
+cxTile=8
+cyTile=8
+data=0 30 1 30
+loop=1
+
+[sprite9]
+name=up
+texture=1
+tileWidth=32
+tileHeight=32
+cxTile=8
+cyTile=8
+data=6 30 7 30
+loop=1
+
+[sprite10]
+name=down
+texture=1
+tileWidth=32
+tileHeight=32
+cxTile=8
+cyTile=8
+data=2 30 3 30
+loop=1
+
+[sprite11]
+name=flower
+texture=1
+tileWidth=32
+tileHeight=32
+cxTile=8
+cyTile=8
+data=16 60
+loop=1
+
+[sprite12]
+name=bomb
+texture=1
+tileWidth=32
+tileHeight=32
+cxTile=8
+cyTile=8
+data=32 15 33 15 34 15 35 15
+loop=1
+
+[level3]
+script=Game
+objects=4 6
+
+[object4]
+map=2
+
+[object6]
+name=head
+sprite=5
+x=128
+y=160
+

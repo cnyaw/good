@@ -1,0 +1,39 @@
+[good]
+version=0.3
+name=Monte Carlo
+window=640 500
+texs=1 5 7 6
+levels=2
+
+[scripts]
+8=./montecarlo.lua
+4=./Util.lua
+
+[tex1]
+name=bkgnd
+fileName=./res/green.bmp
+
+[tex5]
+name=cards
+fileName=./res/card1.png
+
+[tex7]
+name=empty
+fileName=./res/empty.bmp
+
+[tex6]
+name=font
+fileName=./res/font.png
+
+[level2]
+script=Game
+objects=3
+
+[object3]
+name=bkgnd
+texture=1
+repX=1
+repY=1
+x=16
+y=16
+

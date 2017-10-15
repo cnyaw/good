@@ -1,0 +1,17 @@
+[good]
+version=0.3
+name=texture
+texs=1
+levels=2
+
+[scripts]
+3=./texture.lua
+4=./Util.lua
+
+[tex1]
+fileName=./res/ladx_tilese.png
+
+[level2]
+bgColor=255 255 0
+script=Level
+

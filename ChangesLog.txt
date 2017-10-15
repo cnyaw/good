@@ -1,0 +1,202 @@
+Good Game Editor 1.6.3(2017/10/11)
+-----------------------------------------
+
+* 最佳化色塊繪製方式大幅提升繪圖效能。
+* 修正FPS計算顯示。
+
+Good Game Editor 1.6.2 (2017/6/18)
+-----------------------------------------
+
+* 修正播放器(In Editor Player)顯示貼圖資訊的問題。
+* 修正關卡編輯器物件樹點擊關卡物件程式當掉的問題。
+* 新增Good.GenObjEx支援從外部資源包(External Good Package)生成物件。
+
+Good Game Editor 1.6.1 (2017/4/21)
+-----------------------------------------
+
+* 新增可以Undo關卡的寛高。
+* 修正關卡編輯器(LevelEditor)顯示格點的效能問題。
+* 新增可以指定關卡的位置屬性。
+* 新增在狀態列上顯示關卡編輯器(LevelEditor)目前寛高及左上角位置資訊。
+* 修正關卡編輯器(LevelEditor)中點擊貼圖物件右下角範圍選取小工具無效的問題。
+* 修正當物件數量太大時造成當機的問題。
+* 修正動作編輯器(Sprite Editor)Undo時當機的問題。
+* 修正Good.IsAnimPlaying不能正確工作的問題。
+* 修正Good.GenObj生成關卡資源內的子物件時沒有設定指定script的問題。
+* 播放器FPS資訊新增顯示目前物件數量及最大物件數量資訊。
+* 播放器只在畫面內容有變更時才重繪畫面。
+
+Good Game Editor 1.6 (2017/2/1)
+-----------------------------------------
+
+* 新增Graphics.DrawText。
+* 新增Graphics.SetAnchor。
+* 關卡編輯器(LevelEditor)中物件左上角顥示狀態圖標:IsVisible,RepX,RepY,HasScript,ImageMissing。
+* 支援一次新增多個貼圖資源(New Texture)。
+* 新增播放目前選取關卡(Play This Level)功能。
+* 關卡編輯器(LevelEditor)中物件支援階層關係編輯。
+* 關卡編輯器(LevelEditor)新增編輯Dummy物件。
+
+Good Game Editor 1.5 (2016/11/4)
+-----------------------------------------
+
+* 新增Good.GenTextObj。
+* Create Package時若資源項目不存在則顯示警告訊息並允許輸出檔案。
+* 關卡編輯器(LevelEditor)不可見物件左上角標示一不可見物件圖標。
+* 新增範例text(字圖及系統字)。
+* 合併繪圖DrawCalls大幅提升繪圖效能。
+* 修正繪製範圍外的貼圖物件的錯誤。
+* Cache動態載入的Good Package。
+* 修正刪除正開啟的資源時造成的程式崩潰。
+* Util新增SetTextObjColor及GetTextObjWidth。
+* 關卡編輯器(LevelEditor)新增右鍵點選物件切換資源選擇。
+* 新增Good.GetAlpha及Good.SetAlpha(此功能包含於Util)。
+* 新增Graphics.GetAntiAlias及Graphics.SetAntiAlias用於控制系統字反鋸齒。
+
+Good Game Editor 1.4.4 (2016/8/9)
+-----------------------------------------
+
+* 修正貼圖物件在負數Scale時顯示錯誤。
+* 修正編輯器開啟舊檔時偶發性當機的問題。
+* 修正地圖編輯器(MapEditor)繪製圖格超出地圖範圍時造成當機的問題。
+* Good.OBJ更名為Good.SPRITE。
+* 新增Good.SetName。
+
+Good Game Editor 1.4.3 (2016/4/10)
+-----------------------------------------
+
+* 物件屬性檢視器(Property View)的ComboBox改為以關卡編輯器(Level Editor)的物件列表取代。
+* 新增Resource.GetFirstLevelId。
+* 新增Ctrl+F5開始播放資源樹指定關卡。
+* 新增Good.GetName。
+* Good.IsVisible更名為Good.GetVisible。
+* 新增範例animator(簡易動作系統)。
+
+Good Game Editor 1.4.2 (2015/11/22)
+-----------------------------------------
+
+* 支援Good.GenObj可以生成任意關卡資源內的子物件。
+* 修正搜尋路徑(Search Path Dependency)的錯誤。
+* 播放器(In Editor Player)新增顯示目前使用貼圖資訊(Ctrl+Alt+T)。
+* 編輯器新增輸出ZIP格式資源包(Create ZIP Package)。
+* 擴充Good.GetTexId可以回傳地圖物件(MAPBG)的貼圖ID。
+
+Good Game Editor 1.4.1 (2015/9/5)
+-----------------------------------------
+
+* 修正ID為0的錯誤。
+* 更名Good.GetScreenResolution為GetWindowSize。
+* 遊戲開始前播放GoodLogo。
+* 新增Good.GetRep及Good.SetRep。
+* 新增Input.ANY。
+* 新增AnchorPoint支援，Good.SetAnchor及Good.GetAnchor。
+
+Good Game Editor 1.4 (2015/04/21)
+-----------------------------------------
+
+* 粒子程式編輯器(STGE Script Editor)編譯程式前提示存檔。
+* 動作編輯器(Sprite Editor)選取項目使用紅色框。
+* 新增Resource.GetMapTileSize。
+* 新增範例snake(貪食蛇)。
+* 新增範例solar(物件階層)。
+* 取消TGA圖形格式支援。
+* 最佳化繪圖程序。
+* 修正Good.Clone的錯誤。
+* 動作編輯器(Sprite Editor)改版，整合Preview視窗至編輯區。
+* 修正Good.CallPackage機制堆疊錯誤。
+* 更名Resource.GetMapTileSize為Resource.GetTileSize。
+* 更名Resource.GetTextureId為Resource.GetTexId。
+* 更名Resource.GetTextureSize為Resource.GetTexSize。
+* 更名Resource.GetTileMapSize為Resource.GetMapSize。
+* 更名Sound.ReleaseSound為Sound.KillSound。
+* 線上API參考手冊改連至WIKI。
+* 關卡編輯器(Level Editor)新增自訂貼齊格線大小。
+* 修正當Tile寬高不同時顯示地圖物件的錯誤。
+* 修正Resource.GetNextLevelId錯誤。
+* 新增範例link(連連看)。
+* 自動儲存及載入視窗屬性。
+* 編輯器內建的播放器支援即時顯示除錯訊息。
+* 修正開啟另一個專案時程式崩塌的錯誤。
+* 修正Good.PickObj無法Pick子物件的錯誤。
+* 移除Good.PickColorBgObj/PickMapObj/PickSpriteObj/PickTexBgObj。
+* 新增Good.PauseAnim。
+* 新增Good.AddChild index參數，允許指定位置加入父物件。
+* 所有類型的物件都可在關卡編輯器(Level Editor)中指定顏色。
+* 新增Good.IsAnimPlaying。
+* 新增開新專案對話盒(New Project Dialog)。
+* 編輯器不支援縮放。
+* 新增範例numbers。
+* 新增關卡編輯器貼圖物件範圍選取小工具(Select Texture Dimension)。
+* 新增關卡編輯器物件對齊功能(Level Editor Objects Alignment)。
+* 動作編輯器(Sprite Editor)支援多選畫框(Frame)。
+* 新增遊戲範例mmc(小香方塊)。
+
+Good Game Editor 1.3 Beta (2012/02/03)
+-----------------------------------------
+
+* 新增TGA圖形格式。
+* 關卡編輯器(LevelEditor)加大物件選取框。
+* 修正程式碼編輯器(SciprtEditor)鍵盤焦點(Focus)問題。
+* 範例StgeTest1更名為stge1。
+* 移除貼圖的KeyColor屬性。
+* 移除View選單裡的Toolbar及Status Bar選項。
+* 新增範例fire(火焰模擬)。
+* 新增Resource.GetTextureSize API。
+* 新增Graphics.DrawImage及Graphics.FillRect API。
+* 新增粒子測試器(STGE particle script tester)。
+* 新增OnDraw事件(OwnerDraw)。
+* 新增範例stge2(粒子效果)。
+* 預設ShowFps開啟。
+* 新增MRU(Most Recently Used)。
+* 修正一個拼字錯誤(You are using latest version)。
+* 拿掉新增貼圖對話盒(Add new texture dialog)，簡化成開啟檔案對話盒(Open file dialog)作檔案選取。
+* 修正地圖編輯器(MapEditor)輔助線編輯器的顏色選擇鈕沒有正確重畫的問題。
+* 新增範例savegame(記錄檔讀寫)。
+* 修正遊戲視窗改變大小時滑鼠座標產生的誤差。
+* 新增範例mouse(滑鼠狀態)。
+* 地圖編輯器(MapEditor)橡皮擦工具也能以右鍵選取區塊範圍。
+* 修正地圖編輯器(MapEditor)編輯狀態錯誤的問題。
+
+Good Game Editor 1.2 Beta (2010/09/06)
+-----------------------------------------
+
+* 新增Good.KillAllChild
+* 關卡編輯器(Level Editor)支援按住Alt鍵以滑鼠拖曳物件作複製。
+* 修正在關卡編輯器中拖曳物件過程中按ESC鍵的處理錯誤。
+* AboutBox中，zlib及yardparser文字位置對調。
+* 關卡編輯器新增使用方向鍵移動物件。
+* 關卡編輯器中(Name|Visible|Rot|Scale|Repeat|Script)等屬性可以undo/redo。
+* 關卡編輯器支援按住Shift鍵以方向鍵作色塊及貼圖物件縮放。
+* 關卡編輯器支援以Tab鍵切換選取物件。
+* 修正Good模組API傳入物件Id(0)的錯誤。
+* 去掉Good模組中物件類別常數的前綴詞TYPES_。
+* 去掉Input模組中按鍵常數的前綴詞KEYS_。
+* 以Good.SetBgColor設定關卡物件BgColor等同於設定關卡背景清除顏色(ClearColor)。
+* 新增範例lvlbg。
+* 新增範例動態選單(menu)。
+* 工具列新增一個可以開關ResourceView及一個開關OutputView的按鈕。
+* AboutBox的連結(又)改成按鈕型式。
+* 修正一個新增關卡的小問題，將HasClearColor初始為false。
+* 將範例程式中使用的一些BMP圖形格式轉為PNG。
+* 新增單人撲克牌遊戲：蒙地卡羅。
+* AboutBox添加Wiki連結。
+* 編輯器(Editors)的縮放比例最大可到800%。
+* 修正一個新件貼圖物件大小計算錯誤的問題。
+* 新增Good.GetTexId/SetMapId/SetTexId API。
+* 新增檢查是否有新版本編輯器的功能(Help\Check for Update...)。
+* 新增一個sample，簡單的示範縮放及旋轉(scalerot)。
+* 移除AboutBox裡的waync's smallworld連結。
+* 修正Good.GetDim在讀取貼圖物件時沒有正確回傳寬高的問題。
+* 修正時間控制的問題，這樣在某些電腦上不會一執行遊戲時就失速。
+* 新版本也能在iPhone上通過編譯執行。
+* 增加對物件作縮放(xScale,yScale)及旋轉(Rotate)的支援。
+* 把25940m改版一下支援iPhone，當作測試。
+* 除了可以在Dependency指定外部資源(zip或good檔)外，新增可以加入搜尋路徑的功能。
+* 以yardparser取代Boost Spirit作stge parser。
+* AboutBox的Libs頁面裡的Spirit-1.8.5宣告變更為yardparser-1.5。
+
+Good Game Editor 1.1 Beta (2010/04/28)
+-----------------------------------------
+
+Good Game Editor 1.0 Beta (2009/12/24)
+-----------------------------------------

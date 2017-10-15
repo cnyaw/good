@@ -1,0 +1,17 @@
+[good]
+version=0.3
+name=text
+texs=0
+levels=1
+
+[scripts]
+2=./text.lua
+3=./Util.lua
+
+[tex0]
+fileName=./res/font.png
+
+[level1]
+bgColor=0 128 0
+script=Level
+

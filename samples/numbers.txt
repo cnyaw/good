@@ -1,0 +1,19 @@
+[good]
+version=0.3
+name=Numbers
+window=400 400
+texs=1
+levels=2
+
+[scripts]
+3=./numbers.lua
+4=./Util.lua
+
+[tex1]
+name=font
+fileName=./res/font.png
+
+[level2]
+bgColor=0 128 0
+script=Game
+

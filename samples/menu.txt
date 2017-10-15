@@ -1,0 +1,33 @@
+[good]
+version=0.3
+name=Menu
+window=320 480
+texs=1 2
+levels=3
+
+[scripts]
+4=./Util.lua
+5=./menu.lua
+
+[deps]
+6=./mmc.txt
+7=./mario.txt
+8=./stge.txt
+9=./puzzle.txt
+10=./weeder.txt
+11=./breakout.txt
+12=./zelda.txt
+13=./life.txt
+
+[tex1]
+name=font
+fileName=./res/font.png
+
+[tex2]
+name=icons
+fileName=./res/samples.png
+
+[level3]
+bgColor=128 0 0
+script=Menu
+

@@ -1,0 +1,18 @@
+[good]
+version=0.3
+name=Mouse
+texs=5
+levels=1
+
+[scripts]
+3=./mouse.lua
+4=./Util.lua
+
+[tex5]
+name=font
+fileName=./res/font.png
+
+[level1]
+bgColor=64 128 128
+script=Level
+

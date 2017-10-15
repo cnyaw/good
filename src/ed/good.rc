@@ -1,0 +1,796 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "atlres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""atlres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST ""res\\\\good.exe.manifest""\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_MAINFRAME TOOLBAR  16, 15
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    SEPARATOR
+    BUTTON      ID_VIEW_PROJVIEW
+    BUTTON      ID_VIEW_OUTPUTWINDOW
+    SEPARATOR
+    BUTTON      ID_EDIT_UNDO
+    BUTTON      ID_EDIT_REDO
+    SEPARATOR
+    BUTTON      ID_PROJECT_RUNTHEGAME
+    BUTTON      ID_PROJECT_RUNTHISLEVEL
+    SEPARATOR
+    BUTTON      ID_FILE_ADDNEWAUDIO
+    BUTTON      ID_FILE_ADDNEWTEXTURE
+    BUTTON      ID_FILE_ADDNEWMAP
+    BUTTON      ID_FILE_ADDNEWSPRITE
+    BUTTON      ID_FILE_ADDNEWLEVEL
+    BUTTON      ID_FILE_ADDNEWSCRIPT
+    BUTTON      ID_FILE_ADDNEWSTGE
+    BUTTON      ID_FILE_ADDNEWDEPENDENCY
+    BUTTON      ID_PROJECT_NEWSEARCHPATH
+END
+
+IDR_TB_MAPEDIT TOOLBAR  16, 15
+BEGIN
+    BUTTON      ID_MAPEDIT_DRAW
+    BUTTON      ID_MAPEDIT_ERASE
+    BUTTON      ID_MAPEDIT_FILL
+    SEPARATOR
+    BUTTON      ID_MAPEDIT_GRID
+    SEPARATOR
+    BUTTON      ID_MAPEDIT_OPTION
+END
+
+IDR_TB_SPRITETILESET TOOLBAR  16, 15
+BEGIN
+    BUTTON      ID_SPRITETILESET_INSERT
+END
+
+IDR_TB_SPRITEEDIT TOOLBAR  16, 15
+BEGIN
+    BUTTON      ID_SPRITEPREVIEW_PLAY
+    SEPARATOR
+    BUTTON      ID_SPRITEEDIT_DRAW
+    BUTTON      ID_SPRITEEDIT_ERASE
+END
+
+IDR_TB_SPRITEPREVIEW TOOLBAR  16, 15
+BEGIN
+    BUTTON      ID_SPRITEPREVIEW_LOOP
+    SEPARATOR
+    BUTTON      ID_SPRITEPREVIEW_PLAY
+    BUTTON      ID_SPRITEPREVIEW_PAUSE
+    BUTTON      ID_SPRITEPREVIEW_STOP
+    SEPARATOR
+    BUTTON      ID_SPRITEPREVIEW_PREVFRAME
+    BUTTON      ID_SPRITEPREVIEW_NEXTFRAME
+END
+
+IDR_TB_LEVELEDIT TOOLBAR  16, 15
+BEGIN
+    BUTTON      ID_LEVELEDIT_MOVEITEM
+    BUTTON      ID_LEVELEDIT_REMOVE
+    SEPARATOR
+    BUTTON      ID_LEVELEDIT_ADDCOLBG
+    BUTTON      ID_LEVELEDIT_ADDTEXBG
+    BUTTON      ID_LEVELEDIT_ADDMAPBG
+    BUTTON      ID_LEVELEDIT_ADDOBJ
+    BUTTON      ID_LEVELEDIT_ADDDUMMY
+    SEPARATOR
+    BUTTON      ID_LEVELEDIT_TOPMOST
+    BUTTON      ID_LEVELEDIT_MOVEUP
+    BUTTON      ID_LEVELEDIT_MOVEDOWN
+    BUTTON      ID_LEVELEDIT_BOTTOMMOST
+    SEPARATOR
+    BUTTON      ID_LEVELEDIT_ALIGNLEFT
+    BUTTON      ID_LEVELEDIT_ALIGNRIGHT
+    BUTTON      ID_LEVELEDIT_ALIGNTOP
+    BUTTON      ID_LEVELEDIT_ALIGNBOTTOM
+    SEPARATOR
+    BUTTON      ID_LEVELEDIT_GRID
+END
+
+IDR_TB_OUTPUT TOOLBAR  16, 15
+BEGIN
+    BUTTON      ID_EDIT_CLEAR_ALL
+END
+
+IDR_TB_STGESCRIPT TOOLBAR  16, 15
+BEGIN
+    BUTTON      ID_STGESCRIPT_SOURCE
+    BUTTON      ID_STGESCRIPT_VIEW
+    SEPARATOR
+    BUTTON      ID_STGESCRIPT_COMPILE
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
+IDR_TB_MAPEDIT          BITMAP                  "res\\bmp00002.bmp"
+IDB_BKBRUSH             BITMAP                  "res\\bitmap1.bmp"
+IDR_TB_SPRITETILESET    BITMAP                  "res\\bmp00003.bmp"
+IDR_TB_SPRITEEDIT       BITMAP                  "res\\bmp00004.bmp"
+IDR_TB_SPRITEPREVIEW    BITMAP                  "res\\bmp00005.bmp"
+IDR_TB_LEVELEDIT        BITMAP                  "res\\toolbar1.bmp"
+IDB_BITMAP1             BITMAP                  "res\\icon1.bmp"
+IDR_TB_OUTPUT           BITMAP                  "res\\bmp00001.bmp"
+IDR_TB_STGESCRIPT       BITMAP                  "res\\bmp00006.bmp"
+IDB_OBJSTATE            BITMAP                  "res\\objstate.bmp"
+IDB_LVLOBJ              BITMAP                  "res\\lvlobj.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        POPUP "Recent &Files"
+        BEGIN
+            MENUITEM "(empty)",                     57616
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "&Undo\tCtrl+Z",               ID_EDIT_UNDO
+        MENUITEM "&Redo\tCtrl+Y",               ID_EDIT_REDO
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Project View\tF4",           32809
+        MENUITEM "O&utput\tCtrl+Alt+O",         ID_VIEW_OUTPUTWINDOW
+        MENUITEM SEPARATOR
+        MENUITEM "Show FPS",                    ID_VIEW_SHOWFPS
+    END
+    POPUP "&Project"
+    BEGIN
+        MENUITEM "&Play\tF5",                   ID_PROJECT_RUNTHEGAME
+        MENUITEM "Play This Level\tCtrl+F5",    ID_PROJECT_RUNTHISLEVEL
+        MENUITEM "Play Package...",             ID_PROJECT_PLAYFILE
+        MENUITEM SEPARATOR
+        MENUITEM "Create Package...",           ID_PROJECT_CREATEPACKAGE
+        MENUITEM "Create Executable...",        ID_PROJECT_CREATEEXECUTABLE
+        MENUITEM "Create Zip Package...",       ID_PROJECT_CREATEZIPPACKAGE
+    END
+    POPUP "&Window"
+    BEGIN
+        MENUITEM "&Close\tCtrl+F4",             ID_WINDOW_CLOSE
+        MENUITEM "Close &All",                  ID_WINDOW_CLOSE_ALL
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "API Reference",               ID_HELP_GOODAPIREFERENCE
+        MENUITEM "Check For Updates",           ID_HELP_CHECKFORUPDATE
+        MENUITEM SEPARATOR
+        MENUITEM "&About",                      ID_APP_ABOUT
+    END
+END
+
+IDR_MENU_SNAP MENU 
+BEGIN
+    POPUP "0"
+    BEGIN
+        MENUITEM "Snap 8",                      ID_SNAP_8
+        MENUITEM "Snap 16",                     ID_SNAP_16
+        MENUITEM "Snap 24",                     ID_SNAP_24
+        MENUITEM "Snap 32",                     ID_SNAP_32
+        MENUITEM "Snap 40",                     ID_SNAP_40
+        MENUITEM "Snap 48",                     ID_SNAP_48
+        MENUITEM "Snap 56",                     ID_SNAP_56
+        MENUITEM "Snap 64",                     ID_SNAP_64
+        MENUITEM "Custom...",                   ID_SNAP_CUSTOMIZE
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\good.ico"
+IDI_ICON1               ICON                    "res\\icon1.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_NEWMAP DIALOGEX 0, 0, 294, 190
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "New Map"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDIT1,102,23,157,14,ES_AUTOHSCROLL
+    LTEXT           "CX Tile [1..1024]",IDC_STATIC,15,44,80,8
+    EDITTEXT        IDC_EDIT2,102,41,157,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "CY Tile  [1..1024]",IDC_STATIC,15,63,80,8
+    EDITTEXT        IDC_EDIT3,102,59,157,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Tile Width [8..1024]",IDC_STATIC,15,82,80,8
+    EDITTEXT        IDC_EDIT4,102,77,157,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Tile Height  [8..1024]",IDC_STATIC,15,101,80,8
+    EDITTEXT        IDC_EDIT5,102,95,157,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Name",IDC_STATIC,15,25,80,8
+    LTEXT           "Texture",IDC_STATIC,15,136,80,8
+    EDITTEXT        IDC_EDIT7,102,133,136,14,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "...",IDC_BUTTON2,243,133,16,14
+    LTEXT           "Property",IDC_STATIC,7,7,31,8
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,41,10,246,1
+    LTEXT           "Tileset",IDC_STATIC,7,118,31,8
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,33,121,253,1
+END
+
+IDD_MAPPROP_GRID DIALOGEX 0, 0, 297, 182
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_CAPTION
+CAPTION "Grid Line"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_GRID,"Static",SS_OWNERDRAW | NOT WS_VISIBLE,23,24,249,135
+    CONTROL         ".",IDC_COLOR,"Button",BS_OWNERDRAW | WS_TABSTOP,5,6,16,16
+END
+
+IDD_NEWSPRITE DIALOGEX 0, 0, 294, 190
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_CHILD | WS_CAPTION | WS_SYSMENU
+CAPTION "New Sprite"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Name",IDC_STATIC,15,26,75,8
+    LTEXT           "Tile Width [8..1024]",IDC_STATIC,15,43,75,8
+    LTEXT           "Tile Height [8..1024]",IDC_STATIC,15,60,75,8
+    EDITTEXT        IDC_EDIT6,98,24,166,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT1,98,42,166,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT2,98,60,166,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Texture",IDC_STATIC,15,110,49,8
+    EDITTEXT        IDC_EDIT3,98,107,150,14,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "...",IDC_BUTTON1,252,107,16,14
+    LTEXT           "Property",IDC_STATIC,7,7,31,8
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,41,10,246,1
+    LTEXT           "Tileset",IDC_STATIC,7,90,31,8
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,34,93,252,1
+END
+
+IDD_PROPVIEW DIALOGEX 0, 0, 186, 90
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LISTBOX         IDC_LIST1,7,43,48,40,LBS_OWNERDRAWVARIABLE | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_CHOICESPRITE DIALOGEX 0, 0, 288, 166
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Choose Sprite"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,177,145,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,231,145,50,14
+    LISTBOX         IDC_LIST1,7,7,274,133,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_CHOICETEXTURE DIALOGEX 0, 0, 288, 166
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Choose Texture"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,177,145,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,231,145,50,14
+    LISTBOX         IDC_LIST1,7,7,274,133,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_CHOICEMAP DIALOGEX 0, 0, 288, 166
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Choose Map"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,177,145,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,231,145,50,14
+    LISTBOX         IDC_LIST1,7,7,274,133,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_SAVECHANGES DIALOGEX 0, 0, 318, 179
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Save Changes"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Save changes to the following item(s)?",IDC_STATIC,7,7,304,8
+    LISTBOX         IDC_LIST1,7,22,304,131,LBS_MULTIPLESEL | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Save",IDC_BUTTON1,153,158,50,14
+    PUSHBUTTON      "Don't Save",IDC_BUTTON2,208,158,50,14
+    PUSHBUTTON      "Cancel",IDC_BUTTON3,262,158,50,14
+END
+
+IDD_GOTOLINE DIALOGEX 0, 0, 213, 65
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Goto Line"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDIT1,7,22,199,14,ES_AUTOHSCROLL | ES_NUMBER
+    DEFPUSHBUTTON   "OK",IDOK,98,44,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,156,44,50,14
+    LTEXT           "Static",IDC_STATIC1,7,7,199,8
+END
+
+IDD_SNAPCUSTOMIZE DIALOGEX 0, 0, 186, 103
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Snap Customization"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,73,82,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,129,82,50,14
+    LTEXT           "Grid Width",IDC_STATIC,7,7,34,8
+    EDITTEXT        IDC_EDIT1,7,19,172,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Grid Height",IDC_STATIC,7,41,36,8
+    EDITTEXT        IDC_EDIT2,7,53,172,14,ES_AUTOHSCROLL | ES_NUMBER
+END
+
+IDD_NEWPROJ DIALOGEX 0, 0, 294, 156
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "New Project"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDIT1,79,28,147,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT2,79,49,147,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse...",IDC_BUTTON1,232,49,50,14
+    EDITTEXT        IDC_EDIT3,79,71,147,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT4,79,94,147,14,ES_AUTOHSCROLL | ES_NUMBER
+    DEFPUSHBUTTON   "OK",IDOK,165,135,65,14
+    PUSHBUTTON      "Cancel",IDCANCEL,237,135,50,14
+    LTEXT           "Name",IDC_STATIC,16,30,61,8
+    GROUPBOX        "New Project",IDC_STATIC,7,7,280,123
+    LTEXT           "Location",IDC_STATIC,16,51,61,8
+    LTEXT           "Width [32..4096]",IDC_STATIC,16,73,61,8
+    LTEXT           "Height [32..4096]",IDC_STATIC,16,96,61,8
+END
+
+IDD_SELTEXDIM DIALOGEX 0, 0, 432, 282
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Select Texture Dimenstion"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,321,261,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,375,261,50,14
+    PUSHBUTTON      "Select All",IDC_BUTTON1,259,261,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_NEWMAP, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 287
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 183
+    END
+
+    IDD_MAPPROP_GRID, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 290
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 175
+    END
+
+    IDD_NEWSPRITE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 287
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 183
+    END
+
+    IDD_PROPVIEW, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 83
+    END
+
+    IDD_CHOICESPRITE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 281
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 159
+    END
+
+    IDD_CHOICETEXTURE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 281
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 159
+    END
+
+    IDD_CHOICEMAP, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 281
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 159
+    END
+
+    IDD_SAVECHANGES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 311
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 172
+    END
+
+    IDD_GOTOLINE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 206
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 58
+    END
+
+    IDD_SNAPCUSTOMIZE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 96
+    END
+
+    IDD_NEWPROJ, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 287
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 149
+    END
+
+    IDD_SELTEXDIM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 425
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 275
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS 
+BEGIN
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT, NOINVERT
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
+    "F",            ID_EDIT_FIND,           VIRTKEY, CONTROL, NOINVERT
+    "G",            ID_EDIT_GOTO,           VIRTKEY, CONTROL, NOINVERT
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT, NOINVERT
+    "Y",            ID_EDIT_REDO,           VIRTKEY, CONTROL, NOINVERT
+    VK_F3,          ID_EDIT_REPEAT,         VIRTKEY, NOINVERT
+    "A",            ID_EDIT_SELECT_ALL,     VIRTKEY, CONTROL, NOINVERT
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT, NOINVERT
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY, NOINVERT
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, NOINVERT
+    VK_F5,          ID_PROJECT_RUNTHEGAME,  VIRTKEY, NOINVERT
+    VK_F5,          ID_PROJECT_RUNTHISLEVEL, VIRTKEY, CONTROL, NOINVERT
+    "O",            ID_VIEW_OUTPUTWINDOW,   VIRTKEY, CONTROL, ALT, NOINVERT
+    VK_F4,          ID_VIEW_PROJVIEW,       VIRTKEY, NOINVERT
+    "T",            ID_VIEW_TEXTURE,        VIRTKEY, CONTROL, ALT, NOINVERT
+    VK_F4,          ID_WINDOW_CLOSE,        VIRTKEY, CONTROL, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_POINTER             CURSOR                  "res\\arrow.cur"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// THEPLAYER
+//
+
+IDR_THEPLAYER1          THEPLAYER               "res\\player.zip"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDR_MAINFRAME           "Good Game Editor"
+    IDS_HELP_ADDGRIDLINE    "Drag from here to add new grid line"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_FILE_NEW             "Create a new project\nNew Project"
+    ID_FILE_OPEN            "Open an existing document\nOpen"
+    ID_FILE_CLOSE           "Close the active document\nClose"
+    ID_FILE_SAVE            "Save the active document\nSave"
+    ID_FILE_SAVE_AS         "Save the active document with a new name\nSave As"
+    ID_FILE_PAGE_SETUP      "Change the printing options\nPage Setup"
+    ID_FILE_PRINT_SETUP     "Change the printer and printing options\nPrint Setup"
+    ID_FILE_PRINT           "Print the active document\nPrint"
+    ID_FILE_PRINT_PREVIEW   "Display full pages\nPrint Preview"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
+    ID_APP_EXIT             "Quit the application; prompts to save documents\nExit"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
+    ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_WINDOW_NEW           "Open another window for the active document\nNew Window"
+    ID_WINDOW_ARRANGE       "Arrange icons at the bottom of the window\nArrange Icons"
+    ID_WINDOW_CASCADE       "Arrange windows so they overlap\nCascade Windows"
+    ID_WINDOW_TILE_HORZ     "Arrange windows as non-overlapping tiles\nTile Windows"
+    ID_WINDOW_TILE_VERT     "Arrange windows as non-overlapping tiles\nTile Windows"
+    ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_EDIT_CLEAR           "Erase the selection\nErase"
+    ID_EDIT_CLEAR_ALL       "Erase everything\nErase All"
+    ID_EDIT_COPY            "Copy the selection and put it on the Clipboard\nCopy"
+    ID_EDIT_CUT             "Cut the selection and put it on the Clipboard\nCut"
+    ID_EDIT_FIND            "Find the specified text\nFind"
+    ID_EDIT_PASTE           "Insert Clipboard contents\nPaste"
+    ID_EDIT_REPEAT          "Repeat the last action\nRepeat"
+    ID_EDIT_REPLACE         "Replace specific text with different text\nReplace"
+    ID_EDIT_SELECT_ALL      "Select the entire document\nSelect All"
+    ID_EDIT_UNDO            "Undo the last action\nUndo"
+    ID_EDIT_REDO            "Redo the previously undone action\nRedo"
+END
+
+STRINGTABLE 
+BEGIN
+    ATL_IDS_SCSIZE          "Change the window size"
+    ATL_IDS_SCMOVE          "Change the window position"
+    ATL_IDS_SCMINIMIZE      "Reduce the window to an icon"
+    ATL_IDS_SCMAXIMIZE      "Enlarge the window to full size"
+    ATL_IDS_SCNEXTWINDOW    "Switch to the next document window"
+    ATL_IDS_SCPREVWINDOW    "Switch to the previous document window"
+    ATL_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
+END
+
+STRINGTABLE 
+BEGIN
+    ATL_IDS_SCRESTORE       "Restore the window to normal size"
+    ATL_IDS_SCTASKLIST      "Activate Task List"
+    ATL_IDS_MDICHILD        "Activate this window"
+END
+
+STRINGTABLE 
+BEGIN
+    ATL_IDS_IDLEMESSAGE     "Ready"
+END
+
+STRINGTABLE 
+BEGIN
+    ATL_IDS_MRU_FILE        "Open this document"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_WINDOW_CLOSE         "Close the active document\nClose"
+    ID_WINDOW_CLOSE_ALL     "Close the all document\nClose All"
+    ID_MAPLAYER_ADD         "Add New Layer\nAdd New Layer"
+    ID_MAPLAYER_REMOVE      "Remove Layer\nRemove Layer"
+    ID_MAPLAYER_UP          "Move Layer Up\nMove Layer Up"
+    ID_MAPLAYER_DOWN        "Move Layer Down\nMove Layer Down"
+    ID_MAPLAYER_DUP         "Duplicate Layer\nDuplicate Layer"
+    ID_MAPLAYER_MERGE       "Merge Layer Down\nMerge Layer Down"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_MAPEDIT_DRAW         "Draw\nDraw Tool"
+    ID_MAPEDIT_ERASE        "Erase\nErase Tool"
+    ID_MAPEDIT_FILL         "Fill\nFill Tool"
+    ID_MAPEDIT_GRID         "Grid\nToggle Grid"
+    ID_MAPEDIT_PROP         "Properties\nProperties"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_VIEW_PROJVIEW        "Show or hide project view\nProject View"
+    ID_FILE_ADDNEWITEM      "Add new resource item\nAdd New Item"
+    ID_MAPTILESET_ADD       "Add Tileset\nAdd Tileset"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_SPRITETILESET_INSERT "Insert Frame\nInsert Frame"
+    ID_MAPTILESET_REMOVE    "Remove Tileset\nRemove Tileset"
+    ID_SPRITEEDIT_DRAW      "Draw Tool\nDraw Tool"
+    ID_SPRITEEDIT_ERASE     "Erase Tool\nErase Tool"
+    ID_SPRITEPREVIEW_PLAY   "Play\nPlay"
+    ID_SPRITEPREVIEW_PAUSE  "Pause\nPause"
+    ID_SPRITEPREVIEW_STOP   "Stop\nStop"
+    ID_SPRITEPREVIEW_PREVFRAME "Previous Frame\nPrevious Frame"
+    ID_SPRITEPREVIEW_NEXTFRAME "Next Frame\nNext Frame"
+    ID_SPRITEEDIT_PROP      "Properties\nProperties"
+    ID_SPRITEPREVIEW_LOOP   "Loop\nLoop"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_LEVELEDIT_REMOVE     "Remove Tool\nRemove"
+    ID_LEVELEDIT_SELITEM    "Select tool\nSelect"
+    ID_LEVELEDIT_PROP       "Properties\nProperties"
+    ID_LEVELEDIT_DELITEM    "Delete item\nDelete"
+    ID_LEVELEDIT_ADDOBJ     "New Object\nNew Object"
+    ID_LEVELEDIT_ADDBKGND   "New Background\nNew Background"
+    ID_FILE_ADDNEWTEXTURE   "Add new texture resource\nNew Texture"
+    ID_FILE_ADDNEWMAP       "Add new map resource\nNew Map"
+    ID_FILE_ADDNEWSPRITE    "Add new sprite resource\nNew Sprite"
+    ID_FILE_ADDNEWOBJECT    "Add new texture resource\nNew Texture"
+    ID_FILE_ADDNEWLEVEL     "Add new level resource\nNew Level"
+    ID_LEVELEDIT_MOVEITEM   "Move tool\nMove"
+    ID_LEVELEDIT_MOVEUP     "Move up\nMove Up"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_LEVELEDIT_MOVEDOWN   "Move down\nMove Down"
+    ID_LEVELEDIT_TOPMOST    "Move topmost\nMove Topmost"
+    ID_LEVELEDIT_BOTTOMMOST "Move bottommost\nMove Bottommost"
+    ID_PROJECT_RUNTHEGAME   "Play the game\nPlay"
+    ID_PROJECT_CREATEEXECUTABLE 
+                            "Create stand alone executable\nCreate Executable"
+    ID_LEVELEDIT_LEVELUP    "Level Up\nLevel Up"
+    ID_LEVELEDIT_LEVELDOWN  "Level Down\nLevel Down"
+    ID_LEVELEDIT_GRID       "Snap\nToggle Snap"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_PROJECT_NEWSEARCHPATH "Add new search path\nNew Search Path"
+    ID_HELP_CHECKFORUPDATE  "Check for Update\nCheckUpdate"
+    ID_STGESCRIPT_SOURCE    "Source View\nSource"
+    ID_STGESCRIPT_COMPILE   "Compile\nCompile"
+    ID_MAPEDIT_OPTION       "Option\nOption"
+    ID_STGESCRIPT_VIEW      "Particle View\nParticle"
+    ID_LEVELEDIT_ALIGNLEFT  "Align Left\nAlign Left"
+    ID_LEVELEDIT_ALIGNRIGHT "Align Right\nAlign Right"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_SPRITEEDIT_INSERT    "Insert Frame\nInsert Frame"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_LEVELEDIT_ADDTEXBG   "New Texture Background\nNew Texture Bg"
+    ID_LEVELEDIT_ADDMAPBG   "New Map Background\nNew Map Bg"
+    ID_FILE_ADDNEWSCRIPT    "Add new script resource\nNew Script"
+    ID_FILE_ADDNEWAUDIO     "Add new audio resource\nNew Audio"
+    ID_PROJECT_CREATEPACKAGE "Create a good package\nCreate Package"
+    ID_PROJECT_PLAYFILE     "Play a good package file\nPlay "
+    ID_VIEW_OUTPUTWINDOW    "Show or hide output window\nOutput"
+    ID_LEVELEDIT_ADDCOLBG   "New Color Background\nNew Color Bg"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_FILE_ADDNEWSTGE      "Add new particle script resource\nNew Particle Script"
+    ID_VIEW_SHOWFPS         "Show or hide FPS"
+    ID_FILE_ADDNEWDEPENDENCY "Add new dependency resource\nNew Dependency"
+    ID_HELP_GOODAPIREFERENCE "API Help\nGoto API Ref Page"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_LEVELEDIT_ALIGNTOP   "Align Top\nAlign Top"
+    ID_LEVELEDIT_ALIGNBOTTOM "Align Bottom\nAlign Bottom"
+    ID_PROJECT_CREATEZIPPACKAGE "Create a zip package\nCreate Zip"
+    ID_PROJECT_RUNTHISLEVEL "Play this level\nPlay This Level"
+    ID_LEVELEDIT_ADDDUMMY   "New dummy\nNew Dummy"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "res\\good.exe.manifest"
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
