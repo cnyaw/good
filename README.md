@@ -1,7 +1,7 @@
 # Cross platform 2D game editor/player
 
 Android player download https://play.google.com/store/apps/details?id=weilican.good <br/>
-Windows editor download http://good-ed.smallworld.idv.tw/wiki/index.php?title=Download
+Windows editor download http://good-ed.smallworld.idv.tw/wiki/index.php?title=Download <br/>
 Blog https://good-ed.blogspot.com/ <br/>
 API Reference http://good-ed.smallworld.idv.tw/wiki/index.php?title=Good_API_Reference
 
