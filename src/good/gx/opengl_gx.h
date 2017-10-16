@@ -272,6 +272,14 @@ public:
     flush();
   }
 
+  template<class T>
+  void checkFlush(const T &tex)
+  {
+    if (tex != GLImageResource::inst().lastTex || MAX_OBJ == obj_index) {
+      flush();
+    }
+  }
+
   void flush()
   {
     if (obj_index) {
@@ -367,9 +375,7 @@ public:
       }
     }
 
-    if (img.mSur->tex != GLImageResource::inst().lastTex || MAX_OBJ == obj_index) {
-      flush();
-    }
+    checkFlush(img.mSur->tex);
 
     applyObjTransform(x, y, srcw, srch, xscale, yscale, rot);
 
@@ -417,9 +423,7 @@ public:
       return false;
     }
 
-    if (imgWhitePixel.mSur->tex != GLImageResource::inst().lastTex || MAX_OBJ == obj_index) {
-      flush();
-    }
+    checkFlush(imgWhitePixel.mSur->tex);
 
     applyObjTransform(x, y, w, h, xscale, yscale, rot);
 
@@ -461,9 +465,7 @@ public:
 
   bool drawTex(int x, int y, GL_Surface<GLImageResource> *pSur, int w, int h, unsigned int color)
   {
-    if (pSur != GLImageResource::inst().lastTex || MAX_OBJ == obj_index) {
-      flush();
-    }
+    checkFlush(pSur);
 
     Mat4 mat;
     mat.setIdentity();
