@@ -692,19 +692,18 @@ public:
 
   bool addFileSystem(std::string const& ssname, std::istream& stream)
   {
-    int curPos = (int)stream.tellg();
-    stream.seekg(0, std::ios_base::end);
-    int lenStream = (int)stream.tellg() - curPos;
-    stream.seekg(curPos, std::ios_base::beg);
-
-    unsigned int crc32 = 0;
-    if (!sw2::Util::crc32(crc32, stream, lenStream)) {
-      trace("calc stream file system crc32 failed!");
-      return false;
-    }
-
     char name[256];
     if (ssname.empty()) {
+      int curPos = (int)stream.tellg();
+      stream.seekg(0, std::ios_base::end);
+      int lenStream = (int)stream.tellg() - curPos;
+      stream.seekg(curPos, std::ios_base::beg);
+      unsigned int crc32 = 0;
+      if (!sw2::Util::crc32(crc32, stream, lenStream)) {
+        trace("calc stream file system crc32 failed!");
+        return false;
+      }
+      stream.seekg(curPos, std::ios_base::beg);
       sprintf(name, "stream;%x;%x", lenStream, crc32);
     } else {
       strcpy(name, ssname.c_str());
@@ -714,7 +713,6 @@ public:
       return true;
     }
 
-    stream.seekg(curPos, std::ios_base::beg);
     if (!mAr->addFileSystem(stream)) {
       trace("add stream file system '%s' failed!", name);
       return false;
