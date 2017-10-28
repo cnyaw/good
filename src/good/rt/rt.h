@@ -54,7 +54,7 @@ extern "C" {
 // #define GOOD_SUPPORT_ANDROID_IMG
 // Is enable android system image decoder.
 //
-// #define GOOD_REDNER_WITH_DIRTY_FLAG
+// #define GOOD_RENDER_WITH_DIRTY_FLAG
 // Render screen only when dirty flag is set.
 //
 

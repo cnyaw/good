@@ -147,7 +147,7 @@ JNIEXPORT jboolean JNICALL Java_weilican_good_goodJniLib_step(JNIEnv *env, jobje
   int y = (int)(mousey * g.mRes.mHeight / (float)g.height);
 
   g.doTrigger((int)keys, x, y);
-#ifdef GOOD_REDNER_WITH_DIRTY_FLAG
+#ifdef GOOD_RENDER_WITH_DIRTY_FLAG
   if (g.mDirty) {
     g.renderAll(g.gx);
   }
