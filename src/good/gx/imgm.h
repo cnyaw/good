@@ -244,7 +244,7 @@ public:
       mImg[name] = sur;
       return &mImg[name];
     } else {
-      SW2_TRACE_ERROR("load image resource %s failed", name.c_str());
+      SW2_TRACE_ERROR("load image stream %s failed", name.c_str());
       mImg[name] = sur;
       return 0;
     }
@@ -263,6 +263,24 @@ public:
       return &mImg[name];
     } else {
       SW2_TRACE_ERROR("create char img %s failed", name.c_str());
+      mImg[name] = sur;
+      return 0;
+    }
+  }
+
+  RectT const* getImage(std::string const& name, GxImage &img)
+  {
+    typename std::map<std::string, RectT>::const_iterator it = mImg.find(name);
+    if (mImg.end() != it) {
+      return &it->second;
+    }
+
+    RectT sur;
+    if (((T*)this)->LoadSurface(img, sur)) {
+      mImg[name] = sur;
+      return &mImg[name];
+    } else {
+      SW2_TRACE_ERROR("load image %s failed", name.c_str());
       mImg[name] = sur;
       return 0;
     }

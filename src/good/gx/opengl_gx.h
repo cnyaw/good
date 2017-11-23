@@ -14,8 +14,6 @@
 #include "imgm.h"
 #include "mat4.h"
 
-#include "white_pixel.h"
-
 namespace good {
 
 namespace gx {
@@ -179,6 +177,11 @@ public:
   static GLImage getImage(std::string const& name, int size, int ch, bool bAntiAlias)
   {
     return GLImage(GLImageResource::inst().getImage(name, size, ch, bAntiAlias));
+  }
+
+  static GLImage getImage(std::string const& name, GxImage &img)
+  {
+    return GLImage(GLImageResource::inst().getImage(name, img));
   }
 };
 
@@ -415,8 +418,10 @@ public:
   bool fillSolidColor(int x, int y, int w, int h, unsigned int color, float rot, float xscale, float yscale)
   {
     if (!imgWhitePixel.isValid()) {
-      std::string s((const char*)WHITE_PIXEL_MOD, sizeof(WHITE_PIXEL_MOD));
-      imgWhitePixel = GLImage::getImage("fillSolidColor_whitepixel", s);
+      GxImage img;
+      img.create(1, 1, 4);
+      *(unsigned int*)img.dat = 0xffffffff;
+      imgWhitePixel = GLImage::getImage("fillSolidColor_whitepixel", img);
     }
 
     if (!imgWhitePixel.isValid()) {
