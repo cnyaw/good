@@ -3,15 +3,13 @@ local SCR_W, SCR_H = Good.GetWindowSize()
 TestBlock = {}
 
 TestBlock.OnCreate = function(param)
+  param.dirx = math.random(1,5)
   if (math.random(2) == 1) then
-    param.dirx = -1 * math.random(1,5)
-  else
-    param.dirx = 1 * math.random(1,5)
+    param.dirx = -1 * param.dirx
   end
+  param.diry = math.random(1,5)
   if (math.random(2) == 1) then
-    param.diry = -1 * math.random(1,5)
-  else
-    param.diry = 1 * math.random(1,5)
+    param.diry = -1 * param.diry
   end
 end
 
