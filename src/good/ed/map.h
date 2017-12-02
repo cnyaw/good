@@ -153,10 +153,9 @@ public:
       for (int i = 0; i < mPatWidth; i++) {
         int tile = pat[idx++];
         int x = cx + i, y = cy + j;
-        if (0 > x || w <= x || 0 > y || h <= y) {
-          continue;
+        if (0 <= x && w > x && 0 <= y && h > y) {
+          map.mData[x + y * w] = tile;
         }
-        map.mData[x + y * w] = tile;
       }
     }
   }
@@ -208,7 +207,7 @@ public:
     mSaveData = map.mData;              // Save whole tiledata.
 
     int depth = 0;
-    fill_(x, y, mTile, map.mData[x + map.mWidth * y], depth);
+    fill_i(x, y, mTile, map.mData[x + map.mWidth * y], depth);
 
     return true;
   }
@@ -230,7 +229,7 @@ public:
     TileDataT const& map = PrjT::inst().getMap(mMapId);
 
     int depth = 0;
-    fill_(mPosX, mPosY, mTile, map.mData[mPosX + map.mWidth * mPosY], depth);
+    fill_i(mPosX, mPosY, mTile, map.mData[mPosX + map.mWidth * mPosY], depth);
 
     return true;
   }
@@ -239,7 +238,7 @@ public:
   // Helper.
   //
 
-  void fill_(int x, int y, int fill, int border, int& depth)
+  void fill_i(int x, int y, int fill, int border, int& depth)
   {
     TileDataT& map = PrjT::inst().getMap(mMapId);
 
@@ -260,10 +259,10 @@ public:
     map.mData[xy] = fill;
 
     depth += 1;
-    fill_(x + 1, y, fill, border, depth);
-    fill_(x - 1, y, fill, border, depth);
-    fill_(x, y + 1, fill, border, depth);
-    fill_(x, y - 1, fill, border, depth);
+    fill_i(x + 1, y, fill, border, depth);
+    fill_i(x - 1, y, fill, border, depth);
+    fill_i(x, y + 1, fill, border, depth);
+    fill_i(x, y - 1, fill, border, depth);
     depth -= 1;
   }
 };
@@ -461,9 +460,7 @@ public:
   bool loadGrid(sw2::Ini& sec, std::string const& sgrid, int range, std::vector<GridLine>& lines)
   {
     std::vector<int> v;
-    v.assign(
-        std::istream_iterator<int>(std::stringstream((std::string)sec[sgrid].value)),
-        std::istream_iterator<int>());
+    v.assign(std::istream_iterator<int>(std::stringstream((std::string)sec[sgrid].value)), std::istream_iterator<int>());
 
     for (size_t i = 0; i < v.size(); ) {
 

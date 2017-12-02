@@ -106,18 +106,12 @@ public:
 
   virtual bool undo()
   {
-    return SpriteDataT::insertFrame(
-                          PrjT::inst().getSprite(mSpriteId),
-                          mIdxRemove,
-                          mFrame,
-                          mTime);
+    return SpriteDataT::insertFrame(PrjT::inst().getSprite(mSpriteId), mIdxRemove, mFrame, mTime);
   }
 
   virtual bool redo()
   {
-    return SpriteDataT::removeFrame(
-                          PrjT::inst().getSprite(mSpriteId),
-                          mIdxRemove);
+    return SpriteDataT::removeFrame(PrjT::inst().getSprite(mSpriteId), mIdxRemove);
   }
 };
 

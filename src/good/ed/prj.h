@@ -458,7 +458,6 @@ public:
         //
 
         MapT const& map = getMap(obj.mMapId);
-
         rc = sw2::IntRect(0, 0, map.mWidth * map.mTileset.mTileWidth, map.mHeight * map.mTileset.mTileHeight);
       }
       break;
