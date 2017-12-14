@@ -581,11 +581,12 @@ void getRep(int idObj, bool &bRepX, bool &bRepY) const
   }
 }
 
-int getResLevelId(const char* name) const
+template<class MapT>
+int getResIdByName(const MapT &m, const char* name) const
 {
   if (name) {
-    std::map<int, LevelT>::const_iterator it = mRes.mLevel.begin();
-    for (; mRes.mLevel.end() != it; ++it) {
+    MapT::const_iterator it = m.begin();
+    for (; m.end() != it; ++it) {
       if (it->second.getName() == name) {
         return it->first;
       }
@@ -594,17 +595,14 @@ int getResLevelId(const char* name) const
   return -1;
 }
 
+int getResLevelId(const char* name) const
+{
+  return getResIdByName(mRes.mLevel, name);
+}
+
 int getResMapId(const char* name) const
 {
-  if (name) {
-    std::map<int, MapT>::const_iterator it = mRes.mMap.begin();
-    for (; mRes.mMap.end() != it; ++it) {
-      if (it->second.getName() == name) {
-        return it->first;
-      }
-    }
-  }
-  return -1;
+  return getResIdByName(mRes.mMap, name);
 }
 
 void getResMapSize(int idMap, int &cx, int &cy) const
@@ -618,41 +616,17 @@ void getResMapSize(int idMap, int &cx, int &cy) const
 
 int getResSoundId(const char* name) const
 {
-  if (name) {
-    std::map<int, SoundT>::const_iterator it = mRes.mSnd.begin();
-    for (; mRes.mSnd.end() != it; ++it) {
-      if (it->second.getName() == name) {
-        return it->first;
-      }
-    }
-  }
-  return -1;
+  return getResIdByName(mRes.mSnd, name);
 }
 
 int getResSpriteId(const char* name) const
 {
-  if (name) {
-    std::map<int, SpriteT>::const_iterator it = mRes.mSprite.begin();
-    for (; mRes.mSprite.end() != it; ++it) {
-      if (it->second.getName() == name) {
-        return it->first;
-      }
-    }
-  }
-  return -1;
+  return getResIdByName(mRes.mSprite, name);
 }
 
 int getResTexId(const char* name) const
 {
-  if (name) {
-    std::map<int, TextureT>::const_iterator it = mRes.mTex.begin();
-    for (; mRes.mTex.end() != it; ++it) {
-      if (it->second.getName() == name) {
-        return it->first;
-      }
-    }
-  }
-  return -1;
+  return getResIdByName(mRes.mTex, name);
 }
 
 void getResTexSize(int idTex, int &w, int &h) const
