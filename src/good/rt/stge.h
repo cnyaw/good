@@ -108,9 +108,18 @@ bool triggerStge()
 // API.
 //
 
-void bindParticle(int idParticle, int idObj, int iObjMgr)
+bool iObjMgrValid(int iObjMgr) const
 {
   if (0 > iObjMgr || GOOD_MAX_STGE_OBJ_MGR <= iObjMgr) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+void bindParticle(int idParticle, int idObj, int iObjMgr)
+{
+  if (!iObjMgrValid(iObjMgr)) {
     return;
   }
 
@@ -128,7 +137,7 @@ void bindParticle(int idParticle, int idObj, int iObjMgr)
 
 void bindTask(int idTask, int idObj, int iObjMgr)
 {
-  if (0 > iObjMgr || GOOD_MAX_STGE_OBJ_MGR <= iObjMgr) {
+  if (!iObjMgrValid(iObjMgr)) {
     return;
   }
 
@@ -142,7 +151,7 @@ void bindTask(int idTask, int idObj, int iObjMgr)
 
 int getFirstParticle(int iObjMgr) const
 {
-  if (0 > iObjMgr || GOOD_MAX_STGE_OBJ_MGR <= iObjMgr) {
+  if (!iObjMgrValid(iObjMgr)) {
     return -1;
   } else {
     return mObjMgr[iObjMgr].objects.first();
@@ -151,7 +160,7 @@ int getFirstParticle(int iObjMgr) const
 
 int getFirstTask(int iObjMgr) const
 {
-  if (0 > iObjMgr || GOOD_MAX_STGE_OBJ_MGR <= iObjMgr) {
+  if (!iObjMgrValid(iObjMgr)) {
     return -1;
   } else {
     return mObjMgr[iObjMgr].actions.first();
@@ -160,7 +169,7 @@ int getFirstTask(int iObjMgr) const
 
 int getNextParticle(int idCur, int iObjMgr) const
 {
-  if (0 > iObjMgr || GOOD_MAX_STGE_OBJ_MGR <= iObjMgr) {
+  if (!iObjMgrValid(iObjMgr)) {
     return -1;
   } else {
     return mObjMgr[iObjMgr].objects.next(idCur);
@@ -169,7 +178,7 @@ int getNextParticle(int idCur, int iObjMgr) const
 
 int getNextTask(int idCur, int iObjMgr) const
 {
-  if (0 > iObjMgr || GOOD_MAX_STGE_OBJ_MGR <= iObjMgr) {
+  if (!iObjMgrValid(iObjMgr)) {
     return -1;
   } else {
     return mObjMgr[iObjMgr].actions.next(idCur);
@@ -178,7 +187,7 @@ int getNextTask(int idCur, int iObjMgr) const
 
 int getParticleBind(int idParticle, int iObjMgr) const
 {
-  if (0 <= iObjMgr && GOOD_MAX_STGE_OBJ_MGR > iObjMgr) {
+  if (iObjMgrValid(iObjMgr)) {
     const ParticleMgrT& om = mObjMgr[iObjMgr];
     if (om.objects.isUsed(idParticle)) {
       return om.objects[idParticle].idBind;
@@ -189,7 +198,7 @@ int getParticleBind(int idParticle, int iObjMgr) const
 
 int getParticleCount(int iObjMgr) const
 {
-  if (0 > iObjMgr || GOOD_MAX_STGE_OBJ_MGR <= iObjMgr) {
+  if (!iObjMgrValid(iObjMgr)) {
     return 0;
   } else {
     return mObjMgr[iObjMgr].objects.size();
@@ -198,7 +207,7 @@ int getParticleCount(int iObjMgr) const
 
 float getParticleDirection(int idParticle, int iObjMgr) const
 {
-  if (0 <= iObjMgr && GOOD_MAX_STGE_OBJ_MGR > iObjMgr) {
+  if (iObjMgrValid(iObjMgr)) {
     const ParticleMgrT& om = mObjMgr[iObjMgr];
     if (om.objects.isUsed(idParticle)) {
       return om.objects[idParticle].direction;
@@ -209,7 +218,7 @@ float getParticleDirection(int idParticle, int iObjMgr) const
 
 void getParticlePos(int idParticle, float &x, float &y, int iObjMgr) const
 {
-  if (0 <= iObjMgr && GOOD_MAX_STGE_OBJ_MGR > iObjMgr) {
+  if (iObjMgrValid(iObjMgr)) {
     const ParticleMgrT& om = mObjMgr[iObjMgr];
     if (om.objects.isUsed(idParticle)) {
       x = om.objects[idParticle].x + om.offsetX;
@@ -220,7 +229,7 @@ void getParticlePos(int idParticle, float &x, float &y, int iObjMgr) const
 
 int getTaskBind(int idTask, int iObjMgr) const
 {
-  if (0 <= iObjMgr && GOOD_MAX_STGE_OBJ_MGR > iObjMgr) {
+  if (iObjMgrValid(iObjMgr)) {
     const ParticleMgrT& om = mObjMgr[iObjMgr];
     if (om.actions.isUsed(idTask)) {
       std::map<int, int>::const_iterator it = om.idBind.find(idTask);
@@ -234,7 +243,7 @@ int getTaskBind(int idTask, int iObjMgr) const
 
 int getTaskCount(int iObjMgr) const
 {
-  if (0 > iObjMgr || GOOD_MAX_STGE_OBJ_MGR <= iObjMgr) {
+  if (!iObjMgrValid(iObjMgr)) {
     return 0;
   } else {
     return mObjMgr[iObjMgr].actions.size();
@@ -243,9 +252,7 @@ int getTaskCount(int iObjMgr) const
 
 float getUserData(int idParticle, int index, int iObjMgr) const
 {
-  if (0 <= iObjMgr &&
-      GOOD_MAX_STGE_OBJ_MGR > iObjMgr &&
-      0 <= index && 4 > index) {
+  if (iObjMgrValid(iObjMgr) && 0 <= index && 4 > index) {
     const ParticleMgrT& om = mObjMgr[iObjMgr];
     if (om.objects.isUsed(idParticle)) {
       return om.objects[idParticle].user[index];
@@ -256,7 +263,7 @@ float getUserData(int idParticle, int index, int iObjMgr) const
 
 bool isStgeActive(int iObjMgr) const
 {
-  if (0 <= iObjMgr && GOOD_MAX_STGE_OBJ_MGR > iObjMgr) {
+  if (iObjMgrValid(iObjMgr)) {
     return mObjMgr[iObjMgr].active;
   } else {
     return false;
@@ -265,7 +272,7 @@ bool isStgeActive(int iObjMgr) const
 
 void killAllParticle(int iObjMgr)
 {
-  if (0 > iObjMgr || GOOD_MAX_STGE_OBJ_MGR <= iObjMgr) {
+  if (!iObjMgrValid(iObjMgr)) {
     return;
   }
 
@@ -279,7 +286,7 @@ void killAllParticle(int iObjMgr)
 
 void killAllTask(int iObjMgr)
 {
-  if (0 > iObjMgr || GOOD_MAX_STGE_OBJ_MGR <= iObjMgr) {
+  if (!iObjMgrValid(iObjMgr)) {
     return;
   }
 
@@ -293,25 +300,21 @@ void killAllTask(int iObjMgr)
 
 void killParticle(int idParticle, int iObjMgr)
 {
-  if (0 > iObjMgr || GOOD_MAX_STGE_OBJ_MGR <= iObjMgr) {
-    return;
+  if (iObjMgrValid(iObjMgr)) {
+    mObjMgr[iObjMgr].freeObject(idParticle);
   }
-
-  mObjMgr[iObjMgr].freeObject(idParticle);
 }
 
 void killTask(int idTask, int iObjMgr)
 {
-  if (0 > iObjMgr || GOOD_MAX_STGE_OBJ_MGR <= iObjMgr) {
-    return;
+  if (iObjMgrValid(iObjMgr)) {
+    mObjMgr[iObjMgr].freeAction(idTask);
   }
-
-  mObjMgr[iObjMgr].freeAction(idTask);
 }
 
 int runStgeScript(const char* script, float *x, float *y, int iObjMgr)
 {
-  if (script && 0 <= iObjMgr && GOOD_MAX_STGE_OBJ_MGR > iObjMgr) {
+  if (script && iObjMgrValid(iObjMgr)) {
     ParticleMgrT& om = mObjMgr[iObjMgr];
     return om.run(script, x ? *x - om.offsetX : 0, y ? *y - om.offsetY : 0);
   } else {
@@ -328,7 +331,7 @@ void setPlayer(int idPlayer)
 
 void setParticleDirection(int idParticle, float newdir, int iObjMgr)
 {
-  if (0 > iObjMgr || GOOD_MAX_STGE_OBJ_MGR <= iObjMgr) {
+  if (!iObjMgrValid(iObjMgr)) {
     return;
   }
 
@@ -340,7 +343,7 @@ void setParticleDirection(int idParticle, float newdir, int iObjMgr)
 
 void setParticlePos(int idParticle, float newx, float newy, int iObjMgr)
 {
-  if (0 > iObjMgr || GOOD_MAX_STGE_OBJ_MGR <= iObjMgr) {
+  if (!iObjMgrValid(iObjMgr)) {
     return;
   }
 
@@ -353,16 +356,14 @@ void setParticlePos(int idParticle, float newx, float newy, int iObjMgr)
 
 void setStgeActive(bool bActive, int iObjMgr)
 {
-  if (0 > iObjMgr || GOOD_MAX_STGE_OBJ_MGR <= iObjMgr) {
-    return;
+  if (iObjMgrValid(iObjMgr)) {
+    mObjMgr[iObjMgr].active = bActive;
   }
-
-  mObjMgr[iObjMgr].active = bActive;
 }
 
 void setTaskDirection(int idTask, float newdir, int iObjMgr)
 {
-  if (0 > iObjMgr || GOOD_MAX_STGE_OBJ_MGR <= iObjMgr) {
+  if (!iObjMgrValid(iObjMgr)) {
     return;
   }
 
@@ -374,7 +375,7 @@ void setTaskDirection(int idTask, float newdir, int iObjMgr)
 
 void setUserData(int idParticle, int index, float data, int iObjMgr)
 {
-  if (0 > iObjMgr || GOOD_MAX_STGE_OBJ_MGR <= iObjMgr) {
+  if (!iObjMgrValid(iObjMgr)) {
     return;
   }
 
