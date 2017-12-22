@@ -585,7 +585,7 @@ template<class MapT>
 int getResIdByName(const MapT &m, const char* name) const
 {
   if (name) {
-    MapT::const_iterator it = m.begin();
+    typename MapT::const_iterator it = m.begin();
     for (; m.end() != it; ++it) {
       if (it->second.getName() == name) {
         return it->first;
