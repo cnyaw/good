@@ -36,7 +36,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
   return 0;
 }
 #else
-# include "AtlOpengl.h"
 # include "../good/app/wtl_player.h"
 
 #include "../ed/resource1.h"

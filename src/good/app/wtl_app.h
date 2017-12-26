@@ -11,6 +11,8 @@
 
 #pragma once
 
+#include "AtlOpengl.h"
+
 #define GOOD_SUPPORT_GDIPLUS
 #define GOOD_WTL_PLAYER
 

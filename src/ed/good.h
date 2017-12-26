@@ -113,7 +113,6 @@ enum APP_GOOD_RESOURCE_TYPE
 # pragma comment(lib, "SDL.lib")
 # pragma comment(lib, "SDLmain.lib")
 #else
-# include "AtlOpengl.h"
 # include "../good/app/wtl_player.h"    // Imply enable GOOD_SUPPORT_GDIPLUS.
 #endif
 
