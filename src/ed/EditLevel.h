@@ -1632,7 +1632,7 @@ public:
       SIZE sz = {lvl.mWidth, lvl.mHeight};
       mEditView.SetScrollSize(sz);
     }
-    if (0 != idItem) {                  // Item changed.
+    if (lvl.isObj(idItem)) {            // Item changed.
       PrjT::LevelT& lvl = PrjT::inst().getLevel(mId);
       PrjT::ObjectT const& o = lvl.getObj(idItem);
       CTreeItem hTree = FinTreeItemById(idItem);
