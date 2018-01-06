@@ -40,11 +40,6 @@ void renderMapBg(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect cons
 {
   MapT const& map = mRes.getMap(a.mResId);
 
-  ImgT img = getImage(a, mRes.getTex(map.mTileset.mTextureId).mFileName);
-  if (!img.isValid()) {
-    return;
-  }
-
   int w = map.mWidth * map.mTileset.mTileWidth;
   int h = map.mHeight * map.mTileset.mTileHeight;
 
@@ -79,6 +74,11 @@ void renderMapBg(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect cons
       if (0 < top) {
         top -= 1;
         rcm.top -= map.mTileset.mTileHeight;
+      }
+
+      ImgT img = getImage(a, mRes.getTex(map.mTileset.mTextureId).mFileName);
+      if (!img.isValid()) {
+        return;
       }
 
       gx.setAnchor(a.mAnchorX, a.mAnchorY);
@@ -144,17 +144,17 @@ void renderSprite(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect con
     return;
   }
 
-  ImgT img = getImage(a, mRes.getTex(spr.mTileset.mTextureId).mFileName);
-  if (!img.isValid()) {
-    return;
-  }
-
   sw2::IntRect rc;
   rc = sw2::IntRect(0, 0, spr.mTileset.mTileWidth, spr.mTileset.mTileHeight);
   rc.offset((int)cx + spr.mOffsetX, (int)cy + spr.mOffsetY);
 
   sw2::IntRect rcm;
   if (!rc.intersect(rcv, rcm)) {
+    return;
+  }
+
+  ImgT img = getImage(a, mRes.getTex(spr.mTileset.mTextureId).mFileName);
+  if (!img.isValid()) {
     return;
   }
 
