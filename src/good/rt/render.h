@@ -87,35 +87,21 @@ void renderMapBg(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect cons
   }
 }
 
-template<class GxT>
-void renderTexBg(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, unsigned int color, float rot, float xscale, float yscale) const
+ImgT getTexBgImg(ActorT const& a) const
 {
-  ImgT img;
-
   if (-1 != a.mResId) {
     TextureT const& tex = mRes.getTex(a.mResId);
-    img = getImage(a, tex.mFileName);
+    return getImage(a, tex.mFileName);
   } else {
-    img = a.mImg;                   // This is a char map obj, use cache immediately.
+    return a.mImg;                      // This is a char map obj, use cache immediately.
   }
+}
 
-  if (!img.isValid()) {
-    return;
-  }
+void calcRenderTexBgParam(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, float xscale, float yscale, int w, int h, int &sw, int &sh, int &nx, int &ny, int &xbound, int &ybound) const
+{
+  sw = std::abs((int)(w * xscale));
+  sh = std::abs((int)(h * yscale));
 
-  int w, h;
-  if (a.mDim.empty()) {
-    w = img.getWidth();
-    h = img.getHeight();
-  } else {
-    w = a.mDim.width();
-    h = a.mDim.height();
-  }
-
-  int sw = std::abs((int)(w * xscale));
-  int sh = std::abs((int)(h * yscale));
-
-  int nx, ny, xbound, ybound;
   calcDrawTileParam(a.mRepX, a.mRepY, (int)cx, (int)cy, sw, sh, rcv, nx, ny, xbound, ybound);
 
   if (a.mRepX) {
@@ -125,11 +111,43 @@ void renderTexBg(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect cons
   if (a.mRepY) {
     ybound += (int)(sh * a.mAnchorY);
   }
+}
 
-  for (int ay = ny + rcv.top; -sh <= ay && ay < ybound; ay += sh) {
-    for (int ax = nx + rcv.left; -sw <= ax && ax < xbound; ax += sw) {
-      gx.setAnchor(a.mAnchorX, a.mAnchorY);
-      gx.drawImage((int)ax, (int)ay, img, a.mDim.left, a.mDim.top, w, h, color, rot, xscale, yscale);
+template<class GxT>
+void renderTexBg(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, unsigned int color, float rot, float xscale, float yscale) const
+{
+  if (a.mDim.empty()) {
+    ImgT img = getTexBgImg(a);
+    if (!img.isValid()) {               // Pre validate img.
+      return;
+    }
+    int w = img.getWidth();
+    int h = img.getHeight();
+    int sw, sh, nx, ny, xbound, ybound;
+    calcRenderTexBgParam(a, cx, cy, rcv, xscale, yscale, w, h, sw, sh, nx, ny, xbound, ybound);
+    for (int ay = ny + rcv.top; -sh <= ay && ay < ybound; ay += sh) {
+      for (int ax = nx + rcv.left; -sw <= ax && ax < xbound; ax += sw) {
+        gx.setAnchor(a.mAnchorX, a.mAnchorY);
+        gx.drawImage((int)ax, (int)ay, img, a.mDim.left, a.mDim.top, w, h, color, rot, xscale, yscale);
+      }
+    }
+  } else {
+    int w = a.mDim.width();
+    int h = a.mDim.height();
+    int sw, sh, nx, ny, xbound, ybound;
+    calcRenderTexBgParam(a, cx, cy, rcv, xscale, yscale, w, h, sw, sh, nx, ny, xbound, ybound);
+    ImgT img;
+    for (int ay = ny + rcv.top; -sh <= ay && ay < ybound; ay += sh) {
+      for (int ax = nx + rcv.left; -sw <= ax && ax < xbound; ax += sw) {
+        if (!img.isValid()) {
+          img = getTexBgImg(a);
+          if (!img.isValid()) {         // Later validate img.
+            return;
+          }
+        }
+        gx.setAnchor(a.mAnchorX, a.mAnchorY);
+        gx.drawImage((int)ax, (int)ay, img, a.mDim.left, a.mDim.top, w, h, color, rot, xscale, yscale);
+      }
     }
   }
 }
