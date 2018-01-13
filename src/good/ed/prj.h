@@ -468,12 +468,11 @@ public:
         // Background is an image.
         //
 
-        ImgT img = LoadTileset(getTex(obj.mTextureId).mFileName);
-        if (!img.isValid()) {
-          return;
-        }
-
         if (obj.mDim.empty()) {
+          ImgT img = LoadTileset(getTex(obj.mTextureId).mFileName);
+          if (!img.isValid()) {
+            return;
+          }
           rc = sw2::IntRect(0, 0, img.getWidth(), img.getHeight());
         } else {
           rc = sw2::IntRect(0, 0, obj.mDim.width(), obj.mDim.height());
