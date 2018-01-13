@@ -224,19 +224,6 @@ public:
 
   void OnCloseCmd(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    if (IDOK == nID) {
-      PrjT::TextureT& tex = PrjT::inst().getTex(mView.mId);
-      ImgT img = ImgT::getImage(tex.mFileName);
-      if (img.isValid()) {
-        RECT &dim = mView.mDim;
-        if (0 == dim.left && 0 == dim.top &&
-            img.getWidth() == dim.right - dim.left &&
-            img.getHeight() == dim.bottom - dim.top) {
-          SetRectEmpty(&dim);
-        }
-      }
-    }
-
     EndDialog(nID);
   }
 

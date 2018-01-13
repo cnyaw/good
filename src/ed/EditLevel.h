@@ -222,6 +222,12 @@ public:
       lvl.getObj(id).setBgColor(mAddCol);
     }
 
+    if (TOOL_ADDTEXBG == mTool) {
+      sw2::IntRect rc;
+      PrjT::inst().getObjDim<ImgT>(lvl.getObj(id), rc);
+      lvl.getObj(id).setDim(0, 0, rc.width(), rc.height());
+    }
+
     //
     // Add new item to obj tree.
     //
