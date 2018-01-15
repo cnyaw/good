@@ -101,70 +101,34 @@ public:
   // Get res opt.
   //
 
-  SoundT& getSnd(int id)
-  {
-    return mRes.getSnd(id);
+#define IMPL_GET_RESOURCE_ITEM(ResName, ResType) \
+  ResType& get ## ResName(int id) \
+  { \
+    return mRes.get ## ResName(id); \
+  } \
+  ResType const& get ## ResName(int id) const \
+  { \
+    return mRes.get ## ResName(id); \
   }
 
-  SoundT const& getSnd(int id) const
-  {
-    return mRes.getSnd(id);
+#define IMPL_GET_STRING_RESOURCE_ITEM(ResName) \
+  std::string get ## ResName(int id) const \
+  { \
+    return mRes.get ## ResName(id); \
   }
 
-  TextureT& getTex(int id)
-  {
-    return mRes.getTex(id);
-  }
+  IMPL_GET_RESOURCE_ITEM(Snd, SoundT)
+  IMPL_GET_RESOURCE_ITEM(Tex, TextureT)
+  IMPL_GET_RESOURCE_ITEM(Map, MapT)
+  IMPL_GET_RESOURCE_ITEM(Sprite, SpriteT)
+  IMPL_GET_RESOURCE_ITEM(Level, LevelT)
 
-  TextureT const& getTex(int id) const
-  {
-    return mRes.getTex(id);
-  }
+  IMPL_GET_STRING_RESOURCE_ITEM(Script)
+  IMPL_GET_STRING_RESOURCE_ITEM(StgeScript)
+  IMPL_GET_STRING_RESOURCE_ITEM(Dep)
 
-  MapT& getMap(int id)
-  {
-    return mRes.getMap(id);
-  }
-
-  MapT const& getMap(int id) const
-  {
-    return mRes.getMap(id);
-  }
-
-  SpriteT& getSprite(int id)
-  {
-    return mRes.getSprite(id);
-  }
-
-  SpriteT const& getSprite(int id) const
-  {
-    return mRes.getSprite(id);
-  }
-
-  LevelT& getLevel(int id)
-  {
-    return mRes.getLevel(id);
-  }
-
-  LevelT const& getLevel(int id) const
-  {
-    return mRes.getLevel(id);
-  }
-
-  std::string getScript(int id) const
-  {
-    return mRes.getScript(id);
-  }
-
-  std::string getStgeScript(int id) const
-  {
-    return mRes.getStgeScript(id);
-  }
-
-  std::string getDep(int id) const
-  {
-    return mRes.getDep(id);
-  }
+#undef IMPL_GET_RESOURCE_ITEM
+#undef IMPL_GET_STRING_RESOURCE_ITEM
 
   //
   // Load override.

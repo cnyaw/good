@@ -158,6 +158,9 @@ public:
   IMPL_GET_STRING_RESOURCE_ITEM(StgeScript)
   IMPL_GET_STRING_RESOURCE_ITEM(Dep)
 
+#undef IMPL_GET_RESOURCE_ITEM
+#undef IMPL_GET_STRING_RESOURCE_ITEM
+
   //
   // Load resource.
   //
