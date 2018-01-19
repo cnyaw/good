@@ -476,13 +476,7 @@ void getDim_i(ActorT const& a, int& left, int& top, int& width, int& height) con
 
   case ActorT::TYPES_TEXBG:
     if (a.mDim.empty()) {
-      ImgT img;
-      if (-1 != a.mResId) {
-        TextureT const& tex = mRes.getTex(a.mResId);
-        img = getImage(a, tex.mFileName);
-      } else {
-        img = a.mImg;                   // This is a char map obj, use cache immediately.
-      }
+      ImgT img = getTexBgImg_i(a);
       if (img.isValid()) {
         width = img.getWidth();
         height = img.getHeight();

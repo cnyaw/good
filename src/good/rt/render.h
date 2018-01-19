@@ -87,7 +87,7 @@ void renderMapBg(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect cons
   }
 }
 
-ImgT getTexBgImg(ActorT const& a) const
+ImgT getTexBgImg_i(ActorT const& a) const
 {
   if (-1 != a.mResId) {
     TextureT const& tex = mRes.getTex(a.mResId);
@@ -117,7 +117,7 @@ template<class GxT>
 void renderTexBg(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, unsigned int color, float rot, float xscale, float yscale) const
 {
   if (a.mDim.empty()) {
-    ImgT img = getTexBgImg(a);
+    ImgT img = getTexBgImg_i(a);
     if (!img.isValid()) {               // Pre validate img.
       return;
     }
@@ -140,7 +140,7 @@ void renderTexBg(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect cons
     for (int ay = ny + rcv.top; -sh <= ay && ay < ybound; ay += sh) {
       for (int ax = nx + rcv.left; -sw <= ax && ax < xbound; ax += sw) {
         if (!img.isValid()) {
-          img = getTexBgImg(a);
+          img = getTexBgImg_i(a);
           if (!img.isValid()) {         // Later validate img.
             return;
           }
