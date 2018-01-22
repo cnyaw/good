@@ -1054,6 +1054,8 @@ public:
 
     mEditor.SelTreeItem(mCurSel);
 
+    ScrollObjToView(id);
+
     Invalidate(FALSE);
   }
 
