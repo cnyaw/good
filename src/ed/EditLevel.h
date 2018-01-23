@@ -212,20 +212,9 @@ public:
       ptCur.y = ptCur.y / sh * sh;
     }
 
-    PrjT::LevelT& lvl = PrjT::inst().getLevel(mEditor.mId);
-    int id = lvl.addObj(mAddObj, mAddMap, mAddTex, ptCur.x, ptCur.y);
+    int id = PrjT::inst().addLevelObj<ImgT>(mEditor.mId, mAddObj, mAddMap, mAddTex, mAddCol, ptCur.x, ptCur.y);
     if (-1 == id) {
       return;
-    }
-
-    if (TOOL_ADDCOLBG == mTool) {
-      lvl.getObj(id).setBgColor(mAddCol);
-    }
-
-    if (TOOL_ADDTEXBG == mTool) {
-      sw2::IntRect rc;
-      PrjT::inst().getObjDim<ImgT>(lvl.getObj(id), rc);
-      lvl.getObj(id).setDim(0, 0, rc.width(), rc.height());
     }
 
     //
