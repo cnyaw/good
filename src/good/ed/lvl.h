@@ -958,7 +958,7 @@ public:
   //
 
   template<class ImgT>
-  bool doAlignObjects(std::vector<int> const& ids, int type)
+  bool doAlignObjs(std::vector<int> const& ids, int type)
   {
     //
     // Type: 0(left), 1(right), 2(top), 3(bottom).
@@ -1029,25 +1029,25 @@ public:
   template<class ImgT>
   bool alignLeft(std::vector<int> const& ids)
   {
-    return doAlignObjects<ImgT>(ids, 0);
+    return doAlignObjs<ImgT>(ids, 0);
   }
 
   template<class ImgT>
   bool alignRight(std::vector<int> const& ids)
   {
-    return doAlignObjects<ImgT>(ids, 1);
+    return doAlignObjs<ImgT>(ids, 1);
   }
 
   template<class ImgT>
   bool alignTop(std::vector<int> const& ids)
   {
-    return doAlignObjects<ImgT>(ids, 2);
+    return doAlignObjs<ImgT>(ids, 2);
   }
 
   template<class ImgT>
   bool alignBottom(std::vector<int> const& ids)
   {
-    return doAlignObjects<ImgT>(ids, 3);
+    return doAlignObjs<ImgT>(ids, 3);
   }
 
   //
