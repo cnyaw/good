@@ -17,8 +17,6 @@ namespace good {
 
 namespace gx {
 
-extern const unsigned char char5_8[];   // Font 5x8, bitmap.
-
 //
 // Imgp implementation.
 //
@@ -337,6 +335,8 @@ public:
   // Text.
   //
 
+  const unsigned char* getChar5_8() const;
+
   Imgp& drawText(const char* str, int len, int x, int y, unsigned int color)
   {
     if (0 == dat) {
@@ -351,7 +351,7 @@ public:
     for (int i = 0; i < len; i++) {
 
       int c = str[i] - ' ';
-      const unsigned char* p = char5_8;
+      const unsigned char* p = getChar5_8();
       while (c --) {
         while (0xff != *p++) {
         }
@@ -386,8 +386,10 @@ public:
   }
 };
 
-const unsigned char char5_8[] =         // font 5x8, bitmap
+const unsigned char* Imgp::getChar5_8() const
 {
+  static const unsigned char char5_8[] = // font 5x8, bitmap
+  {
     0x00, 0x00, 0xff,                   // space
     0xf4, 0xff,                         // !
     0xc0, 0x00, 0xc0, 0xff,             // "
@@ -483,7 +485,9 @@ const unsigned char char5_8[] =         // font 5x8, bitmap
     0xfe, 0xff,                         // |
     0x82, 0x6c, 0x10, 0xff,             // }
     0x40, 0x80, 0x40, 0x80, 0xff,       // ~
-};
+  };
+  return char5_8;
+}
 
 class ImgpImageResource
 {
