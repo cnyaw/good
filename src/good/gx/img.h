@@ -230,7 +230,7 @@ public:
       return;
     }
 
-    int *pdat = (int*)dat;
+    unsigned int *pdat = (unsigned int*)dat;
     for (int i = 0; i < w; i++) {
       for (int j = 0; j < h / 2; j++) {
         unsigned int tmp = pdat[i + w * j];

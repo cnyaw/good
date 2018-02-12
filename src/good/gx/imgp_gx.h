@@ -246,18 +246,7 @@ public:
 
   Imgp& flip()
   {
-    if (0 == dat) {
-      return *this;
-    }
-
-    unsigned int* p = (unsigned int*)dat;
-    for (int i = 0; i < w; i++) {
-      for (int j = 0; j < h / 2; j++) {
-        unsigned int tmp = p[i + w * j];
-        p[i + w * j] = p[i + w * (h - j - 1)];
-        p[i + w * (h - j - 1)] = tmp;
-      }
-    }
+    GxImage::flip();
 
     return *this;
   }
