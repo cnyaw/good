@@ -17,8 +17,6 @@ namespace good {
 
 namespace gx {
 
-namespace imgp {
-
 extern const unsigned char char5_8[];   // Font 5x8, bitmap.
 
 //
@@ -487,11 +485,9 @@ const unsigned char char5_8[] =         // font 5x8, bitmap
     0x40, 0x80, 0x40, 0x80, 0xff,       // ~
 };
 
-} // imgp
-
 class ImgpImageResource
 {
-  std::map<std::string, imgp::Imgp*> mImg;
+  std::map<std::string, Imgp*> mImg;
 
   ImgpImageResource()
   {
@@ -512,7 +508,7 @@ public:
 
   void clear()
   {
-    for (std::map<std::string, imgp::Imgp*>::iterator it = mImg.begin();
+    for (std::map<std::string, Imgp*>::iterator it = mImg.begin();
          mImg.end() != it;
          ++it) {
       delete it->second;
@@ -526,9 +522,9 @@ public:
     return mImg.end() != mImg.find(name);
   }
 
-  imgp::Imgp* getImage(std::string const& name)
+  Imgp* getImage(std::string const& name)
   {
-    std::map<std::string, imgp::Imgp*>::const_iterator it = mImg.find(name);
+    std::map<std::string, Imgp*>::const_iterator it = mImg.find(name);
     if (mImg.end() != it) {
       return it->second;
     }
@@ -550,14 +546,14 @@ public:
     return getImage(name, s);
   }
 
-  imgp::Imgp* getImage(std::string const& name, std::string const& stream)
+  Imgp* getImage(std::string const& name, std::string const& stream)
   {
-    std::map<std::string, imgp::Imgp*>::const_iterator it = mImg.find(name);
+    std::map<std::string, Imgp*>::const_iterator it = mImg.find(name);
     if (mImg.end() != it) {
       return it->second;
     }
 
-    imgp::Imgp* sur = new imgp::Imgp;
+    Imgp* sur = new Imgp;
     if (0 == sur) {
       return 0;
     }
@@ -578,7 +574,7 @@ class ImgpImage : public good::gx::Image<ImgpImage>
 {
 public:
 
-  const imgp::Imgp* mSur;
+  const Imgp* mSur;
   bool mHasKeyColor;
   unsigned int mKeyColor;
 
@@ -586,7 +582,7 @@ public:
   {
   }
 
-  ImgpImage(const imgp::Imgp* sur) : mSur(sur), mHasKeyColor(false), mKeyColor(0)
+  ImgpImage(const Imgp* sur) : mSur(sur), mHasKeyColor(false), mKeyColor(0)
   {
   }
 
@@ -641,9 +637,9 @@ class ImgpGraphics : public good::gx::Graphics<ImgpGraphics>
 {
 public:
 
-  imgp::Imgp& mSur;
+  Imgp& mSur;
 
-  ImgpGraphics(imgp::Imgp& sur) : mSur(sur)
+  ImgpGraphics(Imgp& sur) : mSur(sur)
   {
   }
 
