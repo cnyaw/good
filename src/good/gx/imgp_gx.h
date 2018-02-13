@@ -29,9 +29,17 @@ public:
   // Convert.
   //
 
-  static unsigned int rgb(unsigned char R, unsigned char G, unsigned char B)
+  unsigned int rgba(unsigned int color) const
   {
-    return B + (G << 8) + (R << 16);
+#if defined(DEVKIT_PSP) || defined(_android_)
+    unsigned char b = (color & 0xff);
+    unsigned char g = ((color >> 8) & 0xff);
+    unsigned char r = ((color >> 16) & 0xff);
+    unsigned char a = ((color >> 24) & 0xff);
+    return r | (g << 8) | (b << 16) | (a << 24);
+#else
+    return color;
+#endif
   }
 
   //
@@ -66,7 +74,6 @@ public:
     float alpha1 = 1.0f - alpha;
     for (int i = x, ii = 0; i < x + w && i < this->w; i ++, ii ++) {
       for (int j = y, jj = 0; j < y + h && j < this->h; j ++, jj ++) {
-
         unsigned char* pd = (unsigned char*)((unsigned int*)dat + i + this->w * j);
         unsigned char b = pd[0];
         unsigned char g = pd[1];
@@ -75,7 +82,6 @@ public:
         unsigned char B = ps[0];
         unsigned char G = ps[1];
         unsigned char R = ps[2];
-
         pd[0] = (unsigned char)(b * alpha1 + B * alpha);
         pd[1] = (unsigned char)(g * alpha1 + G * alpha);
         pd[2] = (unsigned char)(r * alpha1 + R * alpha);
@@ -90,6 +96,8 @@ public:
       return *this;
     }
 
+    color = rgba(color);
+
     unsigned int *p = (unsigned int*)dat;
     if (0 != color) {
       for (int i = w * h - 1; 0 <= i; i--) {
@@ -102,7 +110,7 @@ public:
     return *this;
   }
 
-  Imgp& fill(unsigned int clr, int x, int y, int w, int h)
+  Imgp& fill(unsigned int color, int x, int y, int w, int h)
   {
     if (0 == dat) {
       return *this;
@@ -118,10 +126,12 @@ public:
       y = 0;
     }
 
+    color = rgba(color);
+
     unsigned int *p = (unsigned int*)dat;
     for (int i = x; i < x + w && i < this->w; i++) {
       for (int j = y; j < y + h && j < this->h; j++) {
-        p[i + this->w * j] = clr;
+        p[i + this->w * j] = color;
       }
     }
 
@@ -205,6 +215,8 @@ public:
       srcy -= y;
       y = 0;
     }
+
+    keycolor = rgba(keycolor);
 
     unsigned int *p = (unsigned int*)dat;
     for (int i = x, ii = srcx; i < x + w && i < this->w; i ++, ii++) {
@@ -346,6 +358,8 @@ public:
     if (-1 == len) {
       len = (int)strlen(str);
     }
+
+    color = rgba(color);
 
     unsigned int *pdat = (unsigned int*)dat;
     for (int i = 0; i < len; i++) {
