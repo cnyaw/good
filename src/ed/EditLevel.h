@@ -525,6 +525,7 @@ public:
       GetObjDim(inst, rc);
 
       if (!::IntersectRect(&rcm, &rc, &rcv)) {
+        DoPaintChildObj(memdc, lvl, inst.mObjIdx, rcv, redPen, redDotPen, pinkPen, grayPen);
         continue;
       }
 
@@ -698,9 +699,7 @@ public:
       // Draw child objects.
       //
 
-      if (!inst.mObjIdx.empty()) {
-        DoPaintChildObj(memdc, lvl, inst.mObjIdx, rcv, redPen, redDotPen, pinkPen, grayPen);
-      }
+      DoPaintChildObj(memdc, lvl, inst.mObjIdx, rcv, redPen, redDotPen, pinkPen, grayPen);
     }
   }
 
