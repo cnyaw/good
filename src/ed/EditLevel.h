@@ -245,11 +245,15 @@ public:
 
   void ScrollObjToView(int idObj)
   {
+    PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
+    if (!lvl.isObj(idObj)) {
+      return;
+    }
+
     RECT rcv;
     POINT pt, sz, ptDP;
     PrepareDraw(rcv, pt, sz, ptDP);
 
-    PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
     PrjT::ObjectT const& inst = lvl.getObj(idObj);
 
     RECT rcm, rc;
