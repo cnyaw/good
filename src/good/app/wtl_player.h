@@ -120,6 +120,7 @@ public:
     if (showOutput && showTexInfo) {
       showTexInfo = false;
     }
+    mDirty = true;
   }
 
   void ToggleTexInfo()
