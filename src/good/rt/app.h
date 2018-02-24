@@ -387,7 +387,9 @@ public:
     vsnprintf(buf, sizeof(buf), format, va);
     va_end(va);
 
-    return static_cast<T*>(this)->doTrace(buf);
+    static_cast<T*>(this)->doTrace(buf);
+
+    mDirty = true;                      // Force redraw.
   }
 
   bool openUrl(std::string const& url) const
