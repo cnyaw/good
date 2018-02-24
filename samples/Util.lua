@@ -157,3 +157,18 @@ Good.SetAlpha = function(id, a)
   clr = clr - x + y
   Good.SetBgColor(id, clr)
 end
+
+Good.GetScreenPos = function(id)
+  local x, y = Good.GetPos(id)
+  local idLvl = Good.GetLevelId()
+  while (id ~= idLvl) do
+    id = Good.GetParent(id)
+    if (-1 == id or idLvl == id) then
+      break
+    end
+    local lx, ly = Good.GetPos(id)
+    x = x + lx
+    y = y + ly
+  end
+  return x, y
+end
