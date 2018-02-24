@@ -466,6 +466,15 @@ void getDim_i(ActorT const& a, int& left, int& top, int& width, int& height) con
     }
     break;
 
+  case ActorT::TYPES_COLBG:
+    if (a.mDim.empty()) {
+      width = height = 32;
+    } else {
+      width = a.mDim.width();
+      height = a.mDim.height();
+    }
+    break;
+
   case ActorT::TYPES_SPRITE:
     {
       SpriteT const& spr = mRes.getSprite(a.mResId);
