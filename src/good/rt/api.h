@@ -869,20 +869,25 @@ int pickObj_i(ActorT const& a, int type, float x, float y, int idRes, int idResX
 
   sw2::IntRect rc;
 
-  if (ActorT::TYPES_COLBG == a.mResType) {
-    rc = sw2::IntRect(0, 0, a.mDim.width(), a.mDim.height());
-  } else if (ActorT::TYPES_TEXBG == a.mResType) {
-    int l, t, w, h;
-    getDim_i(a, l, t, w, h);
-    rc = sw2::IntRect(0, 0, w, h);
-  } else if (ActorT::TYPES_SPRITE == a.mResType) {
-    SpriteT const& spr = mRes.getSprite(a.mResId);
-    rc = sw2::IntRect(0, 0, spr.mTileset.mTileWidth, spr.mTileset.mTileHeight);
-    rc.offset(spr.mOffsetX, spr.mOffsetY);
-  } else if (ActorT::TYPES_MAPBG == a.mResType) {
-    MapT const& map = mRes.getMap(a.mResId);
-    rc = sw2::IntRect(0, 0, map.mWidth * map.mTileset.mTileWidth, map.mHeight * map.mTileset.mTileHeight);
-  } else if (ActorT::TYPES_DUMMY != a.mResType) {
+  switch (a.mResType)
+  {
+  case ActorT::TYPES_COLBG:
+  case ActorT::TYPES_TEXBG:
+  case ActorT::TYPES_MAPBG:
+  case ActorT::TYPES_SPRITE:
+    {
+      int l, t, w, h;
+      getDim_i(a, l, t, w, h);
+      rc = sw2::IntRect(0, 0, w, h);
+      if (ActorT::TYPES_SPRITE == a.mResType) {
+        SpriteT const& spr = mRes.getSprite(a.mResId);
+        rc.offset(spr.mOffsetX, spr.mOffsetY);
+      }
+    }
+    break;
+  case ActorT::TYPES_DUMMY:
+    break;
+  default:
     return -1;
   }
 
