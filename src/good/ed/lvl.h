@@ -588,6 +588,13 @@ template<class PrjT>
 class Level : public good::Level<Object<PrjT> >
 {
 public:
+  enum ALIGNMENT {
+    ALIGN_LEFT = 0,
+    ALIGN_RIGHT,
+    ALIGN_TOP,
+    ALIGN_BOTTOM
+  };
+
   typedef Object<PrjT> ObjectT;
 
   UndoImpl mUndo;
@@ -994,16 +1001,16 @@ public:
 
       switch (type)
       {
-      case 0:                           // Align left.
+      case ALIGN_LEFT:
         offsetX = rcPivot.left - rc.left;
         break;
-      case 1:                           // Align right.
+      case ALIGN_RIGHT:
         offsetX = rcPivot.right - rc.right;
         break;
-      case 2:                           // Align top.
+      case ALIGN_TOP:
         offsetY = rcPivot.top - rc.top;
         break;
-      case 3:                           // Align bottom.
+      case ALIGN_BOTTOM:
         offsetY = rcPivot.bottom - rc.bottom;
         break;
       }
@@ -1029,25 +1036,25 @@ public:
   template<class ImgT>
   bool alignLeft(std::vector<int> const& ids)
   {
-    return doAlignObjs<ImgT>(ids, 0);
+    return doAlignObjs<ImgT>(ids, ALIGN_LEFT);
   }
 
   template<class ImgT>
   bool alignRight(std::vector<int> const& ids)
   {
-    return doAlignObjs<ImgT>(ids, 1);
+    return doAlignObjs<ImgT>(ids, ALIGN_RIGHT);
   }
 
   template<class ImgT>
   bool alignTop(std::vector<int> const& ids)
   {
-    return doAlignObjs<ImgT>(ids, 2);
+    return doAlignObjs<ImgT>(ids, ALIGN_TOP);
   }
 
   template<class ImgT>
   bool alignBottom(std::vector<int> const& ids)
   {
-    return doAlignObjs<ImgT>(ids, 3);
+    return doAlignObjs<ImgT>(ids, ALIGN_BOTTOM);
   }
 
   //
