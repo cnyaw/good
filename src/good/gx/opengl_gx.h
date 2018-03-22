@@ -190,7 +190,7 @@ class GLGraphics : public Graphics<GLImage>
 public:
   enum {
     NUM_VERT_PER_OBJ = 4,
-    MAX_OBJ = 256
+    MAX_OBJ = 1024
   };
 
   int SCREEN_W, SCREEN_H;
