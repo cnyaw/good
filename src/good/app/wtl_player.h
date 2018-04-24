@@ -27,7 +27,9 @@ public:
     CX_FONT2 = 8,
     CY_FONT2 = 16,
     CCH_ROW_FONT2 = 15,
-    COLOR_TRACE = 0x90ffffff
+    COLOR_TRACE = 0x90ffffff,
+    SHOW_TIP_TIME = 6 * 60,             // 6 seconds.
+    DEFAULT_LOG_LINES_PER_PAGE = 30,
   };
 
   typedef WtlApplicationImpl<PlayerT> BaseT;
@@ -68,7 +70,7 @@ public:
 
     int nPage = mRes.mHeight / CY_FONT2;
     if (0 == nPage) {
-      nPage = 30;
+      nPage = DEFAULT_LOG_LINES_PER_PAGE;
     }
 
     if (iLogs + nPage < (int)logs.size()) {
@@ -76,7 +78,7 @@ public:
     }
 
     if (!isTipShown && 0 == timeTip) {
-      timeTip = 6 * 60;                 // Show tip for 6 seconds.
+      timeTip = SHOW_TIP_TIME;
     }
   }
 
