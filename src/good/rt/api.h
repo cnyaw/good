@@ -146,6 +146,21 @@ int findChild(int idObj, const char* name) const
   return -1;
 }
 
+int genCanvas(int w, int h)
+{
+  int newid = mCanvas.alloc();
+  if (-1 == newid) {
+    return -1;
+  }
+
+  if (!mCanvas[newid].create(w, h, 4)) {
+    mCanvas.free(newid);
+    return -1;
+  }
+
+  return newid;
+}
+
 int genDummy(int idParent, const char* script)
 {
   int newid = allocActor();
@@ -777,6 +792,16 @@ void killAllChild(int idObj)
   }
 
   mDirty = true;
+}
+
+void killCanvas(int id)
+{
+  if (!mCanvas.isUsed(id)) {
+    return;
+  }
+
+  mCanvas[id].release();
+  mCanvas.free(id);
 }
 
 void killObj(int idObj)

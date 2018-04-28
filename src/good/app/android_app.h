@@ -12,6 +12,7 @@
 
 #define GOOD_SUPPORT_ANDROID_IMG
 #include "../gx/opengl_gx.h"
+#include "../gx/imgp_gx.h"
 #include "../snd/android_snd.h"
 
 namespace good {
@@ -19,7 +20,7 @@ namespace good {
 namespace rt {
 
 template<class AppT>
-class AndroidApplication : public Application<AppT, gx::GLImage, snd::AndroidSound>
+class AndroidApplication : public Application<AppT, gx::GLImage, snd::AndroidSound, gx::Imgp>
 {
 public:
 

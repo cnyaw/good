@@ -21,6 +21,7 @@
 #endif
 
 #include "../gx/sdl_gx.h"
+#include "../gx/imgp_gx.h"
 #include "../snd/audiere_snd.h"
 
 namespace good {
@@ -29,7 +30,7 @@ namespace rt {
 
 #define TICK (int)(1000 / 60)
 
-class SDLApplication : public Application<SDLApplication, gx::SDLImage, snd::AudiereSound>
+class SDLApplication : public Application<SDLApplication, gx::SDLImage, snd::AudiereSound, gx::Imgp>
 {
   SDLApplication() : gx(mScreen)
   {

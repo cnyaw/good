@@ -19,7 +19,7 @@ namespace good {
 
 namespace rt {
 
-template<class T, class ImgT, class SndT>
+template<class T, class ImgT, class SndT, class CanvasT>
 class Application
 {
 public:
@@ -102,6 +102,12 @@ public:
 
   std::vector<std::string> mPackageStack; // Real package stack.
   std::vector<std::string> mCallStack;  // Next package to play.
+
+  //
+  // Canvas.
+  //
+
+  sw2::ObjectPool<CanvasT, 8> mCanvas;
 
   //
   // Overridable.
@@ -374,6 +380,11 @@ public:
 #endif
 
     mActors.clear();
+
+    for (int i = mCanvas.first(); -1 != i; i = mCanvas.next(i)) {
+      mCanvas[i].release();
+    }
+    mCanvas.clear();
 
     mRoot = -1;
   }

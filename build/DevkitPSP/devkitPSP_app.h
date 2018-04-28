@@ -12,14 +12,14 @@
 #pragma once
 
 #include "devkitpsp_gx.h"
-
+#include "gx/imgp_gx.h"
 #include "snd/openal_snd.h"
 
 namespace good {
 
 namespace rt {
 
-class DevkitPspApplication : public Application<DevkitPspApplication, gx::DevkitPSPImage, snd::ALSound>
+class DevkitPspApplication : public Application<DevkitPspApplication, gx::DevkitPSPImage, snd::ALSound, gx::Imgp>
 {
   DevkitPspApplication()
   {

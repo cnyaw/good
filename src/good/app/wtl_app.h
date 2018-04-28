@@ -17,6 +17,7 @@
 #define GOOD_WTL_PLAYER
 
 #include "../gx/opengl_gx.h"
+#include "../gx/imgp_gx.h"
 #include "../snd/audiere_snd.h"
 
 namespace good {
@@ -29,7 +30,7 @@ class WtlApplicationImpl :
   public CIdleHandler,
   public CMessageFilter,
   public COpenGL<AppT>,
-  public Application<AppT, ImgT, SndT>
+  public Application<AppT, ImgT, SndT, gx::Imgp>
 {
 public:
   DECLARE_FRAME_WND_CLASS(NULL, IDR_MAINFRAME)

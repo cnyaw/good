@@ -1540,6 +1540,20 @@ public:
   }
 
   //
+  // [in] w, h [out] id
+  //
+
+  static int GenCanvas(lua_State* L)
+  {
+    int w = luaL_checkint(L, 1);
+    int h = luaL_checkint(L, 2);
+
+    lua_pushinteger(L, AppT::getInst().genCanvas(w, h));
+
+    return 1;
+  }
+
+  //
   // [in] [out] bAntiAlias
   //
 
@@ -1548,6 +1562,19 @@ public:
     lua_pushinteger(L, AppT::getInst().mAntiAlias ? 1 : 0);
 
     return 1;
+  }
+
+  //
+  // [in] id [out]
+  //
+
+  static int KillCanvas(lua_State* L)
+  {
+    int id = luaL_checkint(L, 1);
+
+    AppT::getInst().killCanvas(id);
+
+    return 0;
   }
 
   //
@@ -1588,7 +1615,9 @@ public:
       {"DrawImage", &DrawImage},
       {"DrawText", &DrawText},
       {"FillRect", &FillRect},
+      {"GenCanvas", &GenCanvas},
       {"GetAntiAlias", &GetAntiAlias},
+      {"KillCanvas", &KillCanvas},
       {"SetAnchor", &GraphicsSetAnchor},
       {"SetAntiAlias", &SetAntiAlias},
       { 0 }
