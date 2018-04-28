@@ -243,10 +243,10 @@ public:
 
     unsigned char* p = (unsigned char*)dat;
     for (int i = 0; i < w * h; i++) {
-      *p++;                             // Blue.
+      (void)*p++;                       // Blue.
       *p++ = 0;                         // Green.
       *p++ = 0;                         // Red.
-      *p++;                             // Alpha.
+      (void)*p++;                       // Alpha.
     }
 
     return *this;
@@ -286,9 +286,9 @@ public:
     unsigned char* p = (unsigned char*)dat;
     for (int i = 0; i < w * h; i++) {
       *p++ = 0;                         // Blue.
-      *p++;                             // Green.
+      (void)*p++;                       // Green.
       *p++ = 0;                         // Red.
-      *p++;                             // Alpha.
+      (void)*p++;                       // Alpha.
     }
 
     return *this;
@@ -336,8 +336,8 @@ public:
     for (int i = 0; i < w * h; i++) {
       *p++ = 0;                         // Blue.
       *p++ = 0;                         // Green.
-      *p++;                             // Red.
-      *p++;                             // Alpha.
+      (void)*p++;                       // Red.
+      (void)*p++;                       // Alpha.
     }
 
     return *this;
