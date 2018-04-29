@@ -80,7 +80,7 @@ Fire.OnDraw = function(param)
     for j = 0, FH - 1 do
       local idx = i + j * (2 + FW)
       local color = param.Colors[math.floor(param.bmp[idx])]
-      Graphics.FillRect((i - 1) * PW, j * PH, PW, PH, color)
+      Graphics.FillRect(-1, (i - 1) * PW, j * PH, PW, PH, color)
     end
   end
 end

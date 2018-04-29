@@ -124,10 +124,14 @@ void exit()
   }
 }
 
-void fillRect(int x, int y, int w, int h, unsigned int color, float rot = .0f, float scalex = 1.0f, float scaley = 1.0f) const
+void fillRect(int canvas, int x, int y, int w, int h, unsigned int color, float rot = .0f, float scalex = 1.0f, float scaley = 1.0f)
 {
-  ((T*)this)->gx.fillSolidColor(x, y, w, h, color, rot, scalex, scaley);
-  mDirty = true;
+  if (!mCanvas.isUsed(canvas)) {
+    ((T*)this)->gx.fillSolidColor(x, y, w, h, color, rot, scalex, scaley);
+    mDirty = true;
+  } else {
+    mCanvas[canvas].fill(color, x, y, w, h);
+  }
 }
 
 int findChild(int idObj, const char* name) const

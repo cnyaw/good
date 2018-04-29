@@ -1503,38 +1503,40 @@ public:
   }
 
   //
-  // [in] x, y, w, h, color[, rot, scalex, scaley] [out]
+  // [in] canvas, x, y, w, h, color[, rot, scalex, scaley] [out]
   //
 
   static int FillRect(lua_State* L)
   {
+    int canvas = luaL_checkint(L, 1);
+
     AppT& app = AppT::getInst();
-    if (!app.mRenderState) {
+    if (!app.mCanvas.isUsed(canvas) && !app.mRenderState) {
       return 0;
     }
 
-    int x = luaL_checkint(L, 1);
-    int y = luaL_checkint(L, 2);
-    int w = luaL_checkint(L, 3);
-    int h = luaL_checkint(L, 4);
-    unsigned int color = (unsigned int)luaL_checknumber(L, 5);
+    int x = luaL_checkint(L, 2);
+    int y = luaL_checkint(L, 3);
+    int w = luaL_checkint(L, 4);
+    int h = luaL_checkint(L, 5);
+    unsigned int color = (unsigned int)luaL_checknumber(L, 6);
 
     lua_Number rot = 0;
-    if (6 <= lua_gettop(L)) {
-      rot = luaL_checknumber(L, 6);
+    if (7 <= lua_gettop(L)) {
+      rot = luaL_checknumber(L, 7);
     }
 
     lua_Number scalex = 1;
-    if (7 <= lua_gettop(L)) {
-      scalex = luaL_checknumber(L, 7);
+    if (8 <= lua_gettop(L)) {
+      scalex = luaL_checknumber(L, 8);
     }
 
     lua_Number scaley = 1;
-    if (8 <= lua_gettop(L)) {
-      scaley = luaL_checknumber(L, 8);
+    if (9 <= lua_gettop(L)) {
+      scaley = luaL_checknumber(L, 9);
     }
 
-    app.fillRect(x, y, w, h, color, (float)rot, (float)scalex, (float)scaley);
+    app.fillRect(canvas, x, y, w, h, color, (float)rot, (float)scalex, (float)scaley);
 
     return 0;
   }
