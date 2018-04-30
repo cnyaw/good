@@ -1204,6 +1204,26 @@ public:
     return 2;
   }
 
+  //
+  // [in] idTex, x, y, idCanvas, sx, sy, sw, sh [out]
+  //
+
+  static int UpdateResTex(lua_State* L)
+  {
+    int idTex = luaL_checkint(L, 1);
+    int x = luaL_checkint(L, 2);
+    int y = luaL_checkint(L, 3);
+    int idCanvas = luaL_checkint(L, 4);
+    int sx = luaL_checkint(L, 5);
+    int sy = luaL_checkint(L, 6);
+    int sw  = luaL_checkint(L, 7);
+    int sh = luaL_checkint(L, 8);
+
+    AppT::getInst().updateResTex(idTex, x, y, idCanvas, sx, sy, sw, sh);
+
+    return 0;
+  }
+
   static bool installResourceModuleApi(lua_State* L)
   {
     static RegApiType ResourceApi[] = {
@@ -1218,6 +1238,7 @@ public:
       {"GetTexSize", &GetTexSize},
       {"GetTileByPos", &GetTileByPos},
       {"GetTileSize", &GetTileSize},
+      {"UpdateTex", &UpdateResTex},
       { 0 }
     };
 

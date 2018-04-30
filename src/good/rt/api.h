@@ -1165,4 +1165,54 @@ void stopAnim(int idObj)
   }
 }
 
+void updateResTex(int idTex, int x, int y, int idCanvas, int sx, int sy, int sw, int sh)
+{
+  if (!mCanvas.isUsed(idCanvas)) {
+    return;
+  }
+
+  if (!mRes.isTex(idTex)) {
+    return;
+  }
+
+  ImgT img = getImage(mRes.getTex(idTex).mFileName);
+  if (!img.isValid()) {
+    return;
+  }
+
+  const CanvasT &c = mCanvas[idCanvas];
+
+  if (c.w < sw) {
+    sw = c.w;
+  }
+
+  if (c.h < sh) {
+    sh = c.h;
+  }
+
+  if (c.w < sx + sw) {
+    sw = c.w - sx;
+  }
+
+  if (c.h < sy + sh) {
+    sh = c.h - sy;
+  }
+
+  if (img.mSur->w < x + sw) {
+    sw = img.mSur->w - x;
+  }
+
+  if (img.mSur->h < y + sh) {
+    sh = img.mSur->h - y;
+  }
+
+  img.mSur->tex->img.draw(img.mSur->left + x, img.mSur->top + y, c, sx, sy, sw, sh);
+
+  if (mRenderState) {
+    ((T*)this)->gx.restoreSur();
+  } else {
+    mTexDirty = true;
+  }
+}
+
 // end of api.h

@@ -273,6 +273,10 @@ void renderAll(GxT& gx) const
 {
   mDirty = false;
   mRenderState = true;
+  if (mTexDirty) {
+    gx.restoreSur();
+    mTexDirty = false;
+  }
   gx.beginDraw(mRes.mWidth, mRes.mHeight);
   render(gx);                           // render may caused dirty flag set, so it will trigger renderAll process next time.
   ((T*)this)->onRender();

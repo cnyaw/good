@@ -81,6 +81,7 @@ public:
   //
 
   mutable bool mDirty;
+  mutable bool mTexDirty;
 
   //
   // Flag for Graphics API.
@@ -275,6 +276,7 @@ public:
 
       static_cast<T*>(this)->onPackageChanged(); // Notify package has change.
       mDirty = true;
+      mTexDirty = false;
 
       return true;
 
