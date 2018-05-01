@@ -83,11 +83,37 @@ void doLuaScript(const char *str, ...)
   va_end(va);
 }
 
-void drawImage(int x, int y, int texId, int srcx, int srcy, int srcw, int srch, unsigned int color, float rot = .0f, float scalex = 1.0f, float scaley = 1.0f) const
+void drawImageToCanvas(int canvas, int x, int y, ImgT img, int srcx, int srcy, int srcw, int srch)
+{
+  if (img.mSur->w < srcw) {
+    srcw = img.mSur->w;
+  }
+
+  if (img.mSur->h < srch) {
+    srch = img.mSur->h;
+  }
+
+  if (img.mSur->w < srcx + srcw) {
+    srcw = img.mSur->w - srcx;
+  }
+
+  if (img.mSur->h < srcy + srch) {
+    srch = img.mSur->h - srcy;
+  }
+
+  CanvasT &c = mCanvas[canvas];
+  c.draw((*(const CanvasT*)&(img.mSur->tex->img)), x, y, srcw, srch, img.mSur->left + srcx, img.mSur->top + srcy);
+}
+
+void drawImage(int canvas, int x, int y, int texId, int srcx, int srcy, int srcw, int srch, unsigned int color, float rot = .0f, float scalex = 1.0f, float scaley = 1.0f)
 {
   ImgT img = getImage(mRes.getTex(texId).mFileName);
-  ((T*)this)->gx.drawImage(x, y, img, srcx, srcy, srcw, srch, color, rot, scalex, scaley);
-  mDirty = true;
+  if (!mCanvas.isUsed(canvas)) {
+    ((T*)this)->gx.drawImage(x, y, img, srcx, srcy, srcw, srch, color, rot, scalex, scaley);
+    mDirty = true;
+  } else {
+    drawImageToCanvas(canvas, x, y, img, srcx, srcy, srcw, srch);
+  }
 }
 
 void drawText(int x, int y, char const *utf8text, int size, unsigned int color) const

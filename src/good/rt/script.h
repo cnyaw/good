@@ -1446,49 +1446,51 @@ public:
   //
 
   //
-  // [in] x, y, texId, srcx, srcy, srcw, srch[, color, rot, scalex, scaley] [out]
+  // [in] canvas, x, y, texId, srcx, srcy, srcw, srch[, color, rot, scalex, scaley] [out]
   //
 
   static int DrawImage(lua_State* L)
   {
+    int canvas = luaL_checkint(L, 1);
+
     AppT& app = AppT::getInst();
-    if (!app.mRenderState) {
+    if (!app.mCanvas.isUsed(canvas) && !app.mRenderState) {
       return 0;
     }
 
-    int x = luaL_checkint(L, 1);
-    int y = luaL_checkint(L, 2);
-    int texId = luaL_checkint(L, 3);
-    int srcx = luaL_checkint(L, 4);
-    int srcy = luaL_checkint(L, 5);
-    int srcw = luaL_checkint(L, 6);
-    int srch = luaL_checkint(L, 7);
+    int x = luaL_checkint(L, 2);
+    int y = luaL_checkint(L, 3);
+    int texId = luaL_checkint(L, 4);
+    int srcx = luaL_checkint(L, 5);
+    int srcy = luaL_checkint(L, 6);
+    int srcw = luaL_checkint(L, 7);
+    int srch = luaL_checkint(L, 8);
 
     if (!app.mRes.isTex(texId)) {
       return 0;
     }
 
     unsigned int color = 0xffffffff;
-    if (8 <= lua_gettop(L)) {
-      color = (unsigned int)luaL_checknumber(L, 8);
+    if (9 <= lua_gettop(L)) {
+      color = (unsigned int)luaL_checknumber(L, 9);
     }
 
     lua_Number rot = 0;
-    if (9 <= lua_gettop(L)) {
-      rot = luaL_checknumber(L, 9);
+    if (10 <= lua_gettop(L)) {
+      rot = luaL_checknumber(L, 10);
     }
 
     lua_Number scalex = 1;
-    if (10 <= lua_gettop(L)) {
-      scalex = luaL_checknumber(L, 10);
+    if (11 <= lua_gettop(L)) {
+      scalex = luaL_checknumber(L, 11);
     }
 
     lua_Number scaley = 1;
-    if (11 <= lua_gettop(L)) {
-      scaley = luaL_checknumber(L, 11);
+    if (12 <= lua_gettop(L)) {
+      scaley = luaL_checknumber(L, 12);
     }
 
-    app.drawImage(x, y, texId, srcx, srcy, srcw, srch, color, (float)rot, (float)scalex, (float)scaley);
+    app.drawImage(canvas, x, y, texId, srcx, srcy, srcw, srch, color, (float)rot, (float)scalex, (float)scaley);
 
     return 0;
   }
