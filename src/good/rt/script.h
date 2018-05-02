@@ -1496,31 +1496,33 @@ public:
   }
 
   //
-  // [in] x, y, text[, size, color] [out]
+  // [in] canvas, x, y, text[, size, color] [out]
   //
 
   static int DrawText(lua_State* L)
   {
+    int canvas = luaL_checkint(L, 1);
+
     AppT& app = AppT::getInst();
-    if (!app.mRenderState) {
+    if (!app.mCanvas.isUsed(canvas) && !app.mRenderState) {
       return 0;
     }
 
-    int x = luaL_checkint(L, 1);
-    int y = luaL_checkint(L, 2);
-    const char* utf8text = luaL_checkstring(L, 3);
+    int x = luaL_checkint(L, 2);
+    int y = luaL_checkint(L, 3);
+    const char* utf8text = luaL_checkstring(L, 4);
 
     int size = GOOD_DEFAULT_TEXT_SIZE;
-    if (4 <= lua_gettop(L)) {
-      size = luaL_checkint(L, 4);
+    if (5 <= lua_gettop(L)) {
+      size = luaL_checkint(L, 5);
     }
 
     unsigned int color = 0xffffffff;
-    if (5 <= lua_gettop(L)) {
-      color = (unsigned int)luaL_checknumber(L, 5);
+    if (6 <= lua_gettop(L)) {
+      color = (unsigned int)luaL_checknumber(L, 6);
     }
 
-    app.drawText(x, y, utf8text, size, color);
+    app.drawText(canvas, x, y, utf8text, size, color);
 
     return 0;
   }

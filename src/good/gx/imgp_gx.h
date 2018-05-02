@@ -153,7 +153,7 @@ public:
     return draw(img, x, y, w, h, 0, 0);
   }
 
-  Imgp& draw(const Imgp& img, int x, int y, int w, int h, int srcx, int srcy)
+  Imgp& draw(const Imgp& img, int x, int y, int w, int h, int srcx, int srcy, unsigned int color = 0xffffffff)
   {
     if (0 == dat || 0 == img.dat) {
       return *this;
@@ -176,7 +176,7 @@ public:
 
     for (int i = x, ii = srcx; i < x + w && i < this->w; i ++, ii++) {
       for (int j = y, jj = srcy; j < y + h && j < this->h; j ++, jj++) {
-        p[i + this->w * j] = p2[ii + img.w * jj];
+        p[i + this->w * j] = p2[ii + img.w * jj] & color;
       }
     }
 

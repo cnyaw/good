@@ -83,7 +83,7 @@ void doLuaScript(const char *str, ...)
   va_end(va);
 }
 
-void drawImageToCanvas(int canvas, int x, int y, ImgT img, int srcx, int srcy, int srcw, int srch)
+void drawImageToCanvas_i(int canvas, int x, int y, ImgT img, int srcx, int srcy, int srcw, int srch, unsigned int color)
 {
   if (img.mSur->w < srcw) {
     srcw = img.mSur->w;
@@ -102,7 +102,7 @@ void drawImageToCanvas(int canvas, int x, int y, ImgT img, int srcx, int srcy, i
   }
 
   CanvasT &c = mCanvas[canvas];
-  c.draw((*(const CanvasT*)&(img.mSur->tex->img)), x, y, srcw, srch, img.mSur->left + srcx, img.mSur->top + srcy);
+  c.draw((*(const CanvasT*)&(img.mSur->tex->img)), x, y, srcw, srch, img.mSur->left + srcx, img.mSur->top + srcy, color);
 }
 
 void drawImage(int canvas, int x, int y, int texId, int srcx, int srcy, int srcw, int srch, unsigned int color, float rot = .0f, float scalex = 1.0f, float scaley = 1.0f)
@@ -112,21 +112,12 @@ void drawImage(int canvas, int x, int y, int texId, int srcx, int srcy, int srcw
     ((T*)this)->gx.drawImage(x, y, img, srcx, srcy, srcw, srch, color, rot, scalex, scaley);
     mDirty = true;
   } else {
-    drawImageToCanvas(canvas, x, y, img, srcx, srcy, srcw, srch);
+    drawImageToCanvas_i(canvas, x, y, img, srcx, srcy, srcw, srch, color);
   }
 }
 
-void drawText(int x, int y, char const *utf8text, int size, unsigned int color) const
+void drawTextToScreen_i(int x, int y, const std::vector<int> &unicode, int size, unsigned int color) const
 {
-  if (0 == utf8text) {
-    return;
-  }
-
-  size = sw2::clamp(size, GOOD_MIN_TEXT_SIZE, GOOD_MAX_TEXT_SIZE);
-
-  std::vector<int> unicode;
-  sw2::Util::utf8ToU16(utf8text, unicode);
-
   int xoffset = 0;
   for (size_t i = 0; i < unicode.size(); i++) {
     ImgT img = getImage(size, unicode[i]);
@@ -139,6 +130,38 @@ void drawText(int x, int y, char const *utf8text, int size, unsigned int color) 
   }
 
   mDirty = true;
+}
+
+void drawTextToCanvas_i(int canvas, int x, int y, const std::vector<int> &unicode, int size, unsigned int color)
+{
+  int xoffset = 0;
+  for (size_t i = 0; i < unicode.size(); i++) {
+    ImgT img = getImage(size, unicode[i]);
+    if (img.isValid()) {
+      drawImageToCanvas_i(canvas, x + xoffset, y, img, 0, 0, img.getWidth(), img.getHeight(), color);
+      xoffset += img.getWidth();
+    } else {
+      xoffset += 10;
+    }
+  }
+}
+
+void drawText(int canvas, int x, int y, char const *utf8text, int size, unsigned int color)
+{
+  if (0 == utf8text) {
+    return;
+  }
+
+  size = sw2::clamp(size, GOOD_MIN_TEXT_SIZE, GOOD_MAX_TEXT_SIZE);
+
+  std::vector<int> unicode;
+  sw2::Util::utf8ToU16(utf8text, unicode);
+
+  if (!mCanvas.isUsed(canvas)) {
+    drawTextToScreen_i(x, y, unicode, size, color);
+  } else {
+    drawTextToCanvas_i(canvas, x, y, unicode, size, color);
+  }
 }
 
 void exit()
