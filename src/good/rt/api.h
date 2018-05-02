@@ -125,7 +125,7 @@ void drawTextToScreen_i(int x, int y, const std::vector<int> &unicode, int size,
       ((T*)this)->gx.drawImage(x + xoffset, y, img, 0, 0, img.getWidth(), img.getHeight(), color, .0f, 1.0f, 1.0f);
       xoffset += img.getWidth();
     } else {
-      xoffset += 10;
+      xoffset += GOOD_DEFAULT_TEXT_OFFSET;
     }
   }
 
@@ -141,7 +141,7 @@ void drawTextToCanvas_i(int canvas, int x, int y, const std::vector<int> &unicod
       drawImageToCanvas_i(canvas, x + xoffset, y, img, 0, 0, img.getWidth(), img.getHeight(), color);
       xoffset += img.getWidth();
     } else {
-      xoffset += 10;
+      xoffset += GOOD_DEFAULT_TEXT_OFFSET;
     }
   }
 }
@@ -453,7 +453,7 @@ int genTextObj(int idParent, char const *utf8text, int size, char const *script)
     if (a.mImg.isValid()) {
       xoffset += a.mImg.getWidth();
     } else {
-      xoffset += 10;
+      xoffset += GOOD_DEFAULT_TEXT_OFFSET;
     }
     mActors[newid].addChild(chid);
   }
