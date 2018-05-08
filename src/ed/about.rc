@@ -73,7 +73,7 @@ BEGIN
     PUSHBUTTON      "Blog",IDC_BUTTON1,7,50,56,17
     PUSHBUTTON      "Forums",IDC_BUTTON2,69,50,56,17
     PUSHBUTTON      "Wiki",IDC_BUTTON3,131,50,56,17
-    LTEXT           "Good Game Editor/Player 1.6.3\n\nCopyright (c) 2017 Waync Cheng",IDC_STATIC,39,15,140,32
+    LTEXT           "Good Game Editor/Player 1.6.4\n\nCopyright (c) 2017 Waync Cheng",IDC_STATIC,39,15,140,32
     ICON            241,IDC_STATIC,7,17,20,20
     LTEXT           "This software uses the following materials:\n\nAudiere-1.9.4\nLua-5.1.4\nWTL-8.1\nyardparser-1.5\nzlib-1.2.8",IDC_STATIC,7,76,180,73,SS_SUNKEN
 END
@@ -104,8 +104,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,6,3,0
- PRODUCTVERSION 1,6,3,0
+ FILEVERSION 1,6,4,0
+ PRODUCTVERSION 1,6,4,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -123,10 +123,10 @@ BEGIN
             VALUE "Comments", "Free Good Engine Game Editor/Player"
             VALUE "CompanyName", "https://good-ed.blogspot.com"
             VALUE "FileDescription", "Good Game Editor/Player"
-            VALUE "FileVersion", "1.6.3.0"
+            VALUE "FileVersion", "1.6.4.0"
             VALUE "LegalCopyright", "Copyright (c) 2017 Waync Cheng"
             VALUE "ProductName", "Good Game Editor/Player"
-            VALUE "ProductVersion", "1.6.3.0"
+            VALUE "ProductVersion", "1.6.4.0"
         END
     END
     BLOCK "VarFileInfo"

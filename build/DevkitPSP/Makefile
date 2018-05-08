@@ -18,7 +18,7 @@ CXXFLAGS = $(CFLAGS)
 ASFLAGS = $(CXXFLAGS)
 
 EXTRA_TARGETS = EBOOT.PBP
-PSP_EBOOT_TITLE = Good devkitPSP 1.6.1
+PSP_EBOOT_TITLE = Good devkitPSP 1.6.4
 PSP_EBOOT_ICON = icon.png
 
 LIBS = -lpspgum -lpspgu -lm -lstdc++ -lz -lpng -ljpeg

@@ -19,7 +19,7 @@
 //
 
 #define GOOD_CHECK_UPDATE_URL "http://good-ed.smallworld.idv.tw/GoodLatestVersion.txt"
-#define CURRENT_GOOD_EDITOR_VERSION "Good-1.6.3"
+#define CURRENT_GOOD_EDITOR_VERSION "Good-1.6.4"
 
 #define CONFIG_FILE_NAME "Config"
 

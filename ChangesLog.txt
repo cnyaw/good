@@ -1,3 +1,17 @@
+Good Game Editor 1.6.4(2018/5/9)
+-----------------------------------------
+
+* 改良關卡編輯器(LevelEditor)中Dummy物件圖示。
+* 地圖物件(Map)或精靈物件(Sprite)只有在實際出現在畫面中時才載入貼圖。
+* 關卡編輯器(LevelEditor)點擊物件階層樹上的物件時畫面立即捲動至該物件。
+* 關卡編輯器(LevelEditor)中物件顯示不可見狀態圖示若父物件為不可見狀態。
+* Util新增Good.GetScreenPos計算物件銀幕絕對座標。
+* 修正取得色塊物件大小尺寸的錯誤。
+* 一個DrawCall最多支援一次畫1024個物件。
+* 新增Graphics.GenCanvas、Graphics.KillCanvas支援建立及刪除虛擬畫布。
+* 新增Resource.UpdateTex支援以虛擬畫面更新貼圖資料。
+* Graphics.FillRect、Graphics.DrawImage及Graphics.DrawText支援繪至虛擬畫布。
+
 Good Game Editor 1.6.3(2017/10/11)
 -----------------------------------------
 

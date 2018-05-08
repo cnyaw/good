@@ -8,7 +8,7 @@
 
   2014/7/6 Waync created
 -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="weilican.good" android:versionCode="9" android:versionName="1.6.3">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="weilican.good" android:versionCode="10" android:versionName="1.6.4">
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
   <application android:label="@string/goodApp_activity" android:icon="@drawable/icon">
     <activity android:name="goodAppActivity"
