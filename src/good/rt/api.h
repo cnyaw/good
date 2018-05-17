@@ -300,7 +300,7 @@ int genObj(int idParent, int idRes, char const *script)
   return newid;
 }
 
-int dupRes(char const *pPkgName, ResT &Res, int idRes)
+int dupRes_i(char const *pPkgName, ResT &Res, int idRes)
 {
   std::map<std::string, std::map<int, int> >::const_iterator itExtPkg = mExternalResMap.find(pPkgName);
   if (mExternalResMap.end() != itExtPkg) {
@@ -397,7 +397,7 @@ int genObjEx(char const *pPkgName, int idParent, int idRes, char const *script)
     return -1;                          // Gen lvl is invalid.
   }
 
-  int idTmpRes = dupRes(pPkgName, Res, idRes);
+  int idTmpRes = dupRes_i(pPkgName, Res, idRes);
   if (-1 != idTmpRes) {
     return genObj(idParent, idTmpRes, script);
   } else {
@@ -653,7 +653,7 @@ void getRep(int idObj, bool &bRepX, bool &bRepY) const
 }
 
 template<class MapT>
-int getResIdByName(const MapT &m, const char* name) const
+int getResIdByName_i(const MapT &m, const char* name) const
 {
   if (name) {
     typename MapT::const_iterator it = m.begin();
@@ -668,12 +668,12 @@ int getResIdByName(const MapT &m, const char* name) const
 
 int getResLevelId(const char* name) const
 {
-  return getResIdByName(mRes.mLevel, name);
+  return getResIdByName_i(mRes.mLevel, name);
 }
 
 int getResMapId(const char* name) const
 {
-  return getResIdByName(mRes.mMap, name);
+  return getResIdByName_i(mRes.mMap, name);
 }
 
 void getResMapSize(int idMap, int &cx, int &cy) const
@@ -687,17 +687,17 @@ void getResMapSize(int idMap, int &cx, int &cy) const
 
 int getResSoundId(const char* name) const
 {
-  return getResIdByName(mRes.mSnd, name);
+  return getResIdByName_i(mRes.mSnd, name);
 }
 
 int getResSpriteId(const char* name) const
 {
-  return getResIdByName(mRes.mSprite, name);
+  return getResIdByName_i(mRes.mSprite, name);
 }
 
 int getResTexId(const char* name) const
 {
-  return getResIdByName(mRes.mTex, name);
+  return getResIdByName_i(mRes.mTex, name);
 }
 
 void getResTexSize(int idTex, int &w, int &h) const

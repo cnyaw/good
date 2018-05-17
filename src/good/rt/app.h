@@ -577,7 +577,7 @@ public:
     {
     case ObjectT::TYPE_SPRITE:
       if (pRes) {
-        a.create(idItem, ActorT::TYPES_SPRITE, dupRes(pPkgName, *pRes, o.mSpriteId));
+        a.create(idItem, ActorT::TYPES_SPRITE, dupRes_i(pPkgName, *pRes, o.mSpriteId));
       } else {
         a.create(idItem, ActorT::TYPES_SPRITE, o.mSpriteId);
       }
@@ -589,7 +589,7 @@ public:
 
     case ObjectT::TYPE_TEXBG:
       if (pRes) {
-        a.create(idItem, ActorT::TYPES_TEXBG, dupRes(pPkgName, *pRes, o.mTextureId));
+        a.create(idItem, ActorT::TYPES_TEXBG, dupRes_i(pPkgName, *pRes, o.mTextureId));
       } else {
         a.create(idItem, ActorT::TYPES_TEXBG, o.mTextureId);
       }
@@ -597,7 +597,7 @@ public:
 
     case ObjectT::TYPE_MAPBG:
       if (pRes) {
-        a.create(idItem, ActorT::TYPES_MAPBG, dupRes(pPkgName, *pRes, o.mMapId));
+        a.create(idItem, ActorT::TYPES_MAPBG, dupRes_i(pPkgName, *pRes, o.mMapId));
       } else {
         a.create(idItem, ActorT::TYPES_MAPBG, o.mMapId);
       }
