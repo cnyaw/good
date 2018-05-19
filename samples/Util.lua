@@ -7,6 +7,13 @@ function PtInRect(x, y, left, top, right, bottom)
   end
 end
 
+function PtInObj(x, y, o)
+  local ox, oy = Good.GetPos(o)
+  local l, t, w, h = Good.GetDim(o)
+  local sx, sy = Good.GetScale(o)
+  return PtInRect(x, y, ox, oy, ox + math.abs(sx) * w, oy + math.abs(sy) * h)
+end
+
 function GenStrObj(parent, x, y, str, texture, charw, charh, color)
   if (nil == str) then
     return -1
