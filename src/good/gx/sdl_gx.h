@@ -79,6 +79,21 @@ public:
     return getImage(name, s);
   }
 
+  static SDL_Surface* createSurface(const GxImage &img)
+  {
+    SDL_Surface* sur = SDL_CreateRGBSurfaceFrom(
+                         (void*)img.dat,
+                         img.w,
+                         img.h,
+                         img.bpp * 8,
+                         4 * ((img.w * img.bpp * 8 + 31) / 32), // Pitch.
+                         0xff0000,
+                         0xff00,
+                         0xff,
+                         0xff000000);
+    return sur;
+  }
+
   SDL_Surface* getImage(std::string const& name, std::string const& stream)
   {
     std::map<std::string, SDL_Surface*>::const_iterator it = mImg.find(name);
@@ -95,17 +110,7 @@ public:
 
     img.convert32();
 
-    SDL_Surface* sur = SDL_CreateRGBSurfaceFrom(
-                         (void*)img.dat,
-                         img.w,
-                         img.h,
-                         img.bpp * 8,
-                         4 * ((img.w * img.bpp * 8 + 31) / 32), // Pitch.
-                         0xff0000,
-                         0xff00,
-                         0xff,
-                         0xff000000);
-
+    SDL_Surface* sur = createSurface(img);
     if (sur) {
       SDL_Surface* sur2 = SDL_DisplayFormatAlpha(sur);
       SDL_FreeSurface(sur);
@@ -175,15 +180,18 @@ public:
       return;
     }
 
-    SDL_LockSurface(mSur);
+    SDL_Surface* sur = SDLImageResource::createSurface(c);
+    if (sur) {
+      SDL_Surface* sur2 = SDL_DisplayFormatAlpha(sur);
+      SDL_FreeSurface(sur);
 
-    for (int i = 0; i < sh; i++) {
-      unsigned int *pC = (unsigned int*)c.dat + (sy + i) * c.w + sx;
-      unsigned char *pImg = (unsigned char*)mSur->pixels + (y + i) * mSur->pitch + x;
-      memcpy(pImg, pC, sw * mSur->format->BytesPerPixel);
+      SDL_Rect rcSrc, rcDst;
+      rcSrc.x = sx, rcSrc.y = sy, rcSrc.w = sw, rcSrc.h = sh;
+      rcDst.x = x, rcDst.y = y, rcDst.w = sw, rcDst.h = sh;
+      SDL_BlitSurface(sur2, &rcSrc, mSur, &rcDst);
+
+      SDL_FreeSurface(sur2);
     }
-
-    SDL_UnlockSurface(mSur);
   }
 
   template<class CanvasT>
