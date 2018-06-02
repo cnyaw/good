@@ -167,6 +167,42 @@ public:
   {
      return SDLImage();
   }
+
+  template<class CanvasT>
+  void draw(int x, int y, const CanvasT &c, int sx, int sy, int sw, int sh)
+  {
+    if (!isValid()) {
+      return;
+    }
+
+    SDL_LockSurface(mSur);
+
+    for (int i = 0; i < sh; i++) {
+      unsigned int *pC = (unsigned int*)c.dat + (sy + i) * c.w + sx;
+      unsigned char *pImg = (unsigned char*)mSur->pixels + (y + i) * mSur->pitch + x;
+      memcpy(pImg, pC, sw * mSur->format->BytesPerPixel);
+    }
+
+    SDL_UnlockSurface(mSur);
+  }
+
+  template<class CanvasT>
+  void drawToCanvas(int x, int y, CanvasT &c, int sx, int sy, int sw, int sh) const
+  {
+    if (!isValid()) {
+      return;
+    }
+
+    SDL_LockSurface(mSur);
+
+    for (int i = 0; i < sh; i++) {
+      unsigned int *pC = (unsigned int*)c.dat + (y + i) * c.w + x;
+      unsigned char *pImg = (unsigned char*)mSur->pixels + (sy + i) * mSur->pitch + sx;
+      memcpy(pC, pImg, sw * mSur->format->BytesPerPixel);
+    }
+
+    SDL_UnlockSurface(mSur);
+  }
 };
 
 class SDLGraphics : public Graphics<SDLImage>
@@ -184,6 +220,10 @@ public:
   }
 
   void endDraw()
+  {
+  }
+
+  void restoreSur()
   {
   }
 

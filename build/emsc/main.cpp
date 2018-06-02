@@ -23,9 +23,10 @@
 
 #define GOOD_SUPPORT_PNG
 #include "gx/sdl_gx.h"
+#include "gx/imgp_gx.h"
 #include "snd/openal_snd.h"
 
-class EmccApplication : public good::rt::Application<EmccApplication, good::gx::SDLImage, good::snd::ALSound>
+class EmccApplication : public good::rt::Application<EmccApplication, good::gx::SDLImage, good::snd::ALSound, good::gx::Imgp>
 {
   EmccApplication() : gx(mScreen)
   {
