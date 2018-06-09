@@ -85,7 +85,7 @@ public class goodJniActivity extends Activity
     if (RESULT_OK == resultCode) {
       sndStopAll();
       Uri uri = data.getData();
-      String filePath = uri.getPath();
+      String filePath = goodJniLib.getPath(thisActivity, uri);
       if (filePath.startsWith("/file")) {
         filePath = filePath.substring(5);
       }
