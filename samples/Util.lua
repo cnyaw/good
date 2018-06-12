@@ -7,10 +7,18 @@ function PtInRect(x, y, left, top, right, bottom)
   end
 end
 
+function Lerp(v0, v1, t)
+  return (1 - t) * v0 + t * v1
+end
+
 function PtInObj(x, y, o)
   local ox, oy = Good.GetPos(o)
   local l, t, w, h = Good.GetDim(o)
   local sx, sy = Good.GetScale(o)
+  local ax, ay = Good.GetAnchor(o)
+  local sw, sh = math.abs(w * sx), math.abs(h * sy)
+  ox = Lerp(ox, ox + (w - sw), ax)
+  oy = Lerp(oy, oy + (h - sh), ay)
   return PtInRect(x, y, ox, oy, ox + math.abs(sx) * w, oy + math.abs(sy) * h)
 end
 
