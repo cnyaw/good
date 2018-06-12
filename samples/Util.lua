@@ -11,6 +11,14 @@ function PtInObj(x, y, o)
   local ox, oy = Good.GetPos(o)
   local l, t, w, h = Good.GetDim(o)
   local sx, sy = Good.GetScale(o)
+  -- Adjust (ox,oy) by anchor.
+  local ax, ay = Good.GetAnchor(o)
+  local absw = math.abs(w * sx)
+  local absh = math.abs(h * sy)
+  local asx = absw * (1 - ax)
+  local asy = absh * (1 - ay)
+  ox = ox + absw - asx
+  oy = oy + absh - asy
   return PtInRect(x, y, ox, oy, ox + math.abs(sx) * w, oy + math.abs(sy) * h)
 end
 
