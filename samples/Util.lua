@@ -187,3 +187,17 @@ Good.GetScreenPos = function(id)
   end
   return x, y
 end
+
+function GetARgbFromColor(color)
+  local hex = string.format('%x', color)
+  local a = string.sub(hex, 1, 2)
+  local r = string.sub(hex, 3, 4)
+  local g = string.sub(hex, 5, 6)
+  local b = string.sub(hex, 7, 8)
+  return tonumber(a, 16), tonumber(r, 16), tonumber(g, 16), tonumber(b, 16)
+end
+
+function GetColorFromARgb(A, R, G, B)
+  local hex = string.format('%02X%02X%02X%02X', A, R, G, B)
+  return tonumber(hex, 16)
+end
