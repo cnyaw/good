@@ -360,10 +360,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\player\res\icon1.ico"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\ed\res\icon1.ico"
 				>
 			</File>
@@ -401,14 +397,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\player\player.rc"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\player\res\thumb.bmp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\ed\res\thumb.bmp"
 				>
 			</File>
 		</Filter>
