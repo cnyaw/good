@@ -201,3 +201,13 @@ function GetColorFromARgb(A, R, G, B)
   local hex = string.format('%02X%02X%02X%02X', A, R, G, B)
   return tonumber(hex, 16)
 end
+
+function LerpARgb(c0, c1, t)
+  local a,r,g,b = GetARgbFromColor(c0)
+  local ba,br,bg,bb = GetARgbFromColor(c1)
+  local na = Lerp(ba, a, t)
+  local nr = Lerp(br, r, t)
+  local ng = Lerp(bg, g, t)
+  local nb = Lerp(bb, b, t)
+  return GetColorFromARgb(na, nr, ng, nb)
+end
