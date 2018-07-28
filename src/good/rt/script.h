@@ -1143,6 +1143,23 @@ public:
   }
 
   //
+  // [in] idSprite [out] sprite w h
+  //
+
+  static int GetResSpriteSize(lua_State* L)
+  {
+    int idSprite = luaL_checkint(L, 1);
+
+    lua_Integer w = 0, h = 0;
+    AppT::getInst().getResSpriteSize(idSprite, w, h);
+
+    lua_pushinteger(L, w);
+    lua_pushinteger(L, h);
+
+    return 2;
+  }
+
+  //
   // [in] name [out] texture id.
   //
 
@@ -1234,6 +1251,7 @@ public:
       {"GetMapSize", &GetMapSize},
       {"GetSoundId", &GetResSoundId},
       {"GetSpriteId", &GetResSpriteId},
+      {"GetSpriteSize", &GetResSpriteSize},
       {"GetTexId", &GetResTexId},
       {"GetTexSize", &GetTexSize},
       {"GetTileByPos", &GetTileByPos},

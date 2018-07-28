@@ -699,6 +699,15 @@ int getResSpriteId(const char* name) const
   return getResIdByName_i(mRes.mSprite, name);
 }
 
+void getResSpriteSize(int idSprite, int &w, int &h) const
+{
+  if (mRes.isSprite(idSprite)) {
+    const SpriteT &spr = mRes.getSprite(idSprite);
+    w = spr.mTileset.mTileWidth;
+    h = spr.mTileset.mTileHeight;
+  }
+}
+
 int getResTexId(const char* name) const
 {
   return getResIdByName_i(mRes.mTex, name);
