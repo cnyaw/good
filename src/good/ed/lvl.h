@@ -15,20 +15,6 @@ namespace good {
 
 namespace ed {
 
-enum GOOD_LEVELED_UNDO_COMMAND {
-  GOOD_LEVELED_CMD_ADDOBJ,
-  GOOD_LEVELED_CMD_REMOVEOBJ,
-  GOOD_LEVELED_CMD_MOVEOBJ,
-  GOOD_LEVELED_CMD_ZORDER,
-  GOOD_LEVELED_CMD_SETBGCOLOR,
-  GOOD_LEVELED_CMD_SETDIM,
-  GOOD_LEVELED_CMD_SETPROP,
-  GOOD_LEVELED_CMD_CHANGEPARENT,
-  GOOD_LEVELED_CMD_SETSCRIPT,
-  GOOD_LEVELED_CMD_SETSIZE,
-  GOOD_LEVELED_CMD_SETLEVELPOS
-};
-
 namespace clvl {
 
 template<class LvlT>
@@ -43,8 +29,7 @@ public:
   int mPosX, mPosY;
   unsigned int mBgColor;
 
-  CmdAddObj(int idLevel, int idSprite, int idMap, int idTexture, int x, int y)
-    : UndoCommand(GOOD_LEVELED_CMD_ADDOBJ), mLevelId(idLevel)
+  CmdAddObj(int idLevel, int idSprite, int idMap, int idTexture, int x, int y) : UndoCommand(GOOD_LEVELED_CMD_ADDOBJ), mLevelId(idLevel)
   {
     mId = -1;
     mIdSprite = idSprite;
@@ -517,7 +502,7 @@ public:
   int mLevelId;
   int mWidth, mHeight;
 
-  CmdSetSize(int id, int w, int h) : UndoCommand(GOOD_LEVELED_CMD_SETSIZE)
+  CmdSetSize(int id, int w, int h) : UndoCommand(good::ed::GOOD_LEVELED_CMD_SETSIZE)
   {
     mLevelId = id;
     mWidth = w;

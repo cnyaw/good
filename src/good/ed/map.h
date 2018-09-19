@@ -15,12 +15,6 @@ namespace good {
 
 namespace ed {
 
-enum GOOD_MAPED_UNDO_COMMAND {
-  GOOD_MAPED_CMD_DRAW,
-  GOOD_MAPED_CMD_DRAW_PATTERN,
-  GOOD_MAPED_CMD_FILL
-};
-
 namespace cmap {
 
 template<class TileDataT>

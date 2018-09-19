@@ -15,12 +15,6 @@ namespace good {
 
 namespace ed {
 
-enum GOOD_SPRITEED_UNDO_COMMAND {
-  GOOD_SPRITEED_CMD_INSERT,
-  GOOD_SPRITEED_CMD_REMOVE,
-  GOOD_SPRITEED_CMD_SETTIME
-};
-
 namespace cspr {
 
 template<class SpriteDataT>
