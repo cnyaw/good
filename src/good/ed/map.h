@@ -15,10 +15,8 @@ namespace good {
 
 namespace ed {
 
-namespace cmap {
-
 template<class TileDataT>
-class CmdDraw : public UndoCommand
+class MapCmdDraw : public UndoCommand
 {
 public:
   int mMapId;
@@ -26,8 +24,7 @@ public:
   std::vector<std::pair<int,int> > mAction; // (draw pos, prev tile)
   int mSaveX, mSaveY;
 
-  CmdDraw(int idMap, int tile, int x, int y)
-    : UndoCommand(GOOD_MAPED_CMD_DRAW), mMapId(idMap), mTile(tile)
+  MapCmdDraw(int idMap, int tile, int x, int y) : UndoCommand(GOOD_MAPED_CMD_DRAW), mMapId(idMap), mTile(tile)
   {
     mSaveX = x, mSaveY = y;
   }
@@ -78,7 +75,7 @@ public:
 };
 
 template<class TileDataT>
-class CmdDrawPattern : public UndoCommand
+class MapCmdDrawPattern : public UndoCommand
 {
 public:
   int mMapId;
@@ -87,8 +84,7 @@ public:
   std::vector<std::pair<int, std::vector<int> > > mAction; // Draw action (draw pos, prev tile pattern).
   int mSaveX, mSaveY;
 
-  CmdDrawPattern(int idMap, std::vector<int> const& pat, int w, int h, int x, int y)
-    : UndoCommand(GOOD_MAPED_CMD_DRAW_PATTERN), mMapId(idMap), mPattern(pat), mPatWidth(w), mPatHeight(h)
+  MapCmdDrawPattern(int idMap, std::vector<int> const& pat, int w, int h, int x, int y) : UndoCommand(GOOD_MAPED_CMD_DRAW_PATTERN), mMapId(idMap), mPattern(pat), mPatWidth(w), mPatHeight(h)
   {
     mSaveX = x, mSaveY = y;
   }
@@ -178,7 +174,7 @@ public:
 };
 
 template<class TileDataT>
-class CmdFill : public UndoCommand
+class MapCmdFill : public UndoCommand
 {
 public:
   int mMapId;
@@ -187,8 +183,7 @@ public:
   std::vector<int> mSaveData;
   int mSaveX, mSaveY;
 
-  CmdFill(int idMap, int tile, int x, int y)
-    : UndoCommand(GOOD_MAPED_CMD_FILL), mMapId(idMap), mTile(tile)
+  MapCmdFill(int idMap, int tile, int x, int y) : UndoCommand(GOOD_MAPED_CMD_FILL), mMapId(idMap), mTile(tile)
   {
     mSaveX = x, mSaveY = y;
   }
@@ -261,8 +256,6 @@ public:
   }
 };
 
-} // cmap
-
 template<class PrjT>
 class Map : public good::Map<Tileset>
 {
@@ -328,7 +321,7 @@ public:
 
   bool draw(int x, int y, int tile)
   {
-    typedef cmap::CmdDraw<Map> CmdT;
+    typedef MapCmdDraw<Map> CmdT;
     if (!mDrawFlag) {
       CmdT* pcmd = new CmdT(mId, tile, x, y);
       if (mUndo.execAndAdd(pcmd)) {
@@ -348,7 +341,7 @@ public:
 
   bool draw(int x, int y, std::vector<int> const& pattern, int w, int h)
   {
-    typedef cmap::CmdDrawPattern<Map> CmdT;
+    typedef MapCmdDrawPattern<Map> CmdT;
     if (!mDrawFlag) {
       CmdT* pcmd = new CmdT(mId, pattern, w, h, x, y);
       if (mUndo.execAndAdd(pcmd)) {
@@ -368,7 +361,7 @@ public:
 
   bool fill(int x, int y, int fill)
   {
-    typedef cmap::CmdFill<Map> CmdT;
+    typedef MapCmdFill<Map> CmdT;
     if (!mDrawFlag) {
       CmdT* pcmd = new CmdT(mId, fill, x, y);
       if (mUndo.execAndAdd(pcmd)) {

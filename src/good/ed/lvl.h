@@ -15,10 +15,8 @@ namespace good {
 
 namespace ed {
 
-namespace clvl {
-
 template<class LvlT>
-class CmdAddObj : public UndoCommand
+class LevelCmdAddObj : public UndoCommand
 {
 public:
   int mLevelId;
@@ -29,7 +27,7 @@ public:
   int mPosX, mPosY;
   unsigned int mBgColor;
 
-  CmdAddObj(int idLevel, int idSprite, int idMap, int idTexture, int x, int y) : UndoCommand(GOOD_LEVELED_CMD_ADDOBJ), mLevelId(idLevel)
+  LevelCmdAddObj(int idLevel, int idSprite, int idMap, int idTexture, int x, int y) : UndoCommand(GOOD_LEVELED_CMD_ADDOBJ), mLevelId(idLevel)
   {
     mId = -1;
     mIdSprite = idSprite;
@@ -65,14 +63,14 @@ public:
 };
 
 template<class LvlT>
-class CmdMoveObj : public UndoCommand
+class LevelCmdMoveObj : public UndoCommand
 {
 public:
   int mLevelId;
   int mId;
   int mPosX, mPosY;
 
-  CmdMoveObj(int idLevel, int id, int offsetX, int offsetY) : UndoCommand(GOOD_LEVELED_CMD_MOVEOBJ), mLevelId(idLevel)
+  LevelCmdMoveObj(int idLevel, int id, int offsetX, int offsetY) : UndoCommand(GOOD_LEVELED_CMD_MOVEOBJ), mLevelId(idLevel)
   {
     mId = id;
     PrjT::ObjectT& o = PrjT::inst().getLevel(idLevel).getObj(id);
@@ -97,7 +95,7 @@ public:
 };
 
 template<class LvlT>
-class CmdRemoveObj : public UndoCommand
+class LevelCmdRemoveObj : public UndoCommand
 {
 public:
   int mLevelId;
@@ -113,7 +111,7 @@ public:
   int mBgColor;
   bool mRepX, mRepY;
 
-  CmdRemoveObj(int idLevel, int id) : UndoCommand(GOOD_LEVELED_CMD_REMOVEOBJ), mLevelId(idLevel)
+  LevelCmdRemoveObj(int idLevel, int id) : UndoCommand(GOOD_LEVELED_CMD_REMOVEOBJ), mLevelId(idLevel)
   {
     LvlT const& lvl = PrjT::inst().getLevel(mLevelId);
     typename LvlT::ObjectT const& o = lvl.getObj(id);
@@ -175,7 +173,7 @@ public:
 };
 
 template<class LvlT>
-class CmdZorderObj : public UndoCommand
+class LevelCmdZorderObj : public UndoCommand
 {
 public:
   enum {
@@ -190,7 +188,7 @@ public:
   int mMove;
   size_t mPrevOrder;
 
-  CmdZorderObj(int idLevel, int id, int move) : UndoCommand(GOOD_LEVELED_CMD_ZORDER), mLevelId(idLevel)
+  LevelCmdZorderObj(int idLevel, int id, int move) : UndoCommand(GOOD_LEVELED_CMD_ZORDER), mLevelId(idLevel)
   {
     mId = id;
     mMove = move;
@@ -253,14 +251,14 @@ public:
 };
 
 template<class LvlT>
-class CmdSetBgColor : public UndoCommand
+class LevelCmdSetBgColor : public UndoCommand
 {
 public:
   int mLevelId;
   int mId;
   unsigned int mColor;
 
-  CmdSetBgColor(int idLevel, int id, unsigned int color) : UndoCommand(GOOD_LEVELED_CMD_SETBGCOLOR), mLevelId(idLevel)
+  LevelCmdSetBgColor(int idLevel, int id, unsigned int color) : UndoCommand(GOOD_LEVELED_CMD_SETBGCOLOR), mLevelId(idLevel)
   {
     mId = id;
     mColor = color;
@@ -292,14 +290,14 @@ public:
 };
 
 template<class LvlT>
-class CmdSetDim : public UndoCommand
+class LevelCmdSetDim : public UndoCommand
 {
 public:
   int mLevelId;
   int mId;
   sw2::IntRect mDim;
 
-  CmdSetDim(int idLevel, int id, int newx, int newy, int neww, int newh) : UndoCommand(GOOD_LEVELED_CMD_SETDIM), mLevelId(idLevel)
+  LevelCmdSetDim(int idLevel, int id, int newx, int newy, int neww, int newh) : UndoCommand(GOOD_LEVELED_CMD_SETDIM), mLevelId(idLevel)
   {
     mId = id;
     mDim = sw2::IntRect(newx, newy, newx + neww, newy + newh);
@@ -330,7 +328,7 @@ public:
 };
 
 template<class LvlT>
-class CmdSetProp : public UndoCommand
+class LevelCmdSetProp : public UndoCommand
 {
 public:
   int mLevelId;
@@ -340,8 +338,7 @@ public:
   float mRot, mScaleX, mScaleY, mAnchorX, mAnchorY;
   bool mRepX, mRepY;
 
-  CmdSetProp(int idLevel, int id, std::string const& name, bool vis, float rot, float sx, float sy, float ax, float ay, bool repx, bool repy)
-    : UndoCommand(GOOD_LEVELED_CMD_SETPROP), mLevelId(idLevel)
+  LevelCmdSetProp(int idLevel, int id, std::string const& name, bool vis, float rot, float sx, float sy, float ax, float ay, bool repx, bool repy) : UndoCommand(GOOD_LEVELED_CMD_SETPROP), mLevelId(idLevel)
   {
     mId = id;
     mName = name;
@@ -402,7 +399,7 @@ public:
 };
 
 template<class LvlT>
-class CmdChangeParent : public UndoCommand
+class LevelCmdChangeParent : public UndoCommand
 {
 public:
   int mLevelId;
@@ -411,7 +408,7 @@ public:
   int mOrgIdx;
   int mNewParentId;
 
-  CmdChangeParent(int idLevel, int id, int idNewParent) : UndoCommand(GOOD_LEVELED_CMD_CHANGEPARENT), mLevelId(idLevel)
+  LevelCmdChangeParent(int idLevel, int id, int idNewParent) : UndoCommand(GOOD_LEVELED_CMD_CHANGEPARENT), mLevelId(idLevel)
   {
     LvlT& lvl = PrjT::inst().getLevel(mLevelId);
 
@@ -457,14 +454,14 @@ public:
 };
 
 template<class LvlT>
-class CmdSetScript : public UndoCommand
+class LevelCmdSetScript : public UndoCommand
 {
 public:
   int mLevelId;
   int mId;
   std::string mScript;
 
-  CmdSetScript(int idLevel, int id, const std::string &script) : UndoCommand(GOOD_LEVELED_CMD_SETSCRIPT), mLevelId(idLevel)
+  LevelCmdSetScript(int idLevel, int id, const std::string &script) : UndoCommand(GOOD_LEVELED_CMD_SETSCRIPT), mLevelId(idLevel)
   {
     mId = id;
     mScript = script;
@@ -496,13 +493,13 @@ public:
 };
 
 template<class LvlT>
-class CmdSetSize : public UndoCommand
+class LevelCmdSetSize : public UndoCommand
 {
 public:
   int mLevelId;
   int mWidth, mHeight;
 
-  CmdSetSize(int id, int w, int h) : UndoCommand(good::ed::GOOD_LEVELED_CMD_SETSIZE)
+  LevelCmdSetSize(int id, int w, int h) : UndoCommand(good::ed::GOOD_LEVELED_CMD_SETSIZE)
   {
     mLevelId = id;
     mWidth = w;
@@ -532,13 +529,13 @@ public:
 };
 
 template<class LvlT>
-class CmdSetLevelPos : public UndoCommand
+class LevelCmdSetLevelPos : public UndoCommand
 {
 public:
   int mLevelId;
   int mPosX, mPosY;
 
-  CmdSetLevelPos(int id, int x, int y) : UndoCommand(GOOD_LEVELED_CMD_SETLEVELPOS)
+  LevelCmdSetLevelPos(int id, int x, int y) : UndoCommand(GOOD_LEVELED_CMD_SETLEVELPOS)
   {
     mLevelId = id;
     mPosX = x;
@@ -566,8 +563,6 @@ public:
     return ret;
   }
 };
-
-} // namespace clvl
 
 template<class PrjT>
 class Level : public good::Level<Object<PrjT> >
@@ -606,8 +601,8 @@ public:
 
   bool setSize(int newWidth, int newHeight)
   {
-    clvl::CmdSetSize<Level>* pcmd;
-    pcmd = new clvl::CmdSetSize<Level>(mId, newWidth, newHeight);
+    LevelCmdSetSize<Level>* pcmd;
+    pcmd = new LevelCmdSetSize<Level>(mId, newWidth, newHeight);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -650,8 +645,8 @@ public:
 
   bool setObjBgColor(int idObj, unsigned int color)
   {
-    clvl::CmdSetBgColor<Level>* pcmd;
-    pcmd = new clvl::CmdSetBgColor<Level>(mId, idObj, color);
+    LevelCmdSetBgColor<Level>* pcmd;
+    pcmd = new LevelCmdSetBgColor<Level>(mId, idObj, color);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -663,8 +658,8 @@ public:
 
   bool setObjDim(int idObj, int newx, int newy, int neww, int newh)
   {
-    clvl::CmdSetDim<Level>* pcmd;
-    pcmd = new clvl::CmdSetDim<Level>(mId, idObj, newx, newy, neww, newh);
+    LevelCmdSetDim<Level>* pcmd;
+    pcmd = new LevelCmdSetDim<Level>(mId, idObj, newx, newy, neww, newh);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -676,8 +671,8 @@ public:
 
   bool setObjProp(int idObj, std::string const& name, bool vis, float rot, float sx, float sy, float ax, float ay, bool repx, bool repy)
   {
-    clvl::CmdSetProp<Level>* pcmd;
-    pcmd = new clvl::CmdSetProp<Level>(mId, idObj, name, vis, rot, sx, sy, ax, ay, repx, repy);
+    LevelCmdSetProp<Level>* pcmd;
+    pcmd = new LevelCmdSetProp<Level>(mId, idObj, name, vis, rot, sx, sy, ax, ay, repx, repy);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -689,8 +684,8 @@ public:
 
   bool setObjScript(int idObj, const std::string &script)
   {
-    clvl::CmdSetScript<Level>* pcmd;
-    pcmd = new clvl::CmdSetScript<Level>(mId, idObj, script);
+    LevelCmdSetScript<Level>* pcmd;
+    pcmd = new LevelCmdSetScript<Level>(mId, idObj, script);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -720,8 +715,8 @@ public:
 
   int addObj(int idSprite, int idMap, int idTexture, int x, int y)
   {
-    clvl::CmdAddObj<Level>* pcmd;
-    pcmd = new clvl::CmdAddObj<Level>(mId, idSprite, idMap, idTexture, x, y);
+    LevelCmdAddObj<Level>* pcmd;
+    pcmd = new LevelCmdAddObj<Level>(mId, idSprite, idMap, idTexture, x, y);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -763,8 +758,8 @@ public:
       }
     }
 
-    clvl::CmdRemoveObj<Level>* pcmd;
-    pcmd = new clvl::CmdRemoveObj<Level>(mId, id);
+    LevelCmdRemoveObj<Level>* pcmd;
+    pcmd = new LevelCmdRemoveObj<Level>(mId, id);
 
     if (!mUndo.execAndAdd(pcmd)) {
       return false;
@@ -808,8 +803,8 @@ public:
     int tag = mUndo.mTag;
 
     for (size_t i = 0; i < ids.size(); ++i) {
-      clvl::CmdMoveObj<Level>* pcmd;
-      pcmd = new clvl::CmdMoveObj<Level>(mId, ids[i], offsetX, offsetY);
+      LevelCmdMoveObj<Level>* pcmd;
+      pcmd = new LevelCmdMoveObj<Level>(mId, ids[i], offsetX, offsetY);
 
       if (!mUndo.execAndAdd(pcmd)) {
         if (0 < i) {
@@ -828,8 +823,8 @@ public:
 
   bool setLevelPos(int posX, int posY)
   {
-    clvl::CmdSetLevelPos<Level>* pcmd;
-    pcmd = new clvl::CmdSetLevelPos<Level>(mId, posX, posY);
+    LevelCmdSetLevelPos<Level>* pcmd;
+    pcmd = new LevelCmdSetLevelPos<Level>(mId, posX, posY);
 
     if (!mUndo.execAndAdd(pcmd)) {
       return false;
@@ -865,8 +860,8 @@ public:
         continue;
       }
 
-      clvl::CmdSetDim<Level>* pcmd;
-      pcmd = new clvl::CmdSetDim<Level>(mId, ids[i], o.mDim.left, o.mDim.top, neww, newh);
+      LevelCmdSetDim<Level>* pcmd;
+      pcmd = new LevelCmdSetDim<Level>(mId, ids[i], o.mDim.left, o.mDim.top, neww, newh);
 
       if (!mUndo.execAndAdd(pcmd)) {
         if (0 < i) {
@@ -914,28 +909,28 @@ public:
 
   bool moveObjBottommost(int id)
   {
-    return doZorderObj(id, clvl::CmdZorderObj<Level>::MOVE_BOTTOMMOST);
+    return doZorderObj(id, LevelCmdZorderObj<Level>::MOVE_BOTTOMMOST);
   }
 
   bool moveObjDown(int id)
   {
-    return doZorderObj(id, clvl::CmdZorderObj<Level>::MOVE_DOWN);
+    return doZorderObj(id, LevelCmdZorderObj<Level>::MOVE_DOWN);
   }
 
   bool moveObjTopmost(int id)
   {
-    return doZorderObj(id, clvl::CmdZorderObj<Level>::MOVE_TOPMOST);
+    return doZorderObj(id, LevelCmdZorderObj<Level>::MOVE_TOPMOST);
   }
 
   bool moveObjUp(int id)
   {
-    return doZorderObj(id, clvl::CmdZorderObj<Level>::MOVE_UP);
+    return doZorderObj(id, LevelCmdZorderObj<Level>::MOVE_UP);
   }
 
   bool doZorderObj(int id, int move)
   {
-    clvl::CmdZorderObj<Level>* pcmd;
-    pcmd = new clvl::CmdZorderObj<Level>(mId, id, move);
+    LevelCmdZorderObj<Level>* pcmd;
+    pcmd = new LevelCmdZorderObj<Level>(mId, id, move);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -1000,8 +995,8 @@ public:
         break;
       }
 
-      clvl::CmdMoveObj<Level>* pcmd;
-      pcmd = new clvl::CmdMoveObj<Level>(mId, ids[i], offsetX, offsetY);
+      LevelCmdMoveObj<Level>* pcmd;
+      pcmd = new LevelCmdMoveObj<Level>(mId, ids[i], offsetX, offsetY);
 
       if (!mUndo.execAndAdd(pcmd)) {
         if (0 < i) {
@@ -1048,8 +1043,8 @@ public:
 
   bool changeParent(int idObj, int idNewParent)
   {
-    clvl::CmdChangeParent<Level>* pcmd;
-    pcmd = new clvl::CmdChangeParent<Level>(mId, idObj, idNewParent);
+    LevelCmdChangeParent<Level>* pcmd;
+    pcmd = new LevelCmdChangeParent<Level>(mId, idObj, idNewParent);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;

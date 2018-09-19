@@ -15,10 +15,8 @@ namespace good {
 
 namespace ed {
 
-namespace cspr {
-
 template<class SpriteDataT>
-class CmdInsert : public UndoCommand
+class SpriteCmdInsert : public UndoCommand
 {
 public:
   int mSpriteId;
@@ -26,8 +24,7 @@ public:
   std::vector<int> mFrames;
   int mTime;
 
-  CmdInsert(int idSpr, size_t idxInsert, std::vector<int> const& frames, int time)
-    : UndoCommand(GOOD_SPRITEED_CMD_INSERT), mSpriteId(idSpr)
+  SpriteCmdInsert(int idSpr, size_t idxInsert, std::vector<int> const& frames, int time) : UndoCommand(GOOD_SPRITEED_CMD_INSERT), mSpriteId(idSpr)
   {
     SpriteDataT const& spr = PrjT::inst().getSprite(mSpriteId);
 
@@ -69,7 +66,7 @@ public:
 };
 
 template<class SpriteDataT>
-class CmdRemove : public UndoCommand
+class SpriteCmdRemove : public UndoCommand
 {
 public:
   int mSpriteId;
@@ -78,8 +75,7 @@ public:
   int mTime;
   bool mValid;
 
-  CmdRemove(int idSpr, size_t idxRemove)
-    : UndoCommand(GOOD_SPRITEED_CMD_REMOVE), mSpriteId(idSpr)
+  SpriteCmdRemove(int idSpr, size_t idxRemove) : UndoCommand(GOOD_SPRITEED_CMD_REMOVE), mSpriteId(idSpr)
   {
     mValid = false;
 
@@ -110,7 +106,7 @@ public:
 };
 
 template<class SpriteDataT>
-class CmdSetTime : public UndoCommand
+class SpriteCmdSetTime : public UndoCommand
 {
 public:
   SpriteDataT& mSprite;
@@ -119,8 +115,7 @@ public:
   bool mVaild;
   std::vector<int> mTimeSave;
 
-  CmdSetTime(SpriteDataT& sd, size_t idxFrame, int count, int time)
-    : UndoCommand(GOOD_SPRITEED_CMD_SETTIME), mSprite(sd)
+  SpriteCmdSetTime(SpriteDataT& sd, size_t idxFrame, int count, int time) : UndoCommand(GOOD_SPRITEED_CMD_SETTIME), mSprite(sd)
   {
     mVaild = false;
     if (mSprite.mTime.size() > idxFrame && mSprite.mTime[idxFrame] != time) {
@@ -168,8 +163,6 @@ public:
     return true;
   }
 };
-
-} // namespace cspr
 
 template<class PrjT>
 class Sprite : public good::Sprite<Tileset>
@@ -223,7 +216,7 @@ public:
 
   bool setTime(size_t iFrame, int count, int time)
   {
-    typedef cspr::CmdSetTime<Sprite> CmdT;
+    typedef SpriteCmdSetTime<Sprite> CmdT;
 
     UndoCommand* pcmd = mUndo.getCurCommand();
     if (0 != pcmd && GOOD_SPRITEED_CMD_SETTIME == pcmd->getId()) {
@@ -248,8 +241,8 @@ public:
 
   bool insertFrame(size_t iFrame, std::vector<int> const& tiles, int time)
   {
-    cspr::CmdInsert<Sprite>* pcmd;
-    pcmd = new cspr::CmdInsert<Sprite>(mId, iFrame, tiles, time);
+    SpriteCmdInsert<Sprite>* pcmd;
+    pcmd = new SpriteCmdInsert<Sprite>(mId, iFrame, tiles, time);
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
       return true;
@@ -260,8 +253,8 @@ public:
 
   bool removeFrame(size_t iFrame)
   {
-    cspr::CmdRemove<Sprite>* pcmd;
-    pcmd = new cspr::CmdRemove<Sprite>(mId, iFrame);
+    SpriteCmdRemove<Sprite>* pcmd;
+    pcmd = new SpriteCmdRemove<Sprite>(mId, iFrame);
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
       return true;
