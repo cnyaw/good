@@ -268,20 +268,6 @@ public:
     }
   }
 
-  bool isParentVisible(const PrjT::LevelT &lvl, int id) const
-  {
-    while (true) {
-      id = lvl.getParent(id);
-      if (lvl.mId == id) {
-        return lvl.mVisible;
-      }
-      if (!lvl.getObj(id).mVisible) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   BEGIN_MSG_MAP_EX(CLevelEditView)
     MSG_WM_CREATE(OnCreate)
     MSG_WM_KEYDOWN(OnKeyDown)
@@ -700,7 +686,7 @@ public:
       if (!inst.mVisible) {
         memdc.BitBlt(rc.left + IconOffset, rc.top, 16, 16, mDcObjState, 16, 0, SRCCOPY);
         IconOffset += 16;
-      } else if (!isParentVisible(lvl, id)) {
+      } else if (!lvl.isParentVisible(id)) {
         memdc.BitBlt(rc.left + IconOffset, rc.top, 16, 16, mDcObjState, 16, 0, SRCCOPY);
         DrawAlphaRect(CDCHandle((HDC)memdc), RGB(255,0,0), rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, 45);
         IconOffset += 16;

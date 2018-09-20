@@ -713,6 +713,20 @@ public:
     return mId;
   }
 
+  bool isParentVisible(int id) const
+  {
+    while (true) {
+      id = getParent(id);
+      if (mId == id) {
+        return mVisible;
+      }
+      if (!getObj(id).mVisible) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   int addObj(int idSprite, int idMap, int idTexture, int x, int y)
   {
     LevelCmdAddObj<Level>* pcmd;
