@@ -168,7 +168,7 @@ public:
     // Rename resource view tree item.
     //
 
-    CTreeItem hItem = FinTreeItem(id);
+    CTreeItem hItem = FindTreeItem(id);
     if (!hItem.IsNull()) {
       hItem.SetText(name.c_str());
     }
@@ -247,7 +247,7 @@ public:
 
   void SetCurSel(int id)
   {
-    CTreeItem hItem = FinTreeItem(id);
+    CTreeItem hItem = FindTreeItem(id);
 
     //
     // Should check this, to avoid infinte setsel/selchange loop.
@@ -761,7 +761,7 @@ end:
   // Impl helper.
   //
 
-  CTreeItem FinTreeItem(int id) const
+  CTreeItem FindTreeItem(int id) const
   {
     CTreeItem hItem = NULL;
     CTreeItem hGroup = mTree.GetChildItem(NULL); // First group.

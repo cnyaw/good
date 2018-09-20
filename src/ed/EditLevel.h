@@ -1451,7 +1451,7 @@ public:
     }
   }
 
-  CTreeItem FinTreeItemById(int id) const
+  CTreeItem FindTreeItemById(int id) const
   {
     return FindTreeItemById(mTree.GetChildItem(NULL), id);
   }
@@ -1477,7 +1477,7 @@ public:
     mTree.SelectItem(NULL);             // Unselect all.
     for (size_t i = 0; i < v.size(); i++) {
       int idObj = v[i];
-      CTreeItem hItem = FinTreeItemById(idObj);
+      CTreeItem hItem = FindTreeItemById(idObj);
       if (hItem) {
         mTree.SelectItem(hItem);
       }
@@ -1507,7 +1507,7 @@ public:
   {
     for (size_t i = 0; i < v.size(); i++) {
       int idObj = v[i];
-      CTreeItem hItem = FinTreeItemById(idObj);
+      CTreeItem hItem = FindTreeItemById(idObj);
       if (hItem) {
         mTree.DeleteItem(hItem);
       }
@@ -1639,7 +1639,7 @@ public:
     if (lvl.isObj(idItem)) {            // Item changed.
       PrjT::LevelT& lvl = PrjT::inst().getLevel(mId);
       PrjT::ObjectT const& o = lvl.getObj(idItem);
-      CTreeItem hTree = FinTreeItemById(idItem);
+      CTreeItem hTree = FindTreeItemById(idItem);
       hTree.SetText(o.getName().c_str());
     }
     mEditView.Invalidate();
