@@ -460,6 +460,7 @@ public:
             return;
           }
           rc = sw2::IntRect(0, 0, img.getWidth(), img.getHeight());
+          ((ObjectT&)obj).setDim(0, 0, img.getWidth(), img.getHeight()); // Force set dim to full image size.
         } else {
           rc = sw2::IntRect(0, 0, obj.mDim.width(), obj.mDim.height());
         }
