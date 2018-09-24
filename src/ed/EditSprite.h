@@ -239,7 +239,7 @@ public:
     dc.SelectBrush((HBRUSH)::GetStockObject(NULL_BRUSH));
 
     CPen p1, p2;
-    p1.CreatePen(PS_SOLID, 1, RGB(196,196,196));
+    p1.CreatePen(PS_SOLID, 1, RGB(96,96,96));
     p2.CreatePen(PS_SOLID, 1, RGB(255,0,0));
 
     size_t i;
