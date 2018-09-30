@@ -82,20 +82,33 @@ public:
     m_gFindReplaceDialog = NULL;
   }
 
+  void ReplaceStringInPlace(std::string& subject, const std::string& search, const std::string& replace)
+  {
+    size_t pos = 0;
+    while((pos = subject.find(search, pos)) != std::string::npos) {
+     subject.replace(pos, search.length(), replace);
+     pos += replace.length();
+    }
+  }
+
   bool GetText(std::ostream& stream)
   {
-    char buff[2048];
+    int len = GetWindowTextLength();
+    std::wstring wbuff;
+    wbuff.resize(len + 1);
 
-    int nl = GetLineCount();
-    for (int i = 0; i < nl; ++i) {
-      int n = GetLine(i, buff, sizeof(buff));
-      if (n) {
-        stream.write(buff, n);
-      }
-      if (i != nl - 1) {
-        stream << "\n";
-      }
+    wbuff[GetWindowTextW(m_hWnd, (wchar_t*)wbuff.c_str(), len)] = 0;
+
+    int NeedLen = WideCharToMultiByte(CP_UTF8, 0, wbuff.c_str(), -1, NULL, 0, NULL, NULL);
+    std::string buff;
+    buff.resize(NeedLen);
+
+    if (0 >= WideCharToMultiByte(CP_UTF8, 0, wbuff.c_str(), -1, (char*)buff.c_str(), NeedLen, NULL, NULL)) {
+      return false;
     }
+
+    ReplaceStringInPlace(buff, "\r\n", "\n");
+    stream.write(buff.c_str(), buff.size() - 1);
 
     return true;
   }
@@ -116,8 +129,18 @@ public:
     while (std::getline(ifs, line)) {
       ss << line << "\r\n";
     }
+    std::string s = ss.str();
 
-    SetWindowText(ss.str().c_str());
+    int NeedLen = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, 0, 0);
+    std::wstring wbuff;
+    wbuff.resize(NeedLen);
+
+    if (0 >= MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, (wchar_t*)wbuff.c_str(), NeedLen)) {
+      return false;
+    }
+
+    SetWindowTextW(m_hWnd, wbuff.c_str());
+
     SetModify(FALSE);
 
     //
