@@ -179,6 +179,11 @@ public:
     SW2_TRACE_ERROR("Item is still used by %s", name.c_str());
   }
 
+  void FINDINUSEDMSG(std::string const& name, std::string const& owner)
+  {
+    SW2_TRACE_ERROR("Item is still used by %s of %s", name.c_str(), owner.c_str());
+  }
+
   bool SureRemoveRes(const std::string &name) const
   {
     CString msg;
@@ -199,13 +204,12 @@ public:
     return false;
   }
 
-  bool FindIsUsedTex(std::map<int, typename PrjT::ObjectT> const& map, int idItem)
+  bool FindIsUsedTex(const std::string &name, std::map<int, typename PrjT::ObjectT> const& map, int idItem)
   {
-    for (std::map<int, typename PrjT::ObjectT>::const_iterator it = map.begin();
-         map.end() != it;
-         ++it) {
+    std::map<int, typename PrjT::ObjectT>::const_iterator it = map.begin();
+    for (; map.end() != it; ++it) {
       if (it->second.mTextureId == idItem) {
-        FINDINUSEDMSG(it->second.getName());
+        FINDINUSEDMSG(it->second.getName(), name);
         return true;
       }
     }
@@ -214,11 +218,11 @@ public:
   }
 
   template<class MapT>
-  bool FindIsUsedMap(MapT const& map, int idItem)
+  bool FindIsUsedMap(const std::string &name, MapT const& map, int idItem)
   {
     for (MapT::const_iterator it = map.begin(); map.end() != it; ++it) {
       if (it->second.mMapId == idItem) {
-        FINDINUSEDMSG(it->second.getName());
+        FINDINUSEDMSG(it->second.getName(), name);
         return true;
       }
     }
@@ -227,11 +231,11 @@ public:
   }
 
   template<class MapT>
-  bool FindIsUsedSpr(MapT const& map, int idItem)
+  bool FindIsUsedSpr(const std::string &name, MapT const& map, int idItem)
   {
     for (MapT::const_iterator it = map.begin(); map.end() != it; ++it) {
       if (it->second.mSpriteId == idItem) {
-        FINDINUSEDMSG(it->second.getName());
+        FINDINUSEDMSG(it->second.getName(), name);
         return true;
       }
     }
@@ -564,7 +568,7 @@ end:
         std::map<int, PrjT::LevelT>::const_iterator it = prj.mRes.mLevel.begin();
         for (; prj.mRes.mLevel.end() != it; ++it) {
           typename PrjT::LevelT const& lvl = it->second;
-          if (FindIsUsedTex(lvl.mObj, idItem)) {
+          if (FindIsUsedTex(lvl.getName(), lvl.mObj, idItem)) {
             return false;
           }
         }
@@ -582,7 +586,7 @@ end:
         std::map<int, PrjT::LevelT>::const_iterator it = prj.mRes.mLevel.begin();
         for (; prj.mRes.mLevel.end() != it; ++it) {
           typename PrjT::LevelT const& lvl = it->second;
-          if (FindIsUsedMap(lvl.mObj, idItem)) {
+          if (FindIsUsedMap(lvl.getName(), lvl.mObj, idItem)) {
             return false;
           }
         }
@@ -600,7 +604,7 @@ end:
         std::map<int, PrjT::LevelT>::const_iterator it = prj.mRes.mLevel.begin();
         for (; prj.mRes.mLevel.end() != it; ++it) {
           typename PrjT::LevelT const& lvl = it->second;
-          if (FindIsUsedSpr(lvl.mObj, idItem)) {
+          if (FindIsUsedSpr(lvl.getName(), lvl.mObj, idItem)) {
             return false;
           }
         }
