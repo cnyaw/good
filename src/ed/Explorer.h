@@ -538,6 +538,118 @@ end:
     return 0;
   }
 
+  bool RemoveResItem(int typeItem, int idItem)
+  {
+    PrjT& prj = PrjT::inst();
+
+    switch (typeItem)               // Delete resource item.
+    {
+    case GOOD_RESOURCE_AUDIO:
+      if (!SureRemoveRes(prj.getSnd(idItem).getName())) {
+        return false;
+      }
+      if (!prj.removeSnd(idItem)) {
+        return false;
+      }
+      break;
+
+    case GOOD_RESOURCE_TEXTURE:
+      {
+        if (!SureRemoveRes(prj.getTex(idItem).getName())) {
+          return false;
+        }
+        if (FindIsUsedTex(prj.mRes.mMap, idItem) || FindIsUsedTex(prj.mRes.mSprite, idItem)) {
+          return false;
+        }
+        std::map<int, PrjT::LevelT>::const_iterator it = prj.mRes.mLevel.begin();
+        for (; prj.mRes.mLevel.end() != it; ++it) {
+          typename PrjT::LevelT const& lvl = it->second;
+          if (FindIsUsedTex(lvl.mObj, idItem)) {
+            return false;
+          }
+        }
+        if (!prj.removeTex(idItem)) {
+          return false;
+        }
+      }
+      break;
+
+    case GOOD_RESOURCE_MAP:
+      {
+        if (!SureRemoveRes(prj.getMap(idItem).getName())) {
+          return false;
+        }
+        std::map<int, PrjT::LevelT>::const_iterator it = prj.mRes.mLevel.begin();
+        for (; prj.mRes.mLevel.end() != it; ++it) {
+          typename PrjT::LevelT const& lvl = it->second;
+          if (FindIsUsedMap(lvl.mObj, idItem)) {
+            return false;
+          }
+        }
+        if (!prj.removeMap(idItem)) {
+          return false;
+        }
+      }
+      break;
+
+    case GOOD_RESOURCE_SPRITE:
+      {
+        if (!SureRemoveRes(prj.getSprite(idItem).getName())) {
+          return false;
+        }
+        std::map<int, PrjT::LevelT>::const_iterator it = prj.mRes.mLevel.begin();
+        for (; prj.mRes.mLevel.end() != it; ++it) {
+          typename PrjT::LevelT const& lvl = it->second;
+          if (FindIsUsedSpr(lvl.mObj, idItem)) {
+            return false;
+          }
+        }
+        if (!prj.removeSprite(idItem)) {
+          return false;
+        }
+      }
+      break;
+
+    case GOOD_RESOURCE_LEVEL:
+      if (!SureRemoveRes(prj.getLevel(idItem).getName())) {
+        return false;
+      }
+      if (!prj.removeLevel(idItem)) {
+        return false;
+      }
+      break;
+
+    case GOOD_RESOURCE_SCRIPT:
+      if (!SureRemoveRes(prj.getScript(idItem))) {
+        return false;
+      }
+      if (!prj.removeScript(idItem)) {
+        return false;
+      }
+      break;
+
+    case GOOD_RESOURCE_PARTICLE:
+      if (!SureRemoveRes(prj.getStgeScript(idItem))) {
+        return false;
+      }
+      if (!prj.removeStgeScript(idItem)) {
+        return false;
+      }
+      break;
+
+    case GOOD_RESOURCE_DEPENDENCY:
+      if (!SureRemoveRes(prj.getDep(idItem))) {
+        return false;
+      }
+      if (!prj.removeDep(idItem)) {
+        return false;
+      }
+      break;
+    }
+
+    return true;
+  }
+
   LRESULT OnTreeKeyDown(LPNMHDR pnmh)
   {
     if (mTree != pnmh->hwndFrom) {
@@ -559,8 +671,6 @@ end:
         return 0;
       }
 
-      PrjT& prj = PrjT::inst();
-
       HTREEITEM group = mTree.GetParentItem(sel);
       if (NULL == group) {
 
@@ -577,120 +687,8 @@ end:
         int typeItem = (int)mTree.GetItemData(group);
         int idItem = (int)mTree.GetItemData(sel);
 
-        switch (typeItem)               // Delete resource item.
-        {
-        case GOOD_RESOURCE_AUDIO:
-          if (!SureRemoveRes(prj.getSnd(idItem).getName())) {
-            return 0;
-          }
-          if (!prj.removeSnd(idItem)) {
-            return 0;
-          }
-          break;
-
-        case GOOD_RESOURCE_TEXTURE:
-          {
-            if (!SureRemoveRes(prj.getTex(idItem).getName())) {
-              return 0;
-            }
-
-            if (FindIsUsedTex(prj.mRes.mMap, idItem) ||
-                FindIsUsedTex(prj.mRes.mSprite, idItem)) {
-              return 0;
-            }
-
-            for (std::map<int, PrjT::LevelT>::const_iterator it = prj.mRes.mLevel.begin();
-                 prj.mRes.mLevel.end() != it;
-                 ++it) {
-              typename PrjT::LevelT const& lvl = it->second;
-              if (FindIsUsedTex(lvl.mObj, idItem)) {
-                return 0;
-              }
-            }
-
-            if (!prj.removeTex(idItem)) {
-              return 0;
-            }
-          }
-          break;
-
-        case GOOD_RESOURCE_MAP:
-          {
-            if (!SureRemoveRes(prj.getMap(idItem).getName())) {
-              return 0;
-            }
-
-            for (std::map<int, PrjT::LevelT>::const_iterator it = prj.mRes.mLevel.begin();
-                 prj.mRes.mLevel.end() != it;
-                 ++it) {
-              typename PrjT::LevelT const& lvl = it->second;
-              if (FindIsUsedMap(lvl.mObj, idItem)) {
-                return 0;
-              }
-            }
-
-            if (!prj.removeMap(idItem)) {
-              return 0;
-            }
-          }
-          break;
-
-        case GOOD_RESOURCE_SPRITE:
-          {
-            if (!SureRemoveRes(prj.getSprite(idItem).getName())) {
-              return 0;
-            }
-
-            for (std::map<int, PrjT::LevelT>::const_iterator it = prj.mRes.mLevel.begin();
-                 prj.mRes.mLevel.end() != it;
-                 ++it) {
-              typename PrjT::LevelT const& lvl = it->second;
-              if (FindIsUsedSpr(lvl.mObj, idItem)) {
-                return 0;
-              }
-            }
-
-            if (!prj.removeSprite(idItem)) {
-              return 0;
-            }
-          }
-          break;
-
-        case GOOD_RESOURCE_LEVEL:
-          if (!SureRemoveRes(prj.getLevel(idItem).getName())) {
-            return 0;
-          }
-          if (!prj.removeLevel(idItem)) {
-            return 0;
-          }
-          break;
-
-        case GOOD_RESOURCE_SCRIPT:
-          if (!SureRemoveRes(prj.getScript(idItem))) {
-            return 0;
-          }
-          if (!prj.removeScript(idItem)) {
-            return 0;
-          }
-          break;
-
-        case GOOD_RESOURCE_PARTICLE:
-          if (!SureRemoveRes(prj.getStgeScript(idItem))) {
-            return 0;
-          }
-          if (!prj.removeStgeScript(idItem)) {
-            return 0;
-          }
-          break;
-
-        case GOOD_RESOURCE_DEPENDENCY:
-          if (!SureRemoveRes(prj.getDep(idItem))) {
-            return 0;
-          }
-          if (!prj.removeDep(idItem)) {
-            return 0;
-          }
-          break;
+        if (!RemoveResItem(typeItem, idItem)) {
+          return 0;
         }
 
         for (int i = 0; i < m.mTabView.GetPageCount(); ++i) { // Delete tab item.
