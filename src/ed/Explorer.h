@@ -448,6 +448,60 @@ end:
     return 0;
   }
 
+  bool AddEditorView(int typeItem, int idItem)
+  {
+    MainT& m = MainT::inst();
+    PrjT &prj = PrjT::inst();
+
+    switch (typeItem)
+    {
+    case GOOD_RESOURCE_AUDIO:
+      m.AddResourceEditor(prj.getSnd(idItem).getName(), idItem, m.CreateEditor<CSoundEditor<MainT> >(idItem));
+      return true;
+
+    case GOOD_RESOURCE_TEXTURE:
+      m.AddResourceEditor(prj.getTex(idItem).getName(), idItem, m.CreateEditor<CTextureEditor<MainT> >(idItem));
+      return true;
+
+    case GOOD_RESOURCE_MAP:
+      m.AddResourceEditor(prj.getMap(idItem).getName(), idItem, m.CreateEditor<CMapEditor<MainT> >(idItem));
+      return true;
+
+    case GOOD_RESOURCE_SPRITE:
+      m.AddResourceEditor(prj.getSprite(idItem).getName(), idItem, m.CreateEditor<CSpriteEditor<MainT> >(idItem));
+      return true;
+
+    case GOOD_RESOURCE_LEVEL:
+      m.AddResourceEditor(prj.getLevel(idItem).getName(), idItem, m.CreateEditor<CLevelEditor<MainT> >(idItem));
+      return true;
+
+    case GOOD_RESOURCE_SCRIPT:
+    case GOOD_RESOURCE_PARTICLE:
+      {
+        std::string name;
+        if (GOOD_RESOURCE_SCRIPT == typeItem) {
+          name = prj.getScript(idItem);
+        } else {
+          name = prj.getStgeScript(idItem);
+        }
+
+        std::string::size_type pos = name.find_last_of('/');
+        if (std::string::npos != pos) {
+          name = name.substr(pos + 1);
+        }
+
+        if (GOOD_RESOURCE_SCRIPT == typeItem) {
+          m.AddResourceEditor(name, idItem, m.CreateEditor<CScriptEditor<MainT> >(idItem));
+        } else {
+          m.AddResourceEditor(name, idItem, m.CreateEditor<CStgeScriptEditor<MainT> >(idItem));
+        }
+      }
+      return true;
+    }
+
+    return false;
+  }
+
   LRESULT OnTreeDblClk(LPNMHDR pnmh)
   {
     if (mTree != pnmh->hwndFrom) {
@@ -491,51 +545,7 @@ end:
     // Open new view.
     //
 
-    PrjT &prj = PrjT::inst();
-
-    switch (typeItem)
-    {
-    case GOOD_RESOURCE_AUDIO:
-      m.AddResourceEditor(prj.getSnd(idItem).getName(), idItem, m.CreateEditor<CSoundEditor<CMainFrame> >(idItem));
-      return 1;
-
-    case GOOD_RESOURCE_TEXTURE:
-      m.AddResourceEditor(prj.getTex(idItem).getName(), idItem, m.CreateEditor<CTextureEditor<CMainFrame> >(idItem));
-      return 1;
-
-    case GOOD_RESOURCE_MAP:
-      m.AddResourceEditor(prj.getMap(idItem).getName(), idItem, m.CreateEditor<CMapEditor<CMainFrame> >(idItem));
-      return 1;
-
-    case GOOD_RESOURCE_SPRITE:
-      m.AddResourceEditor(prj.getSprite(idItem).getName(), idItem, m.CreateEditor<CSpriteEditor<CMainFrame> >(idItem));
-      return 1;
-
-    case GOOD_RESOURCE_LEVEL:
-      m.AddResourceEditor(prj.getLevel(idItem).getName(), idItem, m.CreateEditor<CLevelEditor<CMainFrame> >(idItem));
-      return 1;
-
-    case GOOD_RESOURCE_SCRIPT:
-    case GOOD_RESOURCE_PARTICLE:
-      {
-        std::string name;
-        if (GOOD_RESOURCE_SCRIPT == typeItem) {
-          name = prj.getScript(idItem);
-        } else {
-          name = prj.getStgeScript(idItem);
-        }
-
-        std::string::size_type pos = name.find_last_of('/');
-        if (std::string::npos != pos) {
-          name = name.substr(pos + 1);
-        }
-
-        if (GOOD_RESOURCE_SCRIPT == typeItem) {
-          m.AddResourceEditor(name, idItem, m.CreateEditor<CScriptEditor<CMainFrame> >(idItem));
-        } else {
-          m.AddResourceEditor(name, idItem, m.CreateEditor<CStgeScriptEditor<CMainFrame> >(idItem));
-        }
-      }
+    if (AddEditorView(typeItem, idItem)) {
       return 1;
     }
 
