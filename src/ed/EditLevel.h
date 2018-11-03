@@ -512,6 +512,27 @@ public:
   // Override.
   //
 
+  void DoPaintHotObj(CDC &memdc, const PrjT::ObjectT& inst, const RECT &rc, CPen &pinkPen) const
+  {
+    //
+    // Draw mouse hot rect.
+    //
+
+    memdc.SelectPen(pinkPen);
+    memdc.Rectangle(&rc);
+
+    //
+    // Draw resizer on tex obj.
+    //
+
+    if (PrjT::ObjectT::TYPE_TEXBG == inst.mType) {
+      CBrush br;
+      br.CreateSolidBrush(RGB(255, 0, 0));
+      RECT rc2 = {rc.right - 10, rc.bottom - 10, rc.right, rc.bottom};
+      memdc.FillRect(&rc2, br);
+    }
+  }
+
   void DoPaintObjStateIcon(CDC &memdc, const PrjT::LevelT& lvl, const PrjT::ObjectT& inst, bool IsImgValid, const RECT &rc) const
   {
     int id = inst.mId;
@@ -682,25 +703,12 @@ public:
         }
       }
 
+      //
+      // Draw hot obj.
+      //
+
       if (mHot == id) {
-
-        //
-        // Draw mouse hot rect.
-        //
-
-        memdc.SelectPen(pinkPen);
-        memdc.Rectangle(&rc);
-
-        //
-        // Draw resizer on tex obj.
-        //
-
-        if (PrjT::ObjectT::TYPE_TEXBG == inst.mType) {
-          CBrush br;
-          br.CreateSolidBrush(RGB(255, 0, 0));
-          RECT rc2 = {rc.right - 10, rc.bottom - 10, rc.right, rc.bottom};
-          memdc.FillRect(&rc2, br);
-        }
+        DoPaintHotObj(memdc, inst, rc, pinkPen);
       }
 
       //
