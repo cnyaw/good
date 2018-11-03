@@ -224,7 +224,7 @@ public:
     mEditor.AddTreeItem(id);
 
     //
-    // Forse reset prop view.
+    // Force reset prop view.
     //
 
     mCurSel.clear();
@@ -233,7 +233,7 @@ public:
     MainT::inst().mExpView.SetCurSel(-1);
 
     //
-    // Forse change cur sel prop to this editor.
+    // Force change cur sel prop to this editor.
     //
 
     MainT::inst().mExpView.SetCurSel(mEditor.mId);
@@ -488,7 +488,7 @@ public:
     }
 
     //
-    // Forse change cur sel prop to this editor.
+    // Force change cur sel prop to this editor.
     //
 
     MainT::inst().mExpView.SetCurSel(mEditor.mId);
@@ -511,6 +511,39 @@ public:
   //
   // Override.
   //
+
+  void DoPaintObjStateIcon(CDC &memdc, const PrjT::LevelT& lvl, const PrjT::ObjectT& inst, bool IsImgValid, const RECT &rc) const
+  {
+    int id = inst.mId;
+    int IconOffset = 0;
+    if (!IsImgValid) {
+      memdc.BitBlt(rc.left, rc.top, 16, 16, mDcObjState, 64, 0, SRCCOPY);
+      IconOffset += 16;
+    }
+
+    if (!inst.mScript.empty()) {
+      memdc.BitBlt(rc.left + IconOffset, rc.top, 16, 16, mDcObjState, 0, 0, SRCCOPY);
+      IconOffset += 16;
+    }
+
+    if (!inst.mVisible) {
+      memdc.BitBlt(rc.left + IconOffset, rc.top, 16, 16, mDcObjState, 16, 0, SRCCOPY);
+      IconOffset += 16;
+    } else if (!lvl.isParentVisible(id)) {
+      memdc.BitBlt(rc.left + IconOffset, rc.top, 16, 16, mDcObjState, 16, 0, SRCCOPY);
+      DrawAlphaRect(CDCHandle((HDC)memdc), RGB(255,0,0), rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, 45);
+      IconOffset += 16;
+    }
+
+    if (inst.mRepX) {
+      memdc.BitBlt(rc.left + IconOffset, rc.top, 16, 16, mDcObjState, 32, 0, SRCCOPY);
+      IconOffset += 16;
+    }
+
+    if (inst.mRepY) {
+      memdc.BitBlt(rc.left + IconOffset, rc.top, 16, 16, mDcObjState, 48, 0, SRCCOPY);
+    }
+  }
 
   void DoPaintChildObj(CDC &memdc, PrjT::LevelT const& lvl, std::vector<int> const& Objs, RECT &rcv, CPen &redPen, CPen &redDotPen, CPen &pinkPen, CPen &grayPen)
   {
@@ -674,30 +707,7 @@ public:
       // Draw object states icon on top-left corner.
       //
 
-      int IconOffset = 0;
-      if (!IsImgValid) {
-        memdc.BitBlt(rc.left, rc.top, 16, 16, mDcObjState, 64, 0, SRCCOPY);
-        IconOffset += 16;
-      }
-      if (!inst.mScript.empty()) {
-        memdc.BitBlt(rc.left + IconOffset, rc.top, 16, 16, mDcObjState, 0, 0, SRCCOPY);
-        IconOffset += 16;
-      }
-      if (!inst.mVisible) {
-        memdc.BitBlt(rc.left + IconOffset, rc.top, 16, 16, mDcObjState, 16, 0, SRCCOPY);
-        IconOffset += 16;
-      } else if (!lvl.isParentVisible(id)) {
-        memdc.BitBlt(rc.left + IconOffset, rc.top, 16, 16, mDcObjState, 16, 0, SRCCOPY);
-        DrawAlphaRect(CDCHandle((HDC)memdc), RGB(255,0,0), rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, 45);
-        IconOffset += 16;
-      }
-      if (inst.mRepX) {
-        memdc.BitBlt(rc.left + IconOffset, rc.top, 16, 16, mDcObjState, 32, 0, SRCCOPY);
-        IconOffset += 16;
-      }
-      if (inst.mRepY) {
-        memdc.BitBlt(rc.left + IconOffset, rc.top, 16, 16, mDcObjState, 48, 0, SRCCOPY);
-      }
+      DoPaintObjStateIcon(memdc, lvl, inst, IsImgValid, rc);
 
       //
       // Draw child objects.
