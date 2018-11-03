@@ -167,6 +167,21 @@ public:
     }
   }
 
+  int CountImageResource(const gx::RectPackNode *pRect) const
+  {
+    int n = 0;
+    if (!pRect->img.empty()) {
+      n = 1;
+    }
+    if (pRect->left) {
+      n += CountImageResource(pRect->left);
+    }
+    if (pRect->right) {
+      n += CountImageResource(pRect->right);
+    }
+    return n;
+  }
+
   void onRender(void)
   {
     //
@@ -211,8 +226,10 @@ public:
       for (int i = 0; i < ir.GetTextureCount(); i++) {
         int x = size * (i % count);
         int y = size * (i / count);
-        gx.drawTex(x, y, ir.GetTex(i), size, size, 0xffffffff);
-        sprintf(buff, "%d", i);
+        gx::GL_Surface<gx::GLImageResource> *sur = ir.GetTex(i);
+        gx.drawTex(x, y, sur, size, size, 0xffffffff);
+        int nImg = CountImageResource(sur->root);
+        sprintf(buff, "%d:%d", i, nImg);
         SimpleDrawText(x, y, buff, 0xffff0000);
       }
     }
