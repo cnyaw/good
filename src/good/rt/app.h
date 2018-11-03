@@ -291,7 +291,7 @@ public:
     for (size_t i = 0; i < mRes.mDepIdx.size(); i++) {
 
       std::string depname = mRes.mDep[mRes.mDepIdx[i]];
-      std::for_each(depname.begin(), depname.end(), ::tolower);
+      toLowerString(depname);
 
       //
       // Skip non package files and non search path.

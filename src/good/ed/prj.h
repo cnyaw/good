@@ -910,7 +910,7 @@ public:
 
     for (std::map<int, std::string>::const_iterator it = res.mDep.begin(); res.mDep.end() != it; ++it) {
       std::string tmp = it->second;
-      std::for_each(tmp.begin(), tmp.end(), ::tolower);
+      toLowerString(tmp);
       if (isGoodArchive(tmp) || '/' == *tmp.rbegin()) { // Skip package files and search path.
         continue;
       }
