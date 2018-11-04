@@ -65,6 +65,15 @@ public:
   {
     img.draw(rc.left, rc.top, aimg);
   }
+
+  int size() const
+  {
+    if (root) {
+      return root->size(root);
+    } else {
+      return 0;
+    }
+  }
 };
 
 template<class SurT>

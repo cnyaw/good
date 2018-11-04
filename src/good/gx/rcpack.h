@@ -79,6 +79,28 @@ struct RectPackNode
 
     return left->add(r);
   }
+
+  int size(const RectPackNode *pRect) const
+  {
+    if (0 == pRect) {
+      return 0;
+    }
+
+    int nImg = 0;
+    if (!pRect->img.empty()) {
+      nImg = 1;
+    }
+
+    if (pRect->left) {
+      nImg += size(pRect->left);
+    }
+
+    if (pRect->right) {
+      nImg += size(pRect->right);
+    }
+
+    return nImg;
+  }
 };
 
 } // namespace gx
