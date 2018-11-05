@@ -167,6 +167,11 @@ public:
     }
   }
 
+  bool Outbound(int x, int y, int rcSize, int width, int height) const
+  {
+    return (1 + x) * rcSize > width || (1 + y) * rcSize > height;
+  }
+
   void onRender(void)
   {
     //
@@ -194,19 +199,24 @@ public:
     char buff[512];
 
     if (showTexInfo) {
-      int size;
+      int size = mRes.mWidth;
       if (mRes.mWidth > mRes.mHeight) {
         size = mRes.mHeight;
-      } else {
-        size = mRes.mWidth;
       }
-      int count = 1;                    // Number of tex display on a row.
       gx::GLImageResource &ir = gx::GLImageResource::inst();
-      for (int i = 0; i < ir.GetTextureCount(); i++) {
-        if (((1 + i) / count) * size > mRes.mHeight) {
-          count *= 2;
-          size /= 2;
+      int count = 1;                    // Number of tex display on a row.
+      for (int i = 0;; i++) {
+        int x = (ir.GetTextureCount() - 1) % count;
+        int y = (ir.GetTextureCount() - 1) / count;
+        if (!Outbound(x, y, size, mRes.mWidth, mRes.mHeight)) {
+          break;
         }
+        if (mRes.mWidth > mRes.mHeight) {
+          size = mRes.mHeight / (1 + i);
+        } else {
+          size = mRes.mWidth / (1 + i);
+        }
+        count = mRes.mWidth / size;
       }
       for (int i = 0; i < ir.GetTextureCount(); i++) {
         int x = size * (i % count);
