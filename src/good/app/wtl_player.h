@@ -167,17 +167,8 @@ public:
     }
   }
 
-  bool Outbound(int x, int y, int rcSize, int width, int height) const
+  void DrawLogInfo_i()
   {
-    return (1 + x) * rcSize > width || (1 + y) * rcSize > height;
-  }
-
-  void onRender(void)
-  {
-    //
-    // Draw output message.
-    //
-
     if ((showOutput || 0 < timeTip) && !logs.empty()) {
       if (isTipShown) {
         const int nPage = mRes.mHeight / CY_FONT2;
@@ -191,62 +182,58 @@ public:
         }
       }
     }
+  }
 
-    //
-    // Draw texture list.
-    //
+  bool Outbound_i(int x, int y, int rcSize, int width, int height) const
+  {
+    return (1 + x) * rcSize > width || (1 + y) * rcSize > height;
+  }
 
-    char buff[512];
-
-    if (showTexInfo) {
-      int size = mRes.mWidth;
+  void DrawTexInfo_i()
+  {
+    int size = mRes.mWidth;
+    if (mRes.mWidth > mRes.mHeight) {
+      size = mRes.mHeight;
+    }
+    gx::GLImageResource &ir = gx::GLImageResource::inst();
+    int count = 1;                    // Number of tex display on a row.
+    for (int i = 0;; i++) {
+      int x = (ir.GetTextureCount() - 1) % count;
+      int y = (ir.GetTextureCount() - 1) / count;
+      if (!Outbound_i(x, y, size, mRes.mWidth, mRes.mHeight)) {
+        break;
+      }
       if (mRes.mWidth > mRes.mHeight) {
-        size = mRes.mHeight;
+        size = mRes.mHeight / (1 + i);
+      } else {
+        size = mRes.mWidth / (1 + i);
       }
-      gx::GLImageResource &ir = gx::GLImageResource::inst();
-      int count = 1;                    // Number of tex display on a row.
-      for (int i = 0;; i++) {
-        int x = (ir.GetTextureCount() - 1) % count;
-        int y = (ir.GetTextureCount() - 1) / count;
-        if (!Outbound(x, y, size, mRes.mWidth, mRes.mHeight)) {
-          break;
-        }
-        if (mRes.mWidth > mRes.mHeight) {
-          size = mRes.mHeight / (1 + i);
-        } else {
-          size = mRes.mWidth / (1 + i);
-        }
-        count = mRes.mWidth / size;
-      }
-      for (int i = 0; i < ir.GetTextureCount(); i++) {
-        int x = size * (i % count);
-        int y = size * (i / count);
-        gx::GL_Surface<gx::GLImageResource> *sur = ir.GetTex(i);
-        gx.drawTex(x, y, sur, size, size, 0xffffffff);
-        sprintf(buff, "%d:%d", i, sur->size());
-        SimpleDrawText(x, y, buff, 0xffff0000);
-      }
+      count = mRes.mWidth / size;
     }
-
-    //
-    // Calc FPS.
-    //
-
-    if (!showFPS) {
-      return;
+    char buff[512];
+    for (int i = 0; i < ir.GetTextureCount(); i++) {
+      int x = size * (i % count);
+      int y = size * (i / count);
+      gx::GL_Surface<gx::GLImageResource> *sur = ir.GetTex(i);
+      gx.drawTex(x, y, sur, size, size, 0xffffffff);
+      sprintf(buff, "%d:%d", i, sur->size());
+      SimpleDrawText(x, y, buff, 0xffff0000);
     }
+  }
 
-     static int FPS = 0;
-     static int framesPerSecond = 0;    // This will store our FPS.
-     static DWORD LastTime = 0;         // This will hold the time from the last frame.
-     DWORD CurrentTime = GetTickCount();
-     ++framesPerSecond;
+  void DrawFpsInfo_i()
+  {
+    static int FPS = 0;
+    static int framesPerSecond = 0;     // This will store our FPS.
+    static DWORD LastTime = 0;          // This will hold the time from the last frame.
+    DWORD CurrentTime = GetTickCount();
+    framesPerSecond += 1;
 
-     if (CurrentTime - LastTime >= 1000) {
-       LastTime = CurrentTime;
-       FPS = framesPerSecond;
-       framesPerSecond = 0;
-     }
+    if (CurrentTime - LastTime >= 1000) {
+      LastTime = CurrentTime;
+      FPS = framesPerSecond;
+      framesPerSecond = 0;
+    }
 
     //
     // Draw FPS info.
@@ -255,8 +242,22 @@ public:
     maxDrawCalls = max(maxDrawCalls, gx.nLastDrawCalls);
     maxActors = max(maxActors, mActors.size());
 
+    char buff[512];
     sprintf(buff, "%d,d%d/%d,o%d/%d", FPS, gx.nLastDrawCalls, maxDrawCalls, mActors.size(), maxActors);
     SimpleDrawText(mRes.mWidth - CX_FONT2 * (int)strlen(buff), 0, buff, COLOR_TRACE);
+  }
+
+  void onRender(void)
+  {
+    DrawLogInfo_i();                    // Draw output message.
+
+    if (showTexInfo) {
+      DrawTexInfo_i();                  // Draw texture list.
+    }
+
+    if (showFPS) {
+      DrawFpsInfo_i();                  // Calc FPS.
+    }
   }
 
   void OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
