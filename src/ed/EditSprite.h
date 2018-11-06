@@ -571,7 +571,7 @@ public:
     switch (uMsg)
     {
     case WM_GOOD_UNDO:
-      if (spr.mUndo.undo()) {
+      if (spr.undo()) {
         mEditView.mCurSel = mEditView.mCurHot = -1;
         mEditView.mCurFrame = mEditView.mCurCnt = 0;
         UpdateLayout();
@@ -579,13 +579,13 @@ public:
       return true;
 
     case WM_GOOD_CANUNDO:
-      return spr.mUndo.canUndo();
+      return spr.canUndo();
 
     case WM_GOOD_CANREDO:
-      return spr.mUndo.canRedo();
+      return spr.canRedo();
 
     case WM_GOOD_REDO:
-      if (spr.mUndo.redo()) {
+      if (spr.redo()) {
         UpdateLayout();
       }
       return true;
