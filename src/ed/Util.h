@@ -149,23 +149,22 @@ HWND GoodCreateSimpleToolbar(HWND hParent, UINT idRes, int nBtn = -1)
 
 std::string GetObjectName(PrjT::ObjectT const &o)
 {
+  std::string name = o.getName();
   switch (o.mType)
   {
   case PrjT::ObjectT::TYPE_SPRITE:
-    return o.getName() + " - Object";
+    return name + " - Sprite";
   case PrjT::ObjectT::TYPE_COLBG:
-    return o.getName() + " - Color";
+    return name + " - Color";
   case PrjT::ObjectT::TYPE_TEXBG:
-    return o.getName() + " - Texture";
+    return name + " - Texture";
   case PrjT::ObjectT::TYPE_MAPBG:
-    return o.getName() + " - Map";
+    return name + " - Map";
   case PrjT::ObjectT::TYPE_DUMMY:
-    return o.getName() + " - Dummy";
+    return name + " - Dummy";
   default:
-    return o.getName() + " - Object";
+    return name + " - Object";
   }
-
-  return o.getName();
 }
 
 // end of Util.h
