@@ -1073,20 +1073,6 @@ public:
     Invalidate(FALSE);
   }
 
-  void DrawTrackFocusRect(HDC dc, POINT a, POINT b) const
-  {
-    if (a.x > b.x) {
-      std::swap(a.x, b.x);
-    }
-
-    if (a.y > b.y) {
-      std::swap(a.y, b.y);
-    }
-
-    RECT r = {a.x, a.y, b.x, b.y};
-    CDCHandle(dc).DrawFocusRect(&r);
-  }
-
   void TrackMoveSelCheck(POINT a, POINT b)
   {
     //
