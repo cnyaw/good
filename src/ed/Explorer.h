@@ -448,31 +448,37 @@ end:
     return 0;
   }
 
-  bool AddEditorView(int typeItem, int idItem)
+  template<class EditorT>
+  void AddResourceEditor(int idItem, const std::string &name)
   {
     MainT& m = MainT::inst();
+    m.AddResourceEditor(name, idItem, m.CreateEditor<EditorT>(idItem));
+  }
+
+  bool AddEditorView(int typeItem, int idItem)
+  {
     PrjT &prj = PrjT::inst();
 
     switch (typeItem)
     {
     case GOOD_RESOURCE_AUDIO:
-      m.AddResourceEditor(prj.getSnd(idItem).getName(), idItem, m.CreateEditor<CSoundEditor<MainT> >(idItem));
+      AddResourceEditor<CSoundEditor<MainT> >(idItem, prj.getSnd(idItem).getName());
       return true;
 
     case GOOD_RESOURCE_TEXTURE:
-      m.AddResourceEditor(prj.getTex(idItem).getName(), idItem, m.CreateEditor<CTextureEditor<MainT> >(idItem));
+      AddResourceEditor<CTextureEditor<MainT> >(idItem, prj.getTex(idItem).getName());
       return true;
 
     case GOOD_RESOURCE_MAP:
-      m.AddResourceEditor(prj.getMap(idItem).getName(), idItem, m.CreateEditor<CMapEditor<MainT> >(idItem));
+      AddResourceEditor<CMapEditor<MainT> >(idItem, prj.getMap(idItem).getName());
       return true;
 
     case GOOD_RESOURCE_SPRITE:
-      m.AddResourceEditor(prj.getSprite(idItem).getName(), idItem, m.CreateEditor<CSpriteEditor<MainT> >(idItem));
+      AddResourceEditor<CSpriteEditor<MainT> >(idItem, prj.getSprite(idItem).getName());
       return true;
 
     case GOOD_RESOURCE_LEVEL:
-      m.AddResourceEditor(prj.getLevel(idItem).getName(), idItem, m.CreateEditor<CLevelEditor<MainT> >(idItem));
+      AddResourceEditor<CLevelEditor<MainT> >(idItem, prj.getLevel(idItem).getName());
       return true;
 
     case GOOD_RESOURCE_SCRIPT:
@@ -491,9 +497,9 @@ end:
         }
 
         if (GOOD_RESOURCE_SCRIPT == typeItem) {
-          m.AddResourceEditor(name, idItem, m.CreateEditor<CScriptEditor<MainT> >(idItem));
+          AddResourceEditor<CScriptEditor<MainT> >(idItem, name);
         } else {
-          m.AddResourceEditor(name, idItem, m.CreateEditor<CStgeScriptEditor<MainT> >(idItem));
+          AddResourceEditor<CStgeScriptEditor<MainT> >(idItem, name);
         }
       }
       return true;
