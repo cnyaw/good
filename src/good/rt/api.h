@@ -239,8 +239,6 @@ int genDummy(int idParent, const char* script)
     a.OnCreate();
   }
 
-  mDirty = true;
-
   return newid;
 }
 
