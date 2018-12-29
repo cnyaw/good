@@ -332,19 +332,7 @@ public:
 
     for (size_t i = 0; i < mRes.mScriptIdx.size(); ++i) {
       std::string name = mRes.mScript[mRes.mScriptIdx[i]];
-      std::stringstream ss;
-      if (!loadFile(name, ss)) {
-        trace("Script '%s' not found.\n", name.c_str());
-        continue;
-      }
-      std::string sdat = ss.str();
-      int s = luaL_loadbuffer(mLua, sdat.data(), sdat.length(), name.c_str());
-      if (0 == s) {
-        s = lua_pcall(mLua, 0, LUA_MULTRET, 0);
-      }
-      if (0 != s) {
-        trace("[%s] %s\n", name.c_str(), lua_tostring(mLua, -1));
-      }
+      (void)loadLuaScript(name);
     }
 
     return true;
