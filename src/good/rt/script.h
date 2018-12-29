@@ -1013,17 +1013,17 @@ public:
   static bool installInputModuleApi(lua_State* L)
   {
     static RegConstType InputConst[] = {
-      {"UP", GOOD_KEYS_UP},
-      {"DOWN", GOOD_KEYS_DOWN},
-      {"LEFT", GOOD_KEYS_LEFT},
-      {"RIGHT", GOOD_KEYS_RIGHT},
-      {"RETURN", GOOD_KEYS_RETURN},
-      {"BTN_A", GOOD_KEYS_BTN_A},
-      {"BTN_B", GOOD_KEYS_BTN_B},
-      {"LBUTTON", GOOD_KEYS_LBUTTON},
-      {"RBUTTON", GOOD_KEYS_RBUTTON},
-      {"ESCAPE", GOOD_KEYS_ESCAPE},
-      {"ANY", GOOD_KEYS_ANY},
+      {"UP", (unsigned int)GOOD_KEYS_UP},
+      {"DOWN", (unsigned int)GOOD_KEYS_DOWN},
+      {"LEFT", (unsigned int)GOOD_KEYS_LEFT},
+      {"RIGHT", (unsigned int)GOOD_KEYS_RIGHT},
+      {"RETURN", (unsigned int)GOOD_KEYS_RETURN},
+      {"BTN_A", (unsigned int)GOOD_KEYS_BTN_A},
+      {"BTN_B", (unsigned int)GOOD_KEYS_BTN_B},
+      {"LBUTTON", (unsigned int)GOOD_KEYS_LBUTTON},
+      {"RBUTTON", (unsigned int)GOOD_KEYS_RBUTTON},
+      {"ESCAPE", (unsigned int)GOOD_KEYS_ESCAPE},
+      {"ANY", (unsigned int)GOOD_KEYS_ANY},
       { 0 }
     };
 

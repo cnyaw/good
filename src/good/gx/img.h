@@ -448,7 +448,7 @@ public:
     HFONT hFont = CreateFontIndirect(&lf);
     hFont = (HFONT)SelectObject(memdc, hFont);
 
-    wchar_t buff[2] = {ch, 0};
+    wchar_t buff[2] = {(wchar_t)ch, 0};
 
     RECT rc = {0};
     DrawTextW(memdc, buff, 1, &rc, DT_LEFT|DT_TOP|DT_SINGLELINE|DT_CALCRECT);
