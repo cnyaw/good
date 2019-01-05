@@ -14,6 +14,10 @@ function ArGetValue(o, n)
   return assert(loadstring('return Good.Get' .. n .. '(' .. o .. ')'))()
 end
 
+function ArLerp(v0, v1, t)
+  return (1 - t) * v0 + t * v1
+end
+
 ArAddAr = function(Parent, n, dt, v1, v2, OnStep, fn)
   local ar = {}
   ar.v1 = v1
@@ -23,6 +27,7 @@ ArAddAr = function(Parent, n, dt, v1, v2, OnStep, fn)
   ar.n = n
   ar.OnStep = OnStep
   ar.fn = fn
+  ar.lerp = ArLerp
   ArAppendAr(Parent, ar)
   return ar
 end
@@ -44,9 +49,9 @@ ArOnStep = function(param, f1, f2)
     end
   end
   if (nil == ar.SrcV2) then
-    ArSetValue(o, ar.n, ar.SrcV1 + f1(ar) * dt)
+    ArSetValue(o, ar.n, ar.lerp(ar.SrcV1, f1(ar), dt))
   else
-    ArSetValue(o, ar.n, ar.SrcV1 + f1(ar) * dt, ar.SrcV2 + f2(ar) * dt)
+    ArSetValue(o, ar.n, ar.lerp(ar.SrcV1, f1(ar), dt), ar.lerp(ar.SrcV2, f2(ar), dt))
   end
   if (ar.dt < ar.Duration) then
     ar.dt = ar.dt + 1
@@ -59,14 +64,14 @@ end
 
 ArAddMoveTo = function(Parent, n, dt, DstV1, DstV2)
   local f = function(param)
-    ArOnStep(param, function(ar) return (ar.v1 - ar.SrcV1) end, function(ar) return (ar.v2 - ar.SrcV2) end)
+    ArOnStep(param, function(ar) return ar.v1 end, function(ar) return ar.v2 end)
   end
   return ArAddAr(Parent, n, dt, DstV1, DstV2, f)
 end
 
 ArAddMoveBy = function(Parent, n, dt, v1, v2)
   local f = function(param)
-    ArOnStep(param, function(ar) return ar.v1 end, function(ar) return ar.v2 end)
+    ArOnStep(param, function(ar) return (ar.SrcV1 + ar.v1) end, function(ar) return (ar.SrcV2 + ar.v2) end)
   end
   return ArAddAr(Parent, n, dt, v1, v2, f)
 end
