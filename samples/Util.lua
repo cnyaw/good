@@ -205,9 +205,9 @@ end
 function LerpARgb(c0, c1, t)
   local a,r,g,b = GetARgbFromColor(c0)
   local ba,br,bg,bb = GetARgbFromColor(c1)
-  local na = Lerp(ba, a, t)
-  local nr = Lerp(br, r, t)
-  local ng = Lerp(bg, g, t)
-  local nb = Lerp(bb, b, t)
+  local na = Lerp(a, ba, t)
+  local nr = Lerp(r, br, t)
+  local ng = Lerp(g, bg, t)
+  local nb = Lerp(b, bb, t)
   return GetColorFromARgb(na, nr, ng, nb)
 end
