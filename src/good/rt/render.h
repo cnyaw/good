@@ -16,12 +16,8 @@ bool mAntiAlias;
 template<class GxT>
 void renderColorBg(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, unsigned int color, float rot, float xscale, float yscale) const
 {
-  int w, h;
-  if (a.mDim.empty()) {
-    w = h = 32;
-  } else {
-    w = a.mDim.width(); h = a.mDim.height();
-  }
+  int l, t, w, h;
+  getDim_i(a, l, t, w, h);
 
   sw2::IntRect rc(0, 0, w, h);
   rc.offset((int)cx, (int)cy);
