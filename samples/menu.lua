@@ -1,9 +1,9 @@
 
 local CHW, CHH = 16, 32
 
-local MENUX, MENUY = 50, 50
-local MENUW, MENUH = 130, 45
-local NUM_MENU = 8
+local MENUX, MENUY = 50, 25
+local MENUW, MENUH = 130, 40
+local NUM_MENU = 11
 
 local ICONS = Resource.GetTexId('icons')
 local ICONW, ICONH = 128, 128
@@ -11,7 +11,7 @@ local ICONW, ICONH = 128, 128
 local ENTERX = ICONW
 local ENTERTIME = 15
 
-local Packages = {'mmc', 'mario', 'stge', 'puzzle', 'weeder', 'breakout', 'zelda', 'life'}
+local Packages = {'mmc', 'mario', 'stge', 'puzzle', 'weeder', 'breakout', 'zelda', 'life', 'mine', 'link', 'animator'}
 
 function PlayGame(sel)
   Good.CallPackage(Packages[1 + sel] .. '.txt')
@@ -64,6 +64,9 @@ Menu = {}
 
 function genIcon(param)
   Good.KillObj(param.icon)
+  if (8 <= param.menu) then
+    return
+  end
   local o = GenTexObj(-1, ICONS, ICONW, ICONH, ICONW * (param.menu % 4), ICONH * math.floor(param.menu / 4), 'Icon')
   Good.SetPos(o, MENUX + MENUW, MENUY + param.menu * MENUH - MENUH/2)
   Good.SetVisible(o, 0)

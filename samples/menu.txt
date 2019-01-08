@@ -18,6 +18,9 @@ levels=3
 11=./breakout.txt
 12=./zelda.txt
 13=./life.txt
+0=./mine.txt
+14=./link.txt
+15=./animator.txt
 
 [tex1]
 name=font
