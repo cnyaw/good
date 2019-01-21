@@ -8,40 +8,8 @@
   2014/7/6 Waync created
  */
 
-#include <jni.h>
-#include <android/log.h>
-#include <android/asset_manager.h>
-#include <android/asset_manager_jni.h>
-
-#include <GLES/gl.h>
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <unistd.h>
-
-#define JNI_ACTIVITY "weilican/good/goodJniActivity"
-
-#define  LOG_TAG    "libgood"
-#define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
-#define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
-
-#include <algorithm>
-#include <map>
-#include <sstream>
-#include <stdexcept>
-#include <vector>
-#include <iterator>
-#include <cctype>
-
-#define glOrtho glOrthof                // Fixed GLES.
-
-JNIEnv *tmpEnv;
-
 #define GOOD_SUPPORT_STGE
-#include "rt/rt.h"
+
 #include "app/android_app.h"
 
 class GoodApp : public good::rt::AndroidApplication<GoodApp>

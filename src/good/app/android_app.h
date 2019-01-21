@@ -10,6 +10,40 @@
 
 #pragma once
 
+#include <jni.h>
+#include <android/log.h>
+#include <android/asset_manager.h>
+#include <android/asset_manager_jni.h>
+
+#include <GLES/gl.h>
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <unistd.h>
+
+#define JNI_ACTIVITY "weilican/good/goodJniActivity"
+
+#define  LOG_TAG    "libgood"
+#define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+#define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
+
+#include <algorithm>
+#include <map>
+#include <sstream>
+#include <stdexcept>
+#include <vector>
+#include <iterator>
+#include <cctype>
+
+#define glOrtho glOrthof                // Fixed GLES.
+
+JNIEnv *tmpEnv;
+
+#include "rt/rt.h"
+
 #define GOOD_SUPPORT_ANDROID_IMG
 #include "../gx/opengl_gx.h"
 #include "../gx/imgp_gx.h"
