@@ -211,3 +211,21 @@ function LerpARgb(c0, c1, t)
   local nb = Lerp(b, bb, t)
   return GetColorFromARgb(na, nr, ng, nb)
 end
+
+function ScaleToSize(o, width, height)
+  local l, t, w, h = Good.GetDim(o)
+  local sw, sh
+  if (w == h) then
+    sw = width / w
+    sh = height / h
+  elseif (w > h) then
+    local s = width/w
+    sw = s
+    sh = s
+  else
+    local s = height/h
+    sw = s
+    sh = s
+  end
+  Good.SetScale(o, sw, sh)
+end
