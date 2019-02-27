@@ -328,7 +328,12 @@ ImgT getImage(std::string const& name) const
   std::stringstream ss;
   loadFile(name, ss);
 
-  return ImgT::getImage(name, ss.str());
+  ImgT img = ImgT::getImage(name, ss.str());
+  if (img.isValid()) {
+    mDirty = true;
+  }
+
+  return img;
 }
 
 ImgT getImage(int size, int ch) const
@@ -336,7 +341,16 @@ ImgT getImage(int size, int ch) const
   char chrmap[128];
   sprintf(chrmap, "chrmap;%d;%d;%d", size, ch, mAntiAlias);
 
-  return ImgT::getImage(chrmap, size, ch, mAntiAlias);
+  if (ImgT::existImage(chrmap)) {
+    return ImgT::getImage(chrmap);
+  }
+
+  ImgT img = ImgT::getImage(chrmap, size, ch, mAntiAlias);
+  if (img.isValid()) {
+    mDirty = true;
+  }
+
+  return img;
 }
 
 // end of render.h
