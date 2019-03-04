@@ -228,4 +228,5 @@ function ScaleToSize(o, width, height)
     sh = s
   end
   Good.SetScale(o, sw, sh)
+  return w * sw, h * sh
 end
