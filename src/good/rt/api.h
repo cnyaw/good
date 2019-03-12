@@ -187,7 +187,7 @@ void fillRect(int canvas, int x, int y, int w, int h, unsigned int color, float 
   }
 }
 
-int findChild(int idObj, const char* name) const
+int findChild(int idObj, const char* name, bool recursive) const
 {
   if (name) {
     if (mActors.isUsed(idObj)) {
@@ -196,6 +196,12 @@ int findChild(int idObj, const char* name) const
         int idChild = o.mChild[i];
         if (mActors[idChild].mResName == name) {
           return idChild;
+        }
+        if (recursive) {
+          idChild = findChild(idChild, name, true);
+          if (-1 != idChild) {
+            return idChild;
+          }
         }
       }
     }

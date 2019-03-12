@@ -138,7 +138,7 @@ public:
   }
 
   //
-  // [in] idObj, childName [out] id.
+  // [in] idObj, childName[, recursive] [out] id.
   //
 
   static int FindChild(lua_State* L)
@@ -146,7 +146,12 @@ public:
     int idObj = luaL_checkint(L, 1);
     const char* name = luaL_checkstring(L, 2);
 
-    lua_pushinteger(L, AppT::getInst().findChild(idObj, name));
+    int recursive = 0;
+    if (3 <= lua_gettop(L)) {
+      recursive = luaL_checkint(L, 3);
+    }
+
+    lua_pushinteger(L, AppT::getInst().findChild(idObj, name, 0 != recursive));
 
     return 1;
   }
