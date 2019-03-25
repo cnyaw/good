@@ -221,7 +221,7 @@ public:
     mHeight = 480;
     mColorBits = 16;
     mFullScreen = false;
-    mFps = 60;
+    mFps = GOOD_DEFAULT_TICK_PER_SECOND;
 
     std::vector<int> v;
     {

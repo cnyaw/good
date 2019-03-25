@@ -190,7 +190,7 @@ public:
     mRes.mHeight = 480;
     mRes.mColorBits = 16;
     mRes.mFullScreen = false;
-    mRes.mFps = 60;
+    mRes.mFps = GOOD_DEFAULT_TICK_PER_SECOND;
   }
 
   //
@@ -723,7 +723,7 @@ public:
       secPrj["window"] = intVecToStr(v);
     }
 
-    if (60 != mRes.mFps) {
+    if (GOOD_DEFAULT_TICK_PER_SECOND != mRes.mFps) {
       secPrj["fps"] = mRes.mFps;
     }
 

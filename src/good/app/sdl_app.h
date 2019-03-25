@@ -28,7 +28,7 @@ namespace good {
 
 namespace rt {
 
-#define TICK (int)(1000 / 60)
+#define TICK (int)(1000 / GOOD_DEFAULT_TICK_PER_SECOND)
 
 class SDLApplication : public Application<SDLApplication, gx::SDLImage, snd::AudiereSound, gx::Imgp>
 {
