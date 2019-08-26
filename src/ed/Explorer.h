@@ -184,11 +184,43 @@ public:
     SW2_TRACE_ERROR("Item is still used by %s of %s", name.c_str(), owner.c_str());
   }
 
-  bool SureRemoveRes(const std::string &name) const
+  template<int ResType, class ResT, class IdxT>
+  void FillResourceTree(ResT const& res, IdxT const& idx, CString const& resName)
   {
-    CString msg;
-    msg.Format(_T("Are you sure to remove resource item '%s'?"), name.c_str());
-    return IDYES == ::MessageBox(m_hWnd, msg, CString((LPCTSTR)IDR_MAINFRAME), MB_YESNOCANCEL | MB_ICONQUESTION);
+    MainT& m = MainT::inst();
+    for (size_t i = 0; i < idx.size(); ++i) {
+      typename ResT::const_iterator it = res.find(idx[i]);
+      m.AddResourceItem(resName, it->second.getName(), idx[i], ResType, NULL);
+    }
+  }
+
+  template<int ResType, class ResT, class IdxT>
+  void FillResourceTree2(ResT const& res, IdxT const& idx, CString const& resName)
+  {
+    MainT& m = MainT::inst();
+    for (size_t i = 0; i < idx.size(); ++i) {
+      typename ResT::const_iterator it = res.find(idx[i]);
+      std::string name = it->second;
+      name = ExtractFileName(name);
+      if (name.empty()) {               // This is a search path.
+        name = it->second;
+      }
+      m.AddResourceItem(resName, name, idx[i], ResType, NULL);
+    }
+  }
+
+  void FillTree()
+  {
+    PrjT::ResT const& res = PrjT::inst().mRes;
+    FillResourceTree<GOOD_RESOURCE_AUDIO>(res.mSnd, res.mSndIdx, _T("Audio"));
+    FillResourceTree<GOOD_RESOURCE_TEXTURE>(res.mTex, res.mTexIdx, _T("Texture"));
+    FillResourceTree<GOOD_RESOURCE_MAP>(res.mMap, res.mMapIdx, _T("Map"));
+    FillResourceTree<GOOD_RESOURCE_SPRITE>(res.mSprite, res.mSpriteIdx, _T("Sprite"));
+    FillResourceTree<GOOD_RESOURCE_LEVEL>(res.mLevel, res.mLevelIdx, _T("Level"));
+    FillResourceTree2<GOOD_RESOURCE_SCRIPT>(res.mScript, res.mScriptIdx, _T("Script"));
+    FillResourceTree2<GOOD_RESOURCE_PARTICLE>(res.mStgeScript, res.mStgeScriptIdx, _T("Particle"));
+    FillResourceTree2<GOOD_RESOURCE_DEPENDENCY>(res.mDep, res.mDepIdx, _T("Dependency"));
+    mTree.InsertItem(_T("Project"), 3, 3, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_PROJECT); // Project info.
   }
 
   template<class MapT>
@@ -200,7 +232,6 @@ public:
         return true;
       }
     }
-
     return false;
   }
 
@@ -213,7 +244,6 @@ public:
         return true;
       }
     }
-
     return false;
   }
 
@@ -226,7 +256,6 @@ public:
         return true;
       }
     }
-
     return false;
   }
 
@@ -239,14 +268,12 @@ public:
         return true;
       }
     }
-
     return false;
   }
 
   void InitTree()
   {
     mTree.DeleteAllItems();
-
     mTree.InsertItem(_T("Audio"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_AUDIO);
     mTree.InsertItem(_T("Texture"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_TEXTURE);
     mTree.InsertItem(_T("Map"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_MAP);
@@ -274,6 +301,13 @@ public:
     if (mTree.GetSelectedItem() != hItem) {
       mTree.SelectItem(hItem);
     }
+  }
+
+  bool SureRemoveRes(const std::string &name) const
+  {
+    CString msg;
+    msg.Format(_T("Are you sure to remove resource item '%s'?"), name.c_str());
+    return IDYES == ::MessageBox(m_hWnd, msg, CString((LPCTSTR)IDR_MAINFRAME), MB_YESNOCANCEL | MB_ICONQUESTION);
   }
 
   void UpdateProperty(int id = -1)
