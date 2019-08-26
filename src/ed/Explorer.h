@@ -243,6 +243,20 @@ public:
     return false;
   }
 
+  void InitTree()
+  {
+    mTree.DeleteAllItems();
+
+    mTree.InsertItem(_T("Audio"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_AUDIO);
+    mTree.InsertItem(_T("Texture"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_TEXTURE);
+    mTree.InsertItem(_T("Map"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_MAP);
+    mTree.InsertItem(_T("Sprite"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_SPRITE);
+    mTree.InsertItem(_T("Level"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_LEVEL);
+    mTree.InsertItem(_T("Script"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_SCRIPT);
+    mTree.InsertItem(_T("Particle"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_PARTICLE);
+    mTree.InsertItem(_T("Dependency"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_DEPENDENCY);
+  }
+
   void Refresh(int id)
   {
     SetCurSel(-1);                      // Remove all prop.

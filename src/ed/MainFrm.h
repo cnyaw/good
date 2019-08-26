@@ -517,8 +517,7 @@ public:
         AddResourceItem(_T("Level"), prj.getLevel(idLevel).getName(), idLevel, GOOD_RESOURCE_LEVEL, CreateEditor<CLevelEditor<CMainFrame> >(idLevel));
       }
     } else {
-      CDlgAddNewItem<CMainFrame>(
-        nID - ID_FILE_ADDNEWMAP + GOOD_RESOURCE_MAP).DoModal();
+      CDlgAddNewItem<CMainFrame>(nID - ID_FILE_ADDNEWMAP + GOOD_RESOURCE_MAP).DoModal();
     }
   }
 
@@ -1204,21 +1203,7 @@ public:
 
   void InitTree()
   {
-    InitTree(mExpView.mTree);
-  }
-
-  void InitTree(CTreeViewCtrlEx& tree)
-  {
-    tree.DeleteAllItems();
-
-    tree.InsertItem(_T("Audio"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_AUDIO);
-    tree.InsertItem(_T("Texture"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_TEXTURE);
-    tree.InsertItem(_T("Map"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_MAP);
-    tree.InsertItem(_T("Sprite"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_SPRITE);
-    tree.InsertItem(_T("Level"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_LEVEL);
-    tree.InsertItem(_T("Script"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_SCRIPT);
-    tree.InsertItem(_T("Particle"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_PARTICLE);
-    tree.InsertItem(_T("Dependency"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_DEPENDENCY);
+    mExpView.InitTree();
   }
 
   LPTSTR GetConfigName() const
