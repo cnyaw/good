@@ -68,10 +68,7 @@ public:
   {
     logs.push_back(s);
 
-    int nPage = mRes.mHeight / CY_FONT2;
-    if (0 == nPage) {
-      nPage = DEFAULT_LOG_LINES_PER_PAGE;
-    }
+    int nPage = getNumLogsPerPage();
 
     if (iLogs + nPage < (int)logs.size()) {
       iLogs = (int)(logs.size() - (logs.size() % nPage)); // Move to end page.
@@ -87,6 +84,15 @@ public:
     char buff[128];
     sprintf(buff, "* User INT event: %d", i);
     doTrace(buff);
+  }
+
+  int getNumLogsPerPage() const
+  {
+    int nPage = mRes.mHeight / CY_FONT2;
+    if (0 >= nPage) {
+      nPage = DEFAULT_LOG_LINES_PER_PAGE;
+    }
+    return nPage;
   }
 
   void Reset(int StartLevel = -1)
@@ -171,7 +177,7 @@ public:
   {
     if ((showOutput || 0 < timeTip) && !logs.empty()) {
       if (isTipShown) {
-        const int nPage = mRes.mHeight / CY_FONT2;
+        const int nPage = getNumLogsPerPage();
         for (int i = iLogs; i < (int)logs.size() && (i - iLogs) < nPage; i++) {
           SimpleDrawText(0, (i - iLogs) * CY_FONT2, logs[i], COLOR_TRACE);
         }
@@ -266,7 +272,7 @@ public:
       return;
     }
 
-    const int nPage = mRes.mHeight / CY_FONT2;
+    const int nPage = getNumLogsPerPage();
 
     if (VK_HOME == nChar) {
       iLogs = 0;
