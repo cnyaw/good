@@ -108,6 +108,10 @@ public:
     iLogs = 0;
     logs.clear();
 
+    iCmdHist = 0;
+    cmdHist.clear();
+    cmdLine = "";
+
     mPackageStack.clear();
     mCallStack.clear();
 
