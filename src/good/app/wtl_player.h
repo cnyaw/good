@@ -30,6 +30,8 @@ public:
     COLOR_TRACE = 0x90ffffff,
     SHOW_TIP_TIME = 6 * 60,             // 6 seconds.
     DEFAULT_LOG_LINES_PER_PAGE = 30,
+    COLOR_CMD_LINE = 0xffffffff,
+    MAX_CMD_LINE_HIST = 100,
   };
 
   typedef WtlApplicationImpl<PlayerT> BaseT;
@@ -43,17 +45,23 @@ public:
   bool isTipShown;
   int timeTip;
 
+  int caretTimer;
+  std::string cmdLine;
+  int iCmdHist;
+  std::vector<std::string> cmdHist;
+
   int iLogs;
   std::vector<std::string> logs;
 
   int maxDrawCalls, maxActors;
 
-  CPlayerWindowImpl() : showFPS(false), showOutput(false), showTexInfo(false), mFont(0), maxDrawCalls(0), maxActors(0)
+  CPlayerWindowImpl() : showFPS(false), showOutput(false), showTexInfo(false), mFont(0), maxDrawCalls(0), maxActors(0), caretTimer(0), iCmdHist(0)
   {
     tip = "Press Ctrl+Alt+O to toggle trace messages";
   }
 
   BEGIN_MSG_MAP_EX(CPlayerWindowImpl)
+    MSG_WM_CHAR(OnChar)
     MSG_WM_KEYUP(OnKeyUp)
 #ifdef ID_VIEW_OUTPUTWINDOW
     COMMAND_ID_HANDLER_EX(ID_VIEW_OUTPUTWINDOW, OnViewOutputWindow)
@@ -88,7 +96,7 @@ public:
 
   int getNumLogsPerPage() const
   {
-    int nPage = mRes.mHeight / CY_FONT2;
+    int nPage = mRes.mHeight / CY_FONT2 - 1;
     if (0 >= nPage) {
       nPage = DEFAULT_LOG_LINES_PER_PAGE;
     }
@@ -173,14 +181,28 @@ public:
     }
   }
 
+  void DrawCmdLine_i()
+  {
+    std::string s(cmdLine);
+    if (10 <= caretTimer) {
+      s += "|";
+    }
+    if (!s.empty()) {
+      const int nPage = getNumLogsPerPage();
+      SimpleDrawText(0, nPage * CY_FONT2, s, COLOR_CMD_LINE);
+    }
+  }
+
   void DrawLogInfo_i()
   {
+    caretTimer = (caretTimer + 1) % 60;
     if ((showOutput || 0 < timeTip) && !logs.empty()) {
       if (isTipShown) {
         const int nPage = getNumLogsPerPage();
         for (int i = iLogs; i < (int)logs.size() && (i - iLogs) < nPage; i++) {
           SimpleDrawText(0, (i - iLogs) * CY_FONT2, logs[i], COLOR_TRACE);
         }
+        DrawCmdLine_i();
       } else if (0 < timeTip) {
         SimpleDrawText(0, 0, tip, COLOR_TRACE);
         if (0 == --timeTip) {
@@ -266,6 +288,37 @@ public:
     }
   }
 
+  void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
+  {
+    if (!showOutput) {
+      return;
+    }
+
+    switch (nChar)
+    {
+    case 8:                           // Backspace.
+      if (!cmdLine.empty()) {
+        cmdLine.erase(cmdLine.length() - 1);
+      }
+      break;
+    case 13:                          // Enter.
+      doLuaScript(cmdLine.c_str());
+      cmdHist.push_back(cmdLine);
+      if (MAX_CMD_LINE_HIST < cmdHist.size()) {
+        cmdHist.erase(cmdHist.begin());
+      }
+      iCmdHist = cmdHist.size();
+      cmdLine = "";
+      break;
+    case 27:                          // ESC.
+      // NOP.
+      break;
+    default:
+      cmdLine += (char)nChar;
+      break;
+    }
+  }
+
   void OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
   {
     if (!showOutput) {
@@ -273,19 +326,34 @@ public:
     }
 
     const int nPage = getNumLogsPerPage();
-
-    if (VK_HOME == nChar) {
-      iLogs = 0;
-    } else if (VK_END == nChar) {
-      iLogs = (int)(logs.size() - (logs.size() % nPage));
-    } else if (VK_PRIOR == nChar) {     // Prev page.
+    switch (nChar)
+    {
+    case VK_PRIOR:                      // Prev page.
       if (nPage <= iLogs) {
         iLogs -= nPage;
       }
-    } else if (VK_NEXT == nChar) {      // Next page.
+      break;
+    case VK_NEXT:                       // Next page.
       if (iLogs + nPage < (int)logs.size()) {
         iLogs += nPage;
       }
+      break;
+    case VK_END:
+      iLogs = (int)(logs.size() - (logs.size() % nPage));
+      break;
+    case VK_HOME:
+      iLogs = 0;
+      break;
+    case VK_UP:                         // Prev cmd line.
+      if (0 < iCmdHist) {
+        cmdLine = cmdHist[--iCmdHist];
+      }
+      break;
+    case VK_DOWN:                       // Next cmd line.
+      if ((int)cmdHist.size() > iCmdHist + 1) {
+        cmdLine = cmdHist[++iCmdHist];
+      }
+      break;
     }
   }
 
