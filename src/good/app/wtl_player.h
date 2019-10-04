@@ -306,6 +306,9 @@ public:
       }
       break;
     case 13:                          // Enter.
+      if (cmdLine.empty()) {
+        break;
+      }
       doLuaScript(cmdLine.c_str());
       cmdHist.push_back(cmdLine);
       if (MAX_CMD_LINE_HIST < cmdHist.size()) {
