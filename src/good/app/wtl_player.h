@@ -46,7 +46,7 @@ public:
   int timeTip;
 
   int caretTimer;
-  std::string cmdLine;
+  std::string cmdLine, lazyRunCmdLine;
   int iCmdHist;
   std::vector<std::string> cmdHist;
 
@@ -293,6 +293,11 @@ public:
     if (showFPS) {
       DrawFpsInfo_i();                  // Calc FPS.
     }
+
+    if (!lazyRunCmdLine.empty()) {
+      doLuaScript(lazyRunCmdLine.c_str());
+      lazyRunCmdLine = "";
+    }
   }
 
   void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -312,12 +317,12 @@ public:
       if (cmdLine.empty()) {
         break;
       }
-      doLuaScript(cmdLine.c_str());
       cmdHist.push_back(cmdLine);
       if (MAX_CMD_LINE_HIST < cmdHist.size()) {
         cmdHist.erase(cmdHist.begin());
       }
       iCmdHist = cmdHist.size();
+      lazyRunCmdLine = cmdLine;
       cmdLine = "";
       break;
     case 27:                          // ESC.
