@@ -206,13 +206,15 @@ public:
         for (int i = iLogs; i < (int)logs.size() && (i - iLogs) < nPage; i++) {
           SimpleDrawText(0, (i - iLogs) * CY_FONT2, logs[i], COLOR_TRACE);
         }
-        DrawCmdLine_i();
       } else if (0 < timeTip) {
         SimpleDrawText(0, 0, tip, COLOR_TRACE);
         if (0 == --timeTip) {
           isTipShown = true;
         }
       }
+    }
+    if (showOutput) {
+      DrawCmdLine_i();
     }
   }
 
