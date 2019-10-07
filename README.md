@@ -3,8 +3,7 @@
 Android player download https://play.google.com/store/apps/details?id=weilican.good <br/>
 Windows editor download https://github.com/cnyaw/goodbin <br/>
 Blog https://good-ed.blogspot.com/ <br/>
-API Reference http://good-ed.smallworld.idv.tw/wiki/index.php?title=Good_API_Reference <br/>
-Other Downloads https://github.com/cnyaw/goodbin
+API Reference http://good-ed.smallworld.idv.tw/wiki/index.php?title=Good_API_Reference
 
 ![ed](gooded.png)
 
