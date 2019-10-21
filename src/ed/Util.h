@@ -28,7 +28,7 @@ void DrawAlphaRect(CDCHandle dc, COLORREF clr, int x, int y, int w, int h, int s
   dc.AlphaBlend(x, y, w, h, memdc, 0, 0, w, h, bf);
 }
 
-void DrawTrackFocusRect(HDC dc, POINT a, POINT b)
+RECT DrawTrackFocusRect(HDC dc, POINT a, POINT b)
 {
   if (a.x > b.x) {
     std::swap(a.x, b.x);
@@ -40,6 +40,8 @@ void DrawTrackFocusRect(HDC dc, POINT a, POINT b)
 
   RECT r = {a.x, a.y, b.x, b.y};
   CDCHandle(dc).DrawFocusRect(&r);
+
+  return r;
 }
 
 ImgT LoadTileset(std::string const& fileName)

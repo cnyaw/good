@@ -896,6 +896,7 @@ public:
     ScreenToClient(&pt);
 
     POINT ptLast = pt;
+    MainT& mf = MainT::inst();
 
     DrawTrackFocusRect(dc, pt, ptLast);
 
@@ -922,7 +923,12 @@ public:
           GetCursorPos(&ptLast);
           ScreenToClient(&ptLast);
 
-          DrawTrackFocusRect(dc, pt, ptLast);
+          RECT r = DrawTrackFocusRect(dc, pt, ptLast);
+
+          CString s;
+          s.Format(_T("(%d,%d)-(%dx%d)"), r.left, r.top, r.right - r.left, r.bottom - r.top);
+
+          mf.mStatus.SetPaneText(2, s);
         }
         break;
 
