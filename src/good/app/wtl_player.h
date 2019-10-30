@@ -168,7 +168,6 @@ public:
   {
     BaseT::onPackageChanged();
     mFont = gx::GLImage(0);
-    doLuaScript("print=Good.Trace");    // Install print as debug util for in-editor player.
   }
 
   void SimpleDrawText(int x, int y, std::string const &s, sw2::uint color = 0xffffffff)

@@ -940,7 +940,7 @@ public:
 
     lua_setglobal(L, "Good");
 
-    char p[] = "Good.Trace = function(...) Good.OutputDebugString(string.format(...)) end";
+    char p[] = "Good.Trace=function(...) Good.OutputDebugString(string.format(...)) end print=Good.Trace";
     int s = luaL_loadbuffer(L, p, strlen(p), "script_good.h");
     if (0 != s || 0 != lua_pcall(L, 0, LUA_MULTRET, 0)) {
       SW2_TRACE_ERROR("Install Good.Trace failed, %s\n", lua_tostring(L, -1));
