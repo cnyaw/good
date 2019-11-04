@@ -240,7 +240,6 @@ public:
 
   void SelectTileset(good::Tileset const& ts)
   {
-    mEditor.mCurTile = -1;
     mEditor.mCurTile = mLastCurTile = 0;
 
     mTileWidth = ts.mTileWidth;
