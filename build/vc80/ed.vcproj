@@ -352,6 +352,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\ed\DlgGotoView.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\ed\DlgMapOption.h"
 				>
 			</File>
@@ -610,6 +614,10 @@
 			>
 			<File
 				RelativePath="..\..\src\good\ed\ed.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\good\ed\grp.h"
 				>
 			</File>
 			<File

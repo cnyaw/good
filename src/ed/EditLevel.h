@@ -928,7 +928,7 @@ public:
           CString s;
           s.Format(_T("(%d,%d)-(%dx%d)"), r.left, r.top, r.right - r.left, r.bottom - r.top);
 
-          mf.mStatus.SetPaneText(2, s);
+          mf.mStatus.SetPaneText(2, s); // Display selection area top left and width height info.
         }
         break;
 
@@ -1578,6 +1578,7 @@ public:
     COMMAND_RANGE_HANDLER_EX(ID_LEVELEDIT_MOVEUP, ID_LEVELEDIT_BOTTOMMOST, OnChangeItemZorder)
     COMMAND_RANGE_HANDLER_EX(ID_LEVELEDIT_ALIGNLEFT, ID_LEVELEDIT_ALIGNBOTTOM, OnAlignObject)
     COMMAND_ID_HANDLER_EX(ID_SNAP_CUSTOMIZE, OnSnapCustomize)
+    COMMAND_ID_HANDLER_EX(ID_EDIT_GOTO, OnEditGoto)
     NOTIFY_CODE_HANDLER_EX(TBN_DROPDOWN, OnDropDown)
     NOTIFY_CODE_HANDLER_EX(NM_CLICK, OnTreeClk)
     NOTIFY_CODE_HANDLER_EX(TVN_KEYDOWN, OnTreeKeyDown)
@@ -1816,6 +1817,23 @@ public:
       break;
     }
     mEditView.Invalidate(FALSE);
+  }
+
+  void OnEditGoto(UINT uNotifyCode, int nID, CWindow wndCtl)
+  {
+    PrjT::LevelT const& lvl = PrjT::inst().getLevel(mId);
+    if (lvl.mWidth > mEditView.m_sizeClient.cx || lvl.mHeight > mEditView.m_sizeClient.cy) {
+      int cx = lvl.mWidth - mEditView.m_sizeClient.cx;
+      int cy = lvl.mHeight - mEditView.m_sizeClient.cy;
+      CDlgGotoView dlg(cx, cy, mEditView.m_ptOffset.x, mEditView.m_ptOffset.y);
+      if (IDOK != dlg.DoModal()) {
+        return;
+      }
+      RECT rcClient;
+      mEditView.GetClientRect(&rcClient);
+      OffsetRect(&rcClient, dlg.mOffsetX, dlg.mOffsetY);
+      mEditView.ScrollToView(rcClient);
+    }
   }
 
   void OnMoveTool(UINT uNotifyCode, int nID, CWindow wndCtl)

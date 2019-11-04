@@ -32,6 +32,7 @@
 #define IDD_SNAPCUSTOMIZE               254
 #define IDD_NEWPROJ                     255
 #define IDD_SELTEXDIM                   257
+#define IDD_GOTOVIEW                    258
 #define IDB_BITMAP2                     262
 #define IDB_OBJSTATE                    262
 #define IDB_LVLOBJ                      263
