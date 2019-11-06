@@ -842,6 +842,17 @@ public:
     AddProp(prop, PropCreateSimple("Width", res.mWidth));
     AddProp(prop, PropCreateSimple("Height", res.mHeight));
     AddProp(prop, PropCreateSimple("Color Bits", res.mColorBits))->SetEnabled(FALSE);
+
+    AddProp(prop, PropCreateCategory("Summary"));
+    AddProp(prop, PropCreateSimple("#Audio", (int)res.mSnd.size()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("#Texture", (int)res.mTex.size()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("#Map", (int)res.mMap.size()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("#Sprite", (int)res.mSprite.size()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("#Level", (int)res.mLevel.size()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("#Script", (int)res.mScript.size()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("#Particle", (int)res.mStgeScript.size()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("#Dependency", (int)res.mDep.size()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("#ID", res.mId.size()))->SetEnabled(FALSE);
   }
 
   virtual void UpdateProperty(CPropertyListCtrl& prop)
