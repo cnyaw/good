@@ -23,7 +23,7 @@ public:
     TOOL_ADDCOLBG,
     TOOL_ADDTEXBG,
     TOOL_ADDMAPBG,
-    TOOL_ADDOBJ,
+    TOOL_ADDSPRITE,
     TOOL_ADDDUMMY
   };
 
@@ -460,7 +460,7 @@ public:
     {
     case PrjT::ObjectT::TYPE_SPRITE:
       mAddObj = o.mSpriteId;
-      mTool = TOOL_ADDOBJ;
+      mTool = TOOL_ADDSPRITE;
       break;
     case PrjT::ObjectT::TYPE_COLBG:
       mAddCol = o.mBgColor;
@@ -1381,7 +1381,7 @@ public:
     UISetCheck(ID_LEVELEDIT_ADDCOLBG, mEditView.TOOL_ADDCOLBG == mEditView.mTool);
     UISetCheck(ID_LEVELEDIT_ADDTEXBG, mEditView.TOOL_ADDTEXBG == mEditView.mTool);
     UISetCheck(ID_LEVELEDIT_ADDMAPBG, mEditView.TOOL_ADDMAPBG == mEditView.mTool);
-    UISetCheck(ID_LEVELEDIT_ADDOBJ, mEditView.TOOL_ADDOBJ == mEditView.mTool);
+    UISetCheck(ID_LEVELEDIT_ADDSPRITE, mEditView.TOOL_ADDSPRITE == mEditView.mTool);
     UISetCheck(ID_LEVELEDIT_ADDDUMMY, mEditView.TOOL_ADDDUMMY == mEditView.mTool);
 
     bool SingleSel = 1 == mEditView.mCurSel.size();
@@ -1547,7 +1547,7 @@ public:
     UPDATE_ELEMENT(ID_LEVELEDIT_ADDCOLBG, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_ADDTEXBG, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_ADDMAPBG, UPDUI_TOOLBAR)
-    UPDATE_ELEMENT(ID_LEVELEDIT_ADDOBJ, UPDUI_TOOLBAR)
+    UPDATE_ELEMENT(ID_LEVELEDIT_ADDSPRITE, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_ADDDUMMY, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_TOPMOST, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_MOVEUP, UPDUI_TOOLBAR)
@@ -1569,7 +1569,7 @@ public:
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_ADDCOLBG, OnAddObjTool)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_ADDTEXBG, OnAddObjTool)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_ADDMAPBG, OnAddObjTool)
-    COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_ADDOBJ, OnAddObjTool)
+    COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_ADDSPRITE, OnAddObjTool)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_ADDDUMMY, OnAddObjTool)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_GRID, OnToggleGrid)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_MOVEITEM, OnMoveTool)
@@ -1754,13 +1754,13 @@ public:
       }
       mEditView.mAddCol = dlg.GetColor();
       mEditView.mTool = mEditView.TOOL_ADDCOLBG;
-    } else if (ID_LEVELEDIT_ADDOBJ == nID) {
+    } else if (ID_LEVELEDIT_ADDSPRITE == nID) {
       CDlgSpritePicker dlg;
       if (IDOK != dlg.DoModal()) {
         return;
       }
       mEditView.mAddObj = dlg.mId;
-      mEditView.mTool = mEditView.TOOL_ADDOBJ;
+      mEditView.mTool = mEditView.TOOL_ADDSPRITE;
     } else if (ID_LEVELEDIT_ADDDUMMY == nID) {
       mEditView.mAddMap = mEditView.mAddTex = mEditView.mAddObj = 0xff;
       mEditView.mTool = mEditView.TOOL_ADDDUMMY;

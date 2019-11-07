@@ -122,7 +122,7 @@ BEGIN
     BUTTON      ID_LEVELEDIT_ADDCOLBG
     BUTTON      ID_LEVELEDIT_ADDTEXBG
     BUTTON      ID_LEVELEDIT_ADDMAPBG
-    BUTTON      ID_LEVELEDIT_ADDOBJ
+    BUTTON      ID_LEVELEDIT_ADDSPRITE
     BUTTON      ID_LEVELEDIT_ADDDUMMY
     SEPARATOR
     BUTTON      ID_LEVELEDIT_TOPMOST
@@ -730,7 +730,7 @@ BEGIN
     ID_LEVELEDIT_SELITEM    "Select tool\nSelect"
     ID_LEVELEDIT_PROP       "Properties\nProperties"
     ID_LEVELEDIT_DELITEM    "Delete item\nDelete"
-    ID_LEVELEDIT_ADDOBJ     "New Object\nNew Object"
+    ID_LEVELEDIT_ADDSPRITE  "New Sprite\nNew Sprite"
     ID_LEVELEDIT_ADDBKGND   "New Background\nNew Background"
     ID_FILE_ADDNEWTEXTURE   "Add new texture resource\nNew Texture"
     ID_FILE_ADDNEWMAP       "Add new map resource\nNew Map"

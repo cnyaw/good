@@ -91,7 +91,7 @@
 #define ID_LEVELEDIT_SELITEM            32834
 #define ID_LEVELEDIT_PROP               32835
 #define ID_LEVELEDIT_DELITEM            32836
-#define ID_LEVELEDIT_ADDOBJ             32839
+#define ID_LEVELEDIT_ADDSPRITE          32839
 #define ID_LEVELEDIT_ADDBKGND           32840
 #define ID_FILE_ADDNEWTEXTURE           32841
 #define ID_FILE_ADDNEWMAP               32842
