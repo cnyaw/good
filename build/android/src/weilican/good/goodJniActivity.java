@@ -333,7 +333,7 @@ public class goodJniActivity extends Activity
   }
 
   void doReleaseSound(int id) {
-    if (0 <= id && snd.length > id && null != snd[id]) {
+    if (sndValid(id)) {
       snd[id].release();
       snd[id] = null;
     }
@@ -344,7 +344,7 @@ public class goodJniActivity extends Activity
   }
 
   boolean doIsSoundPlaying(int id) {
-    if (0 <= id && snd.length > id && null != snd[id]) {
+    if (sndValid(id)) {
       return snd[id].isPlaying();
     } else {
       return false;
@@ -356,7 +356,7 @@ public class goodJniActivity extends Activity
   }
 
   boolean doIsSoundLooping(int id) {
-    if (0 <= id && snd.length > id && null != snd[id]) {
+    if (sndValid(id)) {
       return snd[id].isLooping();
     } else {
       return false;
@@ -368,7 +368,7 @@ public class goodJniActivity extends Activity
   }
 
   void doSetSoundLooping(int id, boolean loop) {
-    if (0 <= id && snd.length > id && null != snd[id]) {
+    if (sndValid(id)) {
       snd[id].setLooping(loop);
     }
   }
@@ -378,7 +378,7 @@ public class goodJniActivity extends Activity
   }
 
   void doPlaySound(int id) {
-    if (0 <= id && snd.length > id && null != snd[id]) {
+    if (sndValid(id)) {
       snd[id].start();
     }
   }
@@ -388,7 +388,7 @@ public class goodJniActivity extends Activity
   }
 
   void doStopSound(int id) {
-    if (0 <= id && snd.length > id && null != snd[id]) {
+    if (sndValid(id)) {
       snd[id].stop();
     }
   }
@@ -398,7 +398,7 @@ public class goodJniActivity extends Activity
   }
 
   void doPauseSound(int id) {
-    if (0 <= id && snd.length > id && null != snd[id]) {
+    if (sndValid(id)) {
       snd[id].pause();
     }
   }
@@ -435,5 +435,9 @@ public class goodJniActivity extends Activity
         snd[i].start();
       }
     }
+  }
+
+  boolean sndValid(int id) {
+    return 0 <= id && snd.length > id && null != snd[id];
   }
 }
