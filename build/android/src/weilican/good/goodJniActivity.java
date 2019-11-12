@@ -21,6 +21,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Base64;
 import java.io.*;
 
 public class goodJniActivity extends Activity
@@ -195,7 +196,7 @@ public class goodJniActivity extends Activity
   // Sound support.
   //
 
-  File sndRes[] = new File[64];
+  String sndRes[] = new String[64];
   MediaPlayer snd[] = new MediaPlayer[64];
 
   static public boolean sndAddSound(int idRes, byte stream[]) {
@@ -221,7 +222,7 @@ public class goodJniActivity extends Activity
     //
 
     while (sndRes.length < idRes) {
-      File newSndRes[] = new File[2 * sndRes.length];
+      String newSndRes[] = new String[2 * sndRes.length];
       for (int i = 0; i < sndRes.length; i++) {
         newSndRes[i] = sndRes[i];
       }
@@ -242,12 +243,8 @@ public class goodJniActivity extends Activity
     }
 
     try {
-      File tempFile = File.createTempFile("goodtmp", ".tmp");
-      tempFile.deleteOnExit();
-      FileOutputStream out = new FileOutputStream(tempFile);
-      out.write(stream);
-      out.close();
-      sndRes[idRes] = tempFile;
+      String base64Stream = Base64.encodeToString(stream, Base64.DEFAULT);
+      sndRes[idRes] = "data:audio/amr;base64," + base64Stream;
       return true;
     } catch (Exception e) {
       return false;
@@ -314,9 +311,7 @@ public class goodJniActivity extends Activity
 
       try {
         MediaPlayer mp = new MediaPlayer();
-        FileInputStream fis = new FileInputStream(sndRes[idRes]);
-        mp.setDataSource(fis.getFD());
-        fis.close();
+        mp.setDataSource(sndRes[idRes]);
         mp.prepare();
         mp.start();
         snd[idSnd] = mp;
