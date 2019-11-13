@@ -11,13 +11,14 @@
 package weilican.good;
 
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.util.Base64;
 
 class SoundManager {
   String sndRes[] = new String[64];
   MediaPlayer snd[] = new MediaPlayer[64];
 
-  boolean addSound(int idRes, byte stream[]) {
+  synchronized boolean addSound(int idRes, byte stream[]) {
     if (0 > idRes) {
       return false;
     }
@@ -36,7 +37,7 @@ class SoundManager {
     }
   }
 
-  int getFreeSoundPoolIndex() {
+  synchronized int getFreeSoundPoolIndex() {
 
     //
     // Free stop playing sound.
@@ -72,7 +73,7 @@ class SoundManager {
     return snd.length / 2;
   }
 
-  int getSound(int idRes) {
+  synchronized int getSound(int idRes) {
     if (0 <= idRes && sndRes.length > idRes) {
 
       if (null == sndRes[idRes]) {
@@ -94,6 +95,7 @@ class SoundManager {
         MediaPlayer mp = new MediaPlayer();
         mp.setDataSource(sndRes[idRes]);
         mp.prepare();
+        setOnCompletionListener(mp, idSnd);
         mp.start();
         snd[idSnd] = mp;
         return idSnd;
@@ -104,7 +106,16 @@ class SoundManager {
     return -1;
   }
 
-  int internalGetIdRes(int idRes) {
+  void setOnCompletionListener(MediaPlayer mp, final int idSnd) {
+    mp.setOnCompletionListener(new OnCompletionListener() {
+      @Override
+      public void onCompletion(MediaPlayer mp) {
+        releaseSound(idSnd);
+      }
+    });
+  }
+
+  synchronized int internalGetIdRes(int idRes) {
 
     //
     // Check existance.
@@ -133,7 +144,7 @@ class SoundManager {
     return idRes;
   }
 
-  boolean isSoundLooping(int id) {
+  synchronized boolean isSoundLooping(int id) {
     if (sndValid(id)) {
       return snd[id].isLooping();
     } else {
@@ -141,7 +152,7 @@ class SoundManager {
     }
   }
 
-  boolean isSoundPlaying(int id) {
+  synchronized boolean isSoundPlaying(int id) {
     if (sndValid(id)) {
       return snd[id].isPlaying();
     } else {
@@ -149,7 +160,7 @@ class SoundManager {
     }
   }
 
-  void pauseAll() {
+  synchronized void pauseAll() {
     for (int i = 0; i < snd.length; i++) {
       if (null != snd[i]) {
         if (snd[i].isLooping()) {
@@ -162,26 +173,26 @@ class SoundManager {
     }
   }
 
-  void pauseSound(int id) {
+  synchronized void pauseSound(int id) {
     if (sndValid(id)) {
       snd[id].pause();
     }
   }
 
-  void playSound(int id) {
+  synchronized void playSound(int id) {
     if (sndValid(id)) {
       snd[id].start();
     }
   }
 
-  void releaseSound(int id) {
+  synchronized void releaseSound(int id) {
     if (sndValid(id)) {
       snd[id].release();
       snd[id] = null;
     }
   }
 
-  void resumeAll() {
+  synchronized void resumeAll() {
     for (int i = 0; i < snd.length; i++) {
       if (null != snd[i]) {
         snd[i].start();
@@ -189,17 +200,17 @@ class SoundManager {
     }
   }
 
-  void setSoundLooping(int id, boolean loop) {
+  synchronized void setSoundLooping(int id, boolean loop) {
     if (sndValid(id)) {
       snd[id].setLooping(loop);
     }
   }
 
-  boolean sndValid(int id) {
+  synchronized boolean sndValid(int id) {
     return 0 <= id && snd.length > id && null != snd[id];
   }
 
-  void stopAll() {
+  synchronized void stopAll() {
     for (int i = 0; i < snd.length; i++) {
       if (null != snd[i]) {
         snd[i].release();
@@ -208,7 +219,7 @@ class SoundManager {
     }
   }
 
-  void stopSound(int id) {
+  synchronized void stopSound(int id) {
     if (sndValid(id)) {
       snd[id].stop();
     }
