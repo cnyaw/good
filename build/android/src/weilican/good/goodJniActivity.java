@@ -15,13 +15,11 @@ import android.os.Bundle;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.KeyEvent;
-import android.media.MediaPlayer;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Base64;
 import java.io.*;
 
 public class goodJniActivity extends Activity
@@ -119,7 +117,7 @@ public class goodJniActivity extends Activity
   {
     super.onPause();
     mView.onPause();
-    sndPauseAll();
+    sndMgr.pauseAll();
     appPause();
   }
 
@@ -127,7 +125,7 @@ public class goodJniActivity extends Activity
   {
     super.onResume();
     mView.onResume();
-    sndResumeAll();
+    sndMgr.resumeAll();
   }
 
   @Override protected void onDestroy()
@@ -196,243 +194,45 @@ public class goodJniActivity extends Activity
   // Sound support.
   //
 
-  String sndRes[] = new String[64];
-  MediaPlayer snd[] = new MediaPlayer[64];
+  SoundManager sndMgr = new SoundManager();
 
   static public boolean sndAddSound(int idRes, byte stream[]) {
-    return thisActivity.doAddSound(idRes, stream);
-  }
-
-  int internalGetIdRes(int idRes) {
-
-    //
-    // Check existance.
-    //
-
-    if (0 <= idRes && sndRes.length > idRes) {
-      if (null == sndRes[idRes]) {
-        return idRes;
-      } else {
-        return -1;
-      }
-    }
-
-    //
-    // Grow pool.
-    //
-
-    while (sndRes.length < idRes) {
-      String newSndRes[] = new String[2 * sndRes.length];
-      for (int i = 0; i < sndRes.length; i++) {
-        newSndRes[i] = sndRes[i];
-      }
-      sndRes = newSndRes;
-    }
-
-    return idRes;
-  }
-
-  boolean doAddSound(int idRes, byte stream[]) {
-    if (0 > idRes) {
-      return false;
-    }
-
-    int idSlot = internalGetIdRes(idRes);
-    if (-1 == idSlot) {
-      return false;
-    }
-
-    try {
-      String base64Stream = Base64.encodeToString(stream, Base64.DEFAULT);
-      sndRes[idRes] = "data:audio/amr;base64," + base64Stream;
-      return true;
-    } catch (Exception e) {
-      return false;
-    }
+    return thisActivity.sndMgr.addSound(idRes, stream);
   }
 
   static public int sndGetSound(int idRes) {
-    return thisActivity.doGetSound(idRes);
-  }
-
-  int getFreeSoundPoolIndex() {
-
-    //
-    // Free stop playing sound.
-    //
-
-    for (int i = 0; i < snd.length; i++) {
-      if (null != snd[i] && !snd[i].isPlaying() && !snd[i].isLooping()) {
-        snd[i].release();
-        snd[i] = null;
-      }
-    }
-
-    //
-    // Find free entity.
-    //
-
-    for (int i = 0; i < snd.length; i++) {
-      if (null == snd[i]) {
-        return i;
-      }
-    }
-
-    //
-    // Double size pool.
-    //
-
-    MediaPlayer newSnd[] = new MediaPlayer[2 * snd.length];
-    for (int i = 0; i < snd.length; i++) {
-      newSnd[i] = snd[i];
-    }
-    snd = newSnd;
-
-    return snd.length / 2;
-  }
-
-  int doGetSound(int idRes) {
-    if (0 <= idRes && sndRes.length > idRes) {
-
-      if (null == sndRes[idRes]) {
-        if (!doAddSound(idRes, goodJniLib.getSound(idRes))) {
-          return -1;
-        }
-      }
-
-      int idSnd = getFreeSoundPoolIndex();
-      if (-1 == idSnd) {
-        return -1;
-      }
-
-      //
-      // Init media player.
-      //
-
-      try {
-        MediaPlayer mp = new MediaPlayer();
-        mp.setDataSource(sndRes[idRes]);
-        mp.prepare();
-        mp.start();
-        snd[idSnd] = mp;
-        return idSnd;
-      } catch (Exception e) {
-      }
-    }
-
-    return -1;
+    return thisActivity.sndMgr.getSound(idRes);
   }
 
   static public void sndRelease(int id) {
-    thisActivity.doReleaseSound(id);
-  }
-
-  void doReleaseSound(int id) {
-    if (sndValid(id)) {
-      snd[id].release();
-      snd[id] = null;
-    }
+    thisActivity.sndMgr.releaseSound(id);
   }
 
   static public boolean sndIsPlaying(int id) {
-    return thisActivity.doIsSoundPlaying(id);
-  }
-
-  boolean doIsSoundPlaying(int id) {
-    if (sndValid(id)) {
-      return snd[id].isPlaying();
-    } else {
-      return false;
-    }
+    return thisActivity.sndMgr.isSoundPlaying(id);
   }
 
   static public boolean sndIsLooping(int id) {
-    return thisActivity.doIsSoundLooping(id);
-  }
-
-  boolean doIsSoundLooping(int id) {
-    if (sndValid(id)) {
-      return snd[id].isLooping();
-    } else {
-      return false;
-    }
+    return thisActivity.sndMgr.isSoundLooping(id);
   }
 
   static public void sndSetLoop(int id, boolean loop) {
-    thisActivity.doSetSoundLooping(id, loop);
-  }
-
-  void doSetSoundLooping(int id, boolean loop) {
-    if (sndValid(id)) {
-      snd[id].setLooping(loop);
-    }
+    thisActivity.sndMgr.setSoundLooping(id, loop);
   }
 
   static public void sndPlay(int id) {
-    thisActivity.doPlaySound(id);
-  }
-
-  void doPlaySound(int id) {
-    if (sndValid(id)) {
-      snd[id].start();
-    }
+    thisActivity.sndMgr.playSound(id);
   }
 
   static public void sndStop(int id) {
-    thisActivity.doStopSound(id);
-  }
-
-  void doStopSound(int id) {
-    if (sndValid(id)) {
-      snd[id].stop();
-    }
+    thisActivity.sndMgr.stopSound(id);
   }
 
   static public void sndPause(int id) {
-    thisActivity.doPauseSound(id);
-  }
-
-  void doPauseSound(int id) {
-    if (sndValid(id)) {
-      snd[id].pause();
-    }
+    thisActivity.sndMgr.pauseSound(id);
   }
 
   static public void sndStopAll() {
-    thisActivity.doSndStopAll();
-  }
-
-  void doSndStopAll() {
-    for (int i = 0; i < snd.length; i++) {
-      if (null != snd[i]) {
-        snd[i].release();
-        snd[i] = null;
-      }
-    }
-  }
-
-  void sndPauseAll() {
-    for (int i = 0; i < snd.length; i++) {
-      if (null != snd[i]) {
-        if (snd[i].isLooping()) {
-          snd[i].pause();
-        } else {
-          snd[i].release();
-          snd[i] = null;
-        }
-      }
-    }
-  }
-
-  void sndResumeAll() {
-    for (int i = 0; i < snd.length; i++) {
-      if (null != snd[i]) {
-        snd[i].start();
-      }
-    }
-  }
-
-  boolean sndValid(int id) {
-    return 0 <= id && snd.length > id && null != snd[id];
+    thisActivity.sndMgr.stopAll();
   }
 }
