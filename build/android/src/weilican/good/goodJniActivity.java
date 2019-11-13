@@ -38,6 +38,8 @@ public class goodJniActivity extends Activity
   static native void appDestroy();
   static native void appPause();
 
+  SoundManager snd = new SoundManager();
+
   @Override protected void onCreate(Bundle b)
   {
     super.onCreate(b);
@@ -117,7 +119,7 @@ public class goodJniActivity extends Activity
   {
     super.onPause();
     mView.onPause();
-    sndMgr.pauseAll();
+    snd.pauseAll();
     appPause();
   }
 
@@ -125,7 +127,7 @@ public class goodJniActivity extends Activity
   {
     super.onResume();
     mView.onResume();
-    sndMgr.resumeAll();
+    snd.resumeAll();
   }
 
   @Override protected void onDestroy()
@@ -194,45 +196,43 @@ public class goodJniActivity extends Activity
   // Sound support.
   //
 
-  SoundManager sndMgr = new SoundManager();
-
   static public boolean sndAddSound(int idRes, byte stream[]) {
-    return thisActivity.sndMgr.addSound(idRes, stream);
+    return thisActivity.snd.addSound(idRes, stream);
   }
 
   static public int sndGetSound(int idRes) {
-    return thisActivity.sndMgr.getSound(idRes);
+    return thisActivity.snd.getSound(idRes);
   }
 
   static public void sndRelease(int id) {
-    thisActivity.sndMgr.releaseSound(id);
+    thisActivity.snd.releaseSound(id);
   }
 
   static public boolean sndIsPlaying(int id) {
-    return thisActivity.sndMgr.isSoundPlaying(id);
+    return thisActivity.snd.isSoundPlaying(id);
   }
 
   static public boolean sndIsLooping(int id) {
-    return thisActivity.sndMgr.isSoundLooping(id);
+    return thisActivity.snd.isSoundLooping(id);
   }
 
   static public void sndSetLoop(int id, boolean loop) {
-    thisActivity.sndMgr.setSoundLooping(id, loop);
+    thisActivity.snd.setSoundLooping(id, loop);
   }
 
   static public void sndPlay(int id) {
-    thisActivity.sndMgr.playSound(id);
+    thisActivity.snd.playSound(id);
   }
 
   static public void sndStop(int id) {
-    thisActivity.sndMgr.stopSound(id);
+    thisActivity.snd.stopSound(id);
   }
 
   static public void sndPause(int id) {
-    thisActivity.sndMgr.pauseSound(id);
+    thisActivity.snd.pauseSound(id);
   }
 
   static public void sndStopAll() {
-    thisActivity.sndMgr.stopAll();
+    thisActivity.snd.stopAll();
   }
 }
