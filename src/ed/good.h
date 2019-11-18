@@ -130,11 +130,11 @@ typedef good::gx::GdiGraphics GxT;
 
 #include "DlgAbout.h"
 #include "DlgNewProj.h"
+#include "DlgMapOption.h"
 #include "DlgAddNewItem.h"
 #include "DlgGotoLine.h"
 #include "DlgSaveChanges.h"
 #include "DlgSelTexDim.h"
-#include "DlgMapOption.h"
 #include "DlgSnapCustom.h"
 #include "DlgGotoView.h"
 
