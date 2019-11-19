@@ -582,9 +582,10 @@ public:
   bool mShowSnap;
   int mSnapWidth, mSnapHeight;
 
+  bool mShowLine;
   std::vector<GridLine> mVertGrid, mHorzGrid;
 
-  Level() : mUndo(PrjT::UNDO_LEVEL), mShowSnap(true), mSnapWidth(16), mSnapHeight(16)
+  Level() : mUndo(PrjT::UNDO_LEVEL), mShowSnap(true), mSnapWidth(16), mSnapHeight(16), mShowLine(true)
   {
   }
 
@@ -601,6 +602,20 @@ public:
   // Modify property.
   //
 
+  bool setGrid(std::vector<GridLine> const& vgrid, std::vector<GridLine> const& hgrid)
+  {
+    if (vgrid == mVertGrid && hgrid == mHorzGrid) {
+      return false;
+    }
+
+    mVertGrid = vgrid;
+    mHorzGrid = hgrid;
+
+    PrjT::inst().mModified = true;
+
+    return true;
+  }
+
   bool setSize(int newWidth, int newHeight)
   {
     LevelCmdSetSize<Level>* pcmd;
@@ -612,6 +627,19 @@ public:
     }
 
     return false;
+  }
+
+  bool setShowLine(bool b)
+  {
+    if (b == mShowLine) {
+      return false;
+    }
+
+    mShowLine = b;
+
+    PrjT::inst().mModified = true;
+
+    return true;
   }
 
   bool setShowSnap(bool b)
@@ -1347,6 +1375,10 @@ public:
     // Grids.
     //
 
+    if (sec.find("showLine")) {
+      mShowSnap = sec["showLine"];
+    }
+
     if (!loadGrid(sec, "vgrid", mHeight, mVertGrid) ||
         !loadGrid(sec, "hgrid", mWidth, mHorzGrid)) {
       return false;
@@ -1387,6 +1419,19 @@ public:
     if (16 != mSnapWidth || 16 != mSnapHeight) {
       sec["snapWidth"] = mSnapWidth;
       sec["snapHeight"] = mSnapHeight;
+    }
+
+    if (!mShowLine) {
+      sec["showLine"] = mShowLine;
+    }
+
+    //
+    // Grid.
+    //
+
+    if (!storeGrid(ini, secName, "vgrid", mVertGrid) ||
+        !storeGrid(ini, secName, "hgrid", mHorzGrid)) {
+      return false;
     }
 
     return true;

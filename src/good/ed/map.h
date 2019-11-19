@@ -507,27 +507,6 @@ public:
 
     return true;
   }
-
-  bool storeGrid(sw2::Ini& ini, std::string const& secName, std::string const& sgrid, std::vector<GridLine> const& lines) const
-  {
-    std::vector<int> v;
-    for (size_t i = 0; i < lines.size(); i++) {
-      GridLine const& gl = lines[i];
-      v.push_back(gl.range);
-      v.push_back(gl.color & 0xff);     // R.
-      v.push_back((gl.color >> 8) & 0xff); // G.
-      v.push_back((gl.color >> 16) & 0xff); // B.
-    }
-
-    if (v.empty()) {
-      return true;
-    }
-
-    sw2::Ini& sec = ini[secName];
-    sec[sgrid] = intVecToStr(v);
-
-    return true;
-  }
 };
 
 } // namespace ed

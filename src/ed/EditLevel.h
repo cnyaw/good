@@ -41,12 +41,14 @@ public:
   int mSnapSize;                        // x 8
   int mSnapWidth, mSnapHeight;          // Valid only if mSnapSize = ID_SNAP_CUSTOMIZE.
 
+  bool mShowLine;
+
   CBitmap mBmpObjState;
   CDC mDcObjState;
 
   EditorT& mEditor;
 
-  CLevelEditView(EditorT& ed) : mTool(TOOL_MOVE), mHot(-1), mEditor(ed), mSnapSize(2), mSnapGrid(true), mSnapWidth(16), mSnapHeight(16)
+  CLevelEditView(EditorT& ed) : mTool(TOOL_MOVE), mHot(-1), mEditor(ed), mSnapSize(2), mSnapGrid(true), mShowLine(true), mSnapWidth(16), mSnapHeight(16)
   {
   }
 
@@ -292,6 +294,7 @@ public:
 
     ::GetObject(AtlGetDefaultGuiFont(), sizeof(mAddFont), &mAddFont);
 
+    mShowLine = lvl.mShowLine;
     mSnapGrid = lvl.mShowSnap;
 
     int szSnap[] = {8, 16, 24, 32, 40, 48, 56, 64};
@@ -762,7 +765,7 @@ public:
     // Grid lines.
     //
 
-    if (true) {
+    if (mShowLine) {
 
       //
       // Horz line(s).
@@ -1436,6 +1439,7 @@ public:
     UIEnable(ID_LEVELEDIT_ALIGNBOTTOM, MultiSel);
 
     UISetCheck(ID_LEVELEDIT_GRID, mEditView.mSnapGrid);
+    UISetCheck(ID_LEVELEDIT_LINE, mEditView.mShowLine);
 
     UIUpdateToolBar();
 
@@ -1597,6 +1601,7 @@ public:
     UPDATE_ELEMENT(ID_LEVELEDIT_ALIGNTOP, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_ALIGNBOTTOM, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_GRID, UPDUI_TOOLBAR)
+    UPDATE_ELEMENT(ID_LEVELEDIT_LINE, UPDUI_TOOLBAR)
   END_UPDATE_UI_MAP()
 
   BEGIN_MSG_MAP_EX(CLevelEditor)
@@ -1611,11 +1616,13 @@ public:
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_ADDSPRITE, OnAddObjTool)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_ADDDUMMY, OnAddObjTool)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_GRID, OnToggleGrid)
+    COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_LINE, OnToggleLine)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_MOVEITEM, OnMoveTool)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_REMOVE, OnRemoveTool)
     COMMAND_RANGE_HANDLER_EX(ID_SNAP_8, ID_SNAP_64, OnSnapSize)
     COMMAND_RANGE_HANDLER_EX(ID_LEVELEDIT_MOVEUP, ID_LEVELEDIT_BOTTOMMOST, OnChangeItemZorder)
     COMMAND_RANGE_HANDLER_EX(ID_LEVELEDIT_ALIGNLEFT, ID_LEVELEDIT_ALIGNBOTTOM, OnAlignObject)
+    COMMAND_ID_HANDLER_EX(ID_LINE_CUSTOMIZE, OnLineCustomize)
     COMMAND_ID_HANDLER_EX(ID_SNAP_CUSTOMIZE, OnSnapCustomize)
     COMMAND_ID_HANDLER_EX(ID_EDIT_GOTO, OnEditGoto)
     NOTIFY_CODE_HANDLER_EX(TBN_DROPDOWN, OnDropDown)
@@ -1649,9 +1656,14 @@ public:
     TBBUTTONINFO tbi;
     tbi.cbSize = sizeof(TBBUTTONINFO);
     tbi.dwMask = TBIF_STYLE;
+
     mTBEdit.GetButtonInfo(ID_LEVELEDIT_GRID, &tbi);
     tbi.fsStyle |= BTNS_DROPDOWN;
     mTBEdit.SetButtonInfo(ID_LEVELEDIT_GRID, &tbi);
+
+    mTBEdit.GetButtonInfo(ID_LEVELEDIT_LINE, &tbi);
+    tbi.fsStyle |= BTNS_DROPDOWN;
+    mTBEdit.SetButtonInfo(ID_LEVELEDIT_LINE, &tbi);
 
     //
     // Create views.
@@ -1895,6 +1907,14 @@ public:
     }
   }
 
+  void OnLineCustomize(UINT uNotifyCode, int nID, CWindow wndCtl)
+  {
+    CDlgLevelOption<MainT> dlg(mId);
+    if (IDOK == dlg.DoModal()) {
+      mEditView.Invalidate(FALSE);
+    }
+  }
+
   void OnSnapCustomize(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
     CDlgSnapCustomize dlg(mEditView.mSnapWidth, mEditView.mSnapHeight);
@@ -1916,24 +1936,34 @@ public:
     mEditView.Invalidate(FALSE);
   }
 
+  void OnToggleLine(UINT uNotifyCode, int nID, CWindow wndCtl)
+  {
+    mEditView.mShowLine = !mEditView.mShowLine;
+    PrjT::inst().getLevel(mId).setShowLine(mEditView.mShowLine);
+    mEditView.Invalidate(FALSE);
+  }
+
   //
   // Notify handler.
   //
 
   LRESULT OnDropDown(LPNMHDR pnmh)
   {
+    LPNMTOOLBAR lpnmtb = (LPNMTOOLBAR)pnmh;
+
     CMenu m;
-    m.LoadMenu((LPCSTR)IDR_MENU_SNAP);
+    m.LoadMenu(ID_LEVELEDIT_GRID == lpnmtb->iItem ? (LPCSTR)IDR_MENU_SNAP : (LPCSTR)IDR_MENU_LINE);
 
     CMenuHandle ms;
     ms = m.GetSubMenu(0);
-    ms.CheckMenuRadioItem(ID_SNAP_8, ID_SNAP_CUSTOMIZE, ID_SNAP_8 + mEditView.mSnapSize - 1, MF_BYCOMMAND);
+
+    if (ID_LEVELEDIT_GRID == lpnmtb->iItem) {
+      ms.CheckMenuRadioItem(ID_SNAP_8, ID_SNAP_CUSTOMIZE, ID_SNAP_8 + mEditView.mSnapSize - 1, MF_BYCOMMAND);
+    }
 
     RECT rc;
-    ::SendMessage(pnmh->hwndFrom, TB_GETRECT, ((LPNMTOOLBAR)pnmh)->iItem, (LPARAM)&rc);
-
+    ::SendMessage(pnmh->hwndFrom, TB_GETRECT, lpnmtb->iItem, (LPARAM)&rc);
     ::MapWindowPoints(pnmh->hwndFrom, HWND_DESKTOP, (LPPOINT)&rc, 2);
-
     ::TrackPopupMenu(ms, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, 0, m_hWnd, NULL);
 
     return 0;

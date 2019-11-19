@@ -136,6 +136,7 @@ BEGIN
     BUTTON      ID_LEVELEDIT_ALIGNBOTTOM
     SEPARATOR
     BUTTON      ID_LEVELEDIT_GRID
+    BUTTON      ID_LEVELEDIT_LINE
 END
 
 IDR_TB_OUTPUT TOOLBAR  16, 15
@@ -240,6 +241,14 @@ BEGIN
         MENUITEM "Snap 56",                     ID_SNAP_56
         MENUITEM "Snap 64",                     ID_SNAP_64
         MENUITEM "Custom...",                   ID_SNAP_CUSTOMIZE
+    END
+END
+
+IDR_MENU_LINE MENU 
+BEGIN
+    POPUP "0"
+    BEGIN
+        MENUITEM "Custom...",                   ID_LINE_CUSTOMIZE
     END
 END
 
@@ -798,6 +807,7 @@ BEGIN
     ID_PROJECT_CREATEZIPPACKAGE "Create a zip package\nCreate Zip"
     ID_PROJECT_RUNTHISLEVEL "Play this level\nPlay This Level"
     ID_LEVELEDIT_ADDDUMMY   "New dummy\nNew Dummy"
+    ID_LEVELEDIT_LINE       "Line\nToggle Line"
 END
 
 #endif    // English (U.S.) resources

@@ -36,6 +36,7 @@
 #define IDB_BITMAP2                     262
 #define IDB_OBJSTATE                    262
 #define IDB_LVLOBJ                      263
+#define IDR_MENU_LINE                   264
 #define IDC_EDIT1                       1000
 #define IDC_EDIT2                       1001
 #define IDC_LIST1                       1001
@@ -145,13 +146,16 @@
 #define ID_PROJECT_CREATEZIPPACKAGE     32932
 #define ID_PROJECT_RUNTHISLEVEL         32933
 #define ID_LEVELEDIT_ADDDUMMY           32936
+#define ID_LEVELEDIT_LINE               32938
+#define ID_0_CUSTOM                     32939
+#define ID_LINE_CUSTOMIZE               32940
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        264
-#define _APS_NEXT_COMMAND_VALUE         32937
+#define _APS_NEXT_RESOURCE_VALUE        265
+#define _APS_NEXT_COMMAND_VALUE         32941
 #define _APS_NEXT_CONTROL_VALUE         1026
 #define _APS_NEXT_SYMED_VALUE           107
 #endif

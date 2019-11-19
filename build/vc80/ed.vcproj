@@ -356,6 +356,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\ed\DlgLevelOption.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\ed\DlgMapOption.h"
 				>
 			</File>

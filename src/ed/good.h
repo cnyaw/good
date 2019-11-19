@@ -137,6 +137,7 @@ typedef good::gx::GdiGraphics GxT;
 #include "DlgSelTexDim.h"
 #include "DlgSnapCustom.h"
 #include "DlgGotoView.h"
+#include "DlgLevelOption.h"
 
 #include "Explorer.h"
 
