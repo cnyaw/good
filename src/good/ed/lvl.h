@@ -582,6 +582,8 @@ public:
   bool mShowSnap;
   int mSnapWidth, mSnapHeight;
 
+  std::vector<GridLine> mVertGrid, mHorzGrid;
+
   Level() : mUndo(PrjT::UNDO_LEVEL), mShowSnap(true), mSnapWidth(16), mSnapHeight(16)
   {
   }
@@ -1339,6 +1341,15 @@ public:
       mSnapHeight = sec["snapHeight"];
     } else {
       mSnapWidth = mSnapHeight = 16;
+    }
+
+    //
+    // Grids.
+    //
+
+    if (!loadGrid(sec, "vgrid", mHeight, mVertGrid) ||
+        !loadGrid(sec, "hgrid", mWidth, mHorzGrid)) {
+      return false;
     }
 
     return true;

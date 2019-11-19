@@ -42,6 +42,33 @@ std::string intVecToStr(std::vector<int> const &v)
   return sw2::Util::trim(ss.str());
 }
 
+bool loadGrid(sw2::Ini& sec, std::string const& sgrid, int range, std::vector<GridLine>& lines)
+{
+  std::vector<int> v;
+  v.assign(std::istream_iterator<int>(std::stringstream((std::string)sec[sgrid].value)), std::istream_iterator<int>());
+
+  for (size_t i = 0; i < v.size(); ) {
+
+    if (i + 3 >= v.size()) {
+      break;
+    }
+
+    GridLine gl;
+    gl.range = (std::max)(0, (std::min)(range / 2, v[i]));
+    gl.color = (v[i + 1] & 0xff) |
+               ((v[i + 2] & 0xff) << 8) |
+               ((v[i + 3] & 0xff) << 16);
+
+    if (0 < gl.range && range / 2 > gl.range) {
+      lines.push_back(gl);
+    }
+
+    i += 4;
+  }
+
+  return true;
+}
+
 template<class VecT, class MapT>
 bool storeResources(MapT const& t, VecT const& v, std::string const& name, sw2::Ini& sec, sw2::Ini& ini)
 {

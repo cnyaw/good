@@ -758,6 +758,49 @@ public:
     RECT rcb = {0, 0, sz.x, sz.y};
     memdc.FillRect(&rcb, br);
 
+    //
+    // Grid lines.
+    //
+
+    if (true) {
+
+      //
+      // Horz line(s).
+      //
+
+      for (size_t i = 0; i < lvl.mHorzGrid.size(); ++i) {
+        good::ed::GridLine const& gl = lvl.mHorzGrid[i];
+        CPen pen;
+        pen.CreatePen(PS_SOLID, 1, gl.color);
+        memdc.SelectPen(pen);
+        for (int j = 0; j < rcv.bottom; )  {
+          memdc.MoveTo(-rcv.left, j - rcv.top);
+          memdc.LineTo(lvl.mWidth - 1 - rcv.left, j - rcv.top);
+          j += gl.range;
+        }
+      }
+
+      //
+      // Vert line(s).
+      //
+
+      for (size_t i = 0; i < lvl.mVertGrid.size(); ++i) {
+        good::ed::GridLine const& gl = lvl.mVertGrid[i];
+        CPen pen;
+        pen.CreatePen(PS_SOLID, 1, gl.color);
+        memdc.SelectPen(pen);
+        for (int j = 0; j < rcv.right; ) {
+          memdc.MoveTo(j - rcv.left, -rcv.top);
+          memdc.LineTo(j - rcv.left, lvl.mHeight - 1 - rcv.top);
+          j += gl.range;
+        }
+      }
+    }
+
+    //
+    // Draw object(s).
+    //
+
     CPen redPen, redDotPen, pinkPen, grayPen;
     redPen.CreatePen(PS_SOLID, 3, RGB(255,0,0));
     redDotPen.CreatePen(PS_SOLID, 1, RGB(255,0,0));
@@ -766,10 +809,6 @@ public:
 
     memdc.SetBkMode(TRANSPARENT);
     memdc.SelectBrush((HBRUSH)::GetStockObject(NULL_BRUSH));
-
-    //
-    // Draw object(s).
-    //
 
     DoPaintChildObj(memdc, lvl, lvl.mObjIdx, rcv, redPen, redDotPen, pinkPen, grayPen);
 
