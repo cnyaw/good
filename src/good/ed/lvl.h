@@ -1379,8 +1379,8 @@ public:
       mShowSnap = sec["showLine"];
     }
 
-    if (!loadGrid(sec, "vgrid", mHeight, mVertGrid) ||
-        !loadGrid(sec, "hgrid", mWidth, mHorzGrid)) {
+    if (!loadGrid(sec, "vgrid", mWidth, mVertGrid) ||
+        !loadGrid(sec, "hgrid", mHeight, mHorzGrid)) {
       return false;
     }
 
