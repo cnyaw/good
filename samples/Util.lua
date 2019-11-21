@@ -1,25 +1,30 @@
 
-function PtInRect(x, y, left, top, right, bottom)
-  if (left <= x and right > x and top <= y and bottom > y) then
-    return true
-  else
-    return false
+function GenColorObj(parent, w, h, color, script)
+  local _parent = parent
+  if (nil == parent) then
+    _parent = -1
   end
-end
-
-function Lerp(v0, v1, t)
-  return (1 - t) * v0 + t * v1
-end
-
-function PtInObj(x, y, o)
-  local ox, oy = Good.GetPos(o)
-  local l, t, w, h = Good.GetDim(o)
-  local sx, sy = Good.GetScale(o)
-  local ax, ay = Good.GetAnchor(o)
-  local sw, sh = math.abs(w * sx), math.abs(h * sy)
-  ox = Lerp(ox, ox + (w - sw), ax)
-  oy = Lerp(oy, oy + (h - sh), ay)
-  return PtInRect(x, y, ox, oy, ox + math.abs(sx) * w, oy + math.abs(sy) * h)
+  local _script = script
+  if (nil == script) then
+    _script = ''
+  end
+  local o = Good.GenObj(_parent, -1, _script)
+  if (-1 ~= o) then
+    local _w, _h = w, h
+    local _color = color
+    if (nil == w) then
+      _w = 16
+    end
+    if (nil == h) then
+      _h = 16
+    end
+    if (nil == color) then
+      _color = 0xffff0000
+    end
+    Good.SetDim(o, 0, 0, _w, _h)
+    Good.SetBgColor(o, _color)
+  end
+  return o
 end
 
 function GenStrObj(parent, x, y, str, texture, charw, charh, color)
@@ -68,34 +73,6 @@ function GenStrObj(parent, x, y, str, texture, charw, charh, color)
   return dummy
 end
 
-function GenColorObj(parent, w, h, color, script)
-  local _parent = parent
-  if (nil == parent) then
-    _parent = -1
-  end
-  local _script = script
-  if (nil == script) then
-    _script = ''
-  end
-  local o = Good.GenObj(_parent, -1, _script)
-  if (-1 ~= o) then
-    local _w, _h = w, h
-    local _color = color
-    if (nil == w) then
-      _w = 16
-    end
-    if (nil == h) then
-      _h = 16
-    end
-    if (nil == color) then
-      _color = 0xffff0000
-    end
-    Good.SetDim(o, 0, 0, _w, _h)
-    Good.SetBgColor(o, _color)
-  end
-  return o
-end
-
 function GenTexObj(parent, texture, w, h, srcx, srcy, script)
   local _parent = parent
   if (nil == parent) then
@@ -130,64 +107,6 @@ function GenTexObj(parent, texture, w, h, srcx, srcy, script)
   return o
 end
 
-function SetTextObjColor(msg, color)
-  for i = 0, Good.GetChildCount(msg) - 1 do
-    Good.SetBgColor(Good.GetChild(msg, i), color)
-  end
-end
-
-function GetTextObjWidth(msg)
-  local W = 0
-  for i = 0, Good.GetChildCount(msg) - 1 do
-    local o = Good.GetChild(msg, i)
-    local l,t,w,h = Good.GetDim(o)
-    W = W + w
-  end
-  return W
-end
-
-function Lshift(x, by)                  -- Bitwise left shift.
-  return x * 2 ^ by
-end
-
-function Rshift(x, by)                  -- Bitwise right shift.
-  return math.floor(x / 2 ^ by)
-end
-
-Good.GetAlpha = function(id)
-  return Rshift(Good.GetBgColor(id), 24)
-end
-
-Good.SetAlpha = function(id, a)
-  a = math.floor(a)
-  if (0 >= a) then
-    a = 0
-  end
-  if (0xff <= a) then
-    a = 0xff
-  end
-  local clr = Good.GetBgColor(id)
-  local x = Lshift(Rshift(clr, 24), 24)
-  local y = Lshift(a, 24)
-  clr = clr - x + y
-  Good.SetBgColor(id, clr)
-end
-
-Good.GetScreenPos = function(id)
-  local x, y = Good.GetPos(id)
-  local idLvl = Good.GetLevelId()
-  while (id ~= idLvl) do
-    id = Good.GetParent(id)
-    if (-1 == id or idLvl == id) then
-      break
-    end
-    local lx, ly = Good.GetPos(id)
-    x = x + lx
-    y = y + ly
-  end
-  return x, y
-end
-
 function GetARgbFromColor(color)
   local hex = string.format('%x', color)
   local a = string.sub(hex, 1, 2)
@@ -202,6 +121,20 @@ function GetColorFromARgb(A, R, G, B)
   return tonumber(hex, 16)
 end
 
+function GetTextObjWidth(msg)
+  local W = 0
+  for i = 0, Good.GetChildCount(msg) - 1 do
+    local o = Good.GetChild(msg, i)
+    local l,t,w,h = Good.GetDim(o)
+    W = W + w
+  end
+  return W
+end
+
+function Lerp(v0, v1, t)
+  return (1 - t) * v0 + t * v1
+end
+
 function LerpARgb(c0, c1, t)
   local a,r,g,b = GetARgbFromColor(c0)
   local ba,br,bg,bb = GetARgbFromColor(c1)
@@ -210,6 +143,36 @@ function LerpARgb(c0, c1, t)
   local ng = Lerp(g, bg, t)
   local nb = Lerp(b, bb, t)
   return GetColorFromARgb(na, nr, ng, nb)
+end
+
+function Lshift(x, by)                  -- Bitwise left shift.
+  return x * 2 ^ by
+end
+
+function PtInObj(x, y, o)
+  if (0 == Good.GetVisible(o)) then
+    return false
+  end
+  local ox, oy = Good.GetPos(o)
+  local l, t, w, h = Good.GetDim(o)
+  local sx, sy = Good.GetScale(o)
+  local ax, ay = Good.GetAnchor(o)
+  local sw, sh = math.abs(w * sx), math.abs(h * sy)
+  ox = Lerp(ox, ox + (w - sw), ax)
+  oy = Lerp(oy, oy + (h - sh), ay)
+  return PtInRect(x, y, ox, oy, ox + math.abs(sx) * w, oy + math.abs(sy) * h)
+end
+
+function PtInRect(x, y, left, top, right, bottom)
+  if (left <= x and right > x and top <= y and bottom > y) then
+    return true
+  else
+    return false
+  end
+end
+
+function Rshift(x, by)                  -- Bitwise right shift.
+  return math.floor(x / 2 ^ by)
 end
 
 function ScaleToSize(o, width, height)
@@ -229,4 +192,44 @@ function ScaleToSize(o, width, height)
   end
   Good.SetScale(o, sw, sh)
   return w * sw, h * sh
+end
+
+function SetTextObjColor(msg, color)
+  for i = 0, Good.GetChildCount(msg) - 1 do
+    Good.SetBgColor(Good.GetChild(msg, i), color)
+  end
+end
+
+Good.GetAlpha = function(id)
+  return Rshift(Good.GetBgColor(id), 24)
+end
+
+Good.GetScreenPos = function(id)
+  local x, y = Good.GetPos(id)
+  local idLvl = Good.GetLevelId()
+  while (id ~= idLvl) do
+    id = Good.GetParent(id)
+    if (-1 == id or idLvl == id) then
+      break
+    end
+    local lx, ly = Good.GetPos(id)
+    x = x + lx
+    y = y + ly
+  end
+  return x, y
+end
+
+Good.SetAlpha = function(id, a)
+  a = math.floor(a)
+  if (0 >= a) then
+    a = 0
+  end
+  if (0xff <= a) then
+    a = 0xff
+  end
+  local clr = Good.GetBgColor(id)
+  local x = Lshift(Rshift(clr, 24), 24)
+  local y = Lshift(a, 24)
+  clr = clr - x + y
+  Good.SetBgColor(id, clr)
 end
