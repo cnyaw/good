@@ -215,6 +215,7 @@ public:
     }
     if (showOutput) {
       DrawCmdLine_i();
+      mDirty = true;                    // Force to update caret timer.
     }
   }
 
