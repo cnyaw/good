@@ -204,21 +204,6 @@ Good.GetAlpha = function(id)
   return Rshift(Good.GetBgColor(id), 24)
 end
 
-Good.GetScreenPos = function(id)
-  local x, y = Good.GetPos(id)
-  local idLvl = Good.GetLevelId()
-  while (id ~= idLvl) do
-    id = Good.GetParent(id)
-    if (-1 == id or idLvl == id) then
-      break
-    end
-    local lx, ly = Good.GetPos(id)
-    x = x + lx
-    y = y + ly
-  end
-  return x, y
-end
-
 Good.SetAlpha = function(id, a)
   a = math.floor(a)
   if (0 >= a) then
