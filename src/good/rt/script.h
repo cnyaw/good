@@ -399,15 +399,20 @@ public:
   }
 
   //
-  // [in] idObj, [out] x, y.
+  // [in] idObj[, world], [out] x, y.
   //
 
   static int GetPos(lua_State* L)
   {
     int idObj = luaL_checkint(L, 1);
 
+    bool world = false;
+    if (2 <= lua_gettop(L)) {
+      world = 0 != luaL_checkint(L, 2);
+    }
+
     float x = .0f, y = .0f;
-    AppT::getInst().getPos(idObj, x, y);
+    AppT::getInst().getPos(idObj, x, y, world);
 
     lua_pushnumber(L, x);
     lua_pushnumber(L, y);

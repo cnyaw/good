@@ -642,12 +642,16 @@ int getParent(int idObj) const
   }
 }
 
-void getPos(int idObj, float &x, float &y) const
+void getPos(int idObj, float &x, float &y, bool world = false) const
 {
   if (mActors.isUsed(idObj)) {
     ActorT const& a = mActors[idObj];
-    x = a.mPosX;
-    y = a.mPosY;
+    if (world) {
+      a.getPos(x, y);
+    } else {
+      x = a.mPosX;
+      y = a.mPosY;
+    }
   }
 }
 
