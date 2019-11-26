@@ -528,13 +528,13 @@ public:
     return newid;
   }
 
-  int createObj(int idItem, LevelT const& lvl, ObjectT const& o, bool bValidId, char const *pPkgName, ResT *pRes)
+  int createObj_i(int idItem, LevelT const& lvl, ObjectT const& o, bool bValidId, char const *pPkgName, ResT *pRes)
   {
     mActors[idItem].init(o);
 
     for (size_t i = 0; i < o.mObjIdx.size(); ++i) {
       int idObj = o.mObjIdx[i];
-      if (-1 == createObj(idItem, lvl, idObj, bValidId, pPkgName, pRes)) {
+      if (-1 == createChildObj_i(idItem, lvl, idObj, bValidId, pPkgName, pRes)) {
         mActors[idItem].free();         // Free obj; ref may invalid if pool grow up.
         return -1;
       }
@@ -545,7 +545,7 @@ public:
     return idItem;
   }
 
-  int createObj(int idParent, LevelT const& lvl, int resId, bool bValidId, char const *pPkgName, ResT *pRes)
+  int createChildObj_i(int idParent, LevelT const& lvl, int resId, bool bValidId, char const *pPkgName, ResT *pRes)
   {
     int idItem = -1;
 
@@ -596,7 +596,7 @@ public:
       break;
     }
 
-    if (-1 == createObj(idItem, lvl, o, bValidId, pPkgName, pRes)) {
+    if (-1 == createObj_i(idItem, lvl, o, bValidId, pPkgName, pRes)) {
       return -1;
     }
 
@@ -617,7 +617,7 @@ public:
 
     LevelT const& lvl = mRes.getLevel(resId);
 
-    if (-1 == createObj(idLvl, lvl, lvl, true, 0, 0)) {
+    if (-1 == createObj_i(idLvl, lvl, lvl, true, 0, 0)) {
       mRoot = -1;
       return -1;
     }
