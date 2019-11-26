@@ -73,7 +73,7 @@ extern "C" {
 
 #include "../good.h"
 
-enum KEYS
+enum GOOD_KEYS
 {
   GOOD_KEYS_UP          = 1,
   GOOD_KEYS_DOWN        = 1 << 1,
@@ -86,6 +86,12 @@ enum KEYS
   GOOD_KEYS_RBUTTON     = 1 << 8,
   GOOD_KEYS_ESCAPE      = 1 << 9,
   GOOD_KEYS_ANY         = 0xffffffff
+};
+
+enum GOOD_CREATE_OBJ
+{
+  GOOD_CREATE_OBJ_RES_ID = 0,
+  GOOD_CREATE_OBJ_ANY_ID
 };
 
 #define GOOD_DEFAULT_TEXT_SIZE 16

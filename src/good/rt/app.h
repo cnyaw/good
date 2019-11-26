@@ -528,13 +528,31 @@ public:
     return newid;
   }
 
-  int createObj_i(int idItem, LevelT const& lvl, ObjectT const& o, bool bValidId, char const *pPkgName, ResT *pRes)
+  int allocActorId_i(int idType, int resId)
+  {
+    int idItem = -1;
+    switch (idType)
+    {
+    case GOOD_CREATE_OBJ_RES_ID:
+      idItem = allocActor(resId);
+      if (resId != idItem) {
+        return -1;
+      }
+      break;
+    case GOOD_CREATE_OBJ_ANY_ID:
+      idItem = allocActor();
+      break;
+    }
+    return idItem;
+  }
+
+  int createObj_i(int idItem, LevelT const& lvl, ObjectT const& o, int idType, char const *pPkgName, ResT *pRes)
   {
     mActors[idItem].init(o);
 
     for (size_t i = 0; i < o.mObjIdx.size(); ++i) {
       int idObj = o.mObjIdx[i];
-      if (-1 == createChildObj_i(idItem, lvl, idObj, bValidId, pPkgName, pRes)) {
+      if (-1 == createChildObj_i(idItem, lvl, idObj, idType, pPkgName, pRes)) {
         mActors[idItem].free();         // Free obj; ref may invalid if pool grow up.
         return -1;
       }
@@ -545,17 +563,11 @@ public:
     return idItem;
   }
 
-  int createChildObj_i(int idParent, LevelT const& lvl, int resId, bool bValidId, char const *pPkgName, ResT *pRes)
+  int createChildObj_i(int idParent, LevelT const& lvl, int resId, int idType, char const *pPkgName, ResT *pRes)
   {
-    int idItem = -1;
-
-    if (bValidId) {
-      idItem = allocActor(resId);
-      if (resId != idItem) {
-        return -1;
-      }
-    } else {
-      idItem = allocActor();
+    int idItem = allocActorId_i(idType, resId);
+    if (-1 == idItem) {
+      return -1;
     }
 
     ObjectT const& o = lvl.getObj(resId);
@@ -596,7 +608,7 @@ public:
       break;
     }
 
-    if (-1 == createObj_i(idItem, lvl, o, bValidId, pPkgName, pRes)) {
+    if (-1 == createObj_i(idItem, lvl, o, idType, pPkgName, pRes)) {
       return -1;
     }
 
@@ -617,7 +629,7 @@ public:
 
     LevelT const& lvl = mRes.getLevel(resId);
 
-    if (-1 == createObj_i(idLvl, lvl, lvl, true, 0, 0)) {
+    if (-1 == createObj_i(idLvl, lvl, lvl, GOOD_CREATE_OBJ_RES_ID, 0, 0)) {
       mRoot = -1;
       return -1;
     }
