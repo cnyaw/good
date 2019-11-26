@@ -562,7 +562,9 @@ public:
 
   int createObj_i(int idItem, LevelT const& lvl, ObjectT const& o, int idType, char const *pPkgName, ResT *pRes)
   {
-    mActors[idItem].init(o);
+    if (ObjectT::TYPE_LVL_OBJECT != o.mType) {
+      mActors[idItem].init(o);
+    }
 
     for (size_t i = 0; i < o.mObjIdx.size(); ++i) {
       int idObj = o.mObjIdx[i];
@@ -630,6 +632,10 @@ public:
         ActorT &a = mActors[idItem];
         a.mPosX = (float)po->mPosX;
         a.mPosY = (float)po->mPosY;
+      }
+      if (-1 == createObj_i(idItem, lvl, *po, idType, pPkgName, pRes)) {
+        mActors[idItem].free();
+        return -1;
       }
       return idItem;
     }
