@@ -528,7 +528,7 @@ public:
     return newid;
   }
 
-  int allocActorId_i(int idType, int resId)
+  int allocActorId_i(int idType, int resId, ResT *pRes)
   {
     int idItem = -1;
     switch (idType)
@@ -542,8 +542,22 @@ public:
     case GOOD_CREATE_OBJ_ANY_ID:
       idItem = allocActor();
       break;
+    case GOOD_CREATE_OBJ_EXCLUDE_RES_ID:
+      idItem = allocActorIdExcludeResId_i(pRes);
+      break;
     }
     return idItem;
+  }
+
+  int allocActorIdExcludeResId_i(ResT *pRes)
+  {
+    const sw2::ObjectPool<int,32,true> &pool = pRes ? pRes->mId : mRes.mId;
+    for (int i = mActors.firstFree(); -1 != i; i = mActors.nextFree(i)) {
+      if (!pool.isUsed(i)) {
+        return allocActor(i);
+      }
+    }
+    return allocActor();
   }
 
   int createObj_i(int idItem, LevelT const& lvl, ObjectT const& o, int idType, char const *pPkgName, ResT *pRes)
@@ -563,23 +577,17 @@ public:
     return idItem;
   }
 
-  int createChildObj_i(int idParent, LevelT const& lvl, int resId, int idType, char const *pPkgName, ResT *pRes)
+  void createObjInit_i(int idItem, const ObjectT *po, char const *pPkgName, ResT *pRes)
   {
-    int idItem = allocActorId_i(idType, resId);
-    if (-1 == idItem) {
-      return -1;
-    }
-
-    ObjectT const& o = lvl.getObj(resId);
     ActorT &a = mActors[idItem];
 
-    switch (o.mType)
+    switch (po->mType)
     {
     case ObjectT::TYPE_SPRITE:
       if (pRes) {
-        a.create(idItem, ActorT::TYPES_SPRITE, dupRes_i(pPkgName, *pRes, o.mSpriteId));
+        a.create(idItem, ActorT::TYPES_SPRITE, dupRes_i(pPkgName, *pRes, po->mSpriteId));
       } else {
-        a.create(idItem, ActorT::TYPES_SPRITE, o.mSpriteId);
+        a.create(idItem, ActorT::TYPES_SPRITE, po->mSpriteId);
       }
       break;
 
@@ -589,17 +597,17 @@ public:
 
     case ObjectT::TYPE_TEXBG:
       if (pRes) {
-        a.create(idItem, ActorT::TYPES_TEXBG, dupRes_i(pPkgName, *pRes, o.mTextureId));
+        a.create(idItem, ActorT::TYPES_TEXBG, dupRes_i(pPkgName, *pRes, po->mTextureId));
       } else {
-        a.create(idItem, ActorT::TYPES_TEXBG, o.mTextureId);
+        a.create(idItem, ActorT::TYPES_TEXBG, po->mTextureId);
       }
       break;
 
     case ObjectT::TYPE_MAPBG:
       if (pRes) {
-        a.create(idItem, ActorT::TYPES_MAPBG, dupRes_i(pPkgName, *pRes, o.mMapId));
+        a.create(idItem, ActorT::TYPES_MAPBG, dupRes_i(pPkgName, *pRes, po->mMapId));
       } else {
-        a.create(idItem, ActorT::TYPES_MAPBG, o.mMapId);
+        a.create(idItem, ActorT::TYPES_MAPBG, po->mMapId);
       }
       break;
 
@@ -607,8 +615,33 @@ public:
       a.create(idItem, ActorT::TYPES_DUMMY, -1);
       break;
     }
+  }
 
-    if (-1 == createObj_i(idItem, lvl, o, idType, pPkgName, pRes)) {
+  int createChildObj_i(int idParent, LevelT const& lvl, int resId, int idType, char const *pPkgName, ResT *pRes)
+  {
+    const ObjectT *po = getLevelObjRes_i(lvl, resId, pRes);
+    if (0 == po) {
+      return -1;
+    }
+
+    if (ObjectT::TYPE_LVL_OBJECT == po->mType) {
+      int idItem = createChildObj_i(idParent, lvl, po->mSpriteId, GOOD_CREATE_OBJ_EXCLUDE_RES_ID, pPkgName, pRes);
+      if (-1 != idItem) {
+        ActorT &a = mActors[idItem];
+        a.mPosX = (float)po->mPosX;
+        a.mPosY = (float)po->mPosY;
+      }
+      return idItem;
+    }
+
+    int idItem = allocActorId_i(idType, resId, pRes);
+    if (-1 == idItem) {
+      return -1;
+    }
+
+    createObjInit_i(idItem, po, pPkgName, pRes);
+
+    if (-1 == createObj_i(idItem, lvl, *po, idType, pPkgName, pRes)) {
       return -1;
     }
 
@@ -637,6 +670,28 @@ public:
     mDirty = true;
 
     return idLvl;
+  }
+
+  const ObjectT* getLevelObjRes_i(LevelT const& lvl, int resId, ResT *pRes) const
+  {
+    if (lvl.isObj(resId)) {
+      return &(lvl.getObj(resId));
+    }
+    std::map<int, LevelT>::const_iterator it;
+    if (pRes) {
+      for (it = pRes->mLevel.begin(); pRes->mLevel.end() != it; ++it) {
+        if (it->second.isObj(resId)) {
+          return &(it->second.getObj(resId));
+        }
+      }
+    } else {
+      for (it = mRes.mLevel.begin(); mRes.mLevel.end() != it; ++it) {
+        if (lvl.mId != it->second.mId && it->second.isObj(resId)) {
+          return &(it->second.getObj(resId));
+        }
+      }
+    }
+    return 0;
   }
 
   //

@@ -210,6 +210,12 @@ public:
       sec["map"] = 0xff;
       break;
 
+    case TYPE_LVL_OBJECT:
+      sec["sprite"] = mSpriteId;
+      sec["texture"] = 0xfe;
+      sec["map"] = 0xfe;
+      break;
+
     default:
 
       //
