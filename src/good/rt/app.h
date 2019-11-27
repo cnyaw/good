@@ -627,7 +627,7 @@ public:
     }
 
     if (ObjectT::TYPE_LVL_OBJECT == po->mType) {
-      int idItem = createChildObj_i(idParent, lvl, po->mSpriteId, GOOD_CREATE_OBJ_EXCLUDE_RES_ID, pPkgName, pRes);
+      int idItem = createChildObj_i(idParent, lvl, po->getLevelObjId(), GOOD_CREATE_OBJ_EXCLUDE_RES_ID, pPkgName, pRes);
       if (-1 != idItem) {
         ActorT &a = mActors[idItem];
         a.mPosX = (float)po->mPosX;

@@ -111,8 +111,17 @@ public:
   std::vector<int> mObjIdx;
 
   //
-  // Name property.
+  // Property.
   //
+
+  int getLevelObjId() const
+  {
+    if (TYPE_LVL_OBJECT == mType) {
+      return mSpriteId;
+    } else {
+      return 0;
+    }
+  }
 
   std::string getName() const
   {
