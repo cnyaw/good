@@ -210,7 +210,7 @@ public:
       sec["map"] = 0xff;
       break;
 
-    case TYPE_LVL_OBJECT:
+    case TYPE_LVLOBJ:
       sec["sprite"] = getLevelObjId();
       sec["texture"] = 0xfe;
       sec["map"] = 0xfe;

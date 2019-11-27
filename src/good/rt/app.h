@@ -562,7 +562,7 @@ public:
 
   int createObj_i(int idItem, LevelT const& lvl, ObjectT const& o, int idType, char const *pPkgName, ResT *pRes)
   {
-    if (ObjectT::TYPE_LVL_OBJECT != o.mType) {
+    if (ObjectT::TYPE_LVLOBJ != o.mType) {
       mActors[idItem].init(o);
     }
 
@@ -626,7 +626,7 @@ public:
       return -1;
     }
 
-    if (ObjectT::TYPE_LVL_OBJECT == po->mType) {
+    if (ObjectT::TYPE_LVLOBJ == po->mType) {
       int idItem = createChildObj_i(idParent, lvl, po->getLevelObjId(), GOOD_CREATE_OBJ_EXCLUDE_RES_ID, pPkgName, pRes);
       if (-1 != idItem) {
         ActorT &a = mActors[idItem];

@@ -22,7 +22,7 @@ public:
     TYPE_TEXBG,
     TYPE_MAPBG,
     TYPE_DUMMY,
-    TYPE_LVL_OBJECT,                    // Child obj of a lvl.
+    TYPE_LVLOBJ,                        // External child obj of a lvl.
   };
 
   //
@@ -116,7 +116,7 @@ public:
 
   int getLevelObjId() const
   {
-    if (TYPE_LVL_OBJECT == mType) {
+    if (TYPE_LVLOBJ == mType) {
       return mSpriteId;
     } else {
       return 0;
@@ -142,7 +142,7 @@ public:
     case TYPE_DUMMY:
       return good::getName(*this, "dummy");
 
-    case TYPE_LVL_OBJECT:
+    case TYPE_LVLOBJ:
       return good::getName(*this, "lvobj");
 
     default:
@@ -193,7 +193,7 @@ public:
     if (0xff == mSpriteId && 0xff == mTextureId && 0xff == mMapId) {
       mType = TYPE_DUMMY;
     } else if (0xfe == mTextureId && 0xfe == mMapId) {
-      mType = TYPE_LVL_OBJECT;          // mSpriteId as lvl object id.
+      mType = TYPE_LVLOBJ;              // mSpriteId as lvl object id.
     } else if (!sec["bgColor"].value.empty() && TYPE_DUMMY == mType) {
       mType = TYPE_COLBG;
     }

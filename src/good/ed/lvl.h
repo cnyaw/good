@@ -1140,9 +1140,24 @@ public:
   {
     PrjT& prj = PrjT::inst();
 
-    if (-1 != idTexture && 0xff != idObj && 0xff != idMap && !prj.mRes.isTex(idTexture)) {
+    int type = -1;
+    if (0xff == idSprite && 0xff == idTexture && 0xff == idMap) {
+      type = PrjT::ObjectT::TYPE_DUMMY;
+    } else if (0xfe == idTexture && 0xfe == idMap) {
+      type = PrjT::ObjectT::TYPE_LVLOBJ;
+    } else if (0 <= idSprite) {
+      type = PrjT::ObjectT::TYPE_SPRITE;
+    } else if (0 <= idTexture) {
+      type = PrjT::ObjectT::TYPE_TEXBG;
+    } else if (0 <= idMap) {
+      type = PrjT::ObjectT::TYPE_MAPBG;
+    } else {
+      type = PrjT::ObjectT::TYPE_COLBG;
+    }
+
+    if (PrjT::ObjectT::TYPE_TEXBG == type && !prj.mRes.isTex(idTexture)) {
       SW2_TRACE_ERROR("Add sprite object failed, texture is not exist!");
-      return false;
+      return -1;
     }
 
     int id = -1;
@@ -1171,18 +1186,7 @@ public:
     o.mScaleX = o.mScaleY = 1.0f;
     o.mAnchorX = o.mAnchorY = .0f;
     o.mDim.setEmpty();
-
-    if (0xff == idSprite && 0xff == idTexture && 0xff == idMap) {
-      o.mType = PrjT::ObjectT::TYPE_DUMMY;
-    } else if (0 <= idSprite) {
-      o.mType = PrjT::ObjectT::TYPE_SPRITE;
-    } else if (0 <= idTexture) {
-      o.mType = PrjT::ObjectT::TYPE_TEXBG;
-    } else if (0 <= idMap) {
-      o.mType = PrjT::ObjectT::TYPE_MAPBG;
-    } else {
-      o.mType = PrjT::ObjectT::TYPE_COLBG;
-    }
+    o.mType = type;
 
     lvl.mObj[id] = o;
     if (idParent == lvl.mId) {

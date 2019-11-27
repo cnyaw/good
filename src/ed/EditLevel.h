@@ -24,7 +24,8 @@ public:
     TOOL_ADDTEXBG,
     TOOL_ADDMAPBG,
     TOOL_ADDSPRITE,
-    TOOL_ADDDUMMY
+    TOOL_ADDDUMMY,
+    TOOL_ADDLVLOBJ
   };
 
   int mTool;
@@ -481,6 +482,11 @@ public:
       mAddMap = mAddTex = mAddObj = 0xff;
       mTool = TOOL_ADDDUMMY;
       break;
+    case PrjT::ObjectT::TYPE_LVLOBJ:
+      mAddMap = mAddTex = 0xfe;
+      mAddObj = o.getLevelObjId();
+      mTool = TOOL_ADDLVLOBJ;
+      break;
     }
   }
 
@@ -691,6 +697,10 @@ public:
             ::InflateRect(&r, -1, -1);
           }
         }
+        break;
+
+      case PrjT::ObjectT::TYPE_LVLOBJ:
+        mEditor.mImages.Draw(memdc, 6, rc.left, rc.top, ILS_NORMAL);
         break;
       }
 
@@ -1425,6 +1435,7 @@ public:
     UISetCheck(ID_LEVELEDIT_ADDMAPBG, mEditView.TOOL_ADDMAPBG == mEditView.mTool);
     UISetCheck(ID_LEVELEDIT_ADDSPRITE, mEditView.TOOL_ADDSPRITE == mEditView.mTool);
     UISetCheck(ID_LEVELEDIT_ADDDUMMY, mEditView.TOOL_ADDDUMMY == mEditView.mTool);
+    UISetCheck(ID_LEVELEDIT_ADDLVLOBJ, mEditView.TOOL_ADDLVLOBJ == mEditView.mTool);
 
     bool SingleSel = 1 == mEditView.mCurSel.size();
     UIEnable(ID_LEVELEDIT_BOTTOMMOST, SingleSel && lvl.canMoveObjBottommost(mEditView.mCurSel[0]));
@@ -1592,6 +1603,7 @@ public:
     UPDATE_ELEMENT(ID_LEVELEDIT_ADDMAPBG, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_ADDSPRITE, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_ADDDUMMY, UPDUI_TOOLBAR)
+    UPDATE_ELEMENT(ID_LEVELEDIT_ADDLVLOBJ, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_TOPMOST, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_MOVEUP, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_MOVEDOWN, UPDUI_TOOLBAR)
@@ -1615,6 +1627,7 @@ public:
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_ADDMAPBG, OnAddObjTool)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_ADDSPRITE, OnAddObjTool)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_ADDDUMMY, OnAddObjTool)
+    COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_ADDLVLOBJ, OnAddObjTool)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_GRID, OnToggleGrid)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_LINE, OnToggleLine)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_MOVEITEM, OnMoveTool)
@@ -1815,6 +1828,14 @@ public:
     } else if (ID_LEVELEDIT_ADDDUMMY == nID) {
       mEditView.mAddMap = mEditView.mAddTex = mEditView.mAddObj = 0xff;
       mEditView.mTool = mEditView.TOOL_ADDDUMMY;
+    } else if (ID_LEVELEDIT_ADDLVLOBJ == nID) {
+      CDlgLevelObjPicker dlg;
+      if (IDOK != dlg.DoModal()) {
+        return;
+      }
+      mEditView.mAddMap = mEditView.mAddTex = 0xfe;
+      mEditView.mAddObj = dlg.mId;
+      mEditView.mTool = mEditView.TOOL_ADDLVLOBJ;
     }
 
     mEditView.SetFocus();
