@@ -700,7 +700,7 @@ public:
         break;
 
       case PrjT::ObjectT::TYPE_LVLOBJ:
-        mEditor.mImages.Draw(memdc, 6, rc.left, rc.top, ILS_NORMAL);
+        mEditor.mImages.Draw(memdc, 6, rc.left - rcv.left, rc.top - rcv.top, ILS_NORMAL);
         break;
       }
 
