@@ -561,7 +561,9 @@ public:
     prop.SetItemValue(propmap["PosX"], &CComVariant(o.mPosX));
     prop.SetItemValue(propmap["PosY"], &CComVariant(o.mPosY));
 
-    if (PrjT::ObjectT::TYPE_COLBG == o.mType) {
+    if (PrjT::ObjectT::TYPE_LVLOBJ == o.mType) {
+      return;
+    } if (PrjT::ObjectT::TYPE_COLBG == o.mType) {
       prop.SetItemValue(propmap["Width"], &CComVariant(o.mDim.empty() ? 32 : o.mDim.width()));
       prop.SetItemValue(propmap["Height"], &CComVariant(o.mDim.empty() ? 32 : o.mDim.height()));
       prop.SetItemValue(propmap["Rot"], &CComVariant(o.mRot));
