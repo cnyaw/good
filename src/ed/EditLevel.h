@@ -44,8 +44,7 @@ public:
 
   bool mShowLine;
 
-  CBitmap mBmpObjState;
-  CDC mDcObjState;
+  CImageListManaged mImgObjState;
 
   EditorT& mEditor;
 
@@ -307,13 +306,7 @@ public:
       mSnapSize = lvl.mSnapWidth / EDITOR_SNAP_SCALE;
     }
 
-    HDC hdc = GetDC();
-
-    mBmpObjState.LoadBitmap(IDB_OBJSTATE);
-    mDcObjState.CreateCompatibleDC(hdc);
-    mDcObjState.SelectBitmap(mBmpObjState);
-
-    ReleaseDC(hdc);
+    mImgObjState.Create(IDB_OBJSTATE, 16, 0, RGB(255,0,255));
 
     SetMsgHandled(FALSE);
     return 0;
@@ -542,36 +535,36 @@ public:
     }
   }
 
-  void DoPaintObjStateIcon(CDC &memdc, const PrjT::LevelT& lvl, const PrjT::ObjectT& inst, bool IsImgValid, const RECT &rc) const
+  void DoPaintObjStateIcon(CDC &memdc, const PrjT::LevelT& lvl, const PrjT::ObjectT& inst, bool IsImgValid, const RECT &rc)
   {
     int id = inst.mId;
     int IconOffset = 0;
     if (!IsImgValid) {
-      memdc.BitBlt(rc.left, rc.top, 16, 16, mDcObjState, 64, 0, SRCCOPY);
+      mImgObjState.Draw(memdc, 4, rc.left, rc.top, ILS_NORMAL);
       IconOffset += 16;
     }
 
     if (!inst.mScript.empty()) {
-      memdc.BitBlt(rc.left + IconOffset, rc.top, 16, 16, mDcObjState, 0, 0, SRCCOPY);
+      mImgObjState.Draw(memdc, 0, rc.left + IconOffset, rc.top, ILS_NORMAL);
       IconOffset += 16;
     }
 
     if (!inst.mVisible) {
-      memdc.BitBlt(rc.left + IconOffset, rc.top, 16, 16, mDcObjState, 16, 0, SRCCOPY);
+      mImgObjState.Draw(memdc, 1, rc.left + IconOffset, rc.top, ILS_NORMAL);
       IconOffset += 16;
     } else if (!lvl.isParentVisible(id)) {
-      memdc.BitBlt(rc.left + IconOffset, rc.top, 16, 16, mDcObjState, 16, 0, SRCCOPY);
+      mImgObjState.Draw(memdc, 1, rc.left + IconOffset, rc.top, ILS_NORMAL);
       DrawAlphaRect(CDCHandle((HDC)memdc), RGB(255,0,0), rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, 45);
       IconOffset += 16;
     }
 
     if (inst.mRepX) {
-      memdc.BitBlt(rc.left + IconOffset, rc.top, 16, 16, mDcObjState, 32, 0, SRCCOPY);
+      mImgObjState.Draw(memdc, 2, rc.left + IconOffset, rc.top, ILS_NORMAL);
       IconOffset += 16;
     }
 
     if (inst.mRepY) {
-      memdc.BitBlt(rc.left + IconOffset, rc.top, 16, 16, mDcObjState, 48, 0, SRCCOPY);
+      mImgObjState.Draw(memdc, 3, rc.left + IconOffset, rc.top, ILS_NORMAL);
     }
   }
 
