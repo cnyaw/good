@@ -10,6 +10,10 @@
 
 #pragma once
 
+namespace good {
+
+namespace rt {
+
 //
 // NOTE: the global variable g is the Application instance.
 //
@@ -62,6 +66,10 @@ public:
   }
 };
 
+} // rt
+
+} // good
+
 extern "C" {
 
 JNIEXPORT void JNICALL Java_weilican_good_goodJniActivity_setcwd(JNIEnv * env, jobject obj, jstring path)
@@ -109,7 +117,7 @@ JNIEXPORT void JNICALL Java_weilican_good_goodJniLib_create(JNIEnv * env, jobjec
 
     g.uninit();
 
-    static AndroidAssetFileSystem fs;
+    static good::rt::AndroidAssetFileSystem fs;
     fs.assmgr = assmgr;
 
     std::stringstream ss;
