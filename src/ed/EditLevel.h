@@ -1394,7 +1394,7 @@ public:
   CLevelEditView<MainT,CLevelEditor> mEditView;
   CTreeViewCtrlEx mTree;
 
-  CImageList mImages;
+  CImageListManaged mImages;
 
   int mPos;
   CSplitterWindow mSplit;
@@ -2053,7 +2053,7 @@ public:
     // Drag loop.
     //
 
-    CImageList img = TreeView_CreateDragImage(mTree, lpnmtv->itemNew.hItem);
+    CImageListManaged img = TreeView_CreateDragImage(mTree, lpnmtv->itemNew.hItem);
     img.BeginDrag(0, 0, 0);
     img.DragEnter(mTree, lpnmtv->ptDrag.x - offsetx, lpnmtv->ptDrag.y - offsety);
     SetCapture();

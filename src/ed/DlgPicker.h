@@ -108,7 +108,7 @@ public:
   enum { IDD = IDD_CHOICELVLOBJ };
 
   int mId;
-  CImageList mImages;
+  CImageListManaged mImages;
   CTreeViewCtrlEx mTree;
 
   CDlgLevelObjPicker() : mId(-1)

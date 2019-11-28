@@ -160,7 +160,7 @@ public:
   CTreeViewCtrlEx mTree;
   CExplorerPropView<MainT> mProp;
 
-  CImageList mImages;
+  CImageListManaged mImages;
 
   void ChangeItemName(int id, std::string const& name)
   {
@@ -391,7 +391,7 @@ public:
     // Drag loop.
     //
 
-    CImageList img = TreeView_CreateDragImage(mTree, lpnmtv->itemNew.hItem);
+    CImageListManaged img = TreeView_CreateDragImage(mTree, lpnmtv->itemNew.hItem);
     img.BeginDrag(0, 0, 0);
     img.DragEnter(mTree, lpnmtv->ptDrag.x - offsetx, lpnmtv->ptDrag.y - offsety);
     SetCapture();
