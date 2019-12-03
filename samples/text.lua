@@ -26,7 +26,7 @@ Level.OnCreate = function(param)
 
   -- Fixed 5x8 font.
   Graphics.SetFont(Graphics.FIXED_FONT)
-  local str2 = Good.GenTextObj(-1, 'FIXED 5x8 FONT string test, draw by x2 size.')
+  local str2 = Good.GenTextObj(-1, 'FIXED 5x8 FONT string test, draw by x2 size.', 2)
   Good.SetPos(str2, 1, 50)
   Graphics.SetFont(Graphics.SYSTEM_FONT)
 

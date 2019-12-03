@@ -98,7 +98,7 @@ enum GOOD_CREATE_OBJ
 enum GOOD_DRAW_TEXT_FONT
 {
   GOOD_DRAW_TEXT_SYSTEM_FONT = 0,
-  GOOD_DRAW_TEXT_FIXED_FONT             // Fixed 5x8 font. Draw by x2 size.
+  GOOD_DRAW_TEXT_FIXED_FONT             // Fixed 5x8 font.
 };
 
 #define GOOD_DEFAULT_TEXT_SIZE 16

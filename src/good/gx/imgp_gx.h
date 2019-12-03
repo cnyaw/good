@@ -349,7 +349,7 @@ public:
 
   const unsigned char* getChar5_8() const;
 
-  int calcTextWidth(const char* str, int len) const
+  int calcTextWidth(const char* str, int len, int size = 2) const
   {
     if (-1 == len) {
       len = (int)strlen(str);
@@ -364,7 +364,7 @@ public:
         }
       }
       while (0xff != *p) {
-        x += 2, p++;
+        x += size, p++;
       }
       x += 2;
     }
@@ -372,7 +372,7 @@ public:
     return x;
   }
 
-  Imgp& drawText(const char* str, int len, int x, int y, unsigned int color)
+  Imgp& drawText(const char* str, int len, int x, int y, unsigned int color, int size = 2)
   {
     if (0 == dat) {
       return *this;
@@ -382,9 +382,6 @@ public:
       len = (int)strlen(str);
     }
 
-    color = rgba(color);
-
-    unsigned int *pdat = (unsigned int*)dat;
     for (int i = 0; i < len; i++) {
       int c = str[i] - ' ';
       const unsigned char* p = getChar5_8();
@@ -395,16 +392,12 @@ public:
       while (0xff != *p) {
         unsigned char mask = 0x80;
         int yy = y;
-        for (int j = 0; j < 8; j ++, yy += 2, mask >>= 1) {
+        for (int j = 0; j < 8; j ++, yy += size, mask >>= 1) {
           if (*p & mask) {
-            pdat[x + w * yy] =
-            pdat[1 + x + w * yy] =
-            pdat[x + w * (1 + yy)] =
-            pdat[1 + x + w * (1 + yy)] =
-            color;
+            fill(color, x, yy, size, size);
           }
         }
-        x += 2, p++;
+        x += size, p++;
         if (w <= x) {
           break;
         }

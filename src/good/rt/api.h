@@ -54,6 +54,15 @@ void callPackage(const char* name)
   }
 }
 
+int clampTextSize_i(int size) const
+{
+  if (GOOD_DRAW_TEXT_FIXED_FONT == getFont()) {
+    return sw2::clamp(size, 1, GOOD_MAX_TEXT_SIZE);
+  } else {
+    return sw2::clamp(size, GOOD_MIN_TEXT_SIZE, GOOD_MAX_TEXT_SIZE);
+  }
+}
+
 int cloneObj(int idObj)
 {
   int idNew = -1;
@@ -156,7 +165,7 @@ void drawText(int canvas, int x, int y, char const *utf8text, int size, unsigned
     return;
   }
 
-  size = sw2::clamp(size, GOOD_MIN_TEXT_SIZE, GOOD_MAX_TEXT_SIZE);
+  size = clampTextSize_i(size);
 
   std::vector<int> unicode;
   sw2::Util::utf8ToU16(utf8text, unicode);
@@ -442,7 +451,7 @@ int genTextObj(int idParent, char const *utf8text, int size, char const *script)
     return -1;
   }
 
-  size = sw2::clamp(size, GOOD_MIN_TEXT_SIZE, GOOD_MAX_TEXT_SIZE);
+  size = clampTextSize_i(size);
 
   std::vector<int> unicode;
   sw2::Util::utf8ToU16(utf8text, unicode);

@@ -307,15 +307,15 @@ void calcDrawTileParam(bool repx, bool repy, int x, int y, int cx, int cy, sw2::
   }
 }
 
-ImgT getFixFontImage(int ch) const
+ImgT getFixFontImage(int size, int ch) const
 {
   char chrmap[128];
 
   bool chValid = ' ' <= ch && '~' >= ch;
   if (chValid) {
-    sprintf(chrmap, "chrmap;fix;%d", ch);
+    sprintf(chrmap, "chrmap;fix;%d;%d", size, ch);
   } else {
-    sprintf(chrmap, "chrmap;fix;none");
+    sprintf(chrmap, "chrmap;fix;%d;none", size);
   }
 
   if (ImgT::existImage(chrmap)) {
@@ -323,12 +323,12 @@ ImgT getFixFontImage(int ch) const
   }
 
   CanvasT img;
-  int w = img.calcTextWidth((const char*)&ch, 1);
-  img.create(w, 16, 4);
+  int w = img.calcTextWidth((const char*)&ch, 1, size);
+  img.create(w, 8 * size, 4);
   img.fill(0);
 
   if (chValid) {
-    img.drawText((const char*)&ch, 1, 0, 0, 0xffffffff);
+    img.drawText((const char*)&ch, 1, 0, 0, 0xffffffff, size);
   }
 
   ImgT i = ImgT::getImage(chrmap, img);
@@ -371,8 +371,8 @@ ImgT getImage(std::string const& name) const
 
 ImgT getImage(int size, int ch) const
 {
-  if (GOOD_DRAW_TEXT_FIXED_FONT == mSelFont) {
-    return getFixFontImage(ch);
+  if (GOOD_DRAW_TEXT_FIXED_FONT == getFont()) {
+    return getFixFontImage(size, ch);
   }
 
   char chrmap[128];
