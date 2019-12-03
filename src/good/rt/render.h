@@ -323,7 +323,8 @@ ImgT getFixFontImage(int ch) const
   }
 
   CanvasT img;
-  img.create(10, 16, 4);
+  int w = img.calcTextWidth((const char*)&ch, 1);
+  img.create(w, 16, 4);
   img.fill(0);
 
   if (chValid) {

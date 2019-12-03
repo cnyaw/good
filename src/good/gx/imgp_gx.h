@@ -349,6 +349,29 @@ public:
 
   const unsigned char* getChar5_8() const;
 
+  int calcTextWidth(const char* str, int len) const
+  {
+    if (-1 == len) {
+      len = (int)strlen(str);
+    }
+
+    int x = 0;
+    for (int i = 0; i < len; i++) {
+      int c = str[i] - ' ';
+      const unsigned char* p = getChar5_8();
+      while (c --) {
+        while (0xff != *p++) {
+        }
+      }
+      while (0xff != *p) {
+        x += 2, p++;
+      }
+      x += 2;
+    }
+
+    return x;
+  }
+
   Imgp& drawText(const char* str, int len, int x, int y, unsigned int color)
   {
     if (0 == dat) {
@@ -363,14 +386,12 @@ public:
 
     unsigned int *pdat = (unsigned int*)dat;
     for (int i = 0; i < len; i++) {
-
       int c = str[i] - ' ';
       const unsigned char* p = getChar5_8();
       while (c --) {
         while (0xff != *p++) {
         }
       }
-
       while (0xff != *p) {
         unsigned char mask = 0x80;
         int yy = y;
@@ -383,13 +404,11 @@ public:
             color;
           }
         }
-
         x += 2, p++;
         if (w <= x) {
           break;
         }
       }
-
       x += 2;
       if (w <= x) {
         break;
