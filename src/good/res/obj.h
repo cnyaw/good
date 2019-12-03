@@ -194,7 +194,7 @@ public:
       mType = TYPE_DUMMY;
     } else if (0xfe == mTextureId && 0xfe == mMapId) {
       mType = TYPE_LVLOBJ;              // mSpriteId as lvl object id.
-    } else if (!sec["bgColor"].value.empty() && TYPE_DUMMY == mType) {
+    } else if (TYPE_DUMMY == mType) {
       mType = TYPE_COLBG;
     }
 
