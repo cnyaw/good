@@ -589,6 +589,11 @@ void getDim_i(ActorT const& a, int& left, int& top, int& width, int& height) con
   }
 }
 
+int getFont() const
+{
+  return mSelFont;
+}
+
 int getFirstResLevelId() const
 {
   if (!mRes.mLevelIdx.empty()) {
@@ -1091,6 +1096,11 @@ void setDim(int idObj, int newx, int newy, int neww, int newh)
   a.mDim = rc;
 
   mDirty = true;
+}
+
+void setFont(int font)
+{
+  mSelFont = font;
 }
 
 void setMapId(int idObj, int idMap)

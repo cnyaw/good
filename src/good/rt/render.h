@@ -12,6 +12,7 @@
 #pragma once
 
 bool mAntiAlias;
+int mSelFont;                           // GOOD_DRAW_TEXT_FONT.
 
 template<class GxT>
 void renderColorBg(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, unsigned int color, float rot, float xscale, float yscale) const
@@ -306,6 +307,37 @@ void calcDrawTileParam(bool repx, bool repy, int x, int y, int cx, int cy, sw2::
   }
 }
 
+ImgT getFixFontImage(int ch) const
+{
+  char chrmap[128];
+
+  bool chValid = ' ' <= ch && '~' >= ch;
+  if (chValid) {
+    sprintf(chrmap, "chrmap;fix;%d", ch);
+  } else {
+    sprintf(chrmap, "chrmap;fix;none");
+  }
+
+  if (ImgT::existImage(chrmap)) {
+    return ImgT::getImage(chrmap);
+  }
+
+  CanvasT img;
+  img.create(10, 16, 4);
+  img.fill(0);
+
+  if (chValid) {
+    img.drawText((const char*)&ch, 1, 0, 0, 0xffffffff);
+  }
+
+  ImgT i = ImgT::getImage(chrmap, img);
+  if (i.isValid()) {
+    mDirty = true;
+  }
+
+  return i;
+}
+
 ImgT getImage(ActorT const &a, std::string const& name) const
 {
   if (a.mImg.isValid()) {
@@ -338,6 +370,10 @@ ImgT getImage(std::string const& name) const
 
 ImgT getImage(int size, int ch) const
 {
+  if (GOOD_DRAW_TEXT_FIXED_FONT == mSelFont) {
+    return getFixFontImage(ch);
+  }
+
   char chrmap[128];
   sprintf(chrmap, "chrmap;%d;%d;%d", size, ch, mAntiAlias);
 

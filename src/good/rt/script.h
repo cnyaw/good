@@ -1614,7 +1614,18 @@ public:
 
   static int GetAntiAlias(lua_State* L)
   {
-    lua_pushinteger(L, AppT::getInst().mAntiAlias ? 1 : 0);
+    lua_pushinteger(L, AppT::getInst().getAntiAlias() ? 1 : 0);
+
+    return 1;
+  }
+
+  //
+  // [in] [out] font
+  //
+
+  static int GetFont(lua_State *L)
+  {
+    lua_pushinteger(L, AppT::getInst().getFont());
 
     return 1;
   }
@@ -1664,22 +1675,44 @@ public:
     return 0;
   }
 
+  //
+  // [in] font [out]
+  //
+
+  static int SetFont(lua_State* L)
+  {
+    int font = luaL_checkint(L, 1);
+
+    AppT::getInst().setFont(font);
+
+    return 0;
+  }
+
   static bool installGraphicsModuleApi(lua_State* L)
   {
+    static RegConstType GraphicsConst[] = {
+      {"SYSTEM_FONT", GOOD_DRAW_TEXT_SYSTEM_FONT},
+      {"FIXED_FONT", GOOD_DRAW_TEXT_FIXED_FONT},
+      { 0 }
+    };
+
     static RegApiType GraphicsApi[] = {
       {"DrawImage", &DrawImage},
       {"DrawText", &DrawText},
       {"FillRect", &FillRect},
       {"GenCanvas", &GenCanvas},
       {"GetAntiAlias", &GetAntiAlias},
+      {"GetFont", &GetFont},
       {"KillCanvas", &KillCanvas},
       {"SetAnchor", &GraphicsSetAnchor},
       {"SetAntiAlias", &SetAntiAlias},
+      {"SetFont", &SetFont},
       { 0 }
     };
 
     lua_newtable(L);
 
+    regCONST(L, GraphicsConst);
     regAPI(L, GraphicsApi);
 
     lua_setglobal(L, "Graphics");
