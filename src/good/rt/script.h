@@ -655,20 +655,6 @@ public:
   }
 
   //
-  // [in] idObj, bgColor, [out]
-  //
-
-  static int SetBgColor(lua_State* L)
-  {
-    int idObj = luaL_checkint(L, 1);
-    unsigned int newclr = (unsigned int)luaL_checknumber(L, 2);
-
-    AppT::getInst().setBgColor(idObj, newclr);
-
-    return 0;
-  }
-
-  //
   // [in] idObj, xAnchor, yAnchor, [out]
   //
 
@@ -679,6 +665,20 @@ public:
     lua_Number newy = luaL_checknumber(L, 3);
 
     AppT::getInst().setAnchor(idObj, (float)newx, (float)newy);
+
+    return 0;
+  }
+
+  //
+  // [in] idObj, bgColor, [out]
+  //
+
+  static int SetBgColor(lua_State* L)
+  {
+    int idObj = luaL_checkint(L, 1);
+    unsigned int newclr = (unsigned int)luaL_checknumber(L, 2);
+
+    AppT::getInst().setBgColor(idObj, newclr);
 
     return 0;
   }
@@ -921,8 +921,8 @@ public:
       {"PickObj", &PickObj},
       {"PlayAnim", &PlayAnim},
       {"PlayPackage", &PlayPackage},
-      {"SetBgColor", &SetBgColor},
       {"SetAnchor", &SetAnchor},
+      {"SetBgColor", &SetBgColor},
       {"SetDim", &SetDim},
       {"SetMapId", &SetMapId},
       {"SetName", &SetName},
@@ -1367,18 +1367,6 @@ public:
   }
 
   //
-  // [in] idSnd [out]
-  //
-
-  static int Play(lua_State* L)
-  {
-    int idSnd = luaL_checkint(L, 1);
-    SndT(idSnd).play();
-
-    return 0;
-  }
-
-  //
   // [in] idRes [out] idSnd.
   //
 
@@ -1389,6 +1377,18 @@ public:
     lua_pushinteger(L, AppT::getInst().playSound(idRes));
 
     return 1;
+  }
+
+  //
+  // [in] idSnd [out]
+  //
+
+  static int Resume(lua_State* L)
+  {
+    int idSnd = luaL_checkint(L, 1);
+    SndT(idSnd).play();
+
+    return 0;
   }
 
   //
@@ -1451,8 +1451,8 @@ public:
       {"IsPlaying", &IsPlaying},
       {"KillSound", &KillSound},
       {"Pause", &Pause},
-      {"Play", &Play},
       {"PlaySound", &PlaySound},
+      {"Resume", &Resume},
       {"SetLoop", &SetLoop},
       {"SetMusicVolume", &SetMusicVolume},
       {"SetSoundVolume", &SetSoundVolume},
