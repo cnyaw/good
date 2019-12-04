@@ -222,12 +222,12 @@ function GenLinkObj(p1, p2)
   local c, r = c1, r1
   local o
   if (c1 == c2) then
-    o = GenColorObj(-1, 1, TILE_H * math.abs(r1 - r2), 0xffff0000)
+    o = GenColorObj(-1, 2, TILE_H * math.abs(r1 - r2), 0xffff0000)
     if (r1 > r2) then
       r = r2
     end
   else
-    o = GenColorObj(-1, TILE_W * math.abs(c1 - c2), 1, 0xffff0000)
+    o = GenColorObj(-1, TILE_W * math.abs(c1 - c2), 2, 0xffff0000)
     if (c1 > c2) then
       c = c2
     end

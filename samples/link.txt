@@ -1,9 +1,11 @@
 [good]
 version=0.3
 name=Link
+window=600 440
 texs=1 2 21
 maps=9 3 12 17
 levels=10 14 4 18
+groups=
 
 [scripts]
 6=./link.lua
@@ -71,9 +73,9 @@ hgrid=1 128 128 128
 
 [level10]
 script=Game
-snapWidth=24
-snapHeight=34
 objects=13 11
+snapWidth=8
+snapHeight=8
 
 [object13]
 texture=2
@@ -81,18 +83,19 @@ repX=1
 repY=1
 x=48
 y=68
+dim=0 0 64 64
 
 [object11]
 name=map
 map=9
-x=72
-y=34
+x=56
+y=16
 
 [level14]
 script=Game
-snapWidth=24
-snapHeight=34
 objects=16 15
+snapWidth=8
+snapHeight=8
 
 [object16]
 texture=2
@@ -100,18 +103,19 @@ repX=1
 repY=1
 x=24
 y=34
+dim=0 0 64 64
 
 [object15]
 name=map
 map=12
-x=72
-y=34
+x=56
+y=16
 
 [level4]
 script=Game
-snapWidth=24
-snapHeight=34
 objects=7 5
+snapWidth=8
+snapHeight=8
 
 [object7]
 texture=2
@@ -119,18 +123,19 @@ repX=1
 repY=1
 x=32
 y=48
+dim=0 0 64 64
 
 [object5]
 name=map
 map=3
-x=72
-y=34
+x=56
+y=16
 
 [level18]
 script=Game
-snapWidth=24
-snapHeight=34
 objects=20 19
+snapWidth=8
+snapHeight=8
 
 [object20]
 texture=2
@@ -138,10 +143,11 @@ repX=1
 repY=1
 x=24
 y=34
+dim=0 0 64 64
 
 [object19]
 name=map
 map=17
-x=72
-y=34
+x=56
+y=16
 
