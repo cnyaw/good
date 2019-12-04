@@ -108,6 +108,16 @@ public:
       return 0;
     }
 
+    return getImage(name, img);
+  }
+
+  SDL_Surface* getImage(std::string const& name, GxImage &img)
+  {
+    std::map<std::string, SDL_Surface*>::const_iterator it = mImg.find(name);
+    if (mImg.end() != it) {
+      return it->second;
+    }
+
     img.convert32();
 
     SDL_Surface* sur = createSurface(img);
@@ -171,6 +181,11 @@ public:
   static SDLImage getImage(std::string const& name, int size, int ch, bool bAntiAlias)
   {
      return SDLImage();
+  }
+
+  static SDLImage getImage(std::string const& name, GxImage &img)
+  {
+    return SDLImage(SDLImageResource::inst().getImage(name, img));
   }
 
   template<class CanvasT>
