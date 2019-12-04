@@ -63,6 +63,7 @@ public:
 
     std::ifstream ifs(name.c_str(), std::ios::binary);
     if (!ifs) {
+      SW2_TRACE_ERROR("open image file %s failed", name.c_str());
       mImg[name] = 0;
       return 0;
     }
