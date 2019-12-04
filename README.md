@@ -23,9 +23,11 @@ API Reference http://good-ed.smallworld.idv.tw/wiki/index.php?title=Good_API_Ref
 * Dynamic Texture Packing
 * Dynamic Sprite Batching
 * Render When Dirty
+* Software Canvas
 
 # Text
 * System Font
+* Fixed 5x8 Font
 * Bitmap Font
 * Anti-Alias
 
@@ -48,6 +50,7 @@ API Reference http://good-ed.smallworld.idv.tw/wiki/index.php?title=Good_API_Ref
 # Platforms
 * Microsoft Windows
 * iPhone/iPod Touch/iPad
-* PSP
 * Android
+* PSP
 * MOD
+* Web Browser
