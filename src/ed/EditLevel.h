@@ -1268,7 +1268,6 @@ public:
 
           if (changed) {
             if (!dragCopy && (::GetKeyState(VK_LMENU) & 0x8000)) { // Drag and copy with Alt-key.
-              PrjT::LevelT& lvl = PrjT::inst().getLevel(mEditor.mId);
               std::vector<int> sel;
               if (lvl.copyObj(mCurSel, sel)) {
                 dragCopy = true;
@@ -1705,7 +1704,6 @@ public:
       mEditView.SetScrollSize(sz);
     }
     if (lvl.isObj(idItem)) {            // Item changed.
-      PrjT::LevelT& lvl = PrjT::inst().getLevel(mId);
       PrjT::ObjectT const& o = lvl.getObj(idItem);
       CTreeItem hTree = FindTreeItemById(idItem);
       hTree.SetText(o.getName().c_str());
