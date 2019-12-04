@@ -828,6 +828,9 @@ int getTexId(int idObj) const
     } else if (ActorT::TYPES_MAPBG == a.mResType) {
       MapT const& map = mRes.getMap(a.mResId);
       tex = map.mTileset.mTextureId;
+    } else if (ActorT::TYPES_SPRITE == a.mResType) {
+      SpriteT const& spr = mRes.getSprite(a.mResId);
+      tex = spr.mTileset.mTextureId;
     }
   }
   return tex;
