@@ -48,17 +48,8 @@ public:
     return i;
   }
 
-  bool LoadSurface(std::string const& stream, DevkitPSPImageRect& sur)
+  bool LoadSurface(GxImage &img, DevkitPSPImageRect& sur)
   {
-    //
-    // Load image to memory.
-    //
-
-    GxImage img;
-    if (!img.loadFromStream(stream)) {
-      return false;
-    }
-
     img.convert32();
     img.resize(img.w * TEX_SCALE, img.h * TEX_SCALE);
 
@@ -100,6 +91,20 @@ public:
     }
 
     return false;
+  }
+
+  bool LoadSurface(std::string const& stream, DevkitPSPImageRect& sur)
+  {
+    //
+    // Load image to memory.
+    //
+
+    GxImage img;
+    if (!img.loadFromStream(stream)) {
+      return false;
+    }
+
+    return LoadSurface(img, sur);
   }
 };
 
@@ -150,6 +155,11 @@ public:
   static DevkitPSPImage getImage(std::string const& name, int size, int ch, bool bAntiAlias)
   {
     return DevkitPSPImage();
+  }
+
+  static DevkitPSPImage getImage(std::string const& name, GxImage &img)
+  {
+    return DevkitPSPImage(DevkitPSPImageManager::inst().getImage(name, img));
   }
 };
 
@@ -259,6 +269,10 @@ public:
 
     sceDisplayWaitVblankStart();
     sceGuSwapBuffers();
+  }
+
+  void restoreSur()
+  {
   }
 
   void setAnchor(float x, float y)
