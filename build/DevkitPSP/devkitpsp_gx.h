@@ -50,60 +50,16 @@ public:
 
   bool LoadSurface(GxImage &img, DevkitPSPImageRect& sur)
   {
-    img.convert32();
     img.resize(img.w * TEX_SCALE, img.h * TEX_SCALE);
-
-    //
-    // Add the image to existing texture pack.
-    //
-
-    sw2::IntRect rc(0, 0, img.w, img.h);
-
-    std::vector<DevkitPSPSurface*>::iterator it;
-    for (it = mSur.begin(); it != mSur.end(); it++) {
-      DevkitPSPSurface *psur = *it;
-      if (psur->add(rc)) {
-        UpdateSurface(psur, rc, img, sur);
-        return true;
-      }
-    }
-
-    //
-    // Add the image to new texture pack.
-    //
-
-    DevkitPSPSurface *psur = new DevkitPSPSurface;
-    if (0 == psur) {
-      return false;
-    }
-
-    if (!psur->init()) {
-      delete psur;
-      return false;
-    }
-
-    mSur.push_back(psur);
-
-    if (psur->add(rc)) {
-      UpdateSurface(psur, rc, img, sur);
-      LastTex = 0;
-      return true;
-    }
-
-    return false;
+    return ImageManager<DevkitPSPImageManager, DevkitPSPSurface, DevkitPSPImageRect>::LoadSurface(img, sur);
   }
 
   bool LoadSurface(std::string const& stream, DevkitPSPImageRect& sur)
   {
-    //
-    // Load image to memory.
-    //
-
     GxImage img;
     if (!img.loadFromStream(stream)) {
       return false;
     }
-
     return LoadSurface(img, sur);
   }
 };
