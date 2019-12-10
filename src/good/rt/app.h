@@ -816,6 +816,28 @@ public:
   {
     return mAr->loadFile(name, ss, GOOD_PACKAGE_PASSWORD);
   }
+
+  bool loadLuaScript(const std::string &name)
+  {
+    std::stringstream ss;
+    if (!loadFile(name, ss)) {
+      trace("Script '%s' not found.\n", name.c_str());
+      return false;
+    }
+
+    std::string sdat = ss.str();
+    int s = luaL_loadbuffer(mLua, sdat.data(), sdat.length(), name.c_str());
+    if (0 == s) {
+      s = lua_pcall(mLua, 0, LUA_MULTRET, 0);
+    }
+
+    if (0 != s) {
+      trace("[%s] %s\n", name.c_str(), lua_tostring(mLua, -1));
+      return false;
+    }
+
+    return true;
+  }
 };
 
 } // namespace rt
