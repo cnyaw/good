@@ -721,15 +721,6 @@ int getResSpriteId(const char* name) const
   return getResIdByName_i(mRes.mSprite, name);
 }
 
-void getResSpriteSize(int idSprite, int &w, int &h) const
-{
-  if (mRes.isSprite(idSprite)) {
-    const SpriteT &spr = mRes.getSprite(idSprite);
-    w = spr.mTileset.mTileWidth;
-    h = spr.mTileset.mTileHeight;
-  }
-}
-
 int getResTexId(const char* name) const
 {
   return getResIdByName_i(mRes.mTex, name);
@@ -760,12 +751,16 @@ int getResTileByPos(int idMap, int x, int y) const
   return 0;
 }
 
-void getResTileSize(int idMap, int &w, int &h) const
+void getResTileSize(int idRes, int &w, int &h) const
 {
-  if (mRes.isMap(idMap)) {
-    MapT const& map = mRes.getMap(idMap);
+  if (mRes.isMap(idRes)) {
+    MapT const& map = mRes.getMap(idRes);
     w = map.mTileset.mTileWidth;
     h = map.mTileset.mTileHeight;
+  } else if (mRes.isSprite(idRes)) {
+    const SpriteT &spr = mRes.getSprite(idRes);
+    w = spr.mTileset.mTileWidth;
+    h = spr.mTileset.mTileHeight;
   }
 }
 
