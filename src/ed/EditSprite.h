@@ -680,19 +680,18 @@ public:
       iIns = spr.mFrame.size();
     }
 
+    std::vector<int> v;
     if (mCurPattern.empty()) {
-      std::vector<int> v;
       v.push_back(mCurTile);
-      (void)spr.insertFrame(iIns, v, frameTime);
     } else {
-      std::vector<int> v;
       for (size_t i = 0; i < mCurPattern.size(); ++i) {
         v.push_back(mCurPattern[i] - 1);
       }
-      (void)spr.insertFrame(iIns, v, frameTime);
     }
 
-    UpdateLayout();
+    if (spr.insertFrame(iIns, v, frameTime)) {
+      UpdateLayout();
+    }
   }
 
   //
