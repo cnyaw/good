@@ -139,7 +139,6 @@ public:
       CTreeItem ti = tiRoot.AddTail(lvl.getName().c_str(), 0);
       ti.SetData(-lvl.mId);
       InitTreeItem(lvl, ti, lvl.mObjIdx);
-      ti.Expand();
     }
     tiRoot.Expand();
   }
