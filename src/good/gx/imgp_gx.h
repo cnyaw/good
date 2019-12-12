@@ -46,13 +46,15 @@ public:
   // Fill.
   //
 
-  Imgp& blend(const Imgp& img, float alpha/*0..1*/, int x, int y)
+  Imgp& blend(const Imgp& img, unsigned int color, int x, int y)
   {
-    return blend(img, alpha, x, y, img.w, img.h, 0, 0);
+    return blend(img, color, x, y, img.w, img.h, 0, 0);
   }
 
-  Imgp& blend(const Imgp& img, float alpha/*0..1*/, int x, int y, int w, int h, int srcx, int srcy)
+  Imgp& blend(const Imgp& img, unsigned int color, int x, int y, int w, int h, int srcx, int srcy)
   {
+    float alpha = ((color >> 24) & 0xff) / (float)0xff;
+
     if (0 == dat || 0 == img.dat || .0f > alpha) {
       return *this;
     }
@@ -90,6 +92,7 @@ public:
         pd[0] = (unsigned char)(b * alpha1 + B * alpha);
         pd[1] = (unsigned char)(g * alpha1 + G * alpha);
         pd[2] = (unsigned char)(r * alpha1 + R * alpha);
+        *((unsigned int*)pd) &= color;
       }
     }
     return *this;
@@ -767,8 +770,7 @@ public:
     if (img.hasKeyColor()) {
       mSur.drawTrans(*img.mSur, img.getKeyColor(), x, y, srcw, srch, srcx, srcy);
     } else {
-      float alpha = ((color >> 24) & 0xff) / (float)0xff;
-      mSur.blend(*img.mSur, alpha, x, y, srcw, srch, srcx, srcy);
+      mSur.blend(*img.mSur, color, x, y, srcw, srch, srcx, srcy);
     }
 
     return true;
