@@ -621,6 +621,21 @@ public:
 
     return sur;
   }
+
+  Imgp* getImage(std::string const& name, int size, int ch, bool bAntiAlias)
+  {
+    std::map<std::string, Imgp*>::const_iterator it = mImg.find(name);
+    if (mImg.end() != it) {
+      return it->second;
+    }
+
+    GxImage img;
+    if (!img.loadFromChar(size, ch, bAntiAlias)) {
+      return false;
+    }
+
+    return getImage(name, img);
+  }
 };
 
 class ImgpImage : public good::gx::Image<ImgpImage>
@@ -687,7 +702,7 @@ public:
 
   static ImgpImage getImage(std::string const& name, int size, int ch, bool bAntiAlias)
   {
-     return ImgpImage();
+     return ImgpImage(ImgpImageResource::inst().getImage(name, size, ch, bAntiAlias));
   }
 
   static ImgpImage getImage(std::string const& name, GxImage &img)
