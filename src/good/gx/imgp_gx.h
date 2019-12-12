@@ -728,7 +728,7 @@ public:
   }
 };
 
-class ImgpGraphics : public good::gx::Graphics<ImgpGraphics>
+class ImgpGraphics : public good::gx::Graphics<ImgpImage>
 {
 public:
 
@@ -747,10 +747,6 @@ public:
   }
 
   void restoreSur()
-  {
-  }
-
-  void upadte()
   {
   }
 
