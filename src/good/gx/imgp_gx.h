@@ -728,14 +728,14 @@ public:
   void draw(int x, int y, const Imgp &c, int sx, int sy, int sw, int sh)
   {
     if (isValid()) {
-      mSur->draw(c, x, y, sx, sy, sw, sh);
+      mSur->draw(c, x, y, sw, sh, sx, sy);
     }
   }
 
   void drawToCanvas(int x, int y, Imgp &c, int sx, int sy, int sw, int sh) const
   {
     if (isValid()) {
-      c.draw(*mSur, x, y, sx, sy, sw, sh);
+      c.draw(*mSur, x, y, sw, sh, sx, sy);
     }
   }
 };
