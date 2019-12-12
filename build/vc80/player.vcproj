@@ -293,6 +293,99 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="Debug_Imgp|Win32"
+			OutputDirectory="../../bin/$(ConfigurationName)"
+			IntermediateDirectory="obj/$(ProjectName)/$(ConfigurationName)"
+			ConfigurationType="1"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="false"
+				TargetEnvironment="1"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(IntDir)/player.tlb"
+				HeaderFileName="player.h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="player_i.c"
+				ProxyFileName="player_p.c"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="../../../smallworld2/include;&quot;../../../../open/lua-5.1.4/src&quot;;&quot;../../../../open/audiere-1.9.4/include&quot;;&quot;../../../../open/yard-1.5&quot;;&quot;../../../../open/SDL-1.2/include&quot;"
+				PreprocessorDefinitions="WIN32;_WINDOWS;STRICT;_DEBUG;_CRT_SECURE_NO_DEPRECATE;GOOD_SUPPORT_IMGP_GX"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				UsePrecompiledHeader="2"
+				WarningLevel="3"
+				DebugInformationFormat="4"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"
+				AdditionalIncludeDirectories="$(IntDir)"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="sw2-debug.lib zdll.lib lua51.lib"
+				OutputFile="$(OutDir)/$(ProjectName).exe"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="../../../smallworld2/lib;&quot;../../../../open/zlib-1.2.8/lib&quot;;&quot;../../../../open/lua-5.1.4/src&quot;;&quot;../../../../open/SDL-1.2/lib/x86&quot;"
+				GenerateManifest="false"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -326,6 +419,14 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug_SDL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug_Imgp|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -384,6 +485,14 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug_SDL|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug_Imgp|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool

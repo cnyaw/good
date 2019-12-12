@@ -36,17 +36,255 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
   return 0;
 }
 #else
-# include "../good/app/wtl_player.h"
 
 #include "../ed/resource1.h"
 #include "../ed/DlgAbout.h"
 
 CAppModule _Module;
 
+#ifdef GOOD_SUPPORT_IMGP_GX
+#define GOOD_SUPPORT_GDIPLUS
+#define GOOD_WTL_PLAYER
+#include "../good/gx/imgp_gx.h"
+#include "../good/snd/openal_snd.h"
+
+class CPlayerWindow :
+  public CFrameWindowImpl<CPlayerWindow>,
+  public CMessageFilter,
+  public good::rt::Application<CPlayerWindow, good::gx::ImgpImage, good::snd::ALSound, good::gx::Imgp>
+{
+  CPlayerWindow() : gx(scr)
+  {
+  }
+public:
+  DECLARE_FRAME_WND_CLASS(NULL, IDR_MAINFRAME)
+
+  good::gx::Imgp scr;
+  good::gx::ImgpGraphics gx;
+
+  sw2::IntPoint lastMousePt;
+
+  static CPlayerWindow& getInst()
+  {
+    static CPlayerWindow i;
+    return i;
+  }
+
+  virtual BOOL PreTranslateMessage(MSG* pMsg)
+  {
+    return CFrameWindowImpl<CPlayerWindow>::PreTranslateMessage(pMsg);
+  }
+
+  void Exit()
+  {
+    if (mExit) {
+      DestroyWindow();
+    }
+  }
+
+  int GetKeyState() const
+  {
+    int ks = 0;
+
+    if (::GetKeyState(VK_UP) & 0x8000) {
+      ks |= GOOD_KEYS_UP;
+    }
+
+    if (::GetKeyState(VK_DOWN) & 0x8000) {
+      ks |= GOOD_KEYS_DOWN;
+    }
+
+    if (::GetKeyState(VK_LEFT) & 0x8000) {
+      ks |= GOOD_KEYS_LEFT;
+    }
+
+    if (::GetKeyState(VK_RIGHT) & 0x8000) {
+      ks |= GOOD_KEYS_RIGHT;
+    }
+
+    if (::GetKeyState(VK_RETURN) & 0x8000) {
+      ks |= GOOD_KEYS_RETURN;
+    }
+
+    if (::GetKeyState(VK_ESCAPE) & 0x8000) {
+      ks |= GOOD_KEYS_ESCAPE;
+    }
+
+    if (::GetKeyState('Z') & 0x8000) {
+      ks |= GOOD_KEYS_BTN_A;
+    }
+
+    if (::GetKeyState('X') & 0x8000) {
+      ks |= GOOD_KEYS_BTN_B;
+    }
+
+    if (::GetKeyState(VK_LBUTTON) & 0x80000) {
+      ks |= GOOD_KEYS_LBUTTON;
+    }
+
+    if (::GetKeyState(VK_RBUTTON) & 0x80000) {
+      ks |= GOOD_KEYS_RBUTTON;
+    }
+
+    return ks;
+  }
+
+  //
+  // Good APP.
+  //
+
+  bool doInit(std::string const& name)
+  {
+    scr.release();
+    scr.create(mRes.mWidth, mRes.mHeight, 32);
+
+    ResizeClient(mRes.mWidth, mRes.mHeight);
+
+    return true;
+  }
+
+  void doUninit()
+  {
+    good::gx::ImgpImageResource::inst().clear();
+  }
+
+  bool doOpenUrl(std::string const& url) const
+  {
+    SHELLEXECUTEINFO shExeInfo = {
+      sizeof(SHELLEXECUTEINFO),
+      0,
+      0,
+      TEXT("open"),
+      url.c_str(),
+      0,
+      0,
+      SW_SHOWNORMAL,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    };
+    ::ShellExecuteEx(&shExeInfo);
+    return true;
+  }
+
+  void onPackageChanged()
+  {
+    if (GOOD_LOGO_NAME != mRes.mName) {
+      SetWindowText(mRes.mName.c_str());
+    }
+  }
+
+  BEGIN_MSG_MAP_EX(CPlayerWindow)
+    MSG_WM_CREATE(OnCreate)
+    MSG_WM_DESTROY(OnDestroy)
+    MSG_WM_ERASEBKGND(OnEraseBkgnd)
+    MSG_WM_KEYDOWN(OnKeyDown)
+    MSG_WM_PAINT(OnPaint)
+    MSG_WM_TIMER(OnTimer)
+    CHAIN_MSG_MAP(CFrameWindowImpl<CPlayerWindow>)
+  END_MSG_MAP()
+
+  int OnCreate(LPCREATESTRUCT lpCreateStruct)
+  {
+    SetMenu(NULL);
+
+    //
+    // Register object for message filtering and idle updates.
+    //
+
+    ResizeClient(320, 240);
+
+    SetTimer(1, 1000/60);
+
+    onAppCreate();
+    SetMsgHandled(false);
+    return 0;
+  }
+
+  void OnDestroy()
+  {
+    uninit();
+
+    onAppDestroy();
+    SetMsgHandled(false);
+  }
+
+  BOOL OnEraseBkgnd(CDCHandle dc)
+  {
+    return TRUE;
+  }
+
+  void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+  {
+    if (VK_ESCAPE == nChar && 0 == (mHandledKeys & GOOD_KEYS_ESCAPE)) {
+      Exit();
+    }
+  }
+
+  void OnPaint(CDCHandle)
+  {
+    renderAll(gx);
+    CPaintDC dc(m_hWnd);
+    scr.blt(dc, 0, 0);
+  }
+
+  void OnTimer(UINT_PTR nIDEvent)
+  {
+    POINT pt;
+    GetCursorPos(&pt);
+    ScreenToClient(&pt);
+    sw2::IntPoint mp(pt.x, pt.y);
+    RECT RcWnd;
+    GetClientRect(&RcWnd);
+    mp.x = (int)(mp.x * mRes.mWidth / (float)RcWnd.right);
+    mp.y = (int)(mp.y * mRes.mHeight / (float)RcWnd.bottom);
+    lastMousePt = mp;
+
+    trigger(GetKeyState(), lastMousePt);
+    RedrawWindow();
+  }
+};
+
+int Run(LPTSTR lpstrCmdLine, int nCmdShow = SW_SHOWDEFAULT)
+{
+  //
+  // Start the app.
+  //
+
+  CMessageLoop theLoop;
+  _Module.AddMessageLoop(&theLoop);
+
+  CPlayerWindow& wndMain = CPlayerWindow::getInst();
+
+  if (wndMain.CreateEx() == NULL) {
+    ATLTRACE(_T("Main gl window creation failed!\n"));
+    return 0;
+  }
+
+  if (!wndMain.init(lpstrCmdLine)) {
+    ATLTRACE(_T("Init good failed!\n"));
+    return 0;
+  }
+
+  wndMain.ShowWindow(SW_SHOW);
+
+  timeBeginPeriod(1);
+  int nRet = theLoop.Run();
+  timeEndPeriod(1);
+
+  _Module.RemoveMessageLoop();
+  return nRet;
+}
+#else
+#include "../good/app/wtl_player.h"
+
 class CPlayerWindow : public good::rt::WtlApplicationImpl<CPlayerWindow>
 {
 public:
-
   typedef good::rt::WtlApplicationImpl<CPlayerWindow> BaseT;
 
   static CPlayerWindow& getInst()
@@ -56,11 +294,12 @@ public:
   } // getInst
 
   BEGIN_MSG_MAP_EX(CPlayerWindow)
+    MSG_WM_CREATE(OnCreate)
     MSG_WM_SYSCOMMAND(OnSysCommand)
     CHAIN_MSG_MAP(BaseT)
   END_MSG_MAP()
 
-  void OnInit(void)
+  void OnInit()
   {
     BaseT::OnInit();
 
@@ -129,12 +368,13 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
   wndMain.ShowWindow(SW_SHOW);
 
   timeBeginPeriod(1);
-  int nRet = wndMain.theLoop.Run();
+  int nRet = theLoop.Run();
   timeEndPeriod(1);
 
   _Module.RemoveMessageLoop();
   return nRet;
 }
+#endif // GOOD_SUPPORT_IMGP_GX
 
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpstrCmdLine, int nCmdShow)
 {
@@ -159,4 +399,4 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 
     return nRet;
 }
-#endif
+#endif // GOOD_SUPPORT_SDL

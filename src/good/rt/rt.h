@@ -39,6 +39,9 @@ extern "C" {
 // #define GOOD_SUPPORT_SDL
 // Define in editor player uses SDL renderer, default is OpenGL.
 //
+// #define GOOD_SUPPORT_IMGP_GX
+// Use ImgpGraphics gx.
+//
 // #define GOOD_SUPPORT_STGE
 // Is enable STGE feature.
 //

@@ -588,11 +588,34 @@ public:
       return 0;
     }
 
-    GxImage img;
-    if (!img.loadFromStream(stream)) {
+    if (!sur->loadFromStream(stream)) {
       SW2_TRACE_ERROR("load image resource stream %s failed", name.c_str());
       return 0;
     }
+
+    mImg[name] = sur;
+
+    return sur;
+  }
+
+  Imgp* getImage(std::string const& name, GxImage &img)
+  {
+    std::map<std::string, Imgp*>::const_iterator it = mImg.find(name);
+    if (mImg.end() != it) {
+      return it->second;
+    }
+
+    Imgp* sur = new Imgp;
+    if (0 == sur) {
+      return 0;
+    }
+
+    if (!sur->create(img.w, img.h, img.bpp)) {
+      SW2_TRACE_ERROR("load gx image %s failed", name.c_str());
+      return 0;
+    }
+
+    ((GxImage*)sur)->draw(0, 0, img);
 
     mImg[name] = sur;
 
@@ -604,7 +627,7 @@ class ImgpImage : public good::gx::Image<ImgpImage>
 {
 public:
 
-  const Imgp* mSur;
+  Imgp* mSur;
   bool mHasKeyColor;
   unsigned int mKeyColor;
 
@@ -612,7 +635,7 @@ public:
   {
   }
 
-  ImgpImage(const Imgp* sur) : mSur(sur), mHasKeyColor(false), mKeyColor(0)
+  ImgpImage(Imgp* sur) : mSur(sur), mHasKeyColor(false), mKeyColor(0)
   {
   }
 
@@ -661,6 +684,30 @@ public:
   {
     return ImgpImage(ImgpImageResource::inst().getImage(name, stream));
   }
+
+  static ImgpImage getImage(std::string const& name, int size, int ch, bool bAntiAlias)
+  {
+     return ImgpImage();
+  }
+
+  static ImgpImage getImage(std::string const& name, GxImage &img)
+  {
+    return ImgpImage(ImgpImageResource::inst().getImage(name, img));
+  }
+
+  void draw(int x, int y, const Imgp &c, int sx, int sy, int sw, int sh)
+  {
+    if (isValid()) {
+      mSur->draw(c, x, y, sx, sy, sw, sh);
+    }
+  }
+
+  void drawToCanvas(int x, int y, Imgp &c, int sx, int sy, int sw, int sh) const
+  {
+    if (isValid()) {
+      c.draw(*mSur, x, y, sx, sy, sw, sh);
+    }
+  }
 };
 
 class ImgpGraphics : public good::gx::Graphics<ImgpGraphics>
@@ -673,7 +720,27 @@ public:
   {
   }
 
-  bool drawImage(int x, int y, ImgpImage const& img, int srcx, int srcy, int srcw, int srch)
+  void beginDraw(int width, int height)
+  {
+  }
+
+  void endDraw()
+  {
+  }
+
+  void restoreSur()
+  {
+  }
+
+  void upadte()
+  {
+  }
+
+  void setAnchor(float x, float y)
+  {
+  }
+
+  bool drawImage(int x, int y, ImgpImage const& img, int srcx, int srcy, int srcw, int srch, unsigned int color, float rot, float xscale, float yscale)
   {
     if (img.hasKeyColor()) {
       mSur.drawTrans(*img.mSur, img.getKeyColor(), x, y, srcw, srch, srcx, srcy);
@@ -684,7 +751,7 @@ public:
     return true;
   }
 
-  bool fillSolidColor(int left, int top, int width, int height, unsigned int color)
+  bool fillSolidColor(int left, int top, int width, int height, unsigned int color, float rot, float xscale, float yscale)
   {
     mSur.fill(color, left, top, width, height);
     return true;
