@@ -227,8 +227,8 @@ public:
     keycolor = rgba(keycolor);
 
     unsigned int *p = (unsigned int*)dat;
-    for (int i = x, ii = srcx; i < x + w && i < this->w; i ++, ii++) {
-      for (int j = y, jj = srcy; j < y + h && j < this->h; j ++, jj++) {
+    for (int i = x, ii = srcx; i < x + w && i < this->w && ii < img.w; i ++, ii++) {
+      for (int j = y, jj = srcy; j < y + h && j < this->h && jj < img.h; j ++, jj++) {
         unsigned int c = p[ii + img.w * jj];
         if (keycolor != c) {
           p[i + this->w * j] = c;
