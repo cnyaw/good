@@ -590,6 +590,7 @@ public:
 
     if (!sur->loadFromStream(stream)) {
       SW2_TRACE_ERROR("load image resource stream %s failed", name.c_str());
+      mImg[name] = 0;
       return 0;
     }
 
@@ -631,6 +632,8 @@ public:
 
     GxImage img;
     if (!img.loadFromChar(size, ch, bAntiAlias)) {
+      SW2_TRACE_ERROR("create char img %s failed", name.c_str());
+      mImg[name] = 0;
       return false;
     }
 
