@@ -48,10 +48,10 @@ public:
 
   Imgp& blend(const Imgp& img, float alpha/*0..1*/, int x, int y)
   {
-    return blend(img, alpha, x, y, img.w, img.h);
+    return blend(img, alpha, x, y, img.w, img.h, 0, 0);
   }
 
-  Imgp& blend(const Imgp& img, float alpha/*0..1*/, int x, int y, int w, int h)
+  Imgp& blend(const Imgp& img, float alpha/*0..1*/, int x, int y, int w, int h, int srcx, int srcy)
   {
     if (0 == dat || 0 == img.dat || .0f > alpha) {
       return *this;
@@ -59,21 +59,23 @@ public:
 
     if (0 > x) {
       w += x;
+      srcx -= x;
       x = 0;
     }
 
     if (0 > y) {
       h += y;
+      srcy -= y;
       y = 0;
     }
 
     if (1.0f < alpha) {
-      alpha = 1.0f;
+      return draw(img, x, y, w, h, srcx, srcy);
     }
 
     float alpha1 = 1.0f - alpha;
-    for (int i = x, ii = 0; i < x + w && i < this->w; i ++, ii ++) {
-      for (int j = y, jj = 0; j < y + h && j < this->h; j ++, jj ++) {
+    for (int i = x, ii = srcx; i < x + w && i < this->w; i ++, ii++) {
+      for (int j = y, jj = srcy; j < y + h && j < this->h; j ++, jj++) {
         unsigned char* pd = (unsigned char*)((unsigned int*)dat + i + this->w * j);
         unsigned char b = pd[0];
         unsigned char g = pd[1];
@@ -759,7 +761,8 @@ public:
     if (img.hasKeyColor()) {
       mSur.drawTrans(*img.mSur, img.getKeyColor(), x, y, srcw, srch, srcx, srcy);
     } else {
-      mSur.draw(*img.mSur, x, y, srcw, srch, srcx, srcy);
+      float alpha = ((color >> 24) & 0xff) / (float)0xff;
+      mSur.blend(*img.mSur, alpha, x, y, srcw, srch, srcx, srcy);
     }
 
     return true;
