@@ -76,14 +76,17 @@ public:
     float alpha1 = 1.0f - alpha;
     for (int i = x, ii = srcx; i < x + w && i < this->w; i ++, ii++) {
       for (int j = y, jj = srcy; j < y + h && j < this->h; j ++, jj++) {
+        unsigned char* ps = (unsigned char*)((unsigned int*)img.dat + ii + img.w * jj);
+        if (0 == ps[3]) {               // 0==alpha.
+          continue;
+        }
+        unsigned char B = ps[0];
+        unsigned char G = ps[1];
+        unsigned char R = ps[2];
         unsigned char* pd = (unsigned char*)((unsigned int*)dat + i + this->w * j);
         unsigned char b = pd[0];
         unsigned char g = pd[1];
         unsigned char r = pd[2];
-        unsigned char* ps = (unsigned char*)((unsigned int*)img.dat + ii + img.w * jj);
-        unsigned char B = ps[0];
-        unsigned char G = ps[1];
-        unsigned char R = ps[2];
         pd[0] = (unsigned char)(b * alpha1 + B * alpha);
         pd[1] = (unsigned char)(g * alpha1 + G * alpha);
         pd[2] = (unsigned char)(r * alpha1 + R * alpha);
@@ -178,7 +181,10 @@ public:
 
     for (int i = x, ii = srcx; i < x + w && i < this->w; i ++, ii++) {
       for (int j = y, jj = srcy; j < y + h && j < this->h; j ++, jj++) {
-        p[i + this->w * j] = p2[ii + img.w * jj] & color;
+        int c = p2[ii + img.w * jj];
+        if ((c >> 24) & 0xff) {
+          p[i + this->w * j] = c & color;
+        }
       }
     }
 
