@@ -136,7 +136,7 @@ public:
   bool doInit(std::string const& name)
   {
     scr.release();
-    scr.create(mRes.mWidth, mRes.mHeight, 32);
+    scr.create(mRes.mWidth, mRes.mHeight, 4);
 
     ResizeClient(mRes.mWidth, mRes.mHeight);
 
