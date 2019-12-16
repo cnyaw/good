@@ -111,11 +111,7 @@ void drawImageToCanvas_i(int canvas, int x, int y, ImgT img, int srcx, int srcy,
   }
 
   CanvasT &c = mCanvas[canvas];
-#if defined(GOOD_SUPPORT_SDL) || defined(GOOD_SUPPORT_IMGP_GX)
   img.drawToCanvas(x, y, c, srcx, srcy, srcw, srch);
-#else
-  c.draw((*(const CanvasT*)&(img.mSur->tex->img)), x, y, srcw, srch, img.mSur->left + srcx, img.mSur->top + srcy, color);
-#endif
 }
 
 void drawImage(int canvas, int x, int y, int texId, int srcx, int srcy, int srcw, int srch, unsigned int color, float rot = .0f, float scalex = 1.0f, float scaley = 1.0f)
@@ -1293,17 +1289,13 @@ void updateResTex(int idTex, int x, int y, int idCanvas, int sx, int sy, int sw,
     sh = img.mSur->h - y;
   }
 
-#if defined(GOOD_SUPPORT_SDL) || defined(GOOD_SUPPORT_IMGP_GX)
   img.draw(x, y, c, sx, sy, sw, sh);
-#else
-  img.mSur->tex->img.draw(img.mSur->left + x, img.mSur->top + y, c, sx, sy, sw, sh);
 
   if (mRenderState) {
     ((T*)this)->gx.restoreSur();
   } else {
     mTexDirty = true;
   }
-#endif
 }
 
 // end of api.h

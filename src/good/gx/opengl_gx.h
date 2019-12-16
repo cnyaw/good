@@ -183,6 +183,22 @@ public:
   {
     return GLImage(GLImageResource::inst().getImage(name, img));
   }
+
+  template<class CanvasT>
+  void draw(int x, int y, const CanvasT &c, int sx, int sy, int sw, int sh)
+  {
+    if (isValid()) {
+      mSur->tex->img.draw(mSur->left + x, mSur->top + y, c, sx, sy, sw, sh);
+    }
+  }
+
+  template<class CanvasT>
+  void drawToCanvas(int x, int y, CanvasT &c, int sx, int sy, int sw, int sh) const
+  {
+    if (isValid()) {
+      c.draw((*(const CanvasT*)&(mSur->tex->img)), x, y, sw, sh, mSur->left + sx, mSur->top + sy);
+    }
+  }
 };
 
 class GLGraphics : public Graphics<GLImage>
