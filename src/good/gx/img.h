@@ -341,7 +341,7 @@ public:
   }
 
 #ifdef WIN32
-  void blt(HDC hdc, int x, int y)
+  void blt(HDC hdc, int x, int y) const
   {
     if (0 == dat) {
       return;

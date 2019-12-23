@@ -242,6 +242,35 @@ public:
     return *this;
   }
 
+  Imgp& rect(unsigned int color, int x, int y, int w, int h)
+  {
+    if (0 == dat) {
+      return *this;
+    }
+
+    if (0 > x) {
+      w += x;
+      x = 0;
+    }
+
+    if (0 > y) {
+      h += y;
+      y = 0;
+    }
+
+    color = rgba(color);
+
+    unsigned int *p = (unsigned int*)dat;
+    for (int i = x; i < x + w && i < this->w; i++) {
+      p[i + this->w * y] = p[i + this->w * (y + h - 1)] = color;
+    }
+    for (int j = y; j < y + h && j < this->h; j++) {
+      p[x + this->w * j] = p[x + w - 1 + this->w * j] = color;
+    }
+
+    return *this;
+  }
+
   //
   // Image processing.
   //
