@@ -59,6 +59,9 @@ Game.OnStep = function(param)
       Good.SetSpriteId(param.o[param.i][0], spr)
       param.i = param.i + 1
     end
+    if (Input.IsKeyPushed(Input.RETURN)) then
+      Good.GenObj(-1, 3)                -- Restart level.
+    end
     return
   end
 
