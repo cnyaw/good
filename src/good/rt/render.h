@@ -325,11 +325,12 @@ ImgT getFixFontImage(int size, int ch) const
   CanvasT img;
   int w = img.calcTextWidth((const char*)&ch, 1, size);
   img.create(w, 8 * size, 4);
+  img.fill(0);
 
   if (chValid) {
-    img.fill(0).drawText((const char*)&ch, 1, 0, 0, 0xffffffff, size);
+    img.drawText((const char*)&ch, 1, 0, 0, 0xffffffff, size);
   } else {
-    img.fill(0xffffffff).fill(0, 1, 1, img.w - 2, img.h - 2);
+    img.rect(0xffffffff, 0, 0, img.w, img.h);
   }
 
   ImgT i = ImgT::getImage(chrmap, img);
