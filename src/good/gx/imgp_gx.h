@@ -411,7 +411,13 @@ public:
     }
 
     for (int i = 0; i < len; i++) {
-      int c = str[i] - ' ';
+      char ch = str[i];
+      if (' ' > ch || '~' < ch) {
+        fill(color, x, y, 5 * size, 8 * size); // Fill block to unknown char.
+        x += 5 * size + 2;
+        continue;
+      }
+      int c = ch - ' ';
       const unsigned char* p = getChar5_8();
       while (c --) {
         while (0xff != *p++) {
