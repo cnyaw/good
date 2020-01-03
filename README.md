@@ -54,3 +54,4 @@ API Reference http://good-ed.smallworld.idv.tw/wiki/index.php?title=Good_API_Ref
 * PSP
 * MOD
 * Web Browser
+* ESP32
