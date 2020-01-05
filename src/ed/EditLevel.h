@@ -115,7 +115,16 @@ public:
       return;
     }
 
-    if (!PrjT::inst().removeLevelObj(mEditor.mId, v)) {
+    PrjT &prj = PrjT::inst();
+    for (size_t i = 0; i < v.size(); i++) {
+      std::string lvlName, oName;
+      if (prj.isLevelObjUsed(v[i], lvlName, oName)) {
+        SW2_TRACE_ERROR("Item is still used by %s of %s", oName.c_str(), lvlName.c_str());
+        return;
+      }
+    }
+
+    if (!prj.removeLevelObj(mEditor.mId, v)) {
       return;
     }
 

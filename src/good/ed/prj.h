@@ -622,6 +622,31 @@ public:
     rc.offset(obj.mPosX, obj.mPosY);
   }
 
+  bool isLevelObjUsed(int id, std::string &lvlName, std::string &oName) const
+  {
+    std::map<int, LevelT>::const_iterator it = mRes.mLevel.begin();
+    for (; mRes.mLevel.end() != it; ++it) {
+      const LevelT &lvl = it->second;
+      if (isLevelObjUsed_i(id, lvl, lvlName, oName)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool isLevelObjUsed_i(int id, const LevelT &lvl, std::string &lvlName, std::string &oName) const
+  {
+    std::map<int, ObjectT>::const_iterator it = lvl.mObj.begin();
+    for (; lvl.mObj.end() != it; ++it) {
+      if (it->second.getLevelObjId() == id) {
+        lvlName = lvl.getName();
+        oName = it->second.getName();
+        return true;
+      }
+    }
+    return false;
+  }
+
   bool removeLevel(int id)
   {
     return removeResource(mRes.mLevel, mRes.mLevelIdx, id);

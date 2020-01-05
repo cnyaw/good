@@ -119,7 +119,7 @@ public:
     if (TYPE_LVLOBJ == mType) {
       return mSpriteId;
     } else {
-      return 0;
+      return -1;
     }
   }
 
