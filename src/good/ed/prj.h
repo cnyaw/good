@@ -537,11 +537,6 @@ public:
     return id;
   }
 
-  bool removeLevel(int id)
-  {
-    return removeResource(mRes.mLevel, mRes.mLevelIdx, id);
-  }
-
   template<class ImgT>
   int addLevelObj(int idLvl, int idSprite, int idMap, int idTexture, unsigned bgColor, int x, int y)
   {
@@ -625,6 +620,16 @@ public:
     }
 
     rc.offset(obj.mPosX, obj.mPosY);
+  }
+
+  bool removeLevel(int id)
+  {
+    return removeResource(mRes.mLevel, mRes.mLevelIdx, id);
+  }
+
+  bool removeLevelObj(int idLvl, const std::vector<int> &ids)
+  {
+    return getLevel(idLvl).removeObj(ids);
   }
 
   //

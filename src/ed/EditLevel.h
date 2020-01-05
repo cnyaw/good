@@ -115,7 +115,7 @@ public:
       return;
     }
 
-    if (!PrjT::inst().getLevel(mEditor.mId).removeObj(v)) {
+    if (!PrjT::inst().removeLevelObj(mEditor.mId, v)) {
       return;
     }
 
