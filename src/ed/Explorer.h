@@ -174,14 +174,13 @@ public:
     }
   }
 
-  void FINDINUSEDMSG(std::string const& name)
-  {
-    SW2_TRACE_ERROR("Item is still used by %s", name.c_str());
-  }
-
   void FINDINUSEDMSG(std::string const& name, std::string const& owner)
   {
-    SW2_TRACE_ERROR("Item is still used by %s of %s", name.c_str(), owner.c_str());
+    if (owner.empty()) {
+      SW2_TRACE_ERROR("Item is still used by %s", name.c_str());
+    } else {
+      SW2_TRACE_ERROR("Item is still used by %s of %s", name.c_str(), owner.c_str());
+    }
   }
 
   template<int ResType, class ResT, class IdxT>
@@ -221,54 +220,6 @@ public:
     FillResourceTree2<GOOD_RESOURCE_PARTICLE>(res.mStgeScript, res.mStgeScriptIdx, _T("Particle"));
     FillResourceTree2<GOOD_RESOURCE_DEPENDENCY>(res.mDep, res.mDepIdx, _T("Dependency"));
     mTree.InsertItem(_T("Project"), 3, 3, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_PROJECT); // Project info.
-  }
-
-  template<class MapT>
-  bool FindIsUsedTex(MapT const& map, int idItem)
-  {
-    for (MapT::const_iterator it = map.begin(); map.end() != it; ++it) {
-      if (it->second.mTileset.mTextureId == idItem) {
-        FINDINUSEDMSG(it->second.getName());
-        return true;
-      }
-    }
-    return false;
-  }
-
-  bool FindIsUsedTex(const std::string &name, std::map<int, typename PrjT::ObjectT> const& map, int idItem)
-  {
-    std::map<int, typename PrjT::ObjectT>::const_iterator it = map.begin();
-    for (; map.end() != it; ++it) {
-      if (it->second.mTextureId == idItem) {
-        FINDINUSEDMSG(it->second.getName(), name);
-        return true;
-      }
-    }
-    return false;
-  }
-
-  template<class MapT>
-  bool FindIsUsedMap(const std::string &name, MapT const& map, int idItem)
-  {
-    for (MapT::const_iterator it = map.begin(); map.end() != it; ++it) {
-      if (it->second.mMapId == idItem) {
-        FINDINUSEDMSG(it->second.getName(), name);
-        return true;
-      }
-    }
-    return false;
-  }
-
-  template<class MapT>
-  bool FindIsUsedSpr(const std::string &name, MapT const& map, int idItem)
-  {
-    for (MapT::const_iterator it = map.begin(); map.end() != it; ++it) {
-      if (it->second.mSpriteId == idItem) {
-        FINDINUSEDMSG(it->second.getName(), name);
-        return true;
-      }
-    }
-    return false;
   }
 
   void InitTree()
@@ -626,15 +577,10 @@ end:
         if (!SureRemoveRes(prj.getTex(idItem).getName())) {
           return false;
         }
-        if (FindIsUsedTex(prj.mRes.mMap, idItem) || FindIsUsedTex(prj.mRes.mSprite, idItem)) {
+        std::string lvlName, oName;
+        if (prj.isTexUsed(idItem, lvlName, oName)) {
+          FINDINUSEDMSG(oName, lvlName);
           return false;
-        }
-        std::map<int, PrjT::LevelT>::const_iterator it = prj.mRes.mLevel.begin();
-        for (; prj.mRes.mLevel.end() != it; ++it) {
-          typename PrjT::LevelT const& lvl = it->second;
-          if (FindIsUsedTex(lvl.getName(), lvl.mObj, idItem)) {
-            return false;
-          }
         }
         if (!prj.removeTex(idItem)) {
           return false;
@@ -647,12 +593,10 @@ end:
         if (!SureRemoveRes(prj.getMap(idItem).getName())) {
           return false;
         }
-        std::map<int, PrjT::LevelT>::const_iterator it = prj.mRes.mLevel.begin();
-        for (; prj.mRes.mLevel.end() != it; ++it) {
-          typename PrjT::LevelT const& lvl = it->second;
-          if (FindIsUsedMap(lvl.getName(), lvl.mObj, idItem)) {
-            return false;
-          }
+        std::string lvlName, oName;
+        if (prj.isMapUsed(idItem, lvlName, oName)) {
+          FINDINUSEDMSG(oName, lvlName);
+          return false;
         }
         if (!prj.removeMap(idItem)) {
           return false;
@@ -665,12 +609,10 @@ end:
         if (!SureRemoveRes(prj.getSprite(idItem).getName())) {
           return false;
         }
-        std::map<int, PrjT::LevelT>::const_iterator it = prj.mRes.mLevel.begin();
-        for (; prj.mRes.mLevel.end() != it; ++it) {
-          typename PrjT::LevelT const& lvl = it->second;
-          if (FindIsUsedSpr(lvl.getName(), lvl.mObj, idItem)) {
-            return false;
-          }
+        std::string lvlName, oName;
+        if (prj.isSpriteUsed(idItem, lvlName, oName)) {
+          FINDINUSEDMSG(oName, lvlName);
+          return false;
         }
         if (!prj.removeSprite(idItem)) {
           return false;

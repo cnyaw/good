@@ -304,6 +304,46 @@ public:
     return id;
   }
 
+  bool isTexUsed(int id, std::string &lvlName, std::string &oName) const
+  {
+    if (isTexUsed_i(id, mRes.mMap, oName) || isTexUsed_i(id, mRes.mSprite, oName)) {
+      return true;
+    }
+    std::map<int, LevelT>::const_iterator it = mRes.mLevel.begin();
+    for (; mRes.mLevel.end() != it; ++it) {
+      const LevelT &lvl = it->second;
+      if (isTexUsed_i(id, lvl, lvlName, oName)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  template<class ResMapT>
+  bool isTexUsed_i(int id, const ResMapT &map, std::string &oName) const
+  {
+    for (ResMapT::const_iterator it = map.begin(); map.end() != it; ++it) {
+      if (it->second.mTileset.mTextureId == id) {
+        oName = it->second.getName();
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool isTexUsed_i(int id, const LevelT &lvl, std::string &lvlName, std::string &oName) const
+  {
+    std::map<int, ObjectT>::const_iterator it = lvl.mObj.begin();
+    for (; lvl.mObj.end() != it; ++it) {
+      if (it->second.mTextureId == id) {
+        lvlName = lvl.getName();
+        oName = it->second.getName();
+        return true;
+      }
+    }
+    return false;
+  }
+
   bool removeTex(int id)
   {
     return removeResource(mRes.mTex, mRes.mTexIdx, id);
@@ -359,6 +399,31 @@ public:
     return id;
   }
 
+  bool isMapUsed(int id, std::string &lvlName, std::string &oName) const
+  {
+    std::map<int, LevelT>::const_iterator it = mRes.mLevel.begin();
+    for (; mRes.mLevel.end() != it; ++it) {
+      const LevelT &lvl = it->second;
+      if (isMapUsed_i(id, lvl, lvlName, oName)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool isMapUsed_i(int id, const LevelT &lvl, std::string &lvlName, std::string &oName) const
+  {
+    std::map<int, ObjectT>::const_iterator it = lvl.mObj.begin();
+    for (; lvl.mObj.end() != it; ++it) {
+      if (it->second.mMapId == id) {
+        lvlName = lvl.getName();
+        oName = it->second.getName();
+        return true;
+      }
+    }
+    return false;
+  }
+
   bool removeMap(int id)
   {
     return removeResource(mRes.mMap, mRes.mMapIdx, id);
@@ -408,6 +473,31 @@ public:
     mModified = true;
 
     return id;
+  }
+
+  bool isSpriteUsed(int id, std::string &lvlName, std::string &oName) const
+  {
+    std::map<int, LevelT>::const_iterator it = mRes.mLevel.begin();
+    for (; mRes.mLevel.end() != it; ++it) {
+      const LevelT &lvl = it->second;
+      if (isSpriteUsed_i(id, lvl, lvlName, oName)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool isSpriteUsed_i(int id, const LevelT &lvl, std::string &lvlName, std::string &oName) const
+  {
+    std::map<int, ObjectT>::const_iterator it = lvl.mObj.begin();
+    for (; lvl.mObj.end() != it; ++it) {
+      if (it->second.mSpriteId == id) {
+        lvlName = lvl.getName();
+        oName = it->second.getName();
+        return true;
+      }
+    }
+    return false;
   }
 
   bool removeSprite(int id)
