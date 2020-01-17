@@ -704,19 +704,24 @@ public:
   // Helper.
   //
 
+  bool isKeyDown_i(int keys, int key) const
+  {
+    return 0 != (keys & key);
+  }
+
   bool isKeyDown(int key) const
   {
-    return 0 != (mKeys & key);
+    return isKeyDown_i(mKeys, key);
   }
 
   bool isKeyPressed(int key) const
   {
-    return !(mKeys & key) && (mPrevKeys & key);
+    return !isKeyDown(key) && isKeyDown_i(mPrevKeys, key);
   }
 
-  bool isKeyPushed(int keyCode) const
+  bool isKeyPushed(int key) const
   {
-    return (mKeys & keyCode) && !(mPrevKeys & keyCode);
+    return isKeyDown(key) && !isKeyDown_i(mPrevKeys, key);
   }
 
   void getScriptParamName(int id, char *buff) const
