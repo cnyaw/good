@@ -437,10 +437,10 @@ public:
       mCreateRoot = false;
       if (!mRes.mLevelIdx.empty()) {
         if (GOOD_LOGO_NAME != mRes.mName && -1 != mStartLevel) {
-          mRoot = createLevel(mStartLevel);
+          mRoot = genObj(-1, mStartLevel, 0);
           mStartLevel = -1;
         } else {
-          mRoot = createLevel(mRes.mLevelIdx[0]);
+          mRoot = genObj(-1, mRes.mLevelIdx[0], 0);
         }
       } else {
         mRoot = -1;
@@ -573,8 +573,6 @@ public:
         return -1;
       }
     }
-
-    mActors[idItem].OnCreate();
 
     return idItem;
   }

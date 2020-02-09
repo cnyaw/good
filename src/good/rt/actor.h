@@ -182,7 +182,7 @@ public:
       return -1;
     }
 
-    a.OnCreate();
+    a.OnCreateRecursive();
 
     return idNew;
   }
@@ -326,11 +326,7 @@ public:
       //
 
       lua_getfield(app.mLua, -1, "OnStep");
-
-      if (LUA_TFUNCTION == lua_type(app.mLua, -1)) {
-        mScriptAnimator = true;
-      }
-
+      mScriptAnimator = LUA_TFUNCTION == lua_type(app.mLua, -1);
       lua_remove(app.mLua, -1);
 
       //
@@ -338,11 +334,7 @@ public:
       //
 
       lua_getfield(app.mLua, -1, "OnDraw");
-
-      if (LUA_TFUNCTION == lua_type(app.mLua, -1)) {
-        mOwnerDraw = true;
-      }
-
+      mOwnerDraw = LUA_TFUNCTION == lua_type(app.mLua, -1);
       lua_remove(app.mLua, -1);
 
     } else {
@@ -528,6 +520,16 @@ public:
   void OnCreate()
   {
     callScript("OnCreate", 0);
+  }
+
+  void OnCreateRecursive()
+  {
+    AppT &app = AppT::getInst();
+    for (size_t i = 0; i < mChild.size(); ++i) {
+      typename AppT::ActorT& a = app.mActors[mChild[i]];
+      a.OnCreateRecursive();
+    }
+    OnCreate();
   }
 
   void OnDestroy()

@@ -270,9 +270,6 @@ int genObj(int idParent, int idRes, char const *script)
       mRoot = -1;
     }
     newid = createLevel(idRes);
-    if (-1 != newid) {
-      mRoot = newid;
-    }
   } else if (mRes.isTex(idRes) || mRes.isMap(idRes) || mRes.isSprite(idRes) || 0 >= idRes/*color bg*/) {
     newid = allocActor();
     if (-1 != newid) {
@@ -303,11 +300,11 @@ int genObj(int idParent, int idRes, char const *script)
 
   if (-1 != newid) {
     mDirty = true;
+    ActorT& a = mActors[newid];
     if (script) {
-      ActorT& a = mActors[newid];
       a.setScript(script);
-      a.OnCreate();
     }
+    a.OnCreateRecursive();
   }
 
   return newid;
@@ -423,11 +420,11 @@ int genObjEx(char const *pPkgName, int idParent, int idRes, char const *script)
         int newid = createChildObj_i(idParent, it->second, idRes, GOOD_CREATE_OBJ_ANY_ID, pPkgName, &Res); // Gen child obj of a lvl.
         if (-1 != newid) {
           mDirty = true;
+          ActorT& a = mActors[newid];
           if (script) {
-            ActorT& a = mActors[newid];
             a.setScript(script);
-            a.OnCreate();
           }
+          a.OnCreateRecursive();
         }
         return newid;
       }
