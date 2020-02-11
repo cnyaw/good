@@ -34,7 +34,7 @@ public:
 
   typedef Actor<T, ImgT> ActorT;
 
-  Application() : mStartLevel(-1), mAntiAlias(true), mSelFont(GOOD_DRAW_TEXT_SYSTEM_FONT)
+  Application() : mRoot(-1), mStartLevel(-1), mAntiAlias(true), mSelFont(GOOD_DRAW_TEXT_SYSTEM_FONT)
   {
   }
 
