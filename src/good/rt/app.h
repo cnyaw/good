@@ -101,8 +101,8 @@ public:
   // Call stack.
   //
 
-  std::vector<std::string> mPackageStack; // Real package stack.
-  std::vector<std::string> mCallStack;  // Next package to play.
+  std::vector<std::string> mPkgCallStack; // Package call stack.
+  std::string mNextPlayPkg;             // Next package to play.
 
   //
   // Canvas.
@@ -406,9 +406,9 @@ public:
 
   void exitPackage()
   {
-    if (!mPackageStack.empty()) {
-      mCallStack.push_back(mPackageStack.back());
-      mPackageStack.erase(mPackageStack.begin() + (mPackageStack.size() - 1));
+    if (!mPkgCallStack.empty()) {
+      mNextPlayPkg = mPkgCallStack.back();
+      mPkgCallStack.erase(mPkgCallStack.begin() + (mPkgCallStack.size() - 1));
     } else {
       mExit = true;
     }
@@ -448,12 +448,12 @@ public:
     }
 
     //
-    // Update call stack.
+    // Play next package.
     //
 
-    if (!mCallStack.empty()) {
-      std::string name(mCallStack.front());
-      mCallStack.erase(mCallStack.begin());
+    if (!mNextPlayPkg.empty()) {
+      std::string name(mNextPlayPkg);
+      mNextPlayPkg.clear();
       playPackage_i(name);
     }
 
@@ -746,8 +746,8 @@ public:
 
     mFileSys[name] = 1;
 
-    mPackageStack.push_back(prjname);
-    mCallStack.push_back("logo.txt");
+    mPkgCallStack.push_back(prjname);
+    mNextPlayPkg = "logo.txt";
 
     return true;
   }

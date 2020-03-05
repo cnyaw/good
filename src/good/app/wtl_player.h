@@ -112,8 +112,8 @@ public:
     cmdHist.clear();
     cmdLine = "";
 
-    mPackageStack.clear();
-    mCallStack.clear();
+    mPkgCallStack.clear();
+    mNextPlayPkg.clear();
 
     showOutput = false;
     showTexInfo = false;

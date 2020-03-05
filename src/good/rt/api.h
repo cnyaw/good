@@ -43,14 +43,14 @@ void callPackage(const char* name)
     // Save current running project.
     //
 
-    mPackageStack.push_back(mRes.mFileName);
+    mPkgCallStack.push_back(mRes.mFileName);
 
     //
     // Now, set new package as active project. Assume new package is at the
     // same folder
     //
 
-    mCallStack.push_back(name);
+    mNextPlayPkg = name;
   }
 }
 
@@ -914,7 +914,7 @@ void playAnim(int idObj)
 void playPackage(const char* name)
 {
   if (name) {
-    mCallStack.push_back(name);         // Assume new package is at the same folder.
+    mNextPlayPkg = name;            // Assume new package is at the same folder.
   }
 }
 
