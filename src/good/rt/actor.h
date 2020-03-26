@@ -44,7 +44,7 @@ public:
 
   bool mVisible;
   float mPosX, mPosY;                   // Relative to parent(not include level(top level)).
-  char mScript[GOOD_MAX_SCRIPT_NAME_LEN];
+  std::string mScript;
 
   sw2::IntRect mDim;
   unsigned int mBgColor;                // 32-bit color, ARGB.
@@ -296,19 +296,15 @@ public:
 
   void setScript(const char* script)
   {
-    if (!strcmp(mScript, script)) {     // Same script.
+    if (0 == script) {
+      script = "";
+    }
+
+    if (mScript == script) {            // Same script.
       return;
     }
 
-    if (sizeof(mScript) <= strlen(script)) {
-      return;
-    }
-
-    AppT& app = AppT::getInst();
-    assert(app.mLua);
-
-    strncpy(mScript, script, GOOD_MAX_SCRIPT_NAME_LEN);
-    mScript[GOOD_MAX_SCRIPT_NAME_LEN - 1] = '\0';
+    mScript = script;
 
     mScriptAnimator = false;
     mOwnerDraw = false;
@@ -316,6 +312,9 @@ public:
     if ('\0' == script[0]) {            // Empty script.
       return;
     }
+
+    AppT& app = AppT::getInst();
+    assert(app.mLua);
 
     lua_getglobal(app.mLua, script);
 
@@ -484,7 +483,7 @@ public:
     AppT& app = AppT::getInst();
     assert(app.mLua);
 
-    lua_getglobal(app.mLua, mScript);
+    lua_getglobal(app.mLua, mScript.c_str());
     if (LUA_TTABLE != lua_type(app.mLua, -1)) {
       return 0;
     }
@@ -511,7 +510,7 @@ public:
     int s = lua_pcall(app.mLua, 1 + nArg, LUA_MULTRET, 0);
 
     if (0 != s) {
-      app.trace("[%s.%s] %s\n", mScript, name, lua_tostring(app.mLua, -1));
+      app.trace("[%s.%s] %s\n", mScript.c_str(), name, lua_tostring(app.mLua, -1));
     }
 
     return 0;
