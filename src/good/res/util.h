@@ -137,11 +137,6 @@ bool isGoodArchive(std::string const& name)
           std::string::npos != name.find(".zip");
 }
 
-void toLowerString(std::string &str)
-{
-  std::transform(str.begin(), str.end(), str.begin(), ::tolower);
-}
-
 } // namespace good
 
 // end of util.h

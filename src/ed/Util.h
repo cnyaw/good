@@ -146,7 +146,7 @@ std::string CompleteFileExt(std::string const& path, std::string const& ext)
   std::string name = path;
 
   std::string lname = path;
-  good::toLowerString(lname);
+  sw2::Util::toLowerString(lname);
 
   if (lname.npos == lname.find(ext)) {
     name += ext;
