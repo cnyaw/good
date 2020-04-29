@@ -53,6 +53,7 @@ public:
   int iLogs;
   std::vector<std::string> logs;
 
+  int iTexs;
   int maxDrawCalls, maxActors;
 
   CPlayerWindowImpl() : showFPS(false), showOutput(false), showTexInfo(false), mFont(0), maxDrawCalls(0), maxActors(0), caretTimer(0), iCmdHist(0)
@@ -120,7 +121,7 @@ public:
 
     isTipShown = false;
     timeTip = 0;
-    maxDrawCalls = maxActors = 0;
+    iTexs = maxDrawCalls = maxActors = 0;
 
     mStartLevel = StartLevel;
 
@@ -219,41 +220,22 @@ public:
     }
   }
 
-  bool Outbound_i(int x, int y, int rcSize, int width, int height) const
-  {
-    return (1 + x) * rcSize > width || (1 + y) * rcSize > height;
-  }
-
   void DrawTexInfo_i()
   {
+    gx::GLImageResource &ir = gx::GLImageResource::inst();
+    const int nMaxTexs = ir.GetTextureCount();
+    if (0 >= nMaxTexs) {
+      return;
+    }
+    gx::GL_Surface<gx::GLImageResource> *sur = ir.GetTex(iTexs);
     int size = mRes.mWidth;
     if (mRes.mWidth > mRes.mHeight) {
       size = mRes.mHeight;
     }
-    gx::GLImageResource &ir = gx::GLImageResource::inst();
-    int count = 1;                    // Number of tex display on a row.
-    for (int i = 0;; i++) {
-      int x = (ir.GetTextureCount() - 1) % count;
-      int y = (ir.GetTextureCount() - 1) / count;
-      if (!Outbound_i(x, y, size, mRes.mWidth, mRes.mHeight)) {
-        break;
-      }
-      if (mRes.mWidth > mRes.mHeight) {
-        size = mRes.mHeight / (1 + i);
-      } else {
-        size = mRes.mWidth / (1 + i);
-      }
-      count = mRes.mWidth / size;
-    }
+    gx.drawTex(0, 0, sur, size, size, 0xffffffff);
     char buff[512];
-    for (int i = 0; i < ir.GetTextureCount(); i++) {
-      int x = size * (i % count);
-      int y = size * (i / count);
-      gx::GL_Surface<gx::GLImageResource> *sur = ir.GetTex(i);
-      gx.drawTex(x, y, sur, size, size, 0xffffffff);
-      sprintf(buff, "%d:%d", i, sur->size());
-      SimpleDrawText(x, y, buff, 0xffff0000);
-    }
+    sprintf(buff, "%d/%d,t%d", iTexs, nMaxTexs - 1, sur->size());
+    SimpleDrawText(0, 0, buff, 0xffff0000);
   }
 
   void DrawFpsInfo_i()
@@ -336,39 +318,58 @@ public:
 
   void OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
   {
-    if (!showOutput) {
-      return;
-    }
-
-    const int nPage = getNumLogsPerPage();
-    switch (nChar)
-    {
-    case VK_PRIOR:                      // Prev page.
-      if (nPage <= iLogs) {
-        iLogs -= nPage;
+    if (showOutput) {
+      const int nPage = getNumLogsPerPage();
+      switch (nChar)
+      {
+      case VK_PRIOR:                    // Prev page.
+        if (nPage <= iLogs) {
+          iLogs -= nPage;
+        }
+        break;
+      case VK_NEXT:                     // Next page.
+        if (iLogs + nPage < (int)logs.size()) {
+          iLogs += nPage;
+        }
+        break;
+      case VK_END:
+        iLogs = (int)(logs.size() - (logs.size() % nPage));
+        break;
+      case VK_HOME:
+        iLogs = 0;
+        break;
+      case VK_UP:                       // Prev cmd line.
+        if (0 < iCmdHist) {
+          cmdLine = cmdHist[--iCmdHist];
+        }
+        break;
+      case VK_DOWN:                     // Next cmd line.
+        if ((int)cmdHist.size() > iCmdHist + 1) {
+          cmdLine = cmdHist[++iCmdHist];
+        }
+        break;
       }
-      break;
-    case VK_NEXT:                       // Next page.
-      if (iLogs + nPage < (int)logs.size()) {
-        iLogs += nPage;
+    } else if (showTexInfo) {
+      const int nMaxTexs = gx::GLImageResource::inst().GetTextureCount();
+      switch (nChar)
+      {
+      case VK_PRIOR:
+        if (0 < iTexs) {
+          iTexs -= 1;
+        }
+        break;
+      case VK_NEXT:
+        if (nMaxTexs - 1 > iTexs) {
+          iTexs += 1;
+        }
+        break;
+      case VK_END:
+        iTexs = nMaxTexs - 1;
+        break;
+      case VK_HOME:
+        iTexs = 0;
+        break;
       }
-      break;
-    case VK_END:
-      iLogs = (int)(logs.size() - (logs.size() % nPage));
-      break;
-    case VK_HOME:
-      iLogs = 0;
-      break;
-    case VK_UP:                         // Prev cmd line.
-      if (0 < iCmdHist) {
-        cmdLine = cmdHist[--iCmdHist];
-      }
-      break;
-    case VK_DOWN:                       // Next cmd line.
-      if ((int)cmdHist.size() > iCmdHist + 1) {
-        cmdLine = cmdHist[++iCmdHist];
-      }
-      break;
     }
   }
 
