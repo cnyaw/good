@@ -446,12 +446,42 @@ class CResLevelObjectProperty : public IResourceProperty
   {
   }
 
-  char const*
-  FloatToStr(float f) const
+  char const* FloatToStr(float f) const
   {
     static char buff[64];
     sprintf(buff, "%g", f);
     return buff;
+  }
+
+  std::string GetLevelObjInfo(int id) const
+  {
+    std::string s;
+    const PrjT &prj = PrjT::inst();
+    for (size_t i = 0; i < prj.mRes.mLevelIdx.size(); ++i) {
+      const PrjT::LevelT &lvl = prj.getLevel(prj.mRes.mLevelIdx[i]);
+      if (GetLevelObjInfo(lvl, lvl.mObjIdx, id, s)) {
+        return s;
+      }
+    }
+    return s;
+  }
+
+  bool GetLevelObjInfo(const PrjT::LevelT &lvl, const std::vector<int> &v, int id, std::string &s) const
+  {
+    for (size_t i = 0; i < v.size(); i++) {
+      int idObj = v[i];
+      const PrjT::ObjectT &o = lvl.getObj(idObj);
+      if (idObj == id) {
+        char buff[256];
+        sprintf(buff, "%s/%s(%d)", lvl.getName().c_str(), o.getName().c_str(), id);
+        s = buff;
+        return true;
+      }
+      if (GetLevelObjInfo(lvl, o.mObjIdx, id, s)) {
+        return true;
+      }
+    }
+    return false;
   }
 
 public:
@@ -516,7 +546,8 @@ public:
     AddProp(prop, PropCreateSimple("PosY", o.mPosY));
 
     if (PrjT::ObjectT::TYPE_LVLOBJ == o.mType) {
-      AddProp(prop, PropCreateSimple("Object", o.getLevelObjId()))->SetEnabled(FALSE);
+      std::string oi = GetLevelObjInfo(o.getLevelObjId());
+      AddProp(prop, PropCreateSimple("Object", oi.c_str()))->SetEnabled(FALSE);
       return;
     } else if (PrjT::ObjectT::TYPE_MAPBG == o.mType) {
       AddProp(prop, PropCreateSimple("RepeatX", o.mRepX));
