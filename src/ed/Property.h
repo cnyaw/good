@@ -516,7 +516,7 @@ public:
     AddProp(prop, PropCreateSimple("PosY", o.mPosY));
 
     if (PrjT::ObjectT::TYPE_LVLOBJ == o.mType) {
-      AddProp(prop, PropCreateSimple("Object", o.mSpriteId))->SetEnabled(FALSE);
+      AddProp(prop, PropCreateSimple("Object", o.getLevelObjId()))->SetEnabled(FALSE);
       return;
     } else if (PrjT::ObjectT::TYPE_MAPBG == o.mType) {
       AddProp(prop, PropCreateSimple("RepeatX", o.mRepX));
