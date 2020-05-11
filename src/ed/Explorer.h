@@ -149,96 +149,6 @@ public:
 };
 
 template<class MainT>
-class CTextureResListView : public CResourceListView<MainT>
-{
-public:
-  CTextureResListView()
-  {
-    CX_THUMB = CY_THUMB = 74;
-    CXY_BORDER = 14;
-  }
-
-  virtual int GetResCount() const
-  {
-    return (int)PrjT::inst().mRes.mTexIdx.size();
-  }
-
-  virtual int GetResId(int sel) const
-  {
-    return PrjT::inst().mRes.mTexIdx[sel];
-  }
-
-  virtual std::string GetResName(int id) const
-  {
-    typename const PrjT::TextureT &tex = PrjT::inst().getTex(id);
-    return tex.getName();
-  }
-
-  virtual int GetResType() const
-  {
-    return GOOD_RESOURCE_TEXTURE;
-  }
-
-  virtual bool LoadResImage(int id, good::gx::GxImage &img) const
-  {
-    typename const PrjT::TextureT &tex = PrjT::inst().getTex(id);
-    return img.load(tex.mFileName);
-  }
-};
-
-template<class MainT>
-class CSpriteResListView : public CResourceListView<MainT>
-{
-public:
-  CSpriteResListView()
-  {
-    CX_THUMB = CY_THUMB = 74;
-    CXY_BORDER = 14;
-  }
-
-  virtual int GetResCount() const
-  {
-    return (int)PrjT::inst().mRes.mSpriteIdx.size();
-  }
-
-  virtual int GetResId(int sel) const
-  {
-    return PrjT::inst().mRes.mSpriteIdx[sel];
-  }
-
-  virtual std::string GetResName(int id) const
-  {
-    typename const PrjT::SpriteT &spr = PrjT::inst().getSprite(id);
-    return spr.getName();
-  }
-
-  virtual int GetResType() const
-  {
-    return GOOD_RESOURCE_SPRITE;
-  }
-
-  virtual bool LoadResImage(int id, good::gx::GxImage &img) const
-  {
-    typename const PrjT::SpriteT &spr = PrjT::inst().getSprite(id);
-    if (!img.create(spr.mTileset.mTileWidth, spr.mTileset.mTileHeight, 4)) {
-      return false;
-    }
-    typename const PrjT::TextureT &tex = PrjT::inst().getTex(spr.mTileset.mTextureId);
-    if (!spr.mFrame.empty()) {
-      good::gx::GxImage imgTex;
-      if (!imgTex.load(tex.mFileName)) {
-        return false;
-      }
-      int tile = spr.mFrame[0];
-      int srcx = spr.mTileset.mTileWidth * (tile % spr.mTileset.mCxTile);
-      int srcy = spr.mTileset.mTileHeight * (tile / spr.mTileset.mCxTile);
-      img.draw(0, 0, imgTex, srcx, srcy, spr.mTileset.mTileWidth, spr.mTileset.mTileHeight);
-    }
-    return true;
-  }
-};
-
-template<class MainT>
 class CExplorerView : public CWindowImpl<CExplorerView<MainT> >
 {
 public:
@@ -251,6 +161,7 @@ public:
   CTreeViewCtrlEx mTree;
   CTextureResListView<MainT> mTexRes;
   CSpriteResListView<MainT> mSprRes;
+  CMapResListView<MainT> mMapRes;
   CExplorerPropView<MainT> mProp;
 
   CImageListManaged mImages;
@@ -315,6 +226,7 @@ public:
     mTree.InsertItem(_T("Project"), 3, 3, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_PROJECT); // Project info.
     mTexRes.SetList();
     mSprRes.SetList();
+    mMapRes.SetList();
   }
 
   void InitTree()
@@ -389,6 +301,8 @@ public:
     mTabView.AddPage(mTexRes, _T("Texture"));
     mSprRes.Create(mTabView, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);
     mTabView.AddPage(mSprRes, _T("Sprite"));
+    mMapRes.Create(mTabView, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);
+    mTabView.AddPage(mMapRes, _T("Map"));
     mTabView.SetActivePage(0);
 
     mPaneProp.Create(mSplit, _T("Property"));

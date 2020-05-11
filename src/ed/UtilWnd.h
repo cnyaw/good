@@ -651,4 +651,146 @@ public:
   }
 };
 
+template<class MainT>
+class CTextureResListView : public CResourceListView<MainT>
+{
+public:
+  CTextureResListView()
+  {
+    CX_THUMB = CY_THUMB = 74;
+    CXY_BORDER = 14;
+  }
+
+  virtual int GetResCount() const
+  {
+    return (int)PrjT::inst().mRes.mTexIdx.size();
+  }
+
+  virtual int GetResId(int sel) const
+  {
+    return PrjT::inst().mRes.mTexIdx[sel];
+  }
+
+  virtual std::string GetResName(int id) const
+  {
+    const PrjT::TextureT &tex = PrjT::inst().getTex(id);
+    return tex.getName();
+  }
+
+  virtual int GetResType() const
+  {
+    return GOOD_RESOURCE_TEXTURE;
+  }
+
+  virtual bool LoadResImage(int id, good::gx::GxImage &img) const
+  {
+    const PrjT::TextureT &tex = PrjT::inst().getTex(id);
+    return img.load(tex.mFileName);
+  }
+};
+
+template<class MainT>
+class CSpriteResListView : public CResourceListView<MainT>
+{
+public:
+  CSpriteResListView()
+  {
+    CX_THUMB = CY_THUMB = 74;
+    CXY_BORDER = 14;
+  }
+
+  virtual int GetResCount() const
+  {
+    return (int)PrjT::inst().mRes.mSpriteIdx.size();
+  }
+
+  virtual int GetResId(int sel) const
+  {
+    return PrjT::inst().mRes.mSpriteIdx[sel];
+  }
+
+  virtual std::string GetResName(int id) const
+  {
+    const PrjT::SpriteT &spr = PrjT::inst().getSprite(id);
+    return spr.getName();
+  }
+
+  virtual int GetResType() const
+  {
+    return GOOD_RESOURCE_SPRITE;
+  }
+
+  virtual bool LoadResImage(int id, good::gx::GxImage &img) const
+  {
+    const PrjT::SpriteT &spr = PrjT::inst().getSprite(id);
+    if (!img.create(spr.mTileset.mTileWidth, spr.mTileset.mTileHeight, 4)) {
+      return false;
+    }
+    if (!spr.mFrame.empty()) {
+      const PrjT::TextureT &tex = PrjT::inst().getTex(spr.mTileset.mTextureId);
+      good::gx::GxImage imgTex;
+      if (!imgTex.load(tex.mFileName)) {
+        return false;
+      }
+      int tile = spr.mFrame[0];
+      int srcx = spr.mTileset.mTileWidth * (tile % spr.mTileset.mCxTile);
+      int srcy = spr.mTileset.mTileHeight * (tile / spr.mTileset.mCxTile);
+      img.draw(0, 0, imgTex, srcx, srcy, spr.mTileset.mTileWidth, spr.mTileset.mTileHeight);
+    }
+    return true;
+  }
+};
+
+template<class MainT>
+class CMapResListView : public CResourceListView<MainT>
+{
+public:
+  CMapResListView()
+  {
+    CX_THUMB = CY_THUMB = 128;
+    CXY_BORDER = 14;
+  }
+
+  virtual int GetResCount() const
+  {
+    return (int)PrjT::inst().mRes.mMapIdx.size();
+  }
+
+  virtual int GetResId(int sel) const
+  {
+    return PrjT::inst().mRes.mMapIdx[sel];
+  }
+
+  virtual std::string GetResName(int id) const
+  {
+    const PrjT::MapT &map = PrjT::inst().getMap(id);
+    return map.getName();
+  }
+
+  virtual int GetResType() const
+  {
+    return GOOD_RESOURCE_MAP;
+  }
+
+  virtual bool LoadResImage(int id, good::gx::GxImage &img) const
+  {
+    const PrjT::MapT &map = PrjT::inst().getMap(id);
+    int mapw = map.mWidth * map.mTileset.mTileWidth;
+    int maph = map.mHeight * map.mTileset.mTileHeight;
+    if (!img.create(mapw, maph, 4)) {
+      return false;
+    }
+    const PrjT::TextureT &tex = PrjT::inst().getTex(map.mTileset.mTextureId);
+    good::gx::Imgp img2;
+    if (!img2.load(tex.mFileName)) {
+      return false;
+    }
+    int left = 0, top = 0, right = map.mWidth - 1, bottom = map.mHeight - 1;
+    good::gx::ImgpGraphics gx(*(good::gx::Imgp*)&img);
+    good::gx::ImgpImage imgtex(&img2);
+    CommonDrawMap(gx, map, imgtex, 0, 0, left, top, right, bottom, 0xffffffff);
+    return true;
+  }
+};
+
 // end of UtilWnd.h
