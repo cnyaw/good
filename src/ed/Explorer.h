@@ -159,20 +159,13 @@ public:
     CXY_BORDER = 14
   };
 
-  struct IMAGE_ITEM
-  {
-    int Id;
-    std::string Name, FileName;
-    good::gx::GxImage Image;
-  };
-
   CPen mPenBorder, mPenSelBorder;
 
   CString mPath;                        // Current path.
 
   int mCurHot, mCurSel;
 
-  std::vector<IMAGE_ITEM> mList;
+  std::map<int, good::gx::GxImage> mThumbImg;
 
   ~CTextureResourceView()
   {
@@ -181,25 +174,17 @@ public:
 
   void FreeImage()
   {
-    for (size_t i = 0; i < mList.size(); ++i) {
-      mList[i].Image.release();
+    std::map<int, good::gx::GxImage>::iterator it = mThumbImg.begin();
+    for (; mThumbImg.end() != it; ++it) {
+      it->second.release();
     }
 
-    mList.clear();
+    mThumbImg.clear();
   }
 
   void SetList()
   {
-    mList.clear();
-    PrjT::ResT const& res = PrjT::inst().mRes;
-    for (size_t i = 0; i < res.mTexIdx.size(); i++) {
-      std::map<int, PrjT::TextureT>::const_iterator it = res.mTex.find(res.mTexIdx[i]);
-      IMAGE_ITEM ii;
-      ii.Id = it->first;
-      ii.Name = it->second.getName();
-      ii.FileName = it->second.mFileName;
-      mList.push_back(ii);
-    }
+    mThumbImg.clear();
     RECT rcClient;
     GetClientRect(&rcClient);
     CSize sz(rcClient.right, rcClient.bottom);
@@ -240,11 +225,13 @@ public:
     mCurSel = mCurHot;
     Invalidate(FALSE);
 
-    MainT::inst().mExpView.SetCurSel(mList[mCurSel].Id);
+    MainT::inst().mExpView.SetCurSel(PrjT::inst().mRes.mTexIdx[mCurSel]);
   }
 
   void OnMouseMove(UINT nFlags, CPoint point)
   {
+    int nTex = (int)PrjT::inst().mRes.mTexIdx.size();
+
     RECT rcClient;
     GetClientRect(&rcClient);
 
@@ -252,14 +239,14 @@ public:
     size_t cxMaxTile = max(1, rcClient.right / CX_THUMB);
 
     int cx = cxMaxTile;
-    int cy = 1 + mList.size() / cxMaxTile;
+    int cy = 1 + nTex / cxMaxTile;
 
     RECT rcBound = {0, 0, cx * CX_THUMB, cy * CY_THUMB};
     if (PtInRect(&rcBound, point)) {
       int x = point.x / CX_THUMB;
       int y = (point.y + m_ptOffset.y) / CY_THUMB;
       mCurHot = x + y * cxMaxTile;
-      if (mList.size() <= (size_t)mCurHot) {
+      if (nTex <= mCurHot) {
         mCurHot = -1;
       }
     } else {
@@ -269,12 +256,14 @@ public:
 
   void OnSize(UINT nType, CSize size)
   {
-    if (!IsWindow() || mList.empty()) {
+    int nTex = (int)PrjT::inst().mRes.mTexIdx.size();
+
+    if (!IsWindow() || 0 >= nTex) {
       return;
     }
 
     size_t cxMaxTile = max(1, size.cx / CX_THUMB);
-    int y = (0 != (mList.size() % cxMaxTile)) + (mList.size() / cxMaxTile);
+    int y = (0 != (nTex % cxMaxTile)) + (nTex / cxMaxTile);
 
     SIZE sz = {cxMaxTile * CX_THUMB, y * CY_THUMB};
     SetScrollSize(sz);
@@ -300,8 +289,10 @@ public:
 
     mdc.SelectBrush((HBRUSH)::GetStockObject(NULL_BRUSH));
 
+    const PrjT::ResT& res = PrjT::inst().mRes;
+
     size_t i;
-    for (i = 0; i < mList.size(); ++i) {
+    for (i = 0; i < res.mTexIdx.size(); ++i) {
       size_t x = i % cxMaxTile, y = i / cxMaxTile;
 
       RECT rc = {0, 0, CX_THUMB, CY_THUMB};
@@ -312,7 +303,10 @@ public:
         continue;
       }
 
-      IMAGE_ITEM& ii = mList[i];
+      int id = res.mTexIdx[i];
+      typename const PrjT::TextureT &tex = PrjT::inst().getTex(id);
+
+      std::map<int, good::gx::GxImage>::iterator it = mThumbImg.find(id);
 
       // draw image border
       {
@@ -329,21 +323,24 @@ public:
       }
 
       // draw cached image
-      if (ii.Image.dat) {
-        ii.Image.blt(mdc, rc.left + CXY_BORDER + (CX_THUMB - ii.Image.w - 2 * CXY_BORDER)/2, rc.top + (CY_THUMB - CXY_BORDER - ii.Image.h)/2);
+      if (mThumbImg.end() != it) {
+        it->second.blt(mdc, rc.left + CXY_BORDER + (CX_THUMB - it->second.w - 2 * CXY_BORDER)/2, rc.top + (CY_THUMB - CXY_BORDER - it->second.h)/2);
       }
 
       // try to load a image(only this time)
       else if (!bLoadImageOneTime) {
-        if (ii.Image.load(ii.FileName)) {
-          int ow = ii.Image.w, oh = ii.Image.h;
+        good::gx::GxImage img;
+        if (img.load(tex.mFileName)) {
+          int ow = img.w, oh = img.h;
           if (CX_THUMB < ow || CY_THUMB < oh) {
             float dw = (CX_THUMB - 3 * CXY_BORDER) / (float)ow;
             float dh = (CY_THUMB - 2 * CXY_BORDER) / (float)oh;
             float scale = min(dw, dh) ;
-            ii.Image.convert32();
-            ii.Image.resize((int)(ow * scale), (int)(oh * scale));
+            img.convert32();
+            img.resize((int)(ow * scale), (int)(oh * scale));
           }
+          mThumbImg[id] = img;
+          img.dat = 0;
           bLoadImageOneTime = true;
           Invalidate(FALSE);
         }
@@ -360,7 +357,8 @@ public:
         mdc.SetBkColor(::GetSysColor(COLOR_WINDOW));
       }
 
-      mdc.DrawText(ii.Name.c_str(), ii.Name.size(), &rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+      std::string name = tex.getName();
+      mdc.DrawText(name.c_str(), name.size(), &rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
     }
   }
 };
