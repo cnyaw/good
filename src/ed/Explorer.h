@@ -473,8 +473,8 @@ public:
     PrjT::ResT const& res = PrjT::inst().mRes;
     FillResourceTree<GOOD_RESOURCE_AUDIO>(res.mSnd, res.mSndIdx, _T("Audio"));
     FillResourceTree<GOOD_RESOURCE_TEXTURE>(res.mTex, res.mTexIdx, _T("Texture"));
-    FillResourceTree<GOOD_RESOURCE_MAP>(res.mMap, res.mMapIdx, _T("Map"));
     FillResourceTree<GOOD_RESOURCE_SPRITE>(res.mSprite, res.mSpriteIdx, _T("Sprite"));
+    FillResourceTree<GOOD_RESOURCE_MAP>(res.mMap, res.mMapIdx, _T("Map"));
     FillResourceTree<GOOD_RESOURCE_LEVEL>(res.mLevel, res.mLevelIdx, _T("Level"));
     FillResourceTree2<GOOD_RESOURCE_SCRIPT>(res.mScript, res.mScriptIdx, _T("Script"));
     FillResourceTree2<GOOD_RESOURCE_PARTICLE>(res.mStgeScript, res.mStgeScriptIdx, _T("Particle"));
@@ -488,8 +488,8 @@ public:
     mTree.DeleteAllItems();
     mTree.InsertItem(_T("Audio"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_AUDIO);
     mTree.InsertItem(_T("Texture"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_TEXTURE);
-    mTree.InsertItem(_T("Map"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_MAP);
     mTree.InsertItem(_T("Sprite"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_SPRITE);
+    mTree.InsertItem(_T("Map"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_MAP);
     mTree.InsertItem(_T("Level"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_LEVEL);
     mTree.InsertItem(_T("Script"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_SCRIPT);
     mTree.InsertItem(_T("Particle"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_PARTICLE);
