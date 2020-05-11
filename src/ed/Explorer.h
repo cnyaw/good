@@ -195,6 +195,7 @@ public:
     MSG_WM_CREATE(OnCreate)
     MSG_WM_ERASEBKGND(OnEraseBkgnd)
     MSG_WM_LBUTTONDOWN(OnLButtonDown)
+    MSG_WM_LBUTTONDBLCLK(OnLButtonDblClk)
     MSG_WM_MOUSEMOVE(OnMouseMove)
     MSG_WM_SIZE(OnSize)
     CHAIN_MSG_MAP(CScrollWindowImpl<CTextureResourceView>)
@@ -207,6 +208,8 @@ public:
     mPenBorder.CreatePen(PS_SOLID, 1, RGB(192, 192, 192));
     mPenSelBorder.CreatePen(PS_SOLID, 3, RGB(0, 0, 128));
 
+    SetClassLong(m_hWnd, GCL_STYLE, GetClassLong(m_hWnd, GCL_STYLE) | CS_DBLCLKS);
+
     SetMsgHandled(FALSE);
     return 0;
   }
@@ -214,6 +217,15 @@ public:
   BOOL OnEraseBkgnd(CDCHandle dc)
   {
     return FALSE;
+  }
+
+  void OnLButtonDblClk(UINT nFlags, CPoint point)
+  {
+    if (-1 == mCurSel) {
+      return;
+    }
+
+    MainT::inst().mExpView.AddEditorView(GOOD_RESOURCE_TEXTURE, PrjT::inst().mRes.mTexIdx[mCurSel]);
   }
 
   void OnLButtonDown(UINT nFlags, CPoint point)
