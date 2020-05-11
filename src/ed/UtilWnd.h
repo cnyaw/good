@@ -408,4 +408,247 @@ public:
   }
 };
 
+template<class MainT>
+class CResourceListView : public CScrollWindowImpl<CResourceListView<MainT> >
+{
+public:
+
+  CPen mPenSelBorder;
+
+  int mCurHot, mCurSel;
+  int CX_THUMB, CY_THUMB, CXY_BORDER;
+
+  std::map<int, good::gx::GxImage> mThumbImg;
+
+  virtual ~CResourceListView()
+  {
+    FreeImage();
+  }
+
+  void Blend(HDC hdc, int x, int y, const good::gx::GxImage &gx) const
+  {
+    if (0 == gx.dat) {
+      return;
+    }
+
+    HDC memdc = CreateCompatibleDC(hdc);
+    HBITMAP membmp = CreateCompatibleBitmap(hdc, gx.w, gx.h);
+    membmp = (HBITMAP)SelectObject(memdc, membmp);
+
+    BITMAPINFO bmi = {0};
+    bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    bmi.bmiHeader.biWidth = gx.w;
+    bmi.bmiHeader.biHeight = -gx.h;
+    bmi.bmiHeader.biPlanes = 1;
+    bmi.bmiHeader.biBitCount = 32;
+    bmi.bmiHeader.biClrImportant = BI_RGB;
+    bmi.bmiHeader.biXPelsPerMeter = bmi.bmiHeader.biYPelsPerMeter = 1;
+    SetDIBitsToDevice(memdc, 0, 0, gx.w, gx.h, 0, 0, 0, gx.h, gx.dat, &bmi, DIB_RGB_COLORS);
+
+    BLENDFUNCTION bf;
+    bf.BlendOp = AC_SRC_OVER;
+    bf.BlendFlags = 0;
+    bf.SourceConstantAlpha = 255;
+    bf.AlphaFormat = AC_SRC_ALPHA;
+    AlphaBlend(hdc, x, y, gx.w, gx.h, memdc, 0, 0, gx.w, gx.h, bf);
+
+    DeleteObject(SelectObject(memdc, membmp));
+    DeleteDC(memdc);
+  }
+
+  void FreeImage()
+  {
+    std::map<int, good::gx::GxImage>::iterator it = mThumbImg.begin();
+    for (; mThumbImg.end() != it; ++it) {
+      it->second.release();
+    }
+    mThumbImg.clear();
+  }
+
+  virtual int GetResCount() const=0;
+  virtual int GetResId(int sel) const=0;
+  virtual std::string GetResName(int id) const=0;
+  virtual int GetResType() const=0;
+  virtual bool LoadResImage(int id, good::gx::GxImage &img) const=0;
+
+  void SetList()
+  {
+    mCurHot = mCurSel = -1;
+    mThumbImg.clear();
+    RECT rcClient;
+    GetClientRect(&rcClient);
+    CSize sz(rcClient.right, rcClient.bottom);
+    OnSize(0, sz);
+  }
+
+  BEGIN_MSG_MAP_EX(CResourceListView)
+    MSG_WM_CREATE(OnCreate)
+    MSG_WM_ERASEBKGND(OnEraseBkgnd)
+    MSG_WM_LBUTTONDOWN(OnLButtonDown)
+    MSG_WM_LBUTTONDBLCLK(OnLButtonDblClk)
+    MSG_WM_MOUSEMOVE(OnMouseMove)
+    MSG_WM_SIZE(OnSize)
+    CHAIN_MSG_MAP(CScrollWindowImpl<CResourceListView>)
+  END_MSG_MAP()
+
+  int OnCreate(LPCREATESTRUCT lpCreateStruct)
+  {
+    mCurHot = mCurSel = -1;
+    mPenSelBorder.CreatePen(PS_SOLID, 3, GetSysColor(COLOR_HIGHLIGHT));
+    SetClassLong(m_hWnd, GCL_STYLE, GetClassLong(m_hWnd, GCL_STYLE) | CS_DBLCLKS);
+    SetMsgHandled(FALSE);
+    return 0;
+  }
+
+  BOOL OnEraseBkgnd(CDCHandle dc)
+  {
+    return FALSE;
+  }
+
+  void OnLButtonDblClk(UINT nFlags, CPoint point)
+  {
+    if (-1 == mCurSel) {
+      return;
+    }
+    MainT::inst().mExpView.AddEditorView(GetResType(), GetResId(mCurSel));
+  }
+
+  void OnLButtonDown(UINT nFlags, CPoint point)
+  {
+    if (-1 == mCurHot || mCurSel == mCurHot) {
+      return;
+    }
+    mCurSel = mCurHot;
+    Invalidate(FALSE);
+    MainT::inst().mExpView.SetCurSel(GetResId(mCurSel));
+  }
+
+  void OnMouseMove(UINT nFlags, CPoint point)
+  {
+    int nItem = GetResCount();
+
+    RECT rcClient;
+    GetClientRect(&rcClient);
+
+    int lastHot = mCurHot;
+    size_t cxMaxTile = max(1, rcClient.right / CX_THUMB);
+
+    int cx = cxMaxTile;
+    int cy = 1 + nItem / cxMaxTile;
+
+    RECT rcBound = {0, 0, cx * CX_THUMB, cy * CY_THUMB};
+    if (PtInRect(&rcBound, point)) {
+      int x = point.x / CX_THUMB;
+      int y = (point.y + m_ptOffset.y) / CY_THUMB;
+      mCurHot = x + y * cxMaxTile;
+      if (nItem <= mCurHot) {
+        mCurHot = -1;
+      }
+    } else {
+      mCurHot = -1;
+    }
+  }
+
+  void OnSize(UINT nType, CSize size)
+  {
+    int nItem = GetResCount();
+
+    if (!IsWindow() || 0 >= nItem) {
+      return;
+    }
+
+    size_t cxMaxTile = max(1, size.cx / CX_THUMB);
+    int y = (0 != (nItem % cxMaxTile)) + (nItem / cxMaxTile);
+
+    SIZE sz = {cxMaxTile * CX_THUMB, y * CY_THUMB};
+    SetScrollSize(sz);
+
+    SetMsgHandled(FALSE);
+  }
+
+  // Overrideables
+  void DoPaint(CDCHandle dc)
+  {
+    RECT rcClient;
+    GetClientRect(&rcClient);
+
+    size_t cxMaxTile = max(1, rcClient.right / CX_THUMB);
+
+    ::OffsetRect(&rcClient, m_ptOffset.x, m_ptOffset.y);
+
+    CMemoryDC mdc(dc, rcClient);
+    mdc.FillRect(&rcClient, COLOR_WINDOW);
+    SelectObject(mdc, GetStockObject(DEFAULT_GUI_FONT));
+
+    // draw thumb
+    bool bLoadImageOneTime = false;
+
+    mdc.SelectBrush((HBRUSH)::GetStockObject(NULL_BRUSH));
+
+    for (int i = 0; i < GetResCount(); ++i) {
+      size_t x = i % cxMaxTile, y = i / cxMaxTile;
+
+      RECT rc = {0, 0, CX_THUMB, CY_THUMB};
+      ::OffsetRect(&rc, CX_THUMB * x, CY_THUMB * y);
+
+      RECT rcInt;
+      if (!::IntersectRect(&rcInt, &rcClient, &rc)) {
+        continue;
+      }
+
+      int id = GetResId(i);
+
+      std::map<int, good::gx::GxImage>::iterator it = mThumbImg.find(id);
+
+      // draw image border
+      if (mCurSel == i) {
+        mdc.SelectPen(mPenSelBorder);
+        int w = CX_THUMB - CXY_BORDER/2;
+        int h = CY_THUMB - CXY_BORDER;
+        int x = rc.left + CXY_BORDER/4;
+        int y = rc.top;
+        mdc.Rectangle(x, y, x + w, y + h);
+      }
+
+      // draw cached image
+      if (mThumbImg.end() != it) {
+        Blend(mdc, rc.left + CXY_BORDER + (CX_THUMB - it->second.w - 2 * CXY_BORDER)/2, rc.top + (CY_THUMB - CXY_BORDER - it->second.h)/2, it->second);
+      }
+
+      // try to load a image(only this time)
+      else if (!bLoadImageOneTime) {
+        good::gx::GxImage img;
+        if (LoadResImage(id, img)) {
+          int ow = img.w, oh = img.h;
+          if (CX_THUMB < ow || CY_THUMB < oh) {
+            float dw = (CX_THUMB - 3 * CXY_BORDER) / (float)ow;
+            float dh = (CY_THUMB - 2 * CXY_BORDER) / (float)oh;
+            float scale = min(dw, dh) ;
+            img.convert32();
+            img.resize((int)(ow * scale), (int)(oh * scale));
+          }
+          mThumbImg[id] = img;
+          img.dat = 0;
+          bLoadImageOneTime = true;
+          Invalidate(FALSE);
+        }
+      }
+
+      // draw name
+      rc.top = rc.bottom - CXY_BORDER;
+
+      if (mCurSel == i) {
+        mdc.SetTextColor(::GetSysColor(COLOR_HIGHLIGHTTEXT));
+        mdc.SetBkColor(::GetSysColor(COLOR_HIGHLIGHT));
+      } else {
+        mdc.SetTextColor(::GetSysColor(COLOR_BTNTEXT));
+        mdc.SetBkColor(::GetSysColor(COLOR_WINDOW));
+      }
+
+      std::string name = GetResName(id);
+      mdc.DrawText(name.c_str(), name.size(), &rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+    }
+  }
+};
+
 // end of UtilWnd.h
