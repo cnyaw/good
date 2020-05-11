@@ -159,7 +159,7 @@ public:
     CXY_BORDER = 14
   };
 
-  CPen mPenBorder, mPenSelBorder;
+  CPen mPenSelBorder;
 
   CString mPath;                        // Current path.
 
@@ -236,12 +236,8 @@ public:
   int OnCreate(LPCREATESTRUCT lpCreateStruct)
   {
     mCurHot = mCurSel = -1;
-
-    mPenBorder.CreatePen(PS_SOLID, 1, RGB(192, 192, 192));
-    mPenSelBorder.CreatePen(PS_SOLID, 3, RGB(0, 0, 128));
-
+    mPenSelBorder.CreatePen(PS_SOLID, 3, GetSysColor(COLOR_HIGHLIGHT));
     SetClassLong(m_hWnd, GCL_STYLE, GetClassLong(m_hWnd, GCL_STYLE) | CS_DBLCLKS);
-
     SetMsgHandled(FALSE);
     return 0;
   }
@@ -353,12 +349,8 @@ public:
       std::map<int, good::gx::GxImage>::iterator it = mThumbImg.find(id);
 
       // draw image border
-      {
-        if (mCurSel == i) {
-          mdc.SelectPen(mPenSelBorder);
-        } else {
-          mdc.SelectPen(mPenBorder);
-        }
+      if (mCurSel == i) {
+        mdc.SelectPen(mPenSelBorder);
         int w = CX_THUMB - CXY_BORDER/2;
         int h = CY_THUMB - CXY_BORDER;
         int x = rc.left + CXY_BORDER/4;
