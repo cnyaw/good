@@ -215,6 +215,7 @@ public:
 
   void SetList()
   {
+    mCurHot = mCurSel = -1;
     mThumbImg.clear();
     RECT rcClient;
     GetClientRect(&rcClient);
