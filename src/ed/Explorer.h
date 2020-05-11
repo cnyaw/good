@@ -172,6 +172,37 @@ public:
     FreeImage();
   }
 
+  void blend(HDC hdc, int x, int y, good::gx::GxImage &gx) const
+  {
+    if (0 == gx.dat) {
+      return;
+    }
+
+    HDC memdc = CreateCompatibleDC(hdc);
+    HBITMAP membmp = CreateCompatibleBitmap(hdc, gx.w, gx.h);
+    membmp = (HBITMAP)SelectObject(memdc, membmp);
+
+    BITMAPINFO bmi = {0};
+    bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    bmi.bmiHeader.biWidth = gx.w;
+    bmi.bmiHeader.biHeight = -gx.h;
+    bmi.bmiHeader.biPlanes = 1;
+    bmi.bmiHeader.biBitCount = 32;
+    bmi.bmiHeader.biClrImportant = BI_RGB;
+    bmi.bmiHeader.biXPelsPerMeter = bmi.bmiHeader.biYPelsPerMeter = 1;
+    SetDIBitsToDevice(memdc, 0, 0, gx.w, gx.h, 0, 0, 0, gx.h, gx.dat, &bmi, DIB_RGB_COLORS);
+
+    BLENDFUNCTION bf;
+    bf.BlendOp = AC_SRC_OVER;
+    bf.BlendFlags = 0;
+    bf.SourceConstantAlpha = 255;
+    bf.AlphaFormat = AC_SRC_ALPHA;
+    AlphaBlend(hdc, x, y, gx.w, gx.h, memdc, 0, 0, gx.w, gx.h, bf);
+
+    DeleteObject(SelectObject(memdc, membmp));
+    DeleteDC(memdc);
+  }
+
   void FreeImage()
   {
     std::map<int, good::gx::GxImage>::iterator it = mThumbImg.begin();
@@ -336,7 +367,7 @@ public:
 
       // draw cached image
       if (mThumbImg.end() != it) {
-        it->second.blt(mdc, rc.left + CXY_BORDER + (CX_THUMB - it->second.w - 2 * CXY_BORDER)/2, rc.top + (CY_THUMB - CXY_BORDER - it->second.h)/2);
+        blend(mdc, rc.left + CXY_BORDER + (CX_THUMB - it->second.w - 2 * CXY_BORDER)/2, rc.top + (CY_THUMB - CXY_BORDER - it->second.h)/2, it->second);
       }
 
       // try to load a image(only this time)
