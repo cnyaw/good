@@ -149,6 +149,223 @@ public:
 };
 
 template<class MainT>
+class CTextureResourceView : public CScrollWindowImpl<CTextureResourceView<MainT> >
+{
+public:
+
+  enum {
+    CX_THUMB = 74,
+    CY_THUMB = 74,
+    CXY_BORDER = 14
+  };
+
+  struct IMAGE_ITEM
+  {
+    int Id;
+    std::string Name, FileName;
+    good::gx::GxImage Image;
+  };
+
+  CPen mPenBorder, mPenSelBorder;
+
+  CString mPath;                        // Current path.
+
+  int mCurHot, mCurSel;
+
+  std::vector<IMAGE_ITEM> mList;
+
+  ~CTextureResourceView()
+  {
+    FreeImage();
+  }
+
+  void FreeImage()
+  {
+    for (size_t i = 0; i < mList.size(); ++i) {
+      mList[i].Image.release();
+    }
+
+    mList.clear();
+  }
+
+  void SetList()
+  {
+    mList.clear();
+    PrjT::ResT const& res = PrjT::inst().mRes;
+    for (size_t i = 0; i < res.mTexIdx.size(); i++) {
+      std::map<int, PrjT::TextureT>::const_iterator it = res.mTex.find(res.mTexIdx[i]);
+      IMAGE_ITEM ii;
+      ii.Id = it->first;
+      ii.Name = it->second.getName();
+      ii.FileName = it->second.mFileName;
+      mList.push_back(ii);
+    }
+    RECT rcClient;
+    GetClientRect(&rcClient);
+    CSize sz(rcClient.right, rcClient.bottom);
+    OnSize(0, sz);
+  }
+
+  BEGIN_MSG_MAP_EX(CTextureResourceView)
+    MSG_WM_CREATE(OnCreate)
+    MSG_WM_ERASEBKGND(OnEraseBkgnd)
+    MSG_WM_LBUTTONDOWN(OnLButtonDown)
+    MSG_WM_MOUSEMOVE(OnMouseMove)
+    MSG_WM_SIZE(OnSize)
+    CHAIN_MSG_MAP(CScrollWindowImpl<CTextureResourceView>)
+  END_MSG_MAP()
+
+  int OnCreate(LPCREATESTRUCT lpCreateStruct)
+  {
+    mCurHot = mCurSel = -1;
+
+    mPenBorder.CreatePen(PS_SOLID, 1, RGB(192, 192, 192));
+    mPenSelBorder.CreatePen(PS_SOLID, 3, RGB(0, 0, 128));
+
+    SetMsgHandled(FALSE);
+    return 0;
+  }
+
+  BOOL OnEraseBkgnd(CDCHandle dc)
+  {
+    return FALSE;
+  }
+
+  void OnLButtonDown(UINT nFlags, CPoint point)
+  {
+    if (-1 == mCurHot || mCurSel == mCurHot) {
+      return;
+    }
+
+    mCurSel = mCurHot;
+    Invalidate(FALSE);
+
+    MainT::inst().mExpView.SetCurSel(mList[mCurSel].Id);
+  }
+
+  void OnMouseMove(UINT nFlags, CPoint point)
+  {
+    RECT rcClient;
+    GetClientRect(&rcClient);
+
+    int lastHot = mCurHot;
+    size_t cxMaxTile = max(1, rcClient.right / CX_THUMB);
+
+    int cx = cxMaxTile;
+    int cy = 1 + mList.size() / cxMaxTile;
+
+    RECT rcBound = {0, 0, cx * CX_THUMB, cy * CY_THUMB};
+    if (PtInRect(&rcBound, point)) {
+      int x = point.x / CX_THUMB;
+      int y = (point.y + m_ptOffset.y) / CY_THUMB;
+      mCurHot = x + y * cxMaxTile;
+      if (mList.size() <= (size_t)mCurHot) {
+        mCurHot = -1;
+      }
+    } else {
+      mCurHot = -1;
+    }
+  }
+
+  void OnSize(UINT nType, CSize size)
+  {
+    if (!IsWindow() || mList.empty()) {
+      return;
+    }
+
+    size_t cxMaxTile = max(1, size.cx / CX_THUMB);
+    int y = (0 != (mList.size() % cxMaxTile)) + (mList.size() / cxMaxTile);
+
+    SIZE sz = {cxMaxTile * CX_THUMB, y * CY_THUMB};
+    SetScrollSize(sz);
+
+    SetMsgHandled(FALSE);
+  }
+
+  // Overrideables
+  void DoPaint(CDCHandle dc)
+  {
+    RECT rcClient;
+    GetClientRect(&rcClient);
+
+    size_t cxMaxTile = max(1, rcClient.right / CX_THUMB);
+
+    ::OffsetRect(&rcClient, m_ptOffset.x, m_ptOffset.y);
+
+    CMemoryDC mdc(dc, rcClient);
+    mdc.FillRect(&rcClient, COLOR_WINDOW);
+
+    // draw thumb
+    bool bLoadImageOneTime = false;
+
+    mdc.SelectBrush((HBRUSH)::GetStockObject(NULL_BRUSH));
+
+    size_t i;
+    for (i = 0; i < mList.size(); ++i) {
+      size_t x = i % cxMaxTile, y = i / cxMaxTile;
+
+      RECT rc = {0, 0, CX_THUMB, CY_THUMB};
+      ::OffsetRect(&rc, CX_THUMB * x, CY_THUMB * y);
+
+      RECT rcInt;
+      if (!::IntersectRect(&rcInt, &rcClient, &rc)) {
+        continue;
+      }
+
+      IMAGE_ITEM& ii = mList[i];
+
+      // draw image border
+      {
+        if (mCurSel == i) {
+          mdc.SelectPen(mPenSelBorder);
+        } else {
+          mdc.SelectPen(mPenBorder);
+        }
+        int w = CX_THUMB - CXY_BORDER/2;
+        int h = CY_THUMB - CXY_BORDER;
+        int x = rc.left + CXY_BORDER/4;
+        int y = rc.top;
+        mdc.Rectangle(x, y, x + w, y + h);
+      }
+
+      // draw cached image
+      if (ii.Image.dat) {
+        ii.Image.blt(mdc, rc.left + CXY_BORDER + (CX_THUMB - ii.Image.w - 2 * CXY_BORDER)/2, rc.top + (CY_THUMB - CXY_BORDER - ii.Image.h)/2);
+      }
+
+      // try to load a image(only this time)
+      else if (!bLoadImageOneTime) {
+        if (ii.Image.load(ii.FileName)) {
+          int ow = ii.Image.w, oh = ii.Image.h;
+          if (CX_THUMB < ow || CY_THUMB < oh) {
+            float dw = (CX_THUMB - 3 * CXY_BORDER) / (float)ow;
+            float dh = (CY_THUMB - 2 * CXY_BORDER) / (float)oh;
+            float scale = min(dw, dh) ;
+            ii.Image.convert32();
+            ii.Image.resize((int)(ow * scale), (int)(oh * scale));
+          }
+          bLoadImageOneTime = true;
+          Invalidate(FALSE);
+        }
+      }
+
+      // draw name
+      rc.top = rc.bottom - CXY_BORDER;
+
+      if (mCurSel == i) {
+        mdc.SetTextColor(::GetSysColor(COLOR_HIGHLIGHTTEXT));
+        mdc.SetBkColor(::GetSysColor(COLOR_HIGHLIGHT));
+      } else {
+        mdc.SetTextColor(::GetSysColor(COLOR_BTNTEXT));
+        mdc.SetBkColor(::GetSysColor(COLOR_WINDOW));
+      }
+
+      mdc.DrawText(ii.Name.c_str(), ii.Name.size(), &rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+    }
+  }
+};
+
+template<class MainT>
 class CExplorerView : public CWindowImpl<CExplorerView<MainT> >
 {
 public:
@@ -156,8 +373,10 @@ public:
 
   CHorSplitterWindow mSplit;
 
-  CPaneContainer mPaneTree, mPaneProp;
+  CTabView mTabView;
+  CPaneContainer mPaneProp;
   CTreeViewCtrlEx mTree;
+  CTextureResourceView<MainT> mTexture;
   CExplorerPropView<MainT> mProp;
 
   CImageListManaged mImages;
@@ -220,6 +439,7 @@ public:
     FillResourceTree2<GOOD_RESOURCE_PARTICLE>(res.mStgeScript, res.mStgeScriptIdx, _T("Particle"));
     FillResourceTree2<GOOD_RESOURCE_DEPENDENCY>(res.mDep, res.mDepIdx, _T("Dependency"));
     mTree.InsertItem(_T("Project"), 3, 3, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_PROJECT); // Project info.
+    mTexture.SetList();
   }
 
   void InitTree()
@@ -287,17 +507,19 @@ public:
   {
     mSplit.Create(m_hWnd);
 
-    mPaneTree.Create(mSplit, _T("Resource"));
-    mPaneTree.SetPaneContainerExtendedStyle(PANECNT_NOBORDER);
-    mTree.Create(mPaneTree, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_SHOWSELALWAYS, WS_EX_CLIENTEDGE);
-    mPaneTree.SetClient(mTree);
+    mTabView.Create(mSplit, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
+    mTree.Create(mTabView, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_SHOWSELALWAYS, WS_EX_CLIENTEDGE);
+    mTabView.AddPage(mTree, _T("Resource"));
+    mTexture.Create(mTabView, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);
+    mTabView.AddPage(mTexture, _T("Texture"));
+    mTabView.SetActivePage(0);
 
     mPaneProp.Create(mSplit, _T("Property"));
     mPaneProp.SetPaneContainerExtendedStyle(PANECNT_NOBORDER | PANECNT_NOCLOSEBUTTON);
     mProp.Create(mPaneProp);
     mPaneProp.SetClient(mProp);
 
-    mSplit.SetSplitterPanes(mPaneTree, mPaneProp);
+    mSplit.SetSplitterPanes(mTabView, mPaneProp);
     mSplit.SetActivePane(0);
 
     mImages.Create(IDB_BITMAP1, 16, 0, RGB(255,0,255));

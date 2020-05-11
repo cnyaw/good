@@ -64,7 +64,7 @@ public:
       return TRUE;
     }
 
-    if (WM_LBUTTONDBLCLK == pMsg->message) {
+    if (WM_LBUTTONDBLCLK == pMsg->message && pMsg->hwnd == mTabView.m_tab) {
 
       //
       // Double-click on tab to close tab page.
