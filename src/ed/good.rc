@@ -758,7 +758,7 @@ BEGIN
     ID_LEVELEDIT_SELITEM    "Select tool\nSelect"
     ID_LEVELEDIT_PROP       "Properties\nProperties"
     ID_LEVELEDIT_DELITEM    "Delete item\nDelete"
-    ID_LEVELEDIT_ADDSPRITE  "New Sprite\nNew Sprite"
+    ID_LEVELEDIT_ADDSPRITE  "New Sprite Object\nNew Sprite Obj"
     ID_LEVELEDIT_ADDBKGND   "New Background\nNew Background"
     ID_FILE_ADDNEWTEXTURE   "Add new texture resource\nNew Texture"
     ID_FILE_ADDNEWMAP       "Add new map resource\nNew Map"
@@ -801,14 +801,14 @@ END
 
 STRINGTABLE 
 BEGIN
-    ID_LEVELEDIT_ADDTEXBG   "New Texture Background\nNew Texture Bg"
-    ID_LEVELEDIT_ADDMAPBG   "New Map Background\nNew Map Bg"
+    ID_LEVELEDIT_ADDTEXBG   "New Texture Object\nNew Texture Obj"
+    ID_LEVELEDIT_ADDMAPBG   "New Map Object\nNew Map Obj"
     ID_FILE_ADDNEWSCRIPT    "Add new script resource\nNew Script"
     ID_FILE_ADDNEWAUDIO     "Add new audio resource\nNew Audio"
     ID_PROJECT_CREATEPACKAGE "Create a good package\nCreate Package"
     ID_PROJECT_PLAYFILE     "Play a good package file\nPlay "
     ID_VIEW_OUTPUTWINDOW    "Show or hide output window\nOutput"
-    ID_LEVELEDIT_ADDCOLBG   "New Color Background\nNew Color Bg"
+    ID_LEVELEDIT_ADDCOLBG   "New Color Object\nNew Color Obj"
 END
 
 STRINGTABLE 
@@ -825,9 +825,9 @@ BEGIN
     ID_LEVELEDIT_ALIGNBOTTOM "Align Bottom\nAlign Bottom"
     ID_PROJECT_CREATEZIPPACKAGE "Create a zip package\nCreate Zip"
     ID_PROJECT_RUNTHISLEVEL "Play this level\nPlay This Level"
-    ID_LEVELEDIT_ADDDUMMY   "New dummy\nNew Dummy"
+    ID_LEVELEDIT_ADDDUMMY   "New Dummy Object\nNew Dummy Obj"
     ID_LEVELEDIT_LINE       "Line\nToggle Line"
-    ID_LEVELEDIT_ADDLVLOBJ  "New level obj\nNew Level Obj"
+    ID_LEVELEDIT_ADDLVLOBJ  "New Level Object\nNew Level Obj"
 END
 
 #endif    // English (U.S.) resources
