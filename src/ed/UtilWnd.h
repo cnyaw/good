@@ -553,7 +553,12 @@ public:
   {
     int nItem = GetResCount();
 
-    if (!IsWindow() || 0 >= nItem) {
+    if (!IsWindow()) {
+      return;
+    }
+
+    if (0 >= nItem) {
+      Invalidate();
       return;
     }
 
