@@ -164,7 +164,7 @@ void trigger()
   app.step();
 }
 
-void GoodTraceTool(const char* format, va_list args)
+void GoodTraceTool(int level, const char* format, va_list args)
 {
   char buf[1024];
   vsnprintf(buf, sizeof(buf), format, args);
