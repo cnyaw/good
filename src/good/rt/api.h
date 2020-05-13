@@ -433,6 +433,38 @@ int genObjEx(char const *pPkgName, int idParent, int idRes, char const *script)
   }
 }
 
+int genResTex(int idCanvas)
+{
+  if (!mCanvas.isUsed(idCanvas)) {
+    return -1;
+  }
+
+  int id = mRes.mId.alloc();
+  if (-1 == id) {
+    return -1;
+  }
+
+  char n[32];
+  sprintf(n, "Resource.GenTex%d", id);
+
+  CanvasT &c = mCanvas[idCanvas];
+
+  ImgT img = ImgT::getImage(n, c);
+  if (!img.isValid()) {
+    mRes.mId.free(id);
+    return -1;
+  }
+
+  TextureT t;
+  t.mFileName = n;
+  t.mId = id;
+
+  mRes.mTexIdx.push_back(id);
+  mRes.mTex[id] = t;
+
+  return id;
+}
+
 int genTextObj(int idParent, char const *utf8text, int size, char const *script)
 {
   if (0 == utf8text) {

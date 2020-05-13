@@ -1060,6 +1060,19 @@ public:
   //
 
   //
+  // [in] canvas id [out] tex id.
+  //
+
+  static int GenResTex(lua_State* L)
+  {
+    int canvas = luaL_checkint(L, 1);
+
+    lua_pushinteger(L, AppT::getInst().genResTex(canvas));
+
+    return 1;
+  }
+
+  //
   // [in] [out] level id.
   //
 
@@ -1237,6 +1250,7 @@ public:
   static bool installResourceModuleApi(lua_State* L)
   {
     static RegApiType ResourceApi[] = {
+      {"GenTex", &GenResTex},
       {"GetFirstLevelId", &GetFirstLevelId},
       {"GetLevelId", &GetResLevelId},
       {"GetNextLevelId", &GetNextLevelId},
