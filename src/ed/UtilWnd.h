@@ -471,6 +471,23 @@ public:
   virtual int GetResType() const=0;
   virtual bool LoadResImage(int id, good::gx::GxImage &img) const=0;
 
+  void SetCurSel(int id)
+  {
+    for (int i = 0; i < GetResCount(); ++i) {
+      int idRes = GetResId(i);
+      if (idRes == id) {
+        if (mCurSel != i) {
+          mCurSel = i;
+          Invalidate(FALSE);
+          MainT::inst().mExpView.SetCurSel(id);
+        }
+        return;
+      }
+    }
+    mCurSel = -1;
+    Invalidate(FALSE);
+  }
+
   void SetList()
   {
     mCurHot = mCurSel = -1;

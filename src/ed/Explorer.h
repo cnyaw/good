@@ -248,6 +248,13 @@ public:
     SetCurSel(id);                      // Add again, lvl will be the first visible prop.
   }
 
+  void ResPageSetCurSel(int id)
+  {
+    mTexRes.SetCurSel(id);
+    mSprRes.SetCurSel(id);
+    mMapRes.SetCurSel(id);
+  }
+
   void SetCurSel(int id)
   {
     CTreeItem hItem = FindTreeItem(id);
@@ -762,6 +769,8 @@ end:
 
     MainT::inst().SetActivePage(idItem);
     mTree.SetFocus();
+
+    ResPageSetCurSel(idItem);
 
     return 0;
   }
