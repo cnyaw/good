@@ -280,7 +280,6 @@ int genObj(int idParent, int idRes, char const *script)
         a.create(newid, ActorT::TYPES_MAPBG, idRes);
       } else if (mRes.isSprite(idRes)) {
         a.create(newid, ActorT::TYPES_SPRITE, idRes);
-        a.setSprite(idRes);
       } else {
         a.create(newid, ActorT::TYPES_COLBG, -1);
         a.mBgColor = 0xffff0000;
