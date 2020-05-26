@@ -70,40 +70,52 @@ public:
     }
   }
 
-  void SwitchCurSel(bool IsBackward)
+  void LoopCurSel(bool IsBackward)
   {
     PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
+    for (size_t i = 0; i < lvl.mObjIdx.size(); i++) {
+      if (lvl.mObjIdx[i] != mCurSel[0]) {
+        continue;
+      }
+      mCurSel.clear();
+      if (IsBackward) {
+        if (0 == i) {
+          mCurSel.push_back(lvl.mObjIdx[lvl.mObjIdx.size() - 1]);
+        } else {
+          mCurSel.push_back(lvl.mObjIdx[i - 1]);
+        }
+      } else {
+        if (lvl.mObjIdx.size() - 1 == i) {
+          mCurSel.push_back(lvl.mObjIdx[0]);
+        } else {
+          mCurSel.push_back(lvl.mObjIdx[i + 1]);
+        }
+      }
+      break;
+    }
+  }
 
+  void SetCurSelFirstObj(bool IsBackward)
+  {
+    PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
+    if (IsBackward) {
+      mCurSel.push_back(lvl.mObjIdx[lvl.mObjIdx.size() - 1]);
+    } else {
+      mCurSel.push_back(lvl.mObjIdx[0]);
+    }
+  }
+
+  void TabSwitchCurSel(bool IsBackward)
+  {
+    PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
     if (lvl.mObjIdx.empty()) {
       return;
     }
 
     if (mCurSel.empty()) {
-      if (IsBackward) {
-        mCurSel.push_back(lvl.mObjIdx[lvl.mObjIdx.size() - 1]);
-      } else {
-        mCurSel.push_back(lvl.mObjIdx[0]);
-      }
+      SetCurSelFirstObj(IsBackward);
     } else {
-      for (size_t i = 0; i < lvl.mObjIdx.size(); i++) {
-        if (lvl.mObjIdx[i] == mCurSel[0]) {
-          mCurSel.clear();
-          if (IsBackward) {
-            if (0 == i) {
-              mCurSel.push_back(lvl.mObjIdx[lvl.mObjIdx.size() - 1]);
-            } else {
-              mCurSel.push_back(lvl.mObjIdx[i - 1]);
-            }
-          } else {
-            if (lvl.mObjIdx.size() - 1 == i) {
-              mCurSel.push_back(lvl.mObjIdx[0]);
-            } else {
-              mCurSel.push_back(lvl.mObjIdx[i + 1]);
-            }
-          }
-          break;
-        }
-      }
+      LoopCurSel(IsBackward);
     }
 
     SelItemChange(GOOD_RESOURCE_LEVEL_OBJECT, mCurSel[0]);
@@ -326,7 +338,7 @@ public:
     switch (nChar)
     {
     case VK_TAB:
-      SwitchCurSel(0 != (GetKeyState(VK_LSHIFT) & 0x8000));
+      TabSwitchCurSel(0 != (GetKeyState(VK_LSHIFT) & 0x8000));
       break;
 
     case VK_ESCAPE:
