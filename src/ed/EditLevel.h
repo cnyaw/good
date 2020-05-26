@@ -121,22 +121,27 @@ public:
     SelItemChange(GOOD_RESOURCE_LEVEL_OBJECT, mCurSel[0]);
   }
 
+  bool IsLevelObjUsed(const std::vector<int> &v) const
+  {
+    std::string lvlName, oName;
+    if (PrjT::inst().isLevelObjUsed(v, lvlName, oName)) {
+      SW2_TRACE_ERROR("Item is still used by %s of %s", oName.c_str(), lvlName.c_str());
+      return true;
+    }
+    return false;
+  }
+
   void DeleteObj(std::vector<int> const &v)
   {
     if (v.empty()) {
       return;
     }
 
-    PrjT &prj = PrjT::inst();
-    for (size_t i = 0; i < v.size(); i++) {
-      std::string lvlName, oName;
-      if (prj.isLevelObjUsed(v[i], lvlName, oName)) {
-        SW2_TRACE_ERROR("Item is still used by %s of %s", oName.c_str(), lvlName.c_str());
-        return;
-      }
+    if (IsLevelObjUsed(v)) {
+      return;
     }
 
-    if (!prj.removeLevelObj(mEditor.mId, v)) {
+    if (!PrjT::inst().removeLevelObj(mEditor.mId, v)) {
       return;
     }
 

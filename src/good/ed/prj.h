@@ -622,6 +622,16 @@ public:
     rc.offset(obj.mPosX, obj.mPosY);
   }
 
+  bool isLevelObjUsed(const std::vector<int> &v, std::string &lvlName, std::string &oName) const
+  {
+    for (size_t i = 0; i < v.size(); i++) {
+      if (isLevelObjUsed(v[i], lvlName, oName)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   bool isLevelObjUsed(int id, std::string &lvlName, std::string &oName) const
   {
     std::map<int, LevelT>::const_iterator it = mRes.mLevel.begin();
