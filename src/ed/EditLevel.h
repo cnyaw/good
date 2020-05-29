@@ -798,6 +798,19 @@ public:
     }
   }
 
+  void DoPaintGridDots(CDC &memdc, const RECT &rcv, const POINT &sz) const
+  {
+    if (mSnapGrid) {
+      int sw = GetSnapWidth(), sh = GetSnapHeight();
+      int offsetx = rcv.left % sw, offsety = rcv.top % sh;
+      for (int i = 0; i <= sz.x / sw; i++) {
+        for (int j = 0; j <= sz.y / sh; j++) {
+          memdc.SetPixel(sw * i + offsetx, sh * j + offsety, RGB(0,0,0));
+        }
+      }
+    }
+  }
+
   void DoPaint(HDC hdc)
   {
     PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
@@ -853,18 +866,10 @@ public:
     DoPaintChildObj(memdc, lvl, lvl.mObjIdx, rcv, redPen, redDotPen, pinkPen, grayPen);
 
     //
-    // Grid.
+    // Grid dots.
     //
 
-    if (mSnapGrid) {
-      int sw = GetSnapWidth(), sh = GetSnapHeight();
-      int offsetx = rcv.left % sw, offsety = rcv.top % sh;
-      for (int i = 0; i <= sz.x / sw; i++) {
-        for (int j = 0; j <= sz.y / sh; j++) {
-          memdc.SetPixel(sw * i + offsetx, sh * j + offsety, RGB(0,0,0));
-        }
-      }
-    }
+    DoPaintGridDots(memdc, rcv, sz);
 
     //
     // Blit.
