@@ -757,6 +757,47 @@ public:
     }
   }
 
+  void DoPaintGridLines(CDC &memdc, const RECT &rcv) const
+  {
+    if (!mShowLine) {
+      return;
+    }
+
+    PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
+
+    //
+    // Horz line(s).
+    //
+
+    for (size_t i = 0; i < lvl.mHorzGrid.size(); ++i) {
+      good::ed::GridLine const& gl = lvl.mHorzGrid[i];
+      CPen pen;
+      pen.CreatePen(PS_SOLID, 1, gl.color);
+      memdc.SelectPen(pen);
+      for (int j = 0; j < rcv.bottom; )  {
+        memdc.MoveTo(-rcv.left, j - rcv.top);
+        memdc.LineTo(lvl.mWidth - 1 - rcv.left, j - rcv.top);
+        j += gl.range;
+      }
+    }
+
+    //
+    // Vert line(s).
+    //
+
+    for (size_t i = 0; i < lvl.mVertGrid.size(); ++i) {
+      good::ed::GridLine const& gl = lvl.mVertGrid[i];
+      CPen pen;
+      pen.CreatePen(PS_SOLID, 1, gl.color);
+      memdc.SelectPen(pen);
+      for (int j = 0; j < rcv.right; ) {
+        memdc.MoveTo(j - rcv.left, -rcv.top);
+        memdc.LineTo(j - rcv.left, lvl.mHeight - 1 - rcv.top);
+        j += gl.range;
+      }
+    }
+  }
+
   void DoPaint(HDC hdc)
   {
     PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
@@ -794,40 +835,7 @@ public:
     // Grid lines.
     //
 
-    if (mShowLine) {
-
-      //
-      // Horz line(s).
-      //
-
-      for (size_t i = 0; i < lvl.mHorzGrid.size(); ++i) {
-        good::ed::GridLine const& gl = lvl.mHorzGrid[i];
-        CPen pen;
-        pen.CreatePen(PS_SOLID, 1, gl.color);
-        memdc.SelectPen(pen);
-        for (int j = 0; j < rcv.bottom; )  {
-          memdc.MoveTo(-rcv.left, j - rcv.top);
-          memdc.LineTo(lvl.mWidth - 1 - rcv.left, j - rcv.top);
-          j += gl.range;
-        }
-      }
-
-      //
-      // Vert line(s).
-      //
-
-      for (size_t i = 0; i < lvl.mVertGrid.size(); ++i) {
-        good::ed::GridLine const& gl = lvl.mVertGrid[i];
-        CPen pen;
-        pen.CreatePen(PS_SOLID, 1, gl.color);
-        memdc.SelectPen(pen);
-        for (int j = 0; j < rcv.right; ) {
-          memdc.MoveTo(j - rcv.left, -rcv.top);
-          memdc.LineTo(j - rcv.left, lvl.mHeight - 1 - rcv.top);
-          j += gl.range;
-        }
-      }
-    }
+    DoPaintGridLines(memdc, rcv);
 
     //
     // Draw object(s).
