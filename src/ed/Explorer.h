@@ -162,6 +162,7 @@ public:
   CTextureResListView<MainT> mTexRes;
   CSpriteResListView<MainT> mSprRes;
   CMapResListView<MainT> mMapRes;
+  CLevelResListView<MainT> mLvlRes;
   CExplorerPropView<MainT> mProp;
 
   CImageListManaged mImages;
@@ -227,6 +228,7 @@ public:
     mTexRes.SetList();
     mSprRes.SetList();
     mMapRes.SetList();
+    mLvlRes.SetList();
   }
 
   void InitTree()
@@ -253,6 +255,7 @@ public:
     mTexRes.SetCurSel(id);
     mSprRes.SetCurSel(id);
     mMapRes.SetCurSel(id);
+    mLvlRes.SetCurSel(id);
   }
 
   void SetCurSel(int id)
@@ -310,6 +313,8 @@ public:
     mTabView.AddPage(mSprRes, _T("Sprite"));
     mMapRes.Create(mTabView, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);
     mTabView.AddPage(mMapRes, _T("Map"));
+    mLvlRes.Create(mTabView, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);
+    mTabView.AddPage(mLvlRes, _T("Level"));
     mTabView.SetActivePage(0);
 
     mPaneProp.Create(mSplit, _T("Property"));

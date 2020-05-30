@@ -769,7 +769,7 @@ class CMapResListView : public CResourceListView<MainT>
 public:
   CMapResListView()
   {
-    CX_THUMB = CY_THUMB = 128;
+    CX_THUMB = CY_THUMB = 140;
     CXY_BORDER = 14;
   }
 
@@ -812,6 +812,175 @@ public:
     good::gx::ImgpImage imgtex(&img2);
     CommonDrawMap(gx, map, imgtex, 0, 0, left, top, right, bottom, 0xffffffff);
     return true;
+  }
+};
+
+template<class MainT>
+class CLevelResListView : public CResourceListView<MainT>
+{
+public:
+  CLevelResListView()
+  {
+    CX_THUMB = CY_THUMB = 140;
+    CXY_BORDER = 14;
+  }
+
+  virtual int GetResCount() const
+  {
+    return (int)PrjT::inst().mRes.mLevelIdx.size();
+  }
+
+  virtual int GetResId(int sel) const
+  {
+    return PrjT::inst().mRes.mLevelIdx[sel];
+  }
+
+  virtual std::string GetResName(int id) const
+  {
+    const PrjT::LevelT &lvl = PrjT::inst().getLevel(id);
+    return lvl.getName();
+  }
+
+  virtual int GetResType() const
+  {
+    return GOOD_RESOURCE_LEVEL;
+  }
+
+  virtual bool LoadResImage(int id, good::gx::GxImage &img) const
+  {
+    const PrjT &prj = PrjT::inst();
+    if (!img.create(prj.mRes.mWidth, prj.mRes.mHeight, 4)) {
+      return false;
+    }
+    const PrjT::LevelT &lvl = prj.getLevel(id);
+    good::gx::Imgp &gx = *(good::gx::Imgp*)&img;
+    gx.fill(ConvertColor(lvl.mBgColor), 0, 0, img.w, img.h);
+    RECT rcv = {0, 0, img.w, img.h};
+    DoPaintChildObj(gx, lvl, lvl.mObjIdx, rcv);
+    return true;
+  }
+
+  unsigned int ConvertColor(unsigned int color) const
+  {
+    unsigned char b = (color & 0xff);
+    unsigned char g = ((color >> 8) & 0xff);
+    unsigned char r = ((color >> 16) & 0xff);
+    unsigned char a = 0xff;
+    return r | (g << 8) | (b << 16) | (a << 24);
+  }
+
+  void DoPaintChildObj(good::gx::Imgp &gx, const PrjT::LevelT &lvl, const std::vector<int> &Objs, const RECT &rcv) const
+  {
+    PrjT const& prj = PrjT::inst();
+
+    for (size_t i = 0; i < Objs.size(); ++i) {
+
+      int id = Objs[i];
+      const PrjT::ObjectT &inst = lvl.getObj(id);
+
+      RECT rcm, rc;
+      GetObjDim(lvl, inst, rc);
+
+      if (!::IntersectRect(&rcm, &rc, &rcv)) {
+        DoPaintChildObj(gx, lvl, inst.mObjIdx, rcv);
+        continue;
+      }
+
+      bool IsImgValid = true;
+
+      switch (inst.mType)
+      {
+      case PrjT::ObjectT::TYPE_MAPBG:
+        {
+          PrjT::MapT const& map = prj.getMap(inst.mMapId);
+
+          good::gx::Imgp img;
+          if (!img.load(prj.getTex(map.mTileset.mTextureId).mFileName)) {
+            IsImgValid = false;
+            break;
+          }
+
+          POINT adj0 = {rc.left % map.mTileset.mTileWidth, rc.top % map.mTileset.mTileHeight};
+
+          POINT adj = {
+            adj0.x + (map.mTileset.mTileWidth * (rcm.left / map.mTileset.mTileWidth)),
+            adj0.y + (map.mTileset.mTileHeight * (rcm.top / map.mTileset.mTileHeight))
+          };
+
+          ::OffsetRect(&rcm, -rcm.left + adj.x, -rcm.top + adj.y);
+
+          int left = (int)((rcm.left - rc.left) / map.mTileset.mTileWidth);
+          int right = min(map.mWidth - 1, (int)((rcm.right - rc.left) / map.mTileset.mTileWidth));
+          int top = (int)((rcm.top - rc.top) / map.mTileset.mTileHeight);
+          int bottom = min(map.mHeight - 1, (int)((rcm.bottom - rc.top) / map.mTileset.mTileHeight));
+
+          if (0 < left) {               // Draw an extra tile to avoid tear.
+            left -= 1;
+            rcm.left -= map.mTileset.mTileWidth;
+          }
+
+          if (0 < top) {
+            top -= 1;
+            rcm.top -= map.mTileset.mTileHeight;
+          }
+
+          CommonDrawMap(good::gx::ImgpGraphics(gx), map, good::gx::ImgpImage(&img), rcm.left - rcv.left, rcm.top - rcv.top, left, top, right, bottom, 0xffffffff);
+        }
+        break;
+
+      case PrjT::ObjectT::TYPE_TEXBG:
+        {
+          good::gx::Imgp img;
+          if (!img.load(prj.getTex(inst.mTextureId).mFileName)) {
+            IsImgValid = false;
+            break;
+          }
+
+          int offsetx = rcm.left - rc.left;
+          int offsety = rcm.top - rc.top;
+          int w = min(rcm.right - rcm.left, img.w - abs(inst.mDim.left) - offsetx);
+          int h = min(rcm.bottom - rcm.top, img.h - abs(inst.mDim.top) - offsety);
+
+          gx.draw(img, rcm.left - rcv.left, rcm.top - rcv.top, w, h, inst.mDim.left + offsetx, inst.mDim.top + offsety);
+        }
+        break;
+
+      case PrjT::ObjectT::TYPE_COLBG:
+        {
+          RECT r = rc;
+          ::OffsetRect(&r, -rcv.left, -rcv.top);
+          gx.fill(ConvertColor(inst.mBgColor), r.left, r.top, r.right - r.left, r.bottom - r.top);
+        }
+        break;
+
+      case PrjT::ObjectT::TYPE_SPRITE:
+        {
+          PrjT::SpriteT const& spr = prj.getSprite(inst.mSpriteId);
+
+          good::gx::Imgp img;
+          if (!img.load(prj.getTex(spr.mTileset.mTextureId).mFileName)) {
+            IsImgValid = false;
+            break;
+          }
+
+          int tile = spr.mFrame[0];
+          int srcx = spr.mTileset.mTileWidth * (tile % spr.mTileset.mCxTile);
+          int srcy = spr.mTileset.mTileHeight * (tile / spr.mTileset.mCxTile);
+
+          int offsetx = rcm.left - rc.left;
+          int offsety = rcm.top - rc.top;
+
+          gx.draw(img, rcm.left - rcv.left, rcm.top - rcv.top, rcm.right - rcm.left, rcm.bottom - rcm.top, srcx + offsetx, srcy + offsety);
+        }
+        break;
+
+      case PrjT::ObjectT::TYPE_DUMMY:
+      case PrjT::ObjectT::TYPE_LVLOBJ:
+        break;
+      }
+
+      DoPaintChildObj(gx, lvl, inst.mObjIdx, rcv);
+    }
   }
 };
 

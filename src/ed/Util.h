@@ -163,6 +163,29 @@ HWND GoodCreateSimpleToolbar(HWND hParent, UINT idRes, int nBtn = -1)
   return tb;
 }
 
+void GetObjDim(const PrjT::LevelT &lvl, const PrjT::ObjectT &obj, RECT &rc)
+{
+  sw2::IntRect irc;
+  PrjT::inst().getObjDim<ImgT>(obj, irc);
+
+  rc.left = irc.left;
+  rc.right = irc.right;
+  rc.top = irc.top;
+  rc.bottom = irc.bottom;
+
+  if (IsRectEmpty(&rc)) {
+    SetRect(&rc, 0, 0, 32, 32);
+    OffsetRect(&rc, obj.mPosX, obj.mPosY);
+  }
+
+  int idParent = lvl.getParent(obj.mId);
+  while (lvl.mId != idParent) {
+    PrjT::ObjectT const& objParent = lvl.getObj(idParent);
+    OffsetRect(&rc, objParent.mPosX, objParent.mPosY);
+    idParent = lvl.getParent(idParent);
+  }
+}
+
 std::string GetObjectName(PrjT::ObjectT const &o)
 {
   std::string name = o.getName();

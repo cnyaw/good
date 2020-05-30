@@ -183,30 +183,6 @@ public:
     MainT::inst().mExpView.UpdateProperty(); // Force update prop view.
   }
 
-  void GetObjDim(PrjT::ObjectT const& obj, RECT &rc) const
-  {
-    sw2::IntRect irc;
-    PrjT::inst().getObjDim<ImgT>(obj, irc);
-
-    rc.left = irc.left;
-    rc.right = irc.right;
-    rc.top = irc.top;
-    rc.bottom = irc.bottom;
-
-    if (IsRectEmpty(&rc)) {
-      SetRect(&rc, 0, 0, 32, 32);
-      OffsetRect(&rc, obj.mPosX, obj.mPosY);
-    }
-
-    PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
-    int idParent = lvl.getParent(obj.mId);
-    while (lvl.mId != idParent) {
-      PrjT::ObjectT const& objParent = lvl.getObj(idParent);
-      OffsetRect(&rc, objParent.mPosX, objParent.mPosY);
-      idParent = lvl.getParent(idParent);
-    }
-  }
-
   POINT GetCurCursorPos(RECT &rcv) const
   {
     POINT ptCur;
@@ -285,7 +261,7 @@ public:
     PrjT::ObjectT const& inst = lvl.getObj(idObj);
 
     RECT rcm, rc;
-    GetObjDim(inst, rc);
+    GetObjDim(lvl, inst, rc);
 
     InflateRect(&rcv, -32, -32);
     if (!IntersectRect(&rcm, &rc, &rcv)) {
@@ -407,7 +383,7 @@ public:
       PrjT::ObjectT const& inst = lvl.getObj(id);
 
       RECT rc;
-      GetObjDim(inst, rc);
+      GetObjDim(lvl, inst, rc);
 
       int idHot = FindHotObj(inst, rcv, ptCur, rcm);
       if (-1 != idHot) {
@@ -604,7 +580,7 @@ public:
       PrjT::ObjectT const& inst = lvl.getObj(id);
 
       RECT rcm, rc;
-      GetObjDim(inst, rc);
+      GetObjDim(lvl, inst, rc);
 
       if (!::IntersectRect(&rcm, &rc, &rcv)) {
         DoPaintChildObj(memdc, lvl, inst.mObjIdx, rcv, redPen, redDotPen, pinkPen, grayPen);
@@ -1215,7 +1191,7 @@ public:
       PrjT::ObjectT const& inst = lvl.getObj(id);
 
       RECT rc;
-      GetObjDim(inst, rc);
+      GetObjDim(lvl, inst, rc);
 
       if (::IntersectRect(&rcm, &rc, &rcv) && ::IntersectRect(&rcm2, &rcm, &rcRgn)) {
         AddCurSel(id);

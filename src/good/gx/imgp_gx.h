@@ -863,7 +863,7 @@ public:
   {
   }
 
-  bool drawImage(int x, int y, ImgpImage const& img, int srcx, int srcy, int srcw, int srch, unsigned int color, float rot, float xscale, float yscale)
+  bool drawImage(int x, int y, ImgpImage const& img, int srcx, int srcy, int srcw, int srch, unsigned int color = 0xffffffff, float rot = .0f, float xscale = 1.0f, float yscale = 1.0f)
   {
     if (img.hasKeyColor()) {
       mSur.drawTrans(*img.mSur, img.getKeyColor(), x, y, srcw, srch, srcx, srcy);
@@ -874,7 +874,7 @@ public:
     return true;
   }
 
-  bool fillSolidColor(int left, int top, int width, int height, unsigned int color, float rot, float xscale, float yscale)
+  bool fillSolidColor(int left, int top, int width, int height, unsigned int color = 0xffffffff, float rot = .0f, float xscale = 1.0f, float yscale = 1.0f)
   {
     mSur.fill(color, left, top, width, height);
     return true;
