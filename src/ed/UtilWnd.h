@@ -491,7 +491,7 @@ public:
   void ScaleResImageToThumbSize(good::gx::GxImage &img) const
   {
     int ow = img.w, oh = img.h;
-    if (CX_THUMB < ow || CY_THUMB < oh) {
+    if (CX_THUMB - 3 * CXY_BORDER < ow || CY_THUMB - 2 * CXY_BORDER < oh) {
       float dw = (CX_THUMB - 3 * CXY_BORDER) / (float)ow;
       float dh = (CY_THUMB - 2 * CXY_BORDER) / (float)oh;
       float scale = min(dw, dh) ;
@@ -685,7 +685,7 @@ public:
   CTextureResListView()
   {
     CX_THUMB = CY_THUMB = 74;
-    CXY_BORDER = 14;
+    CXY_BORDER = 12;
   }
 
   virtual int GetResCount() const
@@ -723,7 +723,7 @@ public:
   CSpriteResListView()
   {
     CX_THUMB = CY_THUMB = 74;
-    CXY_BORDER = 14;
+    CXY_BORDER = 12;
   }
 
   virtual int GetResCount() const
@@ -775,7 +775,7 @@ public:
   CMapResListView()
   {
     CX_THUMB = CY_THUMB = 140;
-    CXY_BORDER = 14;
+    CXY_BORDER = 12;
   }
 
   virtual int GetResCount() const
@@ -827,7 +827,7 @@ public:
   CLevelResListView()
   {
     CX_THUMB = CY_THUMB = 140;
-    CXY_BORDER = 14;
+    CXY_BORDER = 12;
   }
 
   virtual int GetResCount() const
