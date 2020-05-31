@@ -488,6 +488,18 @@ public:
     Invalidate(FALSE);
   }
 
+  void ScaleResImageToThumbSize(good::gx::GxImage &img) const
+  {
+    int ow = img.w, oh = img.h;
+    if (CX_THUMB < ow || CY_THUMB < oh) {
+      float dw = (CX_THUMB - 3 * CXY_BORDER) / (float)ow;
+      float dh = (CY_THUMB - 2 * CXY_BORDER) / (float)oh;
+      float scale = min(dw, dh) ;
+      img.convert32();
+      img.resize((int)(ow * scale), (int)(oh * scale));
+    }
+  }
+
   void SetList()
   {
     mCurHot = mCurSel = -1;
@@ -641,14 +653,7 @@ public:
       else if (!bLoadImageOneTime) {
         good::gx::GxImage img;
         if (LoadResImage(id, img)) {
-          int ow = img.w, oh = img.h;
-          if (CX_THUMB < ow || CY_THUMB < oh) {
-            float dw = (CX_THUMB - 3 * CXY_BORDER) / (float)ow;
-            float dh = (CY_THUMB - 2 * CXY_BORDER) / (float)oh;
-            float scale = min(dw, dh) ;
-            img.convert32();
-            img.resize((int)(ow * scale), (int)(oh * scale));
-          }
+          ScaleResImageToThumbSize(img);
           mThumbImg[id] = img;
           img.dat = 0;
           bLoadImageOneTime = true;
