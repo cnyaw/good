@@ -132,13 +132,12 @@ void drawTextToScreen_i(int x, int y, const std::vector<int> &unicode, int size,
     ImgT img = getImage(size, unicode[i]);
     if (img.isValid()) {
       ((T*)this)->gx.drawImage(x + xoffset, y, img, 0, 0, img.getWidth(), img.getHeight(), color, .0f, 1.0f, 1.0f);
+      mDirty = true;
       xoffset += img.getWidth();
     } else {
       xoffset += GOOD_DEFAULT_TEXT_OFFSET;
     }
   }
-
-  mDirty = true;
 }
 
 void drawTextToCanvas_i(int canvas, int x, int y, const std::vector<int> &unicode, int size, unsigned int color)
@@ -160,12 +159,9 @@ void drawText(int canvas, int x, int y, char const *utf8text, int size, unsigned
   if (0 == utf8text) {
     return;
   }
-
   size = clampTextSize_i(size);
-
   std::vector<int> unicode;
   sw2::Util::utf8ToU16(utf8text, unicode);
-
   if (!mCanvas.isUsed(canvas)) {
     drawTextToScreen_i(x, y, unicode, size, color);
   } else {
