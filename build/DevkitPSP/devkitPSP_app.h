@@ -109,7 +109,7 @@ public:
   void doRender()
   {
     if (mDirty) {
-      renderAll(gx);
+      renderAll();
     }
   }
 };

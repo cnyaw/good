@@ -174,7 +174,7 @@ public:
 
   void OnRender(void)
   {
-    renderAll(gx);
+    renderAll();
   }
 
   void OnResize(int width, int height)

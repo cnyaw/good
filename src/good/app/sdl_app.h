@@ -100,7 +100,7 @@ public:
       //
 
       if (trigger(keys, ptMouse)) {
-        renderAll(gx);
+        renderAll();
         SDL_Flip(mScreen);
       }
 

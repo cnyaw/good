@@ -14,8 +14,7 @@
 bool mAntiAlias;
 int mSelFont;                           // GOOD_DRAW_TEXT_FONT.
 
-template<class GxT>
-void renderColorBg(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, unsigned int color, float rot, float xscale, float yscale) const
+void renderColorBg(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, unsigned int color, float rot, float xscale, float yscale) const
 {
   int l, t, w, h;
   getDim_i(a, l, t, w, h);
@@ -28,12 +27,12 @@ void renderColorBg(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect co
     return;
   }
 
-  gx.setAnchor(a.mAnchorX, a.mAnchorY);
-  gx.fillSolidColor(rcm.left - rcv.left, rcm.top - rcv.top, rcm.width(), rcm.height(), color, rot, xscale, yscale);
+  T *pThis = (T*)this;
+  pThis->gx.setAnchor(a.mAnchorX, a.mAnchorY);
+  pThis->gx.fillSolidColor(rcm.left - rcv.left, rcm.top - rcv.top, rcm.width(), rcm.height(), color, rot, xscale, yscale);
 }
 
-template<class GxT>
-void renderMapBg(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, unsigned int color) const
+void renderMapBg(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, unsigned int color) const
 {
   MapT const& map = mRes.getMap(a.mResId);
 
@@ -43,6 +42,7 @@ void renderMapBg(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect cons
   int nx, ny, xbound, ybound;
   calcDrawTileParam(a.mRepX, a.mRepY, (int)cx, (int)cy, w, h, rcv, nx, ny, xbound, ybound);
 
+  T *pThis = (T*)this;
   for (int ay = ny + rcv.top; -h <= ay && ay < ybound; ay += h) {
     for (int ax = nx + rcv.left; -w <= ax && ax < xbound; ax += w) {
 
@@ -78,8 +78,8 @@ void renderMapBg(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect cons
         return;
       }
 
-      gx.setAnchor(a.mAnchorX, a.mAnchorY);
-      CommonDrawMap(gx, map, img, rcm.left - rcv.left, rcm.top - rcv.top, left, top, right, bottom, color);
+      pThis->gx.setAnchor(a.mAnchorX, a.mAnchorY);
+      CommonDrawMap(pThis->gx, map, img, rcm.left - rcv.left, rcm.top - rcv.top, left, top, right, bottom, color);
     }
   }
 }
@@ -110,9 +110,9 @@ void calcRenderTexBgParam(ActorT const& a, float cx, float cy, sw2::IntRect cons
   }
 }
 
-template<class GxT>
-void renderTexBg(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, unsigned int color, float rot, float xscale, float yscale) const
+void renderTexBg(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, unsigned int color, float rot, float xscale, float yscale) const
 {
+  T *pThis = (T*)this;
   if (a.mDim.empty()) {
     ImgT img = getTexBgImg_i(a);
     if (!img.isValid()) {               // Pre validate img.
@@ -124,8 +124,8 @@ void renderTexBg(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect cons
     calcRenderTexBgParam(a, cx, cy, rcv, xscale, yscale, w, h, sw, sh, nx, ny, xbound, ybound);
     for (int ay = ny + rcv.top; -sh <= ay && ay < ybound; ay += sh) {
       for (int ax = nx + rcv.left; -sw <= ax && ax < xbound; ax += sw) {
-        gx.setAnchor(a.mAnchorX, a.mAnchorY);
-        gx.drawImage((int)ax, (int)ay, img, a.mDim.left, a.mDim.top, w, h, color, rot, xscale, yscale);
+        pThis->gx.setAnchor(a.mAnchorX, a.mAnchorY);
+        pThis->gx.drawImage((int)ax, (int)ay, img, a.mDim.left, a.mDim.top, w, h, color, rot, xscale, yscale);
       }
     }
   } else {
@@ -142,15 +142,14 @@ void renderTexBg(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect cons
             return;
           }
         }
-        gx.setAnchor(a.mAnchorX, a.mAnchorY);
-        gx.drawImage((int)ax, (int)ay, img, a.mDim.left, a.mDim.top, w, h, color, rot, xscale, yscale);
+        pThis->gx.setAnchor(a.mAnchorX, a.mAnchorY);
+        pThis->gx.drawImage((int)ax, (int)ay, img, a.mDim.left, a.mDim.top, w, h, color, rot, xscale, yscale);
       }
     }
   }
 }
 
-template<class GxT>
-void renderSprite(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, unsigned int color, float rot, float xscale, float yscale) const
+void renderSprite(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, unsigned int color, float rot, float xscale, float yscale) const
 {
   int spriteId = a.mResId;
 
@@ -181,12 +180,12 @@ void renderSprite(GxT& gx, ActorT const& a, float cx, float cy, sw2::IntRect con
   int offsetx = rcm.left - rc.left;
   int offsety = rcm.top - rc.top;
 
-  gx.setAnchor(a.mAnchorX, a.mAnchorY);
-  gx.drawImage(rcm.left - rcv.left, rcm.top - rcv.top, img, srcx + offsetx, srcy + offsety, rcm.width(), rcm.height(), color, rot, xscale, yscale);
+  T *pThis = (T*)this;
+  pThis->gx.setAnchor(a.mAnchorX, a.mAnchorY);
+  pThis->gx.drawImage(rcm.left - rcv.left, rcm.top - rcv.top, img, srcx + offsetx, srcy + offsety, rcm.width(), rcm.height(), color, rot, xscale, yscale);
 }
 
-template<class GxT>
-bool renderChilds(GxT& gx, ActorT const& a, sw2::IntRect const& rcv, float rot, float xscale, float yscale) const
+bool renderChilds(ActorT const& a, sw2::IntRect const& rcv, float rot, float xscale, float yscale) const
 {
   float alpha = ((a.mBgColor >> 24) & 0xff) / (float)0xff;
 
@@ -205,7 +204,7 @@ bool renderChilds(GxT& gx, ActorT const& a, sw2::IntRect const& rcv, float rot, 
 
     if (child.mOwnerDraw) {
       child.OnDraw();
-      renderChilds(gx, child, rcv, arot, axscale, ayscale);
+      renderChilds(child, rcv, arot, axscale, ayscale);
       continue;
     }
 
@@ -218,30 +217,29 @@ bool renderChilds(GxT& gx, ActorT const& a, sw2::IntRect const& rcv, float rot, 
     switch (child.getType())
     {
     case ActorT::TYPES_COLBG:           // Solid color background.
-      renderColorBg(gx, child, cx, cy, rcv, childBgColor, arot, axscale, ayscale);
+      renderColorBg(child, cx, cy, rcv, childBgColor, arot, axscale, ayscale);
       break;
 
     case ActorT::TYPES_MAPBG:           // Tilemap background.
-      renderMapBg(gx, child, cx, cy, rcv, childBgColor);
+      renderMapBg(child, cx, cy, rcv, childBgColor);
       break;
 
     case ActorT::TYPES_TEXBG:           // Texture background.
-      renderTexBg(gx, child, cx - rcv.left, cy - rcv.top, rcv, childBgColor, arot, axscale, ayscale);
+      renderTexBg(child, cx - rcv.left, cy - rcv.top, rcv, childBgColor, arot, axscale, ayscale);
       break;
 
     case ActorT::TYPES_SPRITE:          // Object instance.
-      renderSprite(gx, child, cx, cy, rcv, childBgColor, arot, axscale, ayscale);
+      renderSprite(child, cx, cy, rcv, childBgColor, arot, axscale, ayscale);
       break;
     }
 
-    renderChilds(gx, child, rcv, arot, axscale, ayscale);
+    renderChilds(child, rcv, arot, axscale, ayscale);
   }
 
   return true;
 }
 
-template<class GxT>
-bool render(GxT& gx) const
+bool render() const
 {
   if (!mActors.isUsed(mRoot)) {
     return false;
@@ -252,9 +250,10 @@ bool render(GxT& gx) const
     return false;
   }
 
+  T *pThis = (T*)this;
   if (!a.mOwnerDraw) {
-    gx.setAnchor(a.mAnchorX, a.mAnchorY);
-    gx.fillSolidColor(0, 0, mRes.mWidth, mRes.mHeight, a.mBgColor, .0f, 1.0f, 1.0f);
+    pThis->gx.setAnchor(a.mAnchorX, a.mAnchorY);
+    pThis->gx.fillSolidColor(0, 0, mRes.mWidth, mRes.mHeight, a.mBgColor, .0f, 1.0f, 1.0f);
   } else {
     a.OnDraw();
   }
@@ -262,22 +261,22 @@ bool render(GxT& gx) const
   sw2::IntRect rcv(0, 0, mRes.mWidth, mRes.mHeight);
   rcv.offset((int)a.mPosX, (int)a.mPosY);
 
-  return renderChilds(gx, a, rcv, a.mRot, a.mXscale, a.mYscale);
+  return renderChilds(a, rcv, a.mRot, a.mXscale, a.mYscale);
 }
 
-template<class GxT>
-void renderAll(GxT& gx) const
+void renderAll() const
 {
+  T *pThis = (T*)this;
   mDirty = false;
   mRenderState = true;
   if (mTexDirty) {
-    gx.restoreSur();
+    pThis->gx.restoreSur();
     mTexDirty = false;
   }
-  gx.beginDraw(mRes.mWidth, mRes.mHeight);
-  render(gx);                           // render may caused dirty flag set, so it will trigger renderAll process next time.
-  ((T*)this)->onRender();
-  gx.endDraw();
+  pThis->gx.beginDraw(mRes.mWidth, mRes.mHeight);
+  render();                             // render() may caused dirty flag set, so it will trigger renderAll() next time.
+  pThis->onRender();
+  pThis->gx.endDraw();
   mRenderState = false;
 }
 

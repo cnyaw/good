@@ -157,10 +157,10 @@ JNIEXPORT jboolean JNICALL Java_weilican_good_goodJniLib_step(JNIEnv *env, jobje
   g.doTrigger((int)keys, x, y);
 #ifdef GOOD_RENDER_WITH_DIRTY_FLAG
   if (g.mDirty) {
-    g.renderAll(g.gx);
+    g.renderAll();
   }
 #else
-  g.renderAll(g.gx);
+  g.renderAll();
 #endif
 
   return (jboolean)g.mExit;

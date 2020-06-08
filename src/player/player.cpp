@@ -227,7 +227,7 @@ public:
 
   void OnPaint(CDCHandle)
   {
-    renderAll(gx);
+    renderAll();
     CPaintDC dc(m_hWnd);
     scr.blt(dc, 0, 0);
   }
