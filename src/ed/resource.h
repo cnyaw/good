@@ -7,7 +7,6 @@
 #define ID_SPRITEEDIT_FRAMETIMEADD      105
 #define IDR_MAINFRAME                   128
 #define IDS_HELP_ADDGRIDLINE            129
-#define IDD_SAVECHANGES                 156
 #define IDD_NEWMAP                      201
 #define IDR_TB_MAPEDIT                  207
 #define IDB_BKBRUSH                     210
@@ -48,7 +47,6 @@
 #define IDC_EDIT7                       1005
 #define IDC_BUTTON2                     1006
 #define IDC_CHECK1                      1007
-#define IDC_BUTTON3                     1007
 #define IDC_EDIT6                       1008
 #define IDC_BUTTON4                     1008
 #define IDC_COLOR                       1010

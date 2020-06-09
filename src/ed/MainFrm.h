@@ -341,11 +341,6 @@ public:
       return TRUE;
     }
 
-    CDlgSaveChanges<CMainFrame> dlg;
-    if (!dlg.CheckSaveChanges()) {
-      return FALSE;
-    }
-
     PrjT& prj = PrjT::inst();
 
     if (prj.canStore()) {
