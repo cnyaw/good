@@ -26,7 +26,6 @@
 #define IDD_CHOICEMAP                   242
 #define IDR_TB_OUTPUT                   242
 #define IDR_THEPLAYER1                  246
-#define IDD_GOTOLINE                    247
 #define IDR_TB_STGESCRIPT               251
 #define IDD_SNAPCUSTOMIZE               254
 #define IDD_NEWPROJ                     255
