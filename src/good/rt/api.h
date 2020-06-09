@@ -63,20 +63,6 @@ int clampTextSize_i(int size) const
   }
 }
 
-int cloneObj(int idObj)
-{
-  int idNew = -1;
-  if (mActors.isUsed(idObj)) {
-    ActorT const& a = mActors[idObj];
-    idNew = a.clone_i();
-    if (-1 != idNew) {
-      mActors[a.mParent].addChild(idNew);
-      mDirty = true;
-    }
-  }
-  return idNew;
-}
-
 void doLuaScript(const char *str, ...)
 {
   va_list va;

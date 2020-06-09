@@ -162,60 +162,6 @@ public:
   }
 
   //
-  // Clone.
-  //
-
-  int clone_i() const
-  {
-    AppT& app = AppT::getInst();
-
-    int idNew = app.allocActor();
-    if (-1 == idNew) {
-      return -1;
-    }
-
-    typename AppT::ActorT& a = app.mActors[idNew];
-    a.mId = idNew;
-
-    if (!clone(a)) {
-      a.free();
-      return -1;
-    }
-
-    a.OnCreateRecursive();
-
-    return idNew;
-  }
-
-  bool clone(Actor& a) const
-  {
-    int idSav = a.mId;
-
-    a = *this;                          // Clone properties.
-    a.mId = idSav;
-
-    AppT& app = AppT::getInst();
-
-    app.getScriptParamName(a.mId, a.mScriptParamName);
-
-    typename AppT::ActorT& p = app.mActors[mParent];
-    p.addChild(a.mId);
-
-    a.mChild.clear();
-
-    for (int i = 0; i < getChildCount(); ++i) {
-      typename AppT::ActorT const& child = app.mActors[mChild[i]];
-      int idNewChild = child.clone_i();
-      if (-1 == idNewChild) {
-        return false;
-      }
-      a.addChild(idNewChild);
-    }
-
-    return true;
-  }
-
-  //
   // Property.
   //
 

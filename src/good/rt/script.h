@@ -114,19 +114,6 @@ public:
   }
 
   //
-  // [in] idObj [out] id.
-  //
-
-  static int CloneObj(lua_State* L)
-  {
-    int idObj = luaL_checkint(L, 1);
-
-    lua_pushinteger(L, AppT::getInst().cloneObj(idObj));
-
-    return 1;
-  }
-
-  //
   // [in] [out]
   //
 
@@ -885,7 +872,6 @@ public:
     static RegApiType GoodApi[] = {
       {"AddChild", &AddChild},
       {"CallPackage", &CallPackage},
-      {"CloneObj", &CloneObj},
       {"Exit", &Exit},
       {"FindChild", &FindChild},
       {"FireUserIntEvent", &FireUserIntEvent},
