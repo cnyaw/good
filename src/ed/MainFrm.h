@@ -424,7 +424,7 @@ public:
 
   void OnAddNewScript(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    CFileDialog dlg(TRUE, _T("lua"), NULL, OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("Script Files(*.lua)\0*.lua\0"));
+    CFileDialog dlg(TRUE, _T("lua"), NULL, OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_FILEMUSTEXIST, _T("Script Files(*.lua)\0*.lua\0"));
     if (IDOK != dlg.DoModal()) {
       return;
     }
@@ -434,7 +434,7 @@ public:
     PrjT& prj = PrjT::inst();
     int id = prj.addScript(name);
     if (-1 != id) {
-      AddResourceItem(_T("Script"), ExtractFileName(name), id, GOOD_RESOURCE_SCRIPT, CreateEditor<CScriptEditor<CMainFrame> >(id));
+      AddResourceItem(_T("Script"), ExtractFileName(name), id, GOOD_RESOURCE_SCRIPT, NULL);
     }
   }
 

@@ -521,7 +521,13 @@ end:
         }
 
         if (GOOD_RESOURCE_SCRIPT == typeItem) {
-          AddResourceEditor<CScriptEditor<MainT> >(idItem, name);
+          std::string path = good::getPathName(prj.mRes.mFileName);
+          path += prj.getScript(idItem);
+          SHELLEXECUTEINFO si = {sizeof(SHELLEXECUTEINFO)};
+          si.lpVerb = TEXT("open");
+          si.lpFile = path.c_str();
+          si.nShow = SW_SHOWNORMAL;
+          ShellExecuteEx(&si);
         } else {
           AddResourceEditor<CStgeScriptEditor<MainT> >(idItem, name);
         }
