@@ -147,7 +147,6 @@ typedef good::gx::GdiGraphics GxT;
 #include "EditMap.h"
 #include "EditSprite.h"
 #include "EditLevel.h"
-#include "EditScript.h"
 #include "EditError.h"
 #include "EditStgeScript.h"
 

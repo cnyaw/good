@@ -330,7 +330,7 @@ public:
 };
 
 template<class MainT>
-class CStgeScriptEditor : public CWindowImpl<CStgeScriptEditor<MainT> >, public CUpdateUI<CStgeScriptEditor<MainT> >, public CIdleHandler
+class CStgeScriptEditor : public CWindowImpl<CStgeScriptEditor<MainT> >
 {
 public:
 
@@ -339,9 +339,6 @@ public:
 
   CSplitterWindow mSplit;
   CListBox mList;
-
-  CSplitterWindow mSplit2;
-  CScriptView mSource;
   CStgeView<MainT> mStge;
 
   int mId;
@@ -354,43 +351,6 @@ public:
   virtual void OnFinalMessage(HWND)     // Delete self when window destroy.
   {
     delete this;
-  }
-
-  void UpdateToolbar()
-  {
-    bool SourceView = SPLIT_PANE_LEFT == mSplit2.GetDefaultActivePane();
-    UISetCheck(ID_STGESCRIPT_SOURCE, SourceView);
-    UISetCheck(ID_STGESCRIPT_VIEW, !SourceView);
-
-    UIUpdateToolBar();
-  }
-
-  virtual BOOL OnIdle()
-  {
-    //
-    // Update status bar.
-    //
-
-    MainT& mf = MainT::inst();
-
-    int Row, Col;
-    mSource.GetCursorLocation(Row, Col);
-
-    CString str;
-    str.Format(_T("Total Lines:%d   Ln:%d   Col:%d"), mSource.GetLineCount(), Row, Col);
-    mf.mStatus.SetPaneText(1, str);
-
-    mPos = mSplit.GetSplitterPos();
-
-    mStge.Invalidate();
-
-    //
-    // Update toolbar.
-    //
-
-    UpdateToolbar();
-
-    return FALSE;
   }
 
   void Compile()
@@ -421,54 +381,13 @@ public:
     mStge.mScm = scm;
   }
 
-  bool SaveChanges()
-  {
-    PrjT const& prj = PrjT::inst();
-
-    std::string path = good::getPathName(prj.mRes.mFileName);
-    path += prj.getStgeScript(mId);
-
-    if (!mSource.SaveText(path)) {
-      MessageBox(_T("Save File Failed!"), CString((LPCTSTR)IDR_MAINFRAME), MB_OK | MB_ICONERROR);
-      return false;
-    }
-
-    return true;
-  }
-
-  void GotoScript(const CString& sc)
-  {
-    int nStartChar, nEndChar;
-    mSource.GetSel(nStartChar, nEndChar);
-    mSource.SetSel(0, 0, TRUE);
-
-    if (!mSource.FindTextSimple(CString() + "script " + sc, TRUE, TRUE)) {
-      mSource.SetSel(nStartChar, nEndChar, TRUE);
-    } else {
-      mSource.FindTextSimple(sc, TRUE, TRUE);
-    }
-  }
-
-  BEGIN_UPDATE_UI_MAP(CStgeScriptEditor)
-    UPDATE_ELEMENT(ID_STGESCRIPT_SOURCE, UPDUI_TOOLBAR)
-    UPDATE_ELEMENT(ID_STGESCRIPT_VIEW, UPDUI_TOOLBAR)
-  END_UPDATE_UI_MAP()
-
   BEGIN_MSG_MAP_EX(CStgeScriptEditor)
     MSG_WM_CREATE(OnCreate)
     MSG_WM_GOOD(OnGoodMessage)
-    MSG_WM_SETFOCUS(OnSetFocus)
-    MSG_WM_SHOWWINDOW(OnShowWindow)
     MSG_WM_SIZE(OnSize)
-    MSG_WM_TIMER(OnTimer)
-    if (GetFocus() == mSource) {
-      CHAIN_COMMANDS_MEMBER(mSource)
-    }
     COMMAND_ID_HANDLER_EX(ID_STGESCRIPT_SOURCE, OnSource)
-    COMMAND_ID_HANDLER_EX(ID_STGESCRIPT_VIEW, OnStgeView)
     COMMAND_ID_HANDLER_EX(ID_STGESCRIPT_COMPILE, OnCompile)
     COMMAND_CODE_HANDLER_EX(LBN_SELCHANGE, OnSelChange)
-    CHAIN_MSG_MAP(CUpdateUI<CStgeScriptEditor>)
     FORWARD_TOOLTIP_GETDISPINFO()
   END_MSG_MAP()
 
@@ -482,34 +401,17 @@ public:
     mPane.SetPaneContainerExtendedStyle(PANECNT_NOCLOSEBUTTON);
 
     mToolbar = GoodCreateSimpleToolbar(mPane, IDR_TB_STGESCRIPT);
-    UIAddToolBar(mToolbar);
 
     mSplit.Create(mPane, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
     mList.Create(mSplit, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | LBS_NOINTEGRALHEIGHT | LBS_NOTIFY, WS_EX_CLIENTEDGE);
 
     mPane.SetClient(mSplit);
-
-    mSplit2.Create(mSplit, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
-
-    mSource.Create(mSplit2, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_NOHIDESEL | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_WANTRETURN, WS_EX_CLIENTEDGE);
-    mSource.SetFont(AtlGetStockFont(SYSTEM_FIXED_FONT));
-
-    mStge.Create(mSplit2, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_STATICEDGE);
-
-    mSplit2.SetSinglePaneMode(SPLIT_PANE_LEFT);
-
-    mSplit.SetSplitterPanes(mList, mSplit2);
-    mSplit2.SetSplitterPanes(mSource, mStge);
+    mStge.Create(mSplit, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_STATICEDGE);
+    mSplit.SetSplitterPanes(mList, mStge);
 
     //
     // Load script.
     //
-
-    PrjT const& prj = PrjT::inst();
-    std::string path = good::getPathName(prj.mRes.mFileName);
-    path += prj.getStgeScript(mId);
-
-    mSource.LoadText(path);
 
     Compile();
 
@@ -523,55 +425,9 @@ public:
     {
     case WM_GOOD_GETRESOURCEID:
       return mId;
-
-    case WM_GOOD_CANUNDO:
-      return mSource.CanUndo();
-
-    case WM_GOOD_UNDO:
-      if (GetFocus() == mSource) {
-        mSource.Undo();
-      }
-      return true;
-
-    case WM_GOOD_CANSAVE:
-      return mSource.GetModify();
-
-    case WM_GOOD_SAVE:
-      return SaveChanges();
     }
 
     return 0;
-  }
-
-  void OnSetFocus(CWindow wndOld)
-  {
-    mSource.SetFocus();
-  }
-
-  void OnShowWindow(BOOL bShow, UINT nStatus)
-  {
-    CMessageLoop* pLoop = _Module.GetMessageLoop();
-    ATLASSERT(pLoop != NULL);
-
-    MainT::inst().ResetStatusBar();
-
-    if (bShow) {
-      pLoop->AddIdleHandler(this);
-      if (SPLIT_PANE_LEFT == mSplit2.GetDefaultActivePane()) { // Source view.
-        mSource.RegFindDlg();
-      }
-      SetTimer(1, 100);                 // To fixed focus issue.
-    } else {
-      pLoop->RemoveIdleHandler(this);
-      if (SPLIT_PANE_LEFT == mSplit2.GetDefaultActivePane()) { // Source view.
-        mSource.CloseFindDlg();
-        mSource.UnregFindDlg();
-      } else {
-        mSplit2.SetSinglePaneMode(SPLIT_PANE_LEFT);
-      }
-    }
-
-    SetMsgHandled(FALSE);
   }
 
   void OnSize(UINT nType, CSize size)
@@ -580,64 +436,29 @@ public:
     mSplit.SetSplitterPos(mPos);
   }
 
-  void OnTimer(UINT_PTR nIDEvent)
-  {
-    KillTimer(1);
-
-    if (GetFocus() != mSource) {
-      mSource.SetFocus();
-    }
-  }
-
   void OnCompile(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    if (mSource.GetModify()) {
-      int Ret = MessageBox(_T("Save Changes?"), CString((LPCTSTR)IDR_MAINFRAME), MB_YESNOCANCEL | MB_ICONQUESTION);
-      switch (Ret)
-      {
-      case IDYES:                       // Do save.
-        if (!SaveChanges()) {
-          return;
-        }
-        break;
-      case IDNO:                        // Skip changes.
-        break;
-      case IDCANCEL:                    // Stop.
-        return;
-      }
-    }
-
     Compile();
   }
 
   void OnSource(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    mSplit2.SetSinglePaneMode(SPLIT_PANE_LEFT);
-    mSource.RegFindDlg();
-  }
-
-  void OnStgeView(UINT uNotifyCode, int nID, CWindow wndCtl)
-  {
-    if (SPLIT_PANE_RIGHT != mSplit2.GetDefaultActivePane()) {
-      mSplit2.SetSinglePaneMode(SPLIT_PANE_RIGHT);
-      mSource.CloseFindDlg();
-      mSource.UnregFindDlg();
-      UpdateToolbar();
-    }
+    const PrjT &prj = PrjT::inst();
+    std::string path = good::getPathName(prj.mRes.mFileName);
+    path += prj.getStgeScript(mId);
+    SHELLEXECUTEINFO si = {sizeof(SHELLEXECUTEINFO)};
+    si.lpVerb = TEXT("open");
+    si.lpFile = path.c_str();
+    si.nShow = SW_SHOWNORMAL;
+    ShellExecuteEx(&si);
   }
 
   void OnSelChange(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
     CString s;
     mList.GetText(mList.GetCurSel(), s);
-
-    if (SPLIT_PANE_RIGHT == mSplit2.GetDefaultActivePane()) {
-      mStge.mOm.reset();
-      mStge.mOm.run(std::string(s), 0, 0);
-      OnStgeView(0, 0, 0);
-    } else {
-      GotoScript(s);
-    }
+    mStge.mOm.reset();
+    mStge.mOm.run(std::string(s), 0, 0);
   }
 };
 

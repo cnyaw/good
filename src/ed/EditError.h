@@ -19,7 +19,7 @@ public:
   CToolBarCtrl mToolbar;
 
   CFont mFon;
-  CScriptView mEdit;
+  CEdit mEdit;
 
   bool mVisible;
 
@@ -32,6 +32,7 @@ public:
       MainT::inst().OnViewOutputWindow(0, 0, 0);
       return TRUE;
     }
+    COMMAND_ID_HANDLER_EX(ID_EDIT_CLEAR_ALL, OnClearAll)
     CHAIN_MSG_MAP(CGoodPane)
   END_MSG_MAP()
 
@@ -99,6 +100,12 @@ public:
     MainT::inst().ResetStatusBar();
 
     SetMsgHandled(FALSE);
+  }
+
+  void OnClearAll(UINT uNotifyCode, int nID, CWindow wndCtl)
+  {
+    mEdit.SetSel(0, -1);
+    mEdit.Clear();
   }
 };
 

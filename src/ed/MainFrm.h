@@ -46,16 +46,6 @@ public:
 
   virtual BOOL PreTranslateMessage(MSG* pMsg)
   {
-    if (m_gFindReplaceDialog && *m_gFindReplaceDialog) {
-      HWND hwndFocus = ::GetFocus();
-      if ((*m_gFindReplaceDialog)->m_hWnd == hwndFocus ||
-          (*m_gFindReplaceDialog)->IsChild(hwndFocus)) {
-        if ((*m_gFindReplaceDialog)->IsDialogMessage(pMsg)) {
-          return TRUE;
-        }
-      }
-    }
-
     if (WM_MOUSEWHEEL == pMsg->message) { // Mouse wheel on view.
       POINT pt;
       ::GetCursorPos(&pt);

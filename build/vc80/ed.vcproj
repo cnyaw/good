@@ -497,10 +497,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\ed\EditScript.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\ed\EditSnd.h"
 				>
 			</File>
@@ -867,6 +863,10 @@
 			</File>
 			<File
 				RelativePath="..\..\src\good\rt\app.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\good\rt\keys.h"
 				>
 			</File>
 			<File
