@@ -204,24 +204,7 @@ public:
 
   bool doOpenUrl(std::string const& url) const
   {
-    SHELLEXECUTEINFO shExeInfo = {
-      sizeof(SHELLEXECUTEINFO),
-      0,
-      0,
-      TEXT("open"),
-      url.c_str(),
-      0,
-      0,
-      SW_SHOWNORMAL,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
-    };
-    ::ShellExecuteEx(&shExeInfo);
+    ShellOpen(url.c_str());
     return true;
   }
 

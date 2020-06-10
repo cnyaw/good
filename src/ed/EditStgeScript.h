@@ -446,11 +446,7 @@ public:
     const PrjT &prj = PrjT::inst();
     std::string path = good::getPathName(prj.mRes.mFileName);
     path += prj.getStgeScript(mId);
-    SHELLEXECUTEINFO si = {sizeof(SHELLEXECUTEINFO)};
-    si.lpVerb = TEXT("open");
-    si.lpFile = path.c_str();
-    si.nShow = SW_SHOWNORMAL;
-    ShellExecuteEx(&si);
+    ShellOpen(path.c_str());
   }
 
   void OnSelChange(UINT uNotifyCode, int nID, CWindow wndCtl)

@@ -16,13 +16,6 @@ class CDlgAbout : public CDialogImpl<CDlgAbout>
 public:
   enum { IDD = IDD_ABOUTBOX };
 
-
-  void OpenUrl(LPCTSTR pUrl) const
-  {
-    SHELLEXECUTEINFO shExeInfo = {sizeof(SHELLEXECUTEINFO), 0, 0, TEXT("open"), pUrl, 0, 0, SW_SHOWNORMAL, 0, 0, 0, 0, 0, 0, 0};
-    ::ShellExecuteEx(&shExeInfo);
-  }
-
   BEGIN_MSG_MAP_EX(CDlgAbout)
     MSG_WM_INITDIALOG(OnInitDialog)
     COMMAND_RANGE_HANDLER_EX(IDC_BUTTON1, IDC_BUTTON3, OnUrl)
@@ -38,12 +31,12 @@ public:
 
   void OnUrl(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    LPCTSTR URL[] = {
-      _T("https://good-ed.blogspot.com"),
-      _T("https://good-ed.smallworld.idv.tw/forum"),
-      _T("https://good-ed.smallworld.idv.tw/wiki")
+    const char* URL[] = {
+      "https://good-ed.blogspot.com",
+      "https://good-ed.smallworld.idv.tw/forum",
+      "https://good-ed.smallworld.idv.tw/wiki"
     };
-    OpenUrl(URL[nID - IDC_BUTTON1]);
+    ShellOpen(URL[nID - IDC_BUTTON1]);
   }
 
   void OnCloseCmd(UINT uNotifyCode, int nID, CWindow wndCtl)

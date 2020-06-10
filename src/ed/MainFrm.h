@@ -964,23 +964,7 @@ public:
 
   void OnShowApiRef(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    SHELLEXECUTEINFO shExeInfo = {
-                       sizeof(SHELLEXECUTEINFO),
-                       0,
-                       0,
-                       TEXT("open"),
-                       _T("http://good-ed.smallworld.idv.tw/wiki/index.php?title=Good_API_Reference"),
-                       0,
-                       0,
-                       SW_SHOWNORMAL,
-                       0,
-                       0,
-                       0,
-                       0,
-                       0,
-                       0,
-                       0};
-    ::ShellExecuteEx(&shExeInfo);
+    ShellOpen(_T("http://good-ed.smallworld.idv.tw/wiki/index.php?title=Good_API_Reference"));
   }
 
   void OnViewShowFps(UINT uNotifyCode, int nID, CWindow wndCtl)
