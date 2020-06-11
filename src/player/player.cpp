@@ -273,7 +273,7 @@ int Run(LPTSTR lpstrCmdLine, int nCmdShow = SW_SHOWDEFAULT)
   return nRet;
 }
 #else
-#include "../good/app/wtl_player.h"
+#include "../good/app/wtl_app.h"
 
 class CPlayerWindow : public good::rt::WtlApplicationImpl<CPlayerWindow>
 {

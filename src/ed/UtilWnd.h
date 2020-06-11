@@ -559,7 +559,6 @@ public:
     RECT rcClient;
     GetClientRect(&rcClient);
 
-    int lastHot = mCurHot;
     size_t cxMaxTile = max(1, rcClient.right / CX_THUMB);
 
     int cx = cxMaxTile;
