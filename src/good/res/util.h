@@ -139,4 +139,15 @@ bool isGoodArchive(std::string const& name)
 
 } // namespace good
 
+#ifdef WIN32
+void ShellOpen(const char *path)
+{
+  SHELLEXECUTEINFO si = {sizeof(SHELLEXECUTEINFO)};
+  si.lpVerb = TEXT("open");
+  si.lpFile = path;
+  si.nShow = SW_SHOWNORMAL;
+  ShellExecuteEx(&si);
+}
+#endif
+
 // end of util.h

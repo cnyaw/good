@@ -38,16 +38,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 #else
 
 #include "../ed/resource1.h"
-
-void ShellOpen(const char *path)
-{
-  SHELLEXECUTEINFO si = {sizeof(SHELLEXECUTEINFO)};
-  si.lpVerb = TEXT("open");
-  si.lpFile = path;
-  si.nShow = SW_SHOWNORMAL;
-  ShellExecuteEx(&si);
-}
-
 #include "../ed/DlgAbout.h"
 
 CAppModule _Module;

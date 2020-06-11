@@ -206,13 +206,4 @@ std::string GetObjectName(PrjT::ObjectT const &o)
   }
 }
 
-void ShellOpen(const char *path)
-{
-  SHELLEXECUTEINFO si = {sizeof(SHELLEXECUTEINFO)};
-  si.lpVerb = TEXT("open");
-  si.lpFile = path;
-  si.nShow = SW_SHOWNORMAL;
-  ShellExecuteEx(&si);
-}
-
 // end of Util.h
