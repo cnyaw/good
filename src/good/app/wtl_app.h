@@ -73,7 +73,7 @@ public:
         return TRUE;
       }
 
-      if (mDirty) {
+      if (mDirty || mTexDirty) {
         RedrawWindow();
       }
     }
