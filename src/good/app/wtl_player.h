@@ -260,7 +260,7 @@ public:
     maxActors = max(maxActors, mActors.size());
 
     char buff[512];
-    sprintf(buff, "%d,d%d/%d,o%d/%d", FPS, gx.nLastDrawCalls, maxDrawCalls, mActors.size(), maxActors);
+    sprintf(buff, "%d,d%d/%d,o%d/%d,c%d", FPS, gx.nLastDrawCalls, maxDrawCalls, mActors.size(), maxActors, mCanvas.size());
     SimpleDrawText(mRes.mWidth - CX_FONT2 * (int)strlen(buff), 0, buff, COLOR_TRACE);
   }
 
