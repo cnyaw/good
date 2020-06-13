@@ -1613,6 +1613,21 @@ public:
   }
 
   //
+  // [in] canvas, x, y [out] color
+  //
+
+  static int GetPixel(lua_State *L)
+  {
+    int canvas = luaL_checkint(L, 1);
+    int x = luaL_checkint(L, 2);
+    int y = luaL_checkint(L, 3);
+
+    lua_pushnumber(L, AppT::getInst().getPixel(canvas, x, y));
+
+    return 1;
+  }
+
+  //
   // [in] id [out]
   //
 
@@ -1685,6 +1700,7 @@ public:
       {"GenCanvas", &GenCanvas},
       {"GetAntiAlias", &GetAntiAlias},
       {"GetFont", &GetFont},
+      {"GetPixel", &GetPixel},
       {"KillCanvas", &KillCanvas},
       {"SetAnchor", &GraphicsSetAnchor},
       {"SetAntiAlias", &SetAntiAlias},

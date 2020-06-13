@@ -662,6 +662,15 @@ int getParent(int idObj) const
   }
 }
 
+unsigned int getPixel(int idCanvas, int x, int y) const
+{
+  if (!mCanvas.isUsed(idCanvas)) {
+    return 0;
+  } else {
+    return mCanvas[idCanvas].getPixel(x, y);
+  }
+}
+
 void getPos(int idObj, float &x, float &y, bool world = false) const
 {
   if (mActors.isUsed(idObj)) {
