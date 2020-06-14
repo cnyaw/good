@@ -196,8 +196,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="zip player.exe"
-				CommandLine="cd $(OutDir)&#x0D;&#x0A;d:\cygwin\bin\zip $(ProjectName).zip $(ProjectName).exe&#x0D;&#x0A;move  $(ProjectName).zip ../../src/ed/res&#x0D;&#x0A;"
+				Description=""
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration

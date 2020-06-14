@@ -209,8 +209,7 @@ BEGIN
         MENUITEM "Play This Level\tCtrl+F5",    ID_PROJECT_RUNTHISLEVEL
         MENUITEM "Play Package...",             ID_PROJECT_PLAYFILE
         MENUITEM SEPARATOR
-        MENUITEM "Create Package...",           ID_PROJECT_CREATEPACKAGE
-        MENUITEM "Create Executable...",        ID_PROJECT_CREATEEXECUTABLE
+        MENUITEM "Create Good Package...",      ID_PROJECT_CREATEPACKAGE
         MENUITEM "Create Zip Package...",       ID_PROJECT_CREATEZIPPACKAGE
     END
     POPUP "&Window"
@@ -574,13 +573,6 @@ IDC_POINTER             CURSOR                  "res\\arrow.cur"
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// THEPLAYER
-//
-
-IDR_THEPLAYER1          THEPLAYER               "res\\player.zip"
-
-/////////////////////////////////////////////////////////////////////////////
-//
 // String Table
 //
 
@@ -734,8 +726,6 @@ BEGIN
     ID_LEVELEDIT_TOPMOST    "Move topmost\nMove Topmost"
     ID_LEVELEDIT_BOTTOMMOST "Move bottommost\nMove Bottommost"
     ID_PROJECT_RUNTHEGAME   "Play the game\nPlay"
-    ID_PROJECT_CREATEEXECUTABLE 
-                            "Create stand alone executable\nCreate Executable"
     ID_LEVELEDIT_LEVELUP    "Level Up\nLevel Up"
     ID_LEVELEDIT_LEVELDOWN  "Level Down\nLevel Down"
     ID_LEVELEDIT_GRID       "Snap\nToggle Snap"

@@ -277,7 +277,6 @@ public:
   } // getInst
 
   BEGIN_MSG_MAP_EX(CPlayerWindow)
-    MSG_WM_CREATE(OnCreate)
     MSG_WM_SYSCOMMAND(OnSysCommand)
     CHAIN_MSG_MAP(BaseT)
   END_MSG_MAP()
@@ -302,57 +301,32 @@ public:
   }
 };
 
-int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
+int Run(LPTSTR lpstrCmdLine, int nCmdShow)
 {
-  //
-  // Load good package resouce stream.
-  //
-
-  HRSRC hRes = FindResourceEx(
-                 _Module.GetResourceInstance(),
-                 _T("GDPRES"),
-                 _T("101"),
-                 MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US));
-  if (NULL == hRes) {
+  if (0 >= strlen(lpstrCmdLine)) {
     CDlgAbout().DoModal();
     return 0;
   }
-
-  int len = SizeofResource(_Module.GetResourceInstance(), hRes);
-  HGLOBAL lpres = LoadResource(_Module.GetResourceInstance(), hRes);
-
-  if (0 >= len || 0 == lpres) {
-    CDlgAbout().DoModal();
-    return 0;
-  }
-
-  //
-  // Start the app.
-  //
-
-  CGLMessageLoop theLoop;
-  _Module.AddMessageLoop(&theLoop);
 
   CPlayerWindow& wndMain = CPlayerWindow::getInst();
-
-  std::stringstream ss;
-  ss.write((char const*)LockResource(lpres), len);
 
   if (wndMain.CreateEx() == NULL) {
     ATLTRACE(_T("Main gl window creation failed!\n"));
     return 0;
   }
 
-  if (!wndMain.init(ss)) {
+  if (!wndMain.init(lpstrCmdLine)) {
     ATLTRACE(_T("Init good failed!\n"));
     return 0;
   }
 
   wndMain.ShowWindow(SW_SHOW);
 
+  wndMain.theLoop.AddMessageFilter(&wndMain);
   timeBeginPeriod(1);
-  int nRet = theLoop.Run();
+  int nRet = wndMain.theLoop.Run();
   timeEndPeriod(1);
+  wndMain.theLoop.RemoveMessageFilter(&wndMain);
 
   _Module.RemoveMessageLoop();
   return nRet;

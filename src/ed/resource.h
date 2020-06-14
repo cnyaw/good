@@ -25,7 +25,6 @@
 #define IDD_CHOICETEXTURE               241
 #define IDD_CHOICEMAP                   242
 #define IDR_TB_OUTPUT                   242
-#define IDR_THEPLAYER1                  246
 #define IDR_TB_STGESCRIPT               251
 #define IDD_SNAPCUSTOMIZE               254
 #define IDD_NEWPROJ                     255
@@ -103,7 +102,6 @@
 #define ID_LEVELEDIT_TOPMOST            32849
 #define ID_LEVELEDIT_BOTTOMMOST         32850
 #define ID_PROJECT_RUNTHEGAME           32851
-#define ID_PROJECT_CREATEEXECUTABLE     32852
 #define ID_LEVELEDIT_LEVELUP            32855
 #define ID_LEVELEDIT_LEVELDOWN          32856
 #define ID_LEVELEDIT_GRID               32857

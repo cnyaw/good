@@ -105,7 +105,6 @@ public:
     UIEnable(ID_PROJECT_RUNTHEGAME, !mFileName.empty());
     UIEnable(ID_PROJECT_RUNTHISLEVEL, !mFileName.empty() && -1 != GetPlayThisLevelId());
     UIEnable(ID_PROJECT_CREATEPACKAGE, !mFileName.empty());
-    UIEnable(ID_PROJECT_CREATEEXECUTABLE, !mFileName.empty());
     UIEnable(ID_PROJECT_CREATEZIPPACKAGE, !mFileName.empty());
     UIEnable(
       ID_EDIT_UNDO,
@@ -143,7 +142,6 @@ public:
     UPDATE_ELEMENT(ID_PROJECT_RUNTHEGAME, UPDUI_MENUPOPUP | UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_PROJECT_RUNTHISLEVEL, UPDUI_MENUPOPUP | UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_PROJECT_CREATEPACKAGE, UPDUI_MENUPOPUP)
-    UPDATE_ELEMENT(ID_PROJECT_CREATEEXECUTABLE, UPDUI_MENUPOPUP)
     UPDATE_ELEMENT(ID_PROJECT_CREATEZIPPACKAGE, UPDUI_MENUPOPUP)
     UPDATE_ELEMENT(ID_VIEW_PROJVIEW, UPDUI_MENUPOPUP| UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_VIEW_OUTPUTWINDOW, UPDUI_MENUPOPUP | UPDUI_TOOLBAR)
@@ -175,7 +173,6 @@ public:
     COMMAND_ID_HANDLER_EX(ID_PROJECT_RUNTHISLEVEL, OnRunThisLevel)
     COMMAND_ID_HANDLER_EX(ID_PROJECT_PLAYFILE, OnPlayPackage)
     COMMAND_ID_HANDLER_EX(ID_PROJECT_CREATEPACKAGE, OnCreatePackage)
-    COMMAND_ID_HANDLER_EX(ID_PROJECT_CREATEEXECUTABLE, OnCreateExecutable)
     COMMAND_ID_HANDLER_EX(ID_PROJECT_CREATEZIPPACKAGE, OnCreateZipPackage)
     COMMAND_ID_HANDLER_EX(ID_VIEW_PROJVIEW, OnViewProjView)
     COMMAND_ID_HANDLER_EX(ID_VIEW_OUTPUTWINDOW, OnViewOutputWindow)
@@ -543,105 +540,6 @@ public:
     } else {
       MessageBox(_T("You are using the latest version."), CString((LPCTSTR)IDR_MAINFRAME), MB_OK);
     }
-  }
-
-  void OnCreateExecutable(UINT uNotifyCode, int nID, CWindow wndCtl)
-  {
-    CFileDialog dlg(FALSE, NULL, NULL, OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("Good Standalone Executable Files(*.exe)\0*.exe\0"));
-    if (IDOK != dlg.DoModal()) {
-      return;
-    }
-
-    //
-    // Create package stream.
-    //
-
-    PrjT const& prj = PrjT::inst();
-
-    std::stringstream ss;
-    if (!prj.createPackage(ss, true)) {
-      MessageBox(_T("Create Good Package Failed!"), CString((LPCTSTR)IDR_MAINFRAME), MB_OK | MB_ICONERROR);
-      return;
-    }
-
-    //
-    // Load player exe dat steam from resource, create tmp file and copy player
-    // executable to it.
-    //
-
-    HRSRC hPlayer = FindResourceEx(_Module.GetResourceInstance(), _T("THEPLAYER"), (LPCTSTR)IDR_THEPLAYER1, MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US));
-    if (NULL == hPlayer) {
-      MessageBox(_T("Open player Failed!"), CString((LPCTSTR)IDR_MAINFRAME), MB_OK | MB_ICONERROR);
-      return;
-    }
-
-    int len = SizeofResource(_Module.GetResourceInstance(), hPlayer);
-    HGLOBAL lpres = LoadResource(_Module.GetResourceInstance(), hPlayer);
-
-    char* tmpfilename = 0;
-    if (0 < len && lpres) {
-
-      char const* p = (char const*)LockResource(lpres);
-
-      std::stringstream ss1;
-      ss1.write(p, len);
-
-      sw2::Archive* ar = sw2::Archive::alloc();
-      if (0 == ar) {
-        MessageBox(_T("Get sw2::Archive Failed!"), CString((LPCTSTR)IDR_MAINFRAME), MB_OK | MB_ICONERROR);
-        return;
-      }
-
-      if (!ar->addFileSystem(ss1)) {
-        MessageBox(_T("Add stream file system Failed!"), CString((LPCTSTR)IDR_MAINFRAME), MB_OK | MB_ICONERROR);
-        return;
-      }
-
-      std::stringstream ss2;
-      if (!ar->loadFile("player.exe", ss2)) {
-        MessageBox(_T("Load player from stream file system Failed!"), CString((LPCTSTR)IDR_MAINFRAME), MB_OK | MB_ICONERROR);
-        return;
-      }
-
-      sw2::Archive::free(ar);
-
-      tmpfilename = tmpnam(0);
-      std::ofstream ofs(tmpfilename, std::ios_base::binary);
-      if (!ofs) {
-        MessageBox(_T("Create player Failed!"), CString((LPCTSTR)IDR_MAINFRAME), MB_OK | MB_ICONERROR);
-        return;
-      }
-
-      ofs << ss2.rdbuf();
-
-      ofs.close();
-    }
-
-    //
-    // Update tmp file's resource, inject package stream into it.
-    //
-
-    HANDLE hExe = BeginUpdateResource(tmpfilename, FALSE);
-    if (NULL == hExe) {
-      MessageBox(_T("BeginUpdateResource Failed!"), CString((LPCTSTR)IDR_MAINFRAME), MB_OK | MB_ICONERROR);
-      remove(tmpfilename);
-      return;
-    }
-
-    std::string dat = ss.str();
-    UpdateResource(hExe, _T("GDPRES"), _T("101"), MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US), (VOID*)dat.data(), dat.size());
-
-    EndUpdateResource(hExe, FALSE);
-
-    //
-    // Save file.
-    //
-
-    std::string name = CompleteFileExt(dlg.m_szFileName, ".exe");
-
-    remove(name.c_str());               // Remove existing.
-    ::rename(tmpfilename, name.c_str()); // Copy new.
-
   }
 
   void OnCreatePackage(LPCTSTR msg, std::string const &ext, LPCTSTR title, bool encrypt)
