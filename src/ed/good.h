@@ -140,7 +140,6 @@ typedef good::gx::GdiGraphics GxT;
 
 #include "Explorer.h"
 
-#include "EditSnd.h"
 #include "EditTex.h"
 #include "EditMap.h"
 #include "EditSprite.h"

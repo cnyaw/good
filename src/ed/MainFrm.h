@@ -432,7 +432,7 @@ public:
     PrjT& prj = PrjT::inst();
     int id = prj.addSnd(name);
     if (-1 != id) {
-      AddResourceItem(_T("Audio"), prj.getSnd(id).getName(), id, GOOD_RESOURCE_AUDIO, CreateEditor<CSoundEditor<CMainFrame> >(id));
+      AddResourceItem(_T("Audio"), prj.getSnd(id).getName(), id, GOOD_RESOURCE_AUDIO, NULL);
     }
   }
 

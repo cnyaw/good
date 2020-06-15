@@ -102,18 +102,6 @@ BEGIN
     BUTTON      ID_SPRITEEDIT_ERASE
 END
 
-IDR_TB_SPRITEPREVIEW TOOLBAR  16, 15
-BEGIN
-    BUTTON      ID_SPRITEPREVIEW_LOOP
-    SEPARATOR
-    BUTTON      ID_SPRITEPREVIEW_PLAY
-    BUTTON      ID_SPRITEPREVIEW_PAUSE
-    BUTTON      ID_SPRITEPREVIEW_STOP
-    SEPARATOR
-    BUTTON      ID_SPRITEPREVIEW_PREVFRAME
-    BUTTON      ID_SPRITEPREVIEW_NEXTFRAME
-END
-
 IDR_TB_LEVELEDIT TOOLBAR  16, 15
 BEGIN
     BUTTON      ID_LEVELEDIT_MOVEITEM
@@ -162,7 +150,6 @@ IDR_TB_MAPEDIT          BITMAP                  "res\\bmp00002.bmp"
 IDB_BKBRUSH             BITMAP                  "res\\bitmap1.bmp"
 IDR_TB_SPRITETILESET    BITMAP                  "res\\bmp00003.bmp"
 IDR_TB_SPRITEEDIT       BITMAP                  "res\\bmp00004.bmp"
-IDR_TB_SPRITEPREVIEW    BITMAP                  "res\\bmp00005.bmp"
 IDR_TB_LEVELEDIT        BITMAP                  "res\\toolbar1.bmp"
 IDB_BITMAP1             BITMAP                  "res\\icon1.bmp"
 IDR_TB_OUTPUT           BITMAP                  "res\\bmp00001.bmp"
@@ -678,7 +665,6 @@ BEGIN
     ID_MAPEDIT_ERASE        "Erase\nErase Tool"
     ID_MAPEDIT_FILL         "Fill\nFill Tool"
     ID_MAPEDIT_GRID         "Grid\nToggle Grid"
-    ID_MAPEDIT_PROP         "Properties\nProperties"
 END
 
 STRINGTABLE 
@@ -695,19 +681,12 @@ BEGIN
     ID_SPRITEEDIT_DRAW      "Draw Tool\nDraw Tool"
     ID_SPRITEEDIT_ERASE     "Erase Tool\nErase Tool"
     ID_SPRITEPREVIEW_PLAY   "Play\nPlay"
-    ID_SPRITEPREVIEW_PAUSE  "Pause\nPause"
-    ID_SPRITEPREVIEW_STOP   "Stop\nStop"
-    ID_SPRITEPREVIEW_PREVFRAME "Previous Frame\nPrevious Frame"
-    ID_SPRITEPREVIEW_NEXTFRAME "Next Frame\nNext Frame"
-    ID_SPRITEEDIT_PROP      "Properties\nProperties"
-    ID_SPRITEPREVIEW_LOOP   "Loop\nLoop"
 END
 
 STRINGTABLE 
 BEGIN
     ID_LEVELEDIT_REMOVE     "Remove Tool\nRemove"
     ID_LEVELEDIT_SELITEM    "Select tool\nSelect"
-    ID_LEVELEDIT_PROP       "Properties\nProperties"
     ID_LEVELEDIT_DELITEM    "Delete item\nDelete"
     ID_LEVELEDIT_ADDSPRITE  "New Sprite Object\nNew Sprite Obj"
     ID_LEVELEDIT_ADDBKGND   "New Background\nNew Background"

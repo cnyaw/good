@@ -486,7 +486,11 @@ end:
     switch (typeItem)
     {
     case GOOD_RESOURCE_AUDIO:
-      AddResourceEditor<CSoundEditor<MainT> >(idItem, prj.getSnd(idItem).getName());
+      {
+        std::string path = good::getPathName(prj.mRes.mFileName);
+        path += prj.getSnd(idItem).mFileName;
+        ShellOpen(path.c_str());
+      }
       return true;
 
     case GOOD_RESOURCE_TEXTURE:

@@ -14,7 +14,6 @@
 #define IDD_NEWSPRITE                   219
 #define IDR_TB_SPRITETILESET            220
 #define IDR_TB_SPRITEEDIT               222
-#define IDR_TB_SPRITEPREVIEW            224
 #define IDR_TB_LEVELEDIT                227
 #define IDD_ADDNEWLEVELITEM             229
 #define IDD_PROPVIEW                    234
@@ -68,9 +67,6 @@
 #define ID_MAPEDIT_ERASE                32787
 #define ID_MAPEDIT_FILL                 32788
 #define ID_MAPEDIT_GRID                 32795
-#define ID_MAPEDIT_PROP                 32796
-#define ID_VIEW_ZOOMIN                  32801
-#define ID_VIEW_ZOOMOUT                 32802
 #define ID_VIEW_PROJVIEW                32809
 #define ID_FILE_ADDNEWITEM              32810
 #define ID_MAPTILESET_ADD               32815
@@ -79,15 +75,8 @@
 #define ID_SPRITEEDIT_DRAW              32822
 #define ID_SPRITEEDIT_ERASE             32823
 #define ID_SPRITEPREVIEW_PLAY           32824
-#define ID_SPRITEPREVIEW_PAUSE          32825
-#define ID_SPRITEPREVIEW_STOP           32826
-#define ID_SPRITEPREVIEW_PREVFRAME      32827
-#define ID_SPRITEPREVIEW_NEXTFRAME      32828
-#define ID_SPRITEEDIT_PROP              32829
-#define ID_SPRITEPREVIEW_LOOP           32830
 #define ID_LEVELEDIT_REMOVE             32832
 #define ID_LEVELEDIT_SELITEM            32834
-#define ID_LEVELEDIT_PROP               32835
 #define ID_LEVELEDIT_DELITEM            32836
 #define ID_LEVELEDIT_ADDSPRITE          32839
 #define ID_LEVELEDIT_ADDBKGND           32840
