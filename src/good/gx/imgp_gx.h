@@ -154,6 +154,36 @@ public:
     return *this;
   }
 
+  Imgp& fill(const Imgp& img, int x, int y, int w, int h)
+  {
+    if (0 == dat || 0 == img.dat) {
+      return *this;
+    }
+
+    int cx = img.w, cy = img.h;
+    int nx = x, ny = y;
+
+    if (0 < nx) {
+      nx = (nx % cx) - cx;
+    } else if (0 > nx) {
+      nx = - (-nx % cx);
+    }
+
+    if (0 < ny) {
+      ny = (ny % cy) - cy;
+    } else if (0 > ny) {
+      ny = - (-ny % cy);
+    }
+
+    for (int ay = ny; -cy <= ay && ay < h; ay += cy) {
+      for (int ax = nx; -cx <= ax && ax < w; ax += cx) {
+        draw(img, ax, ay);
+      }
+    }
+
+    return *this;
+  }
+
   Imgp& draw(const Imgp& img)
   {
     return draw(img, 0, 0, img.w, img.h, 0, 0);
