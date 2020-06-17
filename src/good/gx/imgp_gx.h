@@ -232,54 +232,6 @@ public:
     return *this;
   }
 
-  Imgp& drawTrans(const Imgp& img, unsigned int keycolor)
-  {
-    return drawTrans(img, keycolor, 0, 0, img.w, img.h, 0, 0);
-  }
-
-  Imgp& drawTrans(const Imgp& img, unsigned int keycolor, int x, int y)
-  {
-    return drawTrans(img, keycolor, x, y, img.w, img.h, 0, 0);
-  }
-
-  Imgp& drawTrans(const Imgp& img, unsigned int keycolor, int x, int y, int w, int h)
-  {
-    return drawTrans(img, keycolor, x, y, w, h, 0, 0);
-  }
-
-  Imgp& drawTrans(const Imgp& img, unsigned int keycolor, int x, int y, int w, int h, int srcx, int srcy)
-  {
-    if (0 == dat || 0 == img.dat) {
-      return *this;
-    }
-
-    if (0 > x) {
-      w += x;
-      srcx -= x;
-      x = 0;
-    }
-
-    if (0 > y) {
-      h += y;
-      srcy -= y;
-      y = 0;
-    }
-
-    keycolor = rgba(keycolor);
-
-    unsigned int *p = (unsigned int*)dat;
-    for (int i = x, ii = srcx; i < x + w && i < this->w && ii < img.w; i ++, ii++) {
-      for (int j = y, jj = srcy; j < y + h && j < this->h && jj < img.h; j ++, jj++) {
-        unsigned int c = p[ii + img.w * jj];
-        if (keycolor != c) {
-          p[i + this->w * j] = c;
-        }
-      }
-    }
-
-    return *this;
-  }
-
   Imgp& rect(unsigned int color, int x, int y, int w, int h)
   {
     fill(color, x, y, w, 1);
@@ -794,14 +746,12 @@ class ImgpImage : public good::gx::Image<ImgpImage>
 public:
 
   Imgp* mSur;
-  bool mHasKeyColor;
-  unsigned int mKeyColor;
 
-  ImgpImage() : mSur(0), mHasKeyColor(false), mKeyColor(0)
+  ImgpImage() : mSur(0)
   {
   }
 
-  ImgpImage(Imgp* sur) : mSur(sur), mHasKeyColor(false), mKeyColor(0)
+  ImgpImage(Imgp* sur) : mSur(sur)
   {
   }
 
@@ -818,22 +768,6 @@ public:
   int getHeight() const
   {
     return mSur->h;
-  }
-
-  bool hasKeyColor() const
-  {
-    return mHasKeyColor;
-  }
-
-  unsigned int getKeyColor() const
-  {
-    return mKeyColor;
-  }
-
-  void setKeyColor(unsigned int kcolor)
-  {
-    mKeyColor = kcolor;
-    mHasKeyColor = true;
   }
 
   static bool existImage(std::string const& name)
@@ -904,12 +838,7 @@ public:
 
   bool drawImage(int x, int y, ImgpImage const& img, int srcx, int srcy, int srcw, int srch, unsigned int color = 0xffffffff, float rot = .0f, float xscale = 1.0f, float yscale = 1.0f)
   {
-    if (img.hasKeyColor()) {
-      mSur.drawTrans(*img.mSur, img.getKeyColor(), x, y, srcw, srch, srcx, srcy);
-    } else {
-      mSur.blend(*img.mSur, color, x, y, srcw, srch, srcx, srcy);
-    }
-
+    mSur.blend(*img.mSur, color, x, y, srcw, srch, srcx, srcy);
     return true;
   }
 
