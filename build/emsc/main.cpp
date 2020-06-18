@@ -105,7 +105,7 @@ public:
     }
 
     if (trigger(keys, ptMouse)) {
-      renderAll(gx);
+      renderAll();
     }
 
     if (mExit) {
