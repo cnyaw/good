@@ -53,15 +53,6 @@ public:
     img.resize(img.w * TEX_SCALE, img.h * TEX_SCALE);
     return ImageManager<DevkitPSPImageManager, DevkitPSPSurface, DevkitPSPImageRect>::LoadSurface(img, sur);
   }
-
-  bool LoadSurface(std::string const& stream, DevkitPSPImageRect& sur)
-  {
-    GxImage img;
-    if (!img.loadFromStream(stream)) {
-      return false;
-    }
-    return LoadSurface(img, sur);
-  }
 };
 
 class DevkitPSPImage : public Image<DevkitPSPImage>
@@ -116,6 +107,20 @@ public:
   static DevkitPSPImage getImage(std::string const& name, GxImage &img)
   {
     return DevkitPSPImage(DevkitPSPImageManager::inst().getImage(name, img));
+  }
+
+  void draw(int x, int y, const GxImage &c, int sx, int sy, int sw, int sh)
+  {
+    if (isValid()) {
+      mSur->tex->img.draw(mSur->left + x, mSur->top + y, c, sx, sy, sw, sh);
+    }
+  }
+
+  void drawToCanvas(int x, int y, GxImage &c, int sx, int sy, int sw, int sh) const
+  {
+    if (isValid()) {
+      c.draw(x, y, (*(const GxImage*)&(mSur->tex->img)), sw, sh, mSur->left + sx, mSur->top + sy);
+    }
   }
 };
 

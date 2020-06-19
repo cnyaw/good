@@ -741,7 +741,7 @@ public:
   }
 };
 
-class ImgpImage : public good::gx::Image<ImgpImage>
+class ImgpImage : public Image<ImgpImage>
 {
 public:
 
@@ -810,7 +810,7 @@ public:
   }
 };
 
-class ImgpGraphics : public good::gx::Graphics<ImgpImage>
+class ImgpGraphics : public Graphics<ImgpImage>
 {
 public:
 

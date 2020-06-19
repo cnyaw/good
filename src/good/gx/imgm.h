@@ -182,34 +182,6 @@ public:
     return false;
   }
 
-  bool LoadSurface(std::string const& stream, RectT& sur)
-  {
-    //
-    // Load image to memory.
-    //
-
-    GxImage img;
-    if (!img.loadFromStream(stream)) {
-      return false;
-    }
-
-    return LoadSurface(img, sur);
-  }
-
-  bool LoadSurface(int size, int ch, bool bAntiAlias, RectT& sur)
-  {
-    //
-    // Create bits 32 image from a specified size textual char.
-    //
-
-    GxImage img;
-    if (!img.loadFromChar(size, ch, bAntiAlias)) {
-      return false;
-    }
-
-    return LoadSurface(img, sur);
-  }
-
   bool existImage(std::string const& name)
   {
     return mImg.end() != mImg.find(name);
@@ -248,15 +220,14 @@ public:
       return &it->second;
     }
 
-    RectT sur;
-    if (((T*)this)->LoadSurface(stream, sur)) {
-      mImg[name] = sur;
-      return &mImg[name];
-    } else {
+    GxImage img;
+    if (!img.loadFromStream(stream)) {
       SW2_TRACE_ERROR("load image stream %s failed", name.c_str());
-      mImg[name] = sur;
+      mImg[name] = RectT();
       return 0;
     }
+
+    return getImage(name, img);
   }
 
   RectT const* getImage(std::string const& name, int size, int ch, bool bAntiAlias)
@@ -266,15 +237,14 @@ public:
       return &it->second;
     }
 
-    RectT sur;
-    if (((T*)this)->LoadSurface(size, ch, bAntiAlias, sur)) {
-      mImg[name] = sur;
-      return &mImg[name];
-    } else {
-      SW2_TRACE_ERROR("create char img %s failed", name.c_str());
-      mImg[name] = sur;
+    GxImage img;
+    if (!img.loadFromChar(size, ch, bAntiAlias)) {
+      SW2_TRACE_ERROR("create char img %s, size%d, ch%d, aa%d failed", name.c_str(), size, ch, bAntiAlias);
+      mImg[name] = RectT();
       return 0;
     }
+
+    return getImage(name, img);
   }
 
   RectT const* getImage(std::string const& name, GxImage &img)
