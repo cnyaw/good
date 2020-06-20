@@ -418,14 +418,14 @@ public:
   int mCurHot, mCurSel;
   int CX_THUMB, CY_THUMB, CXY_BORDER;
 
-  std::map<int, good::gx::GxImage> mThumbImg;
+  std::map<int, good::gx::Imgp> mThumbImg;
 
   virtual ~CResourceListView()
   {
     FreeImage();
   }
 
-  void Blend(HDC hdc, int x, int y, const good::gx::GxImage &gx) const
+  void Blend(HDC hdc, int x, int y, const good::gx::Imgp &gx) const
   {
     if (0 == gx.dat) {
       return;
@@ -458,7 +458,7 @@ public:
 
   void FreeImage()
   {
-    std::map<int, good::gx::GxImage>::iterator it = mThumbImg.begin();
+    std::map<int, good::gx::Imgp>::iterator it = mThumbImg.begin();
     for (; mThumbImg.end() != it; ++it) {
       it->second.release();
     }
@@ -469,7 +469,7 @@ public:
   virtual int GetResId(int sel) const=0;
   virtual std::string GetResName(int id) const=0;
   virtual int GetResType() const=0;
-  virtual bool LoadResImage(int id, good::gx::GxImage &img) const=0;
+  virtual bool LoadResImage(int id, good::gx::Imgp &img) const=0;
 
   void SetCurSel(int id)
   {
@@ -488,7 +488,7 @@ public:
     Invalidate(FALSE);
   }
 
-  void ScaleResImageToThumbSize(good::gx::GxImage &img) const
+  void ScaleResImageToThumbSize(good::gx::Imgp &img) const
   {
     int ow = img.w, oh = img.h;
     if (CX_THUMB - 3 * CXY_BORDER < ow || CY_THUMB - 2 * CXY_BORDER < oh) {
@@ -631,7 +631,7 @@ public:
 
       int id = GetResId(i);
 
-      std::map<int, good::gx::GxImage>::iterator it = mThumbImg.find(id);
+      std::map<int, good::gx::Imgp>::iterator it = mThumbImg.find(id);
 
       // draw image border
       if (mCurSel == i) {
@@ -650,7 +650,7 @@ public:
 
       // try to load a image(only this time)
       else if (!bLoadImageOneTime) {
-        good::gx::GxImage img;
+        good::gx::Imgp img;
         if (LoadResImage(id, img)) {
           ScaleResImageToThumbSize(img);
           mThumbImg[id] = img;
@@ -708,7 +708,7 @@ public:
     return GOOD_RESOURCE_TEXTURE;
   }
 
-  virtual bool LoadResImage(int id, good::gx::GxImage &img) const
+  virtual bool LoadResImage(int id, good::gx::Imgp &img) const
   {
     const PrjT::TextureT &tex = PrjT::inst().getTex(id);
     return img.load(tex.mFileName);
@@ -746,7 +746,7 @@ public:
     return GOOD_RESOURCE_SPRITE;
   }
 
-  virtual bool LoadResImage(int id, good::gx::GxImage &img) const
+  virtual bool LoadResImage(int id, good::gx::Imgp &img) const
   {
     const PrjT::SpriteT &spr = PrjT::inst().getSprite(id);
     if (!img.create(spr.mTileset.mTileWidth, spr.mTileset.mTileHeight, 4)) {
@@ -754,14 +754,14 @@ public:
     }
     if (!spr.mFrame.empty()) {
       const PrjT::TextureT &tex = PrjT::inst().getTex(spr.mTileset.mTextureId);
-      good::gx::GxImage imgTex;
+      good::gx::Imgp imgTex;
       if (!imgTex.load(tex.mFileName)) {
         return false;
       }
       int tile = spr.mFrame[0];
       int srcx = spr.mTileset.mTileWidth * (tile % spr.mTileset.mCxTile);
       int srcy = spr.mTileset.mTileHeight * (tile / spr.mTileset.mCxTile);
-      img.draw(0, 0, imgTex, srcx, srcy, spr.mTileset.mTileWidth, spr.mTileset.mTileHeight);
+      img.GxImage::draw(0, 0, imgTex, srcx, srcy, spr.mTileset.mTileWidth, spr.mTileset.mTileHeight);
     }
     return true;
   }
@@ -798,7 +798,7 @@ public:
     return GOOD_RESOURCE_MAP;
   }
 
-  virtual bool LoadResImage(int id, good::gx::GxImage &img) const
+  virtual bool LoadResImage(int id, good::gx::Imgp &img) const
   {
     const PrjT::MapT &map = PrjT::inst().getMap(id);
     int mapw = map.mWidth * map.mTileset.mTileWidth;
@@ -812,7 +812,7 @@ public:
       return false;
     }
     int left = 0, top = 0, right = map.mWidth - 1, bottom = map.mHeight - 1;
-    good::gx::ImgpGraphics gx(*(good::gx::Imgp*)&img);
+    good::gx::ImgpGraphics gx(img);
     good::gx::ImgpImage imgtex(&img2);
     CommonDrawMap(gx, map, imgtex, 0, 0, left, top, right, bottom, 0xffffffff);
     return true;
@@ -850,17 +850,16 @@ public:
     return GOOD_RESOURCE_LEVEL;
   }
 
-  virtual bool LoadResImage(int id, good::gx::GxImage &img) const
+  virtual bool LoadResImage(int id, good::gx::Imgp &img) const
   {
     const PrjT &prj = PrjT::inst();
     if (!img.create(prj.mRes.mWidth, prj.mRes.mHeight, 4)) {
       return false;
     }
     const PrjT::LevelT &lvl = prj.getLevel(id);
-    good::gx::Imgp &gx = *(good::gx::Imgp*)&img;
-    gx.fill(ConvertColor(lvl.mBgColor), 0, 0, img.w, img.h);
+    img.fill(ConvertColor(lvl.mBgColor), 0, 0, img.w, img.h);
     RECT rcv = {0, 0, img.w, img.h};
-    DoPaintChildObj(gx, lvl, lvl.mObjIdx, rcv);
+    DoPaintChildObj(img, lvl, lvl.mObjIdx, rcv);
     return true;
   }
 
