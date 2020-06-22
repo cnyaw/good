@@ -99,11 +99,6 @@ public:
     return DevkitPSPImage(DevkitPSPImageManager::inst().getImage(name, stream));
   }
 
-  static DevkitPSPImage getImage(std::string const& name, int size, int ch, bool bAntiAlias)
-  {
-    return DevkitPSPImage();
-  }
-
   static DevkitPSPImage getImage(std::string const& name, GxImage &img)
   {
     return DevkitPSPImage(DevkitPSPImageManager::inst().getImage(name, img));

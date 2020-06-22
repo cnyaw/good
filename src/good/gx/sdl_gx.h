@@ -133,23 +133,6 @@ public:
       return 0;
     }
   }
-
-  SDL_Surface* getImage(std::string const& name, int size, int ch, bool bAntiAlias)
-  {
-    std::map<std::string, SDL_Surface*>::const_iterator it = mImg.find(name);
-    if (mImg.end() != it) {
-      return it->second;
-    }
-
-    GxImage img;
-    if (!img.loadFromChar(size, ch, bAntiAlias)) {
-      SW2_TRACE_ERROR("create char img %s failed", name.c_str());
-      mImg[name] = 0;
-      return 0;
-    }
-
-    return getImage(name, img);
-  }
 };
 
 class SDLImage : public Image<SDLImage>
@@ -194,11 +177,6 @@ public:
   static SDLImage getImage(std::string const& name, std::string const& stream)
   {
     return SDLImage(SDLImageResource::inst().getImage(name, stream));
-  }
-
-  static SDLImage getImage(std::string const& name, int size, int ch, bool bAntiAlias)
-  {
-     return SDLImage(SDLImageResource::inst().getImage(name, size, ch, bAntiAlias));
   }
 
   static SDLImage getImage(std::string const& name, GxImage &img)

@@ -230,23 +230,6 @@ public:
     return getImage(name, img);
   }
 
-  RectT const* getImage(std::string const& name, int size, int ch, bool bAntiAlias)
-  {
-    typename std::map<std::string, RectT>::const_iterator it = mImg.find(name);
-    if (mImg.end() != it) {
-      return &it->second;
-    }
-
-    GxImage img;
-    if (!img.loadFromChar(size, ch, bAntiAlias)) {
-      SW2_TRACE_ERROR("create char img %s, size%d, ch%d, aa%d failed", name.c_str(), size, ch, bAntiAlias);
-      mImg[name] = RectT();
-      return 0;
-    }
-
-    return getImage(name, img);
-  }
-
   RectT const* getImage(std::string const& name, GxImage &img)
   {
     typename std::map<std::string, RectT>::const_iterator it = mImg.find(name);

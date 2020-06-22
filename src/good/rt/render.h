@@ -374,8 +374,13 @@ ImgT getImage(int size, int ch) const
 {
   if (GOOD_DRAW_TEXT_FIXED_FONT == getFont()) {
     return getFixFontImage(size, ch);
+  } else {
+    return getSysFontImage(size, ch);
   }
+}
 
+ImgT getSysFontImage(int size, int ch) const
+{
   char chrmap[128];
   sprintf(chrmap, "chrmap;%d;%d;%d", size, ch, mAntiAlias);
 
@@ -383,12 +388,19 @@ ImgT getImage(int size, int ch) const
     return ImgT::getImage(chrmap);
   }
 
-  ImgT img = ImgT::getImage(chrmap, size, ch, mAntiAlias);
-  if (img.isValid()) {
+  CanvasT img;
+  if (!img.loadFromChar(size, ch, mAntiAlias)) {
+    img.create(size, size, 4);
+    img.fill(0).rect(0xffffffff, 0, 0, img.w, img.h);;
+    sprintf(chrmap, "chrmap;sys;%d;none", size);
+  }
+
+  ImgT i = ImgT::getImage(chrmap, img);
+  if (i.isValid()) {
     mDirty = true;
   }
 
-  return img;
+  return i;
 }
 
 // end of render.h

@@ -174,11 +174,6 @@ public:
     return GLImage(GLImageResource::inst().getImage(name, stream));
   }
 
-  static GLImage getImage(std::string const& name, int size, int ch, bool bAntiAlias)
-  {
-    return GLImage(GLImageResource::inst().getImage(name, size, ch, bAntiAlias));
-  }
-
   static GLImage getImage(std::string const& name, GxImage &img)
   {
     return GLImage(GLImageResource::inst().getImage(name, img));
