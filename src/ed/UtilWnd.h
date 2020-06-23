@@ -711,7 +711,14 @@ public:
   virtual bool LoadResImage(int id, good::gx::Imgp &img) const
   {
     const PrjT::TextureT &tex = PrjT::inst().getTex(id);
-    return img.load(tex.mFileName);
+    good::gx::ImgpImage i = good::gx::ImgpImage::getImage(tex.mFileName);
+    if (i.isValid()) {
+      img.create(i.getWidth(), i.getHeight(), 4);
+      i.drawToCanvas(0, 0, img, 0, 0, i.getWidth(), i.getHeight());
+      return true;
+    } else {
+      return false;
+    }
   }
 };
 
@@ -754,14 +761,14 @@ public:
     }
     if (!spr.mFrame.empty()) {
       const PrjT::TextureT &tex = PrjT::inst().getTex(spr.mTileset.mTextureId);
-      good::gx::Imgp imgTex;
-      if (!imgTex.load(tex.mFileName)) {
+      good::gx::ImgpImage imgTex = good::gx::ImgpImage::getImage(tex.mFileName);
+      if (!imgTex.isValid()) {
         return false;
       }
       int tile = spr.mFrame[0];
       int srcx = spr.mTileset.mTileWidth * (tile % spr.mTileset.mCxTile);
       int srcy = spr.mTileset.mTileHeight * (tile / spr.mTileset.mCxTile);
-      img.GxImage::draw(0, 0, imgTex, srcx, srcy, spr.mTileset.mTileWidth, spr.mTileset.mTileHeight);
+      imgTex.drawToCanvas(0, 0, img, srcx, srcy, spr.mTileset.mTileWidth, spr.mTileset.mTileHeight);
     }
     return true;
   }
@@ -807,14 +814,13 @@ public:
       return false;
     }
     const PrjT::TextureT &tex = PrjT::inst().getTex(map.mTileset.mTextureId);
-    good::gx::Imgp img2;
-    if (!img2.load(tex.mFileName)) {
+    good::gx::ImgpImage imgTex = good::gx::ImgpImage::getImage(tex.mFileName);
+    if (!imgTex.isValid()) {
       return false;
     }
     int left = 0, top = 0, right = map.mWidth - 1, bottom = map.mHeight - 1;
     good::gx::ImgpGraphics gx(img);
-    good::gx::ImgpImage imgtex(&img2);
-    CommonDrawMap(gx, map, imgtex, 0, 0, left, top, right, bottom, 0xffffffff);
+    CommonDrawMap(gx, map, imgTex, 0, 0, left, top, right, bottom, 0xffffffff);
     return true;
   }
 };
@@ -889,17 +895,14 @@ public:
         continue;
       }
 
-      bool IsImgValid = true;
-
       switch (inst.mType)
       {
       case PrjT::ObjectT::TYPE_MAPBG:
         {
           PrjT::MapT const& map = prj.getMap(inst.mMapId);
 
-          good::gx::Imgp img;
-          if (!img.load(prj.getTex(map.mTileset.mTextureId).mFileName)) {
-            IsImgValid = false;
+          good::gx::ImgpImage imgTex = good::gx::ImgpImage::getImage(prj.getTex(map.mTileset.mTextureId).mFileName);
+          if (!imgTex.isValid()) {
             break;
           }
 
@@ -927,24 +930,23 @@ public:
             rcm.top -= map.mTileset.mTileHeight;
           }
 
-          CommonDrawMap(good::gx::ImgpGraphics(gx), map, good::gx::ImgpImage(&img), rcm.left - rcv.left, rcm.top - rcv.top, left, top, right, bottom, 0xffffffff);
+          CommonDrawMap(good::gx::ImgpGraphics(gx), map, imgTex, rcm.left - rcv.left, rcm.top - rcv.top, left, top, right, bottom, 0xffffffff);
         }
         break;
 
       case PrjT::ObjectT::TYPE_TEXBG:
         {
-          good::gx::Imgp img;
-          if (!img.load(prj.getTex(inst.mTextureId).mFileName)) {
-            IsImgValid = false;
+          good::gx::ImgpImage imgTex = good::gx::ImgpImage::getImage(prj.getTex(inst.mTextureId).mFileName);
+          if (!imgTex.isValid()) {
             break;
           }
 
           int offsetx = rcm.left - rc.left;
           int offsety = rcm.top - rc.top;
-          int w = min(rcm.right - rcm.left, img.w - abs(inst.mDim.left) - offsetx);
-          int h = min(rcm.bottom - rcm.top, img.h - abs(inst.mDim.top) - offsety);
+          int w = min(rcm.right - rcm.left, imgTex.getWidth() - abs(inst.mDim.left) - offsetx);
+          int h = min(rcm.bottom - rcm.top, imgTex.getHeight() - abs(inst.mDim.top) - offsety);
 
-          gx.draw(img, rcm.left - rcv.left, rcm.top - rcv.top, w, h, inst.mDim.left + offsetx, inst.mDim.top + offsety);
+          imgTex.drawToCanvas(rcm.left - rcv.left, rcm.top - rcv.top, gx, inst.mDim.left + offsetx, inst.mDim.top + offsety, w, h);
         }
         break;
 
@@ -960,9 +962,8 @@ public:
         {
           PrjT::SpriteT const& spr = prj.getSprite(inst.mSpriteId);
 
-          good::gx::Imgp img;
-          if (!img.load(prj.getTex(spr.mTileset.mTextureId).mFileName)) {
-            IsImgValid = false;
+          good::gx::ImgpImage imgTex = good::gx::ImgpImage::getImage(prj.getTex(spr.mTileset.mTextureId).mFileName);
+          if (!imgTex.isValid()) {
             break;
           }
 
@@ -973,7 +974,7 @@ public:
           int offsetx = rcm.left - rc.left;
           int offsety = rcm.top - rc.top;
 
-          gx.draw(img, rcm.left - rcv.left, rcm.top - rcv.top, rcm.right - rcm.left, rcm.bottom - rcm.top, srcx + offsetx, srcy + offsety);
+          imgTex.drawToCanvas(rcm.left - rcv.left, rcm.top - rcv.top, gx, srcx + offsetx, srcy + offsety, rcm.right - rcm.left, rcm.bottom - rcm.top);
         }
         break;
 
