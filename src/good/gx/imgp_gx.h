@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "img.h"
+#include "imgm.h"
 
 namespace good {
 
@@ -614,113 +614,30 @@ public:
   }
 };
 
-class ImgpImageResource
+class ImgpImageSurface : public ImageSurface
 {
-  std::map<std::string, Imgp*> mImg;
-
-  ImgpImageResource()
-  {
-  }
-
 public:
+  enum {
+    PACK_TEX_WIDTH = 1024,
+    PACK_TEX_HEIGHT = 1024
+  };
+  bool init()
+  {
+    return ImageSurface::init(PACK_TEX_WIDTH, PACK_TEX_HEIGHT);
+  }
+};
 
+class ImgpImageRect : public ImageRect<ImgpImageSurface>
+{
+};
+
+class ImgpImageResource : public ImageManager<ImgpImageResource, ImgpImageSurface, ImgpImageRect>
+{
+public:
   static ImgpImageResource& inst()
   {
     static ImgpImageResource i;
     return i;
-  }
-
-  ~ImgpImageResource()
-  {
-    clear();
-  }
-
-  void clear()
-  {
-    for (std::map<std::string, Imgp*>::iterator it = mImg.begin();
-         mImg.end() != it;
-         ++it) {
-      delete it->second;
-    }
-
-    mImg.clear();
-  }
-
-  bool existImage(std::string const& name)
-  {
-    return mImg.end() != mImg.find(name);
-  }
-
-  Imgp* getImage(std::string const& name)
-  {
-    std::map<std::string, Imgp*>::const_iterator it = mImg.find(name);
-    if (mImg.end() != it) {
-      return it->second;
-    }
-
-    std::ifstream ifs(name.c_str(), std::ios::binary);
-    if (!ifs) {
-      return 0;
-    }
-
-    ifs.seekg(0, std::ios_base::end);
-    int lenstream = (int)ifs.tellg();
-    ifs.seekg(0, std::ios_base::beg);
-
-    std::string s;
-    s.resize(lenstream);
-
-    ifs.read((char*)s.data(), lenstream);
-
-    return getImage(name, s);
-  }
-
-  Imgp* getImage(std::string const& name, std::string const& stream)
-  {
-    std::map<std::string, Imgp*>::const_iterator it = mImg.find(name);
-    if (mImg.end() != it) {
-      return it->second;
-    }
-
-    Imgp* sur = new Imgp;
-    if (0 == sur) {
-      return 0;
-    }
-
-    if (!sur->loadFromStream(stream)) {
-      SW2_TRACE_ERROR("load image resource stream %s failed", name.c_str());
-      mImg[name] = 0;
-      return 0;
-    }
-
-    mImg[name] = sur;
-
-    return sur;
-  }
-
-  Imgp* getImage(std::string const& name, GxImage &img)
-  {
-    std::map<std::string, Imgp*>::const_iterator it = mImg.find(name);
-    if (mImg.end() != it) {
-      return it->second;
-    }
-
-    Imgp* sur = new Imgp;
-    if (0 == sur) {
-      return 0;
-    }
-
-    if (!sur->create(img.w, img.h, img.bpp)) {
-      SW2_TRACE_ERROR("load gx image %s failed", name.c_str());
-      mImg[name] = 0;
-      return 0;
-    }
-
-    ((GxImage*)sur)->draw(0, 0, img);
-
-    mImg[name] = sur;
-
-    return sur;
   }
 };
 
@@ -728,19 +645,19 @@ class ImgpImage : public Image<ImgpImage>
 {
 public:
 
-  Imgp* mSur;
+  const ImgpImageRect *mSur;
 
   ImgpImage() : mSur(0)
   {
   }
 
-  ImgpImage(Imgp* sur) : mSur(sur)
+  ImgpImage(const ImgpImageRect *sur) : mSur(sur)
   {
   }
 
   bool isValid() const
   {
-    return 0 != mSur && 0 != mSur->dat;
+    return 0 != mSur && 0 != mSur->tex && 0 != mSur->tex->img.dat;
   }
 
   int getWidth() const
@@ -773,17 +690,19 @@ public:
     return ImgpImage(ImgpImageResource::inst().getImage(name, img));
   }
 
-  void draw(int x, int y, const Imgp &c, int sx, int sy, int sw, int sh)
+  template<class CanvasT>
+  void draw(int x, int y, const CanvasT &c, int sx, int sy, int sw, int sh)
   {
     if (isValid()) {
-      mSur->draw(c, x, y, sw, sh, sx, sy);
+      mSur->tex->img.draw(mSur->left + x, mSur->top + y, c, sx, sy, sw, sh);
     }
   }
 
-  void drawToCanvas(int x, int y, Imgp &c, int sx, int sy, int sw, int sh) const
+  template<class CanvasT>
+  void drawToCanvas(int x, int y, CanvasT &c, int sx, int sy, int sw, int sh) const
   {
     if (isValid()) {
-      c.draw(*mSur, x, y, sw, sh, sx, sy);
+      c.draw((*(const CanvasT*)&(mSur->tex->img)), x, y, sw, sh, mSur->left + sx, mSur->top + sy);
     }
   }
 };
@@ -816,7 +735,9 @@ public:
 
   bool drawImage(int x, int y, ImgpImage const& img, int srcx, int srcy, int srcw, int srch, unsigned int color = 0xffffffff, float rot = .0f, float xscale = 1.0f, float yscale = 1.0f)
   {
-    mSur.blend(*img.mSur, color, x, y, srcw, srch, srcx, srcy);
+    srcw = (std::min)(srcw, img.getWidth());
+    srch = (std::min)(srch, img.getHeight());
+    mSur.blend(*((const Imgp*)&img.mSur->tex->img), color, x, y, srcw, srch, img.mSur->left + srcx, img.mSur->top + srcy);
     return true;
   }
 
