@@ -163,6 +163,7 @@ public:
   CSpriteResListView<MainT> mSprRes;
   CMapResListView<MainT> mMapRes;
   CLevelResListView<MainT> mLvlRes;
+  std::vector<CResourceListView<MainT>*> mResListView;
   CExplorerPropView<MainT> mProp;
 
   CImageListManaged mImages;
@@ -225,10 +226,7 @@ public:
     FillResourceTree2<GOOD_RESOURCE_PARTICLE>(res.mStgeScript, res.mStgeScriptIdx, _T("Particle"));
     FillResourceTree2<GOOD_RESOURCE_DEPENDENCY>(res.mDep, res.mDepIdx, _T("Dependency"));
     mTree.InsertItem(_T("Project"), 3, 3, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_PROJECT); // Project info.
-    mTexRes.SetList();
-    mSprRes.SetList();
-    mMapRes.SetList();
-    mLvlRes.SetList();
+    ResPageSetList();
   }
 
   void InitTree()
@@ -252,10 +250,16 @@ public:
 
   void ResPageSetCurSel(int id)
   {
-    mTexRes.SetCurSel(id);
-    mSprRes.SetCurSel(id);
-    mMapRes.SetCurSel(id);
-    mLvlRes.SetCurSel(id);
+    for (size_t i = 0; i < mResListView.size(); i++) {
+      mResListView[i]->SetCurSel(id);
+    }
+  }
+
+  void ResPageSetList()
+  {
+    for (size_t i = 0; i < mResListView.size(); i++) {
+      mResListView[i]->SetList();
+    }
   }
 
   void SetCurSel(int id)
@@ -308,12 +312,16 @@ public:
     mTree.Create(mTabView, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_SHOWSELALWAYS, WS_EX_CLIENTEDGE);
     mTabView.AddPage(mTree, _T("Resource"));
     mTexRes.Create(mTabView, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);
+    mResListView.push_back(&mTexRes);
     mTabView.AddPage(mTexRes, _T("Texture"));
     mSprRes.Create(mTabView, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);
+    mResListView.push_back(&mSprRes);
     mTabView.AddPage(mSprRes, _T("Sprite"));
     mMapRes.Create(mTabView, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);
+    mResListView.push_back(&mMapRes);
     mTabView.AddPage(mMapRes, _T("Map"));
     mLvlRes.Create(mTabView, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);
+    mResListView.push_back(&mLvlRes);
     mTabView.AddPage(mLvlRes, _T("Level"));
     mTabView.SetActivePage(0);
 
