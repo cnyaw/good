@@ -18,11 +18,9 @@
 #define IDD_ADDNEWLEVELITEM             229
 #define IDD_PROPVIEW                    234
 #define IDB_BITMAP1                     235
-#define IDD_CHOICESPRITE                238
 #define IDR_MENU_SNAP                   240
 #define IDI_ICON1                       241
 #define IDD_CHOICETEXTURE               241
-#define IDD_CHOICEMAP                   242
 #define IDR_TB_OUTPUT                   242
 #define IDR_TB_STGESCRIPT               251
 #define IDD_SNAPCUSTOMIZE               254
