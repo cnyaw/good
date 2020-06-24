@@ -36,7 +36,6 @@ public:
 
   int mAddObj, mAddMap, mAddTex;        // Sel add obj param.
   COLORREF mAddCol;
-  LOGFONT mAddFont;
 
   bool mSnapGrid;                       // Is enable snap.
   int mSnapSize;                        // x 8
@@ -293,8 +292,6 @@ public:
     SIZE sz = {lvl.mWidth, lvl.mHeight};
     SetScrollOffset(0, 0, FALSE);
     SetScrollSize(sz);
-
-    ::GetObject(AtlGetDefaultGuiFont(), sizeof(mAddFont), &mAddFont);
 
     mShowLine = lvl.mShowLine;
     mSnapGrid = lvl.mShowSnap;
