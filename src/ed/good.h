@@ -51,6 +51,7 @@ enum APP_GOOD_MESSAGE
   //
 
   WM_GOOD_UPDATE,                       // Update view notify.
+  WM_GOOD_SETCURSEL,                    // Resource tree selection change.
 
   //
   // Save file(source).

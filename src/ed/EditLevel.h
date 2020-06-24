@@ -485,6 +485,27 @@ public:
     }
   }
 
+  void SetAddToolByResId(int id)
+  {
+    const PrjT::ResT &res = PrjT::inst().mRes;
+    if (res.isSprite(id)) {
+      mAddMap = mAddTex = -1;
+      mAddCol = RGB(0,0,255);
+      mAddObj = id;
+      mTool = TOOL_ADDSPRITE;
+    } else if (res.isTex(id)) {
+      mAddMap = mAddObj = -1;
+      mAddCol = RGB(0,0,255);
+      mAddTex = id;
+      mTool = TOOL_ADDTEXBG;
+    } else if (res.isMap(id)) {
+      mAddTex = mAddObj = -1;
+      mAddCol = RGB(0,0,255);
+      mAddMap = id;
+      mTool = TOOL_ADDMAPBG;
+    }
+  }
+
   void OnRButtonDown(UINT nFlags, CPoint point)
   {
     if (GetFocus() != m_hWnd) {
@@ -1767,6 +1788,10 @@ public:
     case WM_GOOD_UPDATE:
       UpdateView(wParam);
       return 0;
+
+    case WM_GOOD_SETCURSEL:
+      mEditView.SetAddToolByResId(wParam);
+      return 0;
     }
 
     return 0;
@@ -1798,41 +1823,23 @@ public:
 
   void OnAddObjTool(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    mEditView.mAddMap = mEditView.mAddTex = mEditView.mAddObj = -1;
-    mEditView.mAddCol = RGB(0,0,255);
-
-    mEditView.mTool = mEditView.TOOL_MOVE;
-
     if (ID_LEVELEDIT_ADDTEXBG == nID) {
-      CDlgTexturePicker dlg;
-      if (IDOK != dlg.DoModal()) {
-        return;
-      }
-      mEditView.mAddTex = dlg.mId;
-      mEditView.mTool = mEditView.TOOL_ADDTEXBG;
+      MainT::inst().mExpView.mTabView.SetActivePage(1);
     } else if (ID_LEVELEDIT_ADDMAPBG == nID) {
-      CDlgMapPicker dlg;
-      if (IDOK != dlg.DoModal()) {
-        return;
-      }
-      mEditView.mAddMap = dlg.mId;
-      mEditView.mTool = mEditView.TOOL_ADDMAPBG;
+      MainT::inst().mExpView.mTabView.SetActivePage(3);
     } else if (ID_LEVELEDIT_ADDCOLBG == nID) {
       CColorDialog dlg(mEditView.mAddCol, CC_FULLOPEN);
       if (IDOK != dlg.DoModal()) {
         return;
       }
+      mEditView.mAddMap = mEditView.mAddTex = mEditView.mAddObj = 0xff;
       mEditView.mAddCol = dlg.GetColor();
       mEditView.mTool = mEditView.TOOL_ADDCOLBG;
     } else if (ID_LEVELEDIT_ADDSPRITE == nID) {
-      CDlgSpritePicker dlg;
-      if (IDOK != dlg.DoModal()) {
-        return;
-      }
-      mEditView.mAddObj = dlg.mId;
-      mEditView.mTool = mEditView.TOOL_ADDSPRITE;
+      MainT::inst().mExpView.mTabView.SetActivePage(2);
     } else if (ID_LEVELEDIT_ADDDUMMY == nID) {
       mEditView.mAddMap = mEditView.mAddTex = mEditView.mAddObj = 0xff;
+      mEditView.mAddCol = RGB(0,0,255);
       mEditView.mTool = mEditView.TOOL_ADDDUMMY;
     } else if (ID_LEVELEDIT_ADDLVLOBJ == nID) {
       CDlgLevelObjPicker dlg;
@@ -1841,6 +1848,7 @@ public:
       }
       mEditView.mAddMap = mEditView.mAddTex = 0xfe;
       mEditView.mAddObj = dlg.mId;
+      mEditView.mAddCol = RGB(0,0,255);
       mEditView.mTool = mEditView.TOOL_ADDLVLOBJ;
     }
 

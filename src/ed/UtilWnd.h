@@ -471,6 +471,15 @@ public:
   virtual int GetResType() const=0;
   virtual bool LoadResImage(int id, good::gx::Imgp &img) const=0;
 
+  void NotifyLevelEditorSetCurSel(int id)
+  {
+    MainT &m = MainT::inst();
+    if (-1 != m.mTabView.GetActivePage()) {
+      HWND hwnd = m.mTabView.GetPageHWND(m.mTabView.GetActivePage());
+      ::SendMessage(hwnd, WM_GOOD_SETCURSEL, id, 0);
+    }
+  }
+
   void SetCurSel(int id)
   {
     for (int i = 0; i < GetResCount(); ++i) {
@@ -481,6 +490,7 @@ public:
           Invalidate(FALSE);
           MainT::inst().mExpView.SetCurSel(id);
         }
+        NotifyLevelEditorSetCurSel(id);
         return;
       }
     }
@@ -549,7 +559,9 @@ public:
     }
     mCurSel = mCurHot;
     Invalidate(FALSE);
-    MainT::inst().mExpView.SetCurSel(GetResId(mCurSel));
+    int id = GetResId(mCurSel);
+    MainT::inst().mExpView.SetCurSel(id);
+    NotifyLevelEditorSetCurSel(id);
   }
 
   void OnMouseMove(UINT nFlags, CPoint point)

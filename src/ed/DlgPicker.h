@@ -53,40 +53,6 @@ public:
   }
 };
 
-class CDlgMapPicker : public CDlgResourceItemPicker<CDlgMapPicker>
-{
-public:
-  enum { IDD = IDD_CHOICEMAP };
-
-  void DoInitListBox()
-  {
-    PrjT const& prj = PrjT::inst();
-    for (size_t i = 0; i < prj.mRes.mMapIdx.size(); ++i) {
-      int idx = mItem.AddString(prj.mRes.getMap(prj.mRes.mMapIdx[i]).getName().c_str());
-      mItem.SetItemData(idx, prj.mRes.mMapIdx[i]);
-    }
-  }
-};
-
-class CDlgSpritePicker : public CDlgResourceItemPicker<CDlgSpritePicker>
-{
-public:
-  enum { IDD = IDD_CHOICESPRITE };
-
-  void DoInitListBox()
-  {
-    PrjT const& prj = PrjT::inst();
-    for (size_t i = 0; i < prj.mRes.mSpriteIdx.size(); ++i) {
-      PrjT::SpriteT const& spr = prj.mRes.getSprite(prj.mRes.mSpriteIdx[i]);
-      if (spr.mFrame.empty()) {
-        continue;
-      }
-      int idx = mItem.AddString(spr.getName().c_str());
-      mItem.SetItemData(idx, prj.mRes.mSpriteIdx[i]);
-    }
-  }
-};
-
 class CDlgTexturePicker : public CDlgResourceItemPicker<CDlgTexturePicker>
 {
 public:
