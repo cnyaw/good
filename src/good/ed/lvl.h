@@ -607,6 +607,11 @@ public:
     return mShowLine;
   }
 
+  bool isShowSnap() const
+  {
+    return mShowSnap;
+  }
+
   bool setGrid(std::vector<GridLine> const& vgrid, std::vector<GridLine> const& hgrid)
   {
     if (vgrid == mVertGrid && hgrid == mHorzGrid) {
@@ -634,19 +639,6 @@ public:
     return false;
   }
 
-  bool setShowSnap(bool b)
-  {
-    if (b == mShowSnap) {
-      return false;
-    }
-
-    mShowSnap = b;
-
-    PrjT::inst().mModified = true;
-
-    return true;
-  }
-
   bool setSnapSize(int newWidth, int newHeight)
   {
     if (newWidth == mSnapWidth && newHeight == mSnapHeight) {
@@ -664,6 +656,12 @@ public:
   void toggleShowLine()
   {
     mShowLine = !mShowLine;
+    PrjT::inst().mModified = true;
+  }
+
+  void toggleShowSnap()
+  {
+    mShowSnap = !mShowSnap;
     PrjT::inst().mModified = true;
   }
 

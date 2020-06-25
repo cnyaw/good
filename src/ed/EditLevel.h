@@ -37,7 +37,6 @@ public:
   int mAddObj, mAddMap, mAddTex;        // Sel add obj param.
   COLORREF mAddCol;
 
-  bool mSnapGrid;                       // Is enable snap.
   int mSnapSize;                        // x 8
   int mSnapWidth, mSnapHeight;          // Valid only if mSnapSize = ID_SNAP_CUSTOMIZE.
 
@@ -45,7 +44,7 @@ public:
 
   EditorT& mEditor;
 
-  CLevelEditView(EditorT& ed) : mTool(TOOL_MOVE), mHot(-1), mEditor(ed), mSnapSize(2), mSnapGrid(true), mSnapWidth(16), mSnapHeight(16)
+  CLevelEditView(EditorT& ed) : mTool(TOOL_MOVE), mHot(-1), mEditor(ed), mSnapSize(2), mSnapWidth(16), mSnapHeight(16)
   {
   }
 
@@ -207,7 +206,8 @@ public:
     RECT rcv;
     POINT ptCur = GetCurCursorPos(rcv);
 
-    if (mSnapGrid) {
+    PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
+    if (lvl.isShowSnap()) {
       int sw = GetSnapWidth(), sh = GetSnapHeight();
       ptCur.x = ptCur.x / sw * sw;
       ptCur.y = ptCur.y / sh * sh;
@@ -290,8 +290,6 @@ public:
     SIZE sz = {lvl.mWidth, lvl.mHeight};
     SetScrollOffset(0, 0, FALSE);
     SetScrollSize(sz);
-
-    mSnapGrid = lvl.mShowSnap;
 
     int szSnap[] = {8, 16, 24, 32, 40, 48, 56, 64};
     if (lvl.mSnapWidth != lvl.mSnapHeight || szSnap + 8 == std::find(szSnap, szSnap + 8, lvl.mSnapWidth)) {
@@ -791,7 +789,8 @@ public:
 
   void DoPaintGridDots(CDC &memdc, const RECT &rcv, const POINT &sz) const
   {
-    if (mSnapGrid) {
+    PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
+    if (lvl.isShowSnap()) {
       int sw = GetSnapWidth(), sh = GetSnapHeight();
       int offsetx = rcv.left % sw, offsety = rcv.top % sh;
       for (int i = 0; i <= sz.x / sw; i++) {
@@ -1259,7 +1258,7 @@ public:
         break;
       }
 
-      bool bSnap = mSnapGrid && !(::GetKeyState(VK_LCONTROL) & 0x8000);
+      bool bSnap = lvl.isShowSnap() && !(::GetKeyState(VK_LCONTROL) & 0x8000);
       int sw = GetSnapWidth(), sh = GetSnapHeight();
 
       switch (msg.message)
@@ -1471,7 +1470,7 @@ public:
     UIEnable(ID_LEVELEDIT_ALIGNTOP, MultiSel);
     UIEnable(ID_LEVELEDIT_ALIGNBOTTOM, MultiSel);
 
-    UISetCheck(ID_LEVELEDIT_GRID, mEditView.mSnapGrid);
+    UISetCheck(ID_LEVELEDIT_GRID, lvl.isShowSnap());
     UISetCheck(ID_LEVELEDIT_LINE, lvl.isShowLine());
 
     UIUpdateToolBar();
@@ -1930,8 +1929,8 @@ public:
   {
     mEditView.mSnapSize = nID - ID_SNAP_8 + 1;
     int sz = mEditView.mSnapSize * EDITOR_SNAP_SCALE;
-    PrjT::inst().getLevel(mId).setSnapSize(sz, sz);
-    if (mEditView.mSnapGrid) {
+    PrjT::LevelT &lvl = PrjT::inst().getLevel(mId);
+    if (lvl.setSnapSize(sz, sz) && lvl.isShowSnap()) {
       mEditView.Invalidate(FALSE);
     }
   }
@@ -1951,8 +1950,8 @@ public:
       mEditView.mSnapWidth = dlg.mWidth;
       mEditView.mSnapHeight = dlg.mHeight;
       mEditView.mSnapSize = ID_SNAP_CUSTOMIZE - ID_SNAP_8 + 1;
-      PrjT::inst().getLevel(mId).setSnapSize(dlg.mWidth, dlg.mHeight);
-      if (mEditView.mSnapGrid) {
+      PrjT::LevelT &lvl = PrjT::inst().getLevel(mId);
+      if (lvl.setSnapSize(dlg.mWidth, dlg.mHeight) && lvl.isShowSnap()) {
         mEditView.Invalidate(FALSE);
       }
     }
@@ -1960,8 +1959,7 @@ public:
 
   void OnToggleGrid(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    mEditView.mSnapGrid = !mEditView.mSnapGrid;
-    PrjT::inst().getLevel(mId).setShowSnap(mEditView.mSnapGrid);
+    PrjT::inst().getLevel(mId).toggleShowSnap();
     mEditView.Invalidate(FALSE);
   }
 
