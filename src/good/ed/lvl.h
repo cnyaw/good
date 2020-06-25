@@ -602,6 +602,11 @@ public:
   // Modify property.
   //
 
+  bool isShowLine() const
+  {
+    return mShowLine;
+  }
+
   bool setGrid(std::vector<GridLine> const& vgrid, std::vector<GridLine> const& hgrid)
   {
     if (vgrid == mVertGrid && hgrid == mHorzGrid) {
@@ -629,19 +634,6 @@ public:
     return false;
   }
 
-  bool setShowLine(bool b)
-  {
-    if (b == mShowLine) {
-      return false;
-    }
-
-    mShowLine = b;
-
-    PrjT::inst().mModified = true;
-
-    return true;
-  }
-
   bool setShowSnap(bool b)
   {
     if (b == mShowSnap) {
@@ -667,6 +659,12 @@ public:
     PrjT::inst().mModified = true;
 
     return true;
+  }
+
+  void toggleShowLine()
+  {
+    mShowLine = !mShowLine;
+    PrjT::inst().mModified = true;
   }
 
   //

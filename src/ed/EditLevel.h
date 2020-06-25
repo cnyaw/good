@@ -41,13 +41,11 @@ public:
   int mSnapSize;                        // x 8
   int mSnapWidth, mSnapHeight;          // Valid only if mSnapSize = ID_SNAP_CUSTOMIZE.
 
-  bool mShowLine;
-
   CImageListManaged mImgObjState;
 
   EditorT& mEditor;
 
-  CLevelEditView(EditorT& ed) : mTool(TOOL_MOVE), mHot(-1), mEditor(ed), mSnapSize(2), mSnapGrid(true), mShowLine(true), mSnapWidth(16), mSnapHeight(16)
+  CLevelEditView(EditorT& ed) : mTool(TOOL_MOVE), mHot(-1), mEditor(ed), mSnapSize(2), mSnapGrid(true), mSnapWidth(16), mSnapHeight(16)
   {
   }
 
@@ -293,7 +291,6 @@ public:
     SetScrollOffset(0, 0, FALSE);
     SetScrollSize(sz);
 
-    mShowLine = lvl.mShowLine;
     mSnapGrid = lvl.mShowSnap;
 
     int szSnap[] = {8, 16, 24, 32, 40, 48, 56, 64};
@@ -753,11 +750,11 @@ public:
 
   void DoPaintGridLines(CDC &memdc, const RECT &rcv) const
   {
-    if (!mShowLine) {
+    PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
+
+    if (!lvl.isShowLine()) {
       return;
     }
-
-    PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
 
     //
     // Horz line(s).
@@ -1475,7 +1472,7 @@ public:
     UIEnable(ID_LEVELEDIT_ALIGNBOTTOM, MultiSel);
 
     UISetCheck(ID_LEVELEDIT_GRID, mEditView.mSnapGrid);
-    UISetCheck(ID_LEVELEDIT_LINE, mEditView.mShowLine);
+    UISetCheck(ID_LEVELEDIT_LINE, lvl.isShowLine());
 
     UIUpdateToolBar();
 
@@ -1970,8 +1967,7 @@ public:
 
   void OnToggleLine(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    mEditView.mShowLine = !mEditView.mShowLine;
-    PrjT::inst().getLevel(mId).setShowLine(mEditView.mShowLine);
+    PrjT::inst().getLevel(mId).toggleShowLine();
     mEditView.Invalidate(FALSE);
   }
 
