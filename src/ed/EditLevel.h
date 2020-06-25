@@ -1804,7 +1804,7 @@ public:
       if (IDOK != dlg.DoModal()) {
         return;
       }
-      mEditView.mAddMap = mEditView.mAddTex = mEditView.mAddObj = 0xff;
+      mEditView.mAddMap = mEditView.mAddTex = mEditView.mAddObj = -1;
       mEditView.mAddCol = dlg.GetColor();
       mEditView.mTool = mEditView.TOOL_ADDCOLBG;
     } else if (ID_LEVELEDIT_ADDSPRITE == nID) {
