@@ -602,6 +602,16 @@ public:
   // Modify property.
   //
 
+  int getSnapHeight() const
+  {
+    return mSnapHeight;
+  }
+
+  int getSnapWidth() const
+  {
+    return mSnapWidth;
+  }
+
   bool isShowLine() const
   {
     return mShowLine;

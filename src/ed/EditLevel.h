@@ -38,32 +38,13 @@ public:
   COLORREF mAddCol;
 
   int mSnapSize;                        // x 8
-  int mSnapWidth, mSnapHeight;          // Valid only if mSnapSize = ID_SNAP_CUSTOMIZE.
 
   CImageListManaged mImgObjState;
 
   EditorT& mEditor;
 
-  CLevelEditView(EditorT& ed) : mTool(TOOL_MOVE), mHot(-1), mEditor(ed), mSnapSize(2), mSnapWidth(16), mSnapHeight(16)
+  CLevelEditView(EditorT& ed) : mTool(TOOL_MOVE), mHot(-1), mEditor(ed), mSnapSize(2)
   {
-  }
-
-  int GetSnapWidth() const
-  {
-    if (ID_SNAP_CUSTOMIZE - ID_SNAP_8 + 1 == mSnapSize) {
-      return mSnapWidth;
-    } else {
-      return mSnapSize * EDITOR_SNAP_SCALE;
-    }
-  }
-
-  int GetSnapHeight() const
-  {
-    if (ID_SNAP_CUSTOMIZE - ID_SNAP_8 + 1 == mSnapSize) {
-      return mSnapHeight;
-    } else {
-      return mSnapSize * EDITOR_SNAP_SCALE;
-    }
   }
 
   void LoopCurSel(bool IsBackward)
@@ -164,8 +145,8 @@ public:
     PrjT::LevelT& lvl = PrjT::inst().getLevel(mEditor.mId);
 
     if (0 == (::GetKeyState(VK_LCONTROL) & 0x8000)) {
-      offsetx *= GetSnapWidth();
-      offsety *= GetSnapHeight();
+      offsetx *= lvl.getSnapWidth();
+      offsety *= lvl.getSnapHeight();
     }
 
     if (::GetKeyState(VK_LSHIFT) & 0x8000) { // Resize.
@@ -208,7 +189,7 @@ public:
 
     PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
     if (lvl.isShowSnap()) {
-      int sw = GetSnapWidth(), sh = GetSnapHeight();
+      int sw = lvl.getSnapWidth(), sh = lvl.getSnapHeight();
       ptCur.x = ptCur.x / sw * sw;
       ptCur.y = ptCur.y / sh * sh;
     }
@@ -292,12 +273,10 @@ public:
     SetScrollSize(sz);
 
     int szSnap[] = {8, 16, 24, 32, 40, 48, 56, 64};
-    if (lvl.mSnapWidth != lvl.mSnapHeight || szSnap + 8 == std::find(szSnap, szSnap + 8, lvl.mSnapWidth)) {
+    if (lvl.getSnapWidth() != lvl.getSnapHeight() || szSnap + 8 == std::find(szSnap, szSnap + 8, lvl.getSnapWidth())) {
       mSnapSize = ID_SNAP_CUSTOMIZE - ID_SNAP_8 + 1;
-      mSnapWidth = lvl.mSnapWidth;
-      mSnapHeight = lvl.mSnapHeight;
     } else {
-      mSnapSize = lvl.mSnapWidth / EDITOR_SNAP_SCALE;
+      mSnapSize = lvl.getSnapWidth() / EDITOR_SNAP_SCALE;
     }
 
     mImgObjState.Create(IDB_OBJSTATE, 16, 0, RGB(255,0,255));
@@ -791,7 +770,7 @@ public:
   {
     PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
     if (lvl.isShowSnap()) {
-      int sw = GetSnapWidth(), sh = GetSnapHeight();
+      int sw = lvl.getSnapWidth(), sh = lvl.getSnapHeight();
       int offsetx = rcv.left % sw, offsety = rcv.top % sh;
       for (int i = 0; i <= sz.x / sw; i++) {
         for (int j = 0; j <= sz.y / sh; j++) {
@@ -1259,7 +1238,7 @@ public:
       }
 
       bool bSnap = lvl.isShowSnap() && !(::GetKeyState(VK_LCONTROL) & 0x8000);
-      int sw = GetSnapWidth(), sh = GetSnapHeight();
+      int sw = lvl.getSnapWidth(), sh = lvl.getSnapHeight();
 
       switch (msg.message)
       {
@@ -1945,12 +1924,10 @@ public:
 
   void OnSnapCustomize(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    CDlgSnapCustomize dlg(mEditView.mSnapWidth, mEditView.mSnapHeight);
+    PrjT::LevelT &lvl = PrjT::inst().getLevel(mId);
+    CDlgSnapCustomize dlg(lvl.getSnapWidth(), lvl.getSnapHeight());
     if (IDOK == dlg.DoModal()) {
-      mEditView.mSnapWidth = dlg.mWidth;
-      mEditView.mSnapHeight = dlg.mHeight;
       mEditView.mSnapSize = ID_SNAP_CUSTOMIZE - ID_SNAP_8 + 1;
-      PrjT::LevelT &lvl = PrjT::inst().getLevel(mId);
       if (lvl.setSnapSize(dlg.mWidth, dlg.mHeight) && lvl.isShowSnap()) {
         mEditView.Invalidate(FALSE);
       }
