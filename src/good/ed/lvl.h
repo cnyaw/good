@@ -565,6 +565,164 @@ public:
 };
 
 template<class PrjT>
+class LevelEditTool
+{
+public:
+  enum {
+    TOOL_MOVE,
+    TOOL_REMOVE,
+    TOOL_ADDCOLBG,
+    TOOL_ADDTEXBG,
+    TOOL_ADDMAPBG,
+    TOOL_ADDSPRITE,
+    TOOL_ADDDUMMY,
+    TOOL_ADDLVLOBJ
+  };
+  int mTool;
+  int mAddObj, mAddMap, mAddTex;        // Sel add obj param.
+  unsigned int mAddCol;
+
+  LevelEditTool() : mTool(TOOL_MOVE)
+  {
+  }
+
+  bool isAddColorTool() const
+  {
+    return TOOL_ADDCOLBG == mTool;
+  }
+
+  bool isAddDummyTool() const
+  {
+    return TOOL_ADDDUMMY == mTool;
+  }
+
+  bool isAddLevelobjTool() const
+  {
+    return TOOL_ADDLVLOBJ == mTool;
+  }
+
+  bool isAddMapTool() const
+  {
+    return TOOL_ADDMAPBG == mTool;
+  }
+
+  bool isAddSpriteTool() const
+  {
+    return TOOL_ADDSPRITE == mTool;
+  }
+
+  bool isAddTexTool() const
+  {
+    return TOOL_ADDTEXBG == mTool;
+  }
+
+  bool isMoveTool() const
+  {
+    return TOOL_MOVE == mTool;
+  }
+
+  bool isRemoveTool() const
+  {
+    return TOOL_REMOVE == mTool;
+  }
+
+  void setAddColorTool(unsigned int color)
+  {
+    mAddMap = mAddTex = mAddObj = -1;
+    mAddCol = color;
+    mTool = TOOL_ADDCOLBG;
+  }
+
+  void setAddDummyTool()
+  {
+    mAddMap = mAddTex = mAddObj = 0xff;
+    mAddCol = 0xff0000ff;
+    mTool = TOOL_ADDDUMMY;
+  }
+
+  void setAddLevelObjTool(int id)
+  {
+    mAddMap = mAddTex = 0xfe;
+    mAddObj = id;
+    mAddCol = 0xff0000ff;
+    mTool = TOOL_ADDLVLOBJ;
+  }
+
+  void setMoveTool()
+  {
+    mTool = TOOL_MOVE;
+  }
+
+  void setRemoveTool()
+  {
+    mTool = TOOL_REMOVE;
+  }
+
+  void setToolByLevelObjId(int idLvl, int id)
+  {
+    if (-1 >= id) {
+      return;
+    }
+
+    mAddMap = mAddTex = mAddObj = -1;
+    mAddCol = 0xff0000ff;
+
+    PrjT::LevelT& lvl = PrjT::inst().getLevel(idLvl);
+    const PrjT::ObjectT &o = lvl.getObj(id);
+
+    switch (o.mType)
+    {
+    case PrjT::ObjectT::TYPE_SPRITE:
+      mAddObj = o.mSpriteId;
+      mTool = TOOL_ADDSPRITE;
+      break;
+    case PrjT::ObjectT::TYPE_COLBG:
+      mAddCol = o.mBgColor;
+      mTool = TOOL_ADDCOLBG;
+      break;
+    case PrjT::ObjectT::TYPE_TEXBG:
+      mAddTex = o.mTextureId;
+      mTool = TOOL_ADDTEXBG;
+      break;
+    case PrjT::ObjectT::TYPE_MAPBG:
+      mAddMap = o.mMapId;
+      mTool = TOOL_ADDMAPBG;
+      break;
+    case PrjT::ObjectT::TYPE_DUMMY:
+      mAddMap = mAddTex = mAddObj = 0xff;
+      mTool = TOOL_ADDDUMMY;
+      break;
+    case PrjT::ObjectT::TYPE_LVLOBJ:
+      mAddMap = mAddTex = 0xfe;
+      mAddObj = o.getLevelObjId();
+      mTool = TOOL_ADDLVLOBJ;
+      break;
+    }
+  }
+
+  void setToolByResId(int id)
+  {
+    const PrjT::ResT &res = PrjT::inst().mRes;
+    if (res.isSprite(id)) {
+      mAddMap = mAddTex = -1;
+      mAddCol = 0xff0000ff;
+      mAddObj = id;
+      mTool = TOOL_ADDSPRITE;
+    } else if (res.isTex(id)) {
+      mAddMap = mAddObj = -1;
+      mAddCol = 0xff0000ff;
+      mAddTex = id;
+      mTool = TOOL_ADDTEXBG;
+    } else if (res.isMap(id)) {
+      mAddTex = mAddObj = -1;
+      mAddCol = 0xff0000ff;
+      mAddMap = id;
+      mTool = TOOL_ADDMAPBG;
+    }
+  }
+};
+
+template<class PrjT>
 class Level : public good::Level<Object<PrjT> >
 {
 public:
@@ -578,6 +736,7 @@ public:
   typedef Object<PrjT> ObjectT;
 
   UndoImpl mUndo;
+  LevelEditTool<PrjT> mTool;
 
   bool mShowSnap;
   int mSnapWidth, mSnapHeight;

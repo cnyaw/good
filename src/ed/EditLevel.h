@@ -17,25 +17,9 @@ class CLevelEditView : public CScrollWindowImpl<CLevelEditView<MainT, EditorT> >
 public:
   DECLARE_WND_CLASS(NULL)
 
-  enum {
-    TOOL_MOVE,
-    TOOL_REMOVE,
-    TOOL_ADDCOLBG,
-    TOOL_ADDTEXBG,
-    TOOL_ADDMAPBG,
-    TOOL_ADDSPRITE,
-    TOOL_ADDDUMMY,
-    TOOL_ADDLVLOBJ
-  };
-
-  int mTool;
-
   int mHot;                             // Cur hot item ID.
   bool mHotResizer;
   std::vector<int> mCurSel;             // Sel item ID.
-
-  int mAddObj, mAddMap, mAddTex;        // Sel add obj param.
-  COLORREF mAddCol;
 
   int mSnapSize;                        // x 8
 
@@ -43,7 +27,7 @@ public:
 
   EditorT& mEditor;
 
-  CLevelEditView(EditorT& ed) : mTool(TOOL_MOVE), mHot(-1), mEditor(ed), mSnapSize(2)
+  CLevelEditView(EditorT& ed) : mHot(-1), mEditor(ed), mSnapSize(2)
   {
   }
 
@@ -194,7 +178,7 @@ public:
       ptCur.y = ptCur.y / sh * sh;
     }
 
-    int id = PrjT::inst().addLevelObj<ImgT>(mEditor.mId, mAddObj, mAddMap, mAddTex, mAddCol, ptCur.x, ptCur.y);
+    int id = PrjT::inst().addLevelObj<ImgT>(mEditor.mId, lvl.mTool.mAddObj, lvl.mTool.mAddMap, lvl.mTool.mAddTex, lvl.mTool.mAddCol, ptCur.x, ptCur.y);
     if (-1 == id) {
       return;
     }
@@ -294,7 +278,7 @@ public:
       break;
 
     case VK_ESCAPE:
-      mTool = TOOL_MOVE;
+      PrjT::inst().getLevel(mEditor.mId).mTool.setMoveTool();
       break;
 
     case VK_DELETE:
@@ -327,9 +311,10 @@ public:
 
     MainT::inst().mExpView.SetCurSel(mEditor.mId);
 
-    if (TOOL_MOVE == mTool) {
+    PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
+    if (lvl.mTool.isMoveTool()) {
       HandleMouseDown();
-    } else if (TOOL_REMOVE == mTool) {
+    } else if (lvl.mTool.isRemoveTool()) {
       if (-1 != mHot) {
         std::vector<int> v;
         v.push_back(mHot);
@@ -414,69 +399,6 @@ public:
     }
   }
 
-  void SetAddToolByCurHot()
-  {
-    if (-1 == mHot) {
-      return;
-    }
-
-    mAddMap = mAddTex = mAddObj = -1;
-    mAddCol = RGB(0,0,255);
-
-    PrjT::LevelT& lvl = PrjT::inst().getLevel(mEditor.mId);
-    PrjT::ObjectT const& o = lvl.getObj(mHot);
-
-    switch (o.mType)
-    {
-    case PrjT::ObjectT::TYPE_SPRITE:
-      mAddObj = o.mSpriteId;
-      mTool = TOOL_ADDSPRITE;
-      break;
-    case PrjT::ObjectT::TYPE_COLBG:
-      mAddCol = o.mBgColor;
-      mTool = TOOL_ADDCOLBG;
-      break;
-    case PrjT::ObjectT::TYPE_TEXBG:
-      mAddTex = o.mTextureId;
-      mTool = TOOL_ADDTEXBG;
-      break;
-    case PrjT::ObjectT::TYPE_MAPBG:
-      mAddMap = o.mMapId;
-      mTool = TOOL_ADDMAPBG;
-      break;
-    case PrjT::ObjectT::TYPE_DUMMY:
-      mAddMap = mAddTex = mAddObj = 0xff;
-      mTool = TOOL_ADDDUMMY;
-      break;
-    case PrjT::ObjectT::TYPE_LVLOBJ:
-      mAddMap = mAddTex = 0xfe;
-      mAddObj = o.getLevelObjId();
-      mTool = TOOL_ADDLVLOBJ;
-      break;
-    }
-  }
-
-  void SetAddToolByResId(int id)
-  {
-    const PrjT::ResT &res = PrjT::inst().mRes;
-    if (res.isSprite(id)) {
-      mAddMap = mAddTex = -1;
-      mAddCol = RGB(0,0,255);
-      mAddObj = id;
-      mTool = TOOL_ADDSPRITE;
-    } else if (res.isTex(id)) {
-      mAddMap = mAddObj = -1;
-      mAddCol = RGB(0,0,255);
-      mAddTex = id;
-      mTool = TOOL_ADDTEXBG;
-    } else if (res.isMap(id)) {
-      mAddTex = mAddObj = -1;
-      mAddCol = RGB(0,0,255);
-      mAddMap = id;
-      mTool = TOOL_ADDMAPBG;
-    }
-  }
-
   void OnRButtonDown(UINT nFlags, CPoint point)
   {
     if (GetFocus() != m_hWnd) {
@@ -501,7 +423,7 @@ public:
     // Changed cur sel res.
     //
 
-    SetAddToolByCurHot();
+    PrjT::inst().getLevel(mEditor.mId).mTool.setToolByLevelObjId(mEditor.mId, mHot);
   }
 
   //
@@ -1427,15 +1349,15 @@ public:
     // Update toolbar.
     //
 
-    UISetCheck(ID_LEVELEDIT_MOVEITEM, mEditView.TOOL_MOVE == mEditView.mTool);
-    UISetCheck(ID_LEVELEDIT_REMOVE, mEditView.TOOL_REMOVE == mEditView.mTool);
+    UISetCheck(ID_LEVELEDIT_MOVEITEM, lvl.mTool.isMoveTool());
+    UISetCheck(ID_LEVELEDIT_REMOVE, lvl.mTool.isRemoveTool());
 
-    UISetCheck(ID_LEVELEDIT_ADDCOLBG, mEditView.TOOL_ADDCOLBG == mEditView.mTool);
-    UISetCheck(ID_LEVELEDIT_ADDTEXBG, mEditView.TOOL_ADDTEXBG == mEditView.mTool);
-    UISetCheck(ID_LEVELEDIT_ADDMAPBG, mEditView.TOOL_ADDMAPBG == mEditView.mTool);
-    UISetCheck(ID_LEVELEDIT_ADDSPRITE, mEditView.TOOL_ADDSPRITE == mEditView.mTool);
-    UISetCheck(ID_LEVELEDIT_ADDDUMMY, mEditView.TOOL_ADDDUMMY == mEditView.mTool);
-    UISetCheck(ID_LEVELEDIT_ADDLVLOBJ, mEditView.TOOL_ADDLVLOBJ == mEditView.mTool);
+    UISetCheck(ID_LEVELEDIT_ADDCOLBG, lvl.mTool.isAddColorTool());
+    UISetCheck(ID_LEVELEDIT_ADDTEXBG, lvl.mTool.isAddTexTool());
+    UISetCheck(ID_LEVELEDIT_ADDMAPBG, lvl.mTool.isAddMapTool());
+    UISetCheck(ID_LEVELEDIT_ADDSPRITE, lvl.mTool.isAddSpriteTool());
+    UISetCheck(ID_LEVELEDIT_ADDDUMMY, lvl.mTool.isAddDummyTool());
+    UISetCheck(ID_LEVELEDIT_ADDLVLOBJ, lvl.mTool.isAddLevelobjTool());
 
     bool SingleSel = 1 == mEditView.mCurSel.size();
     UIEnable(ID_LEVELEDIT_BOTTOMMOST, SingleSel && lvl.canMoveObjBottommost(mEditView.mCurSel[0]));
@@ -1762,7 +1684,7 @@ public:
       return 0;
 
     case WM_GOOD_SETCURSEL:
-      mEditView.SetAddToolByResId(wParam);
+      lvl.mTool.setToolByResId(wParam);
       return 0;
     }
 
@@ -1795,35 +1717,26 @@ public:
 
   void OnAddObjTool(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
+    PrjT::LevelT &lvl = PrjT::inst().getLevel(mId);
     if (ID_LEVELEDIT_ADDTEXBG == nID) {
       MainT::inst().mExpView.mTabView.SetActivePage(1);
     } else if (ID_LEVELEDIT_ADDMAPBG == nID) {
       MainT::inst().mExpView.mTabView.SetActivePage(3);
     } else if (ID_LEVELEDIT_ADDCOLBG == nID) {
-      CColorDialog dlg(mEditView.mAddCol, CC_FULLOPEN);
-      if (IDOK != dlg.DoModal()) {
-        return;
+      CColorDialog dlg(lvl.mTool.mAddCol, CC_FULLOPEN);
+      if (IDOK == dlg.DoModal()) {
+        lvl.mTool.setAddColorTool(dlg.GetColor());
       }
-      mEditView.mAddMap = mEditView.mAddTex = mEditView.mAddObj = -1;
-      mEditView.mAddCol = dlg.GetColor();
-      mEditView.mTool = mEditView.TOOL_ADDCOLBG;
     } else if (ID_LEVELEDIT_ADDSPRITE == nID) {
       MainT::inst().mExpView.mTabView.SetActivePage(2);
     } else if (ID_LEVELEDIT_ADDDUMMY == nID) {
-      mEditView.mAddMap = mEditView.mAddTex = mEditView.mAddObj = 0xff;
-      mEditView.mAddCol = RGB(0,0,255);
-      mEditView.mTool = mEditView.TOOL_ADDDUMMY;
+      lvl.mTool.setAddDummyTool();
     } else if (ID_LEVELEDIT_ADDLVLOBJ == nID) {
       CDlgLevelObjPicker dlg;
-      if (IDOK != dlg.DoModal()) {
-        return;
+      if (IDOK == dlg.DoModal()) {
+        lvl.mTool.setAddLevelObjTool(dlg.mId);
       }
-      mEditView.mAddMap = mEditView.mAddTex = 0xfe;
-      mEditView.mAddObj = dlg.mId;
-      mEditView.mAddCol = RGB(0,0,255);
-      mEditView.mTool = mEditView.TOOL_ADDLVLOBJ;
     }
-
     mEditView.SetFocus();
   }
 
@@ -1896,12 +1809,12 @@ public:
 
   void OnMoveTool(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    mEditView.mTool = mEditView.TOOL_MOVE;
+    PrjT::inst().getLevel(mId).mTool.setMoveTool();
   }
 
   void OnRemoveTool(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    mEditView.mTool = mEditView.TOOL_REMOVE;
+    PrjT::inst().getLevel(mId).mTool.setRemoveTool();
   }
 
   void OnSnapSize(UINT uNotifyCode, int nID, CWindow wndCtl)
