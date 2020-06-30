@@ -423,7 +423,7 @@ public:
     // Changed cur sel res.
     //
 
-    PrjT::inst().getLevel(mEditor.mId).setToolByLevelObjId(mHot);
+    PrjT::inst().getLevel(mEditor.mId).setToolByObjId(mHot);
   }
 
   //

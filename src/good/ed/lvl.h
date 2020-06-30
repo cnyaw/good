@@ -1195,7 +1195,7 @@ public:
     mTool = TOOL_REMOVE;
   }
 
-  void setToolByLevelObjId(int id)
+  void setToolByObjId(int id)
   {
     if (-1 >= id) {
       return;
