@@ -178,7 +178,7 @@ public:
       ptCur.y = ptCur.y / sh * sh;
     }
 
-    int id = PrjT::inst().addLevelObj<ImgT>(mEditor.mId, lvl.mAddObj, lvl.mAddMap, lvl.mAddTex, lvl.mAddCol, ptCur.x, ptCur.y);
+    int id = PrjT::inst().addLevelObj<ImgT>(mEditor.mId, ptCur.x, ptCur.y);
     if (-1 == id) {
       return;
     }

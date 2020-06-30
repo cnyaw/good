@@ -597,7 +597,7 @@ public:
   std::vector<GridLine> mVertGrid, mHorzGrid;
 
   int mTool;
-  int mAddObj, mAddMap, mAddTex;        // Sel add obj param.
+  int mAddSpr, mAddMap, mAddTex;        // Sel add obj param.
   unsigned int mAddCol;
 
   Level() : mUndo(PrjT::UNDO_LEVEL), mShowSnap(true), mSnapWidth(16), mSnapHeight(16), mShowLine(true), mTool(TOOL_MOVE)
@@ -1165,14 +1165,14 @@ public:
 
   void setAddColorTool(unsigned int color)
   {
-    mAddMap = mAddTex = mAddObj = -1;
+    mAddMap = mAddTex = mAddSpr = -1;
     mAddCol = color;
     mTool = TOOL_ADDCOLBG;
   }
 
   void setAddDummyTool()
   {
-    mAddMap = mAddTex = mAddObj = 0xff;
+    mAddMap = mAddTex = mAddSpr = 0xff;
     mAddCol = 0xff0000ff;
     mTool = TOOL_ADDDUMMY;
   }
@@ -1180,7 +1180,7 @@ public:
   void setAddLevelObjTool(int id)
   {
     mAddMap = mAddTex = 0xfe;
-    mAddObj = id;
+    mAddSpr = id;
     mAddCol = 0xff0000ff;
     mTool = TOOL_ADDLVLOBJ;
   }
@@ -1201,7 +1201,7 @@ public:
       return;
     }
 
-    mAddMap = mAddTex = mAddObj = -1;
+    mAddMap = mAddTex = mAddSpr = -1;
     mAddCol = 0xff0000ff;
 
     PrjT::LevelT& lvl = PrjT::inst().getLevel(mId);
@@ -1210,7 +1210,7 @@ public:
     switch (o.mType)
     {
     case PrjT::ObjectT::TYPE_SPRITE:
-      mAddObj = o.mSpriteId;
+      mAddSpr = o.mSpriteId;
       mTool = TOOL_ADDSPRITE;
       break;
     case PrjT::ObjectT::TYPE_COLBG:
@@ -1226,12 +1226,12 @@ public:
       mTool = TOOL_ADDMAPBG;
       break;
     case PrjT::ObjectT::TYPE_DUMMY:
-      mAddMap = mAddTex = mAddObj = 0xff;
+      mAddMap = mAddTex = mAddSpr = 0xff;
       mTool = TOOL_ADDDUMMY;
       break;
     case PrjT::ObjectT::TYPE_LVLOBJ:
       mAddMap = mAddTex = 0xfe;
-      mAddObj = o.getLevelObjId();
+      mAddSpr = o.getLevelObjId();
       mTool = TOOL_ADDLVLOBJ;
       break;
     }
@@ -1243,15 +1243,15 @@ public:
     if (res.isSprite(id)) {
       mAddMap = mAddTex = -1;
       mAddCol = 0xff0000ff;
-      mAddObj = id;
+      mAddSpr = id;
       mTool = TOOL_ADDSPRITE;
     } else if (res.isTex(id)) {
-      mAddMap = mAddObj = -1;
+      mAddMap = mAddSpr = -1;
       mAddCol = 0xff0000ff;
       mAddTex = id;
       mTool = TOOL_ADDTEXBG;
     } else if (res.isMap(id)) {
-      mAddTex = mAddObj = -1;
+      mAddTex = mAddSpr = -1;
       mAddCol = 0xff0000ff;
       mAddMap = id;
       mTool = TOOL_ADDMAPBG;

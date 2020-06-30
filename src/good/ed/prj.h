@@ -538,19 +538,19 @@ public:
   }
 
   template<class ImgT>
-  int addLevelObj(int idLvl, int idSprite, int idMap, int idTexture, unsigned bgColor, int x, int y)
+  int addLevelObj(int idLvl, int x, int y)
   {
     LevelT& lvl = getLevel(idLvl);
-    int idObj = lvl.addObj(idSprite, idMap, idTexture, x, y);
+    int idObj = lvl.addObj(lvl.mAddSpr, lvl.mAddMap, lvl.mAddTex, x, y);
     if (-1 == idObj) {
       return -1;
     }
 
-    if (-1 == idSprite && -1 == idMap && -1 == idTexture) { // A color bg.
-      lvl.getObj(idObj).setBgColor(bgColor);
+    if (lvl.isAddColorTool()) {
+      lvl.getObj(idObj).setBgColor(lvl.mAddCol);
     }
 
-    if (-1 != idTexture) {              // A tex bg.
+    if (lvl.isAddTexTool()) {
       sw2::IntRect rc;
       getObjDim<ImgT>(lvl.getObj(idObj), rc);
       lvl.getObj(idObj).setDim(0, 0, rc.width(), rc.height());
