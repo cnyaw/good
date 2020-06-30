@@ -178,7 +178,7 @@ public:
       ptCur.y = ptCur.y / sh * sh;
     }
 
-    int id = PrjT::inst().addLevelObj<ImgT>(mEditor.mId, lvl.mTool.mAddObj, lvl.mTool.mAddMap, lvl.mTool.mAddTex, lvl.mTool.mAddCol, ptCur.x, ptCur.y);
+    int id = PrjT::inst().addLevelObj<ImgT>(mEditor.mId, lvl.mAddObj, lvl.mAddMap, lvl.mAddTex, lvl.mAddCol, ptCur.x, ptCur.y);
     if (-1 == id) {
       return;
     }
@@ -278,7 +278,7 @@ public:
       break;
 
     case VK_ESCAPE:
-      PrjT::inst().getLevel(mEditor.mId).mTool.setMoveTool();
+      PrjT::inst().getLevel(mEditor.mId).setMoveTool();
       break;
 
     case VK_DELETE:
@@ -312,9 +312,9 @@ public:
     MainT::inst().mExpView.SetCurSel(mEditor.mId);
 
     PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
-    if (lvl.mTool.isMoveTool()) {
+    if (lvl.isMoveTool()) {
       HandleMouseDown();
-    } else if (lvl.mTool.isRemoveTool()) {
+    } else if (lvl.isRemoveTool()) {
       if (-1 != mHot) {
         std::vector<int> v;
         v.push_back(mHot);
@@ -423,7 +423,7 @@ public:
     // Changed cur sel res.
     //
 
-    PrjT::inst().getLevel(mEditor.mId).mTool.setToolByLevelObjId(mEditor.mId, mHot);
+    PrjT::inst().getLevel(mEditor.mId).setToolByLevelObjId(mHot);
   }
 
   //
@@ -1349,15 +1349,15 @@ public:
     // Update toolbar.
     //
 
-    UISetCheck(ID_LEVELEDIT_MOVEITEM, lvl.mTool.isMoveTool());
-    UISetCheck(ID_LEVELEDIT_REMOVE, lvl.mTool.isRemoveTool());
+    UISetCheck(ID_LEVELEDIT_MOVEITEM, lvl.isMoveTool());
+    UISetCheck(ID_LEVELEDIT_REMOVE, lvl.isRemoveTool());
 
-    UISetCheck(ID_LEVELEDIT_ADDCOLBG, lvl.mTool.isAddColorTool());
-    UISetCheck(ID_LEVELEDIT_ADDTEXBG, lvl.mTool.isAddTexTool());
-    UISetCheck(ID_LEVELEDIT_ADDMAPBG, lvl.mTool.isAddMapTool());
-    UISetCheck(ID_LEVELEDIT_ADDSPRITE, lvl.mTool.isAddSpriteTool());
-    UISetCheck(ID_LEVELEDIT_ADDDUMMY, lvl.mTool.isAddDummyTool());
-    UISetCheck(ID_LEVELEDIT_ADDLVLOBJ, lvl.mTool.isAddLevelobjTool());
+    UISetCheck(ID_LEVELEDIT_ADDCOLBG, lvl.isAddColorTool());
+    UISetCheck(ID_LEVELEDIT_ADDTEXBG, lvl.isAddTexTool());
+    UISetCheck(ID_LEVELEDIT_ADDMAPBG, lvl.isAddMapTool());
+    UISetCheck(ID_LEVELEDIT_ADDSPRITE, lvl.isAddSpriteTool());
+    UISetCheck(ID_LEVELEDIT_ADDDUMMY, lvl.isAddDummyTool());
+    UISetCheck(ID_LEVELEDIT_ADDLVLOBJ, lvl.isAddLevelobjTool());
 
     bool SingleSel = 1 == mEditView.mCurSel.size();
     UIEnable(ID_LEVELEDIT_BOTTOMMOST, SingleSel && lvl.canMoveObjBottommost(mEditView.mCurSel[0]));
@@ -1684,7 +1684,7 @@ public:
       return 0;
 
     case WM_GOOD_SETCURSEL:
-      lvl.mTool.setToolByResId(wParam);
+      lvl.setToolByResId(wParam);
       return 0;
     }
 
@@ -1723,18 +1723,18 @@ public:
     } else if (ID_LEVELEDIT_ADDMAPBG == nID) {
       MainT::inst().mExpView.mTabView.SetActivePage(3);
     } else if (ID_LEVELEDIT_ADDCOLBG == nID) {
-      CColorDialog dlg(lvl.mTool.mAddCol, CC_FULLOPEN);
+      CColorDialog dlg(lvl.mAddCol, CC_FULLOPEN);
       if (IDOK == dlg.DoModal()) {
-        lvl.mTool.setAddColorTool(dlg.GetColor());
+        lvl.setAddColorTool(dlg.GetColor());
       }
     } else if (ID_LEVELEDIT_ADDSPRITE == nID) {
       MainT::inst().mExpView.mTabView.SetActivePage(2);
     } else if (ID_LEVELEDIT_ADDDUMMY == nID) {
-      lvl.mTool.setAddDummyTool();
+      lvl.setAddDummyTool();
     } else if (ID_LEVELEDIT_ADDLVLOBJ == nID) {
       CDlgLevelObjPicker dlg;
       if (IDOK == dlg.DoModal()) {
-        lvl.mTool.setAddLevelObjTool(dlg.mId);
+        lvl.setAddLevelObjTool(dlg.mId);
       }
     }
     mEditView.SetFocus();
@@ -1809,12 +1809,12 @@ public:
 
   void OnMoveTool(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    PrjT::inst().getLevel(mId).mTool.setMoveTool();
+    PrjT::inst().getLevel(mId).setMoveTool();
   }
 
   void OnRemoveTool(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    PrjT::inst().getLevel(mId).mTool.setRemoveTool();
+    PrjT::inst().getLevel(mId).setRemoveTool();
   }
 
   void OnSnapSize(UINT uNotifyCode, int nID, CWindow wndCtl)
