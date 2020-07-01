@@ -1615,6 +1615,8 @@ public:
 
     InitTreeItem();
 
+    PrjT::inst().getLevel(mId).setMoveTool();
+
     SetMsgHandled(FALSE);
     return 0;
   }
