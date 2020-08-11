@@ -108,7 +108,7 @@ function GenTexObj(parent, texture, w, h, srcx, srcy, script)
 end
 
 function GetARgbFromColor(color)
-  local hex = string.format('%x', color)
+  local hex = string.format('%08x', color)
   local a = string.sub(hex, 1, 2)
   local r = string.sub(hex, 3, 4)
   local g = string.sub(hex, 5, 6)
