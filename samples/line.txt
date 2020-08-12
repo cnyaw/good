@@ -1,0 +1,14 @@
+[good]
+version=0.3
+name=line
+levels=0
+groups=
+
+[scripts]
+1=./line.lua
+2=./Util.lua
+
+[level0]
+bgColor=0 128 128
+script=Line
+
