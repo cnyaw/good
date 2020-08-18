@@ -31,36 +31,12 @@ public:
   {
   }
 
-  void LoopCurSel(bool IsBackward)
-  {
-    PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
-    lvl.loopSel(IsBackward, mCurSel);
-  }
-
-  void SetCurSelFirstObj(bool IsBackward)
-  {
-    PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
-    if (IsBackward) {
-      mCurSel.push_back(lvl.mObjIdx[lvl.mObjIdx.size() - 1]);
-    } else {
-      mCurSel.push_back(lvl.mObjIdx[0]);
-    }
-  }
-
   void TabSwitchCurSel(bool IsBackward)
   {
     PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
-    if (lvl.mObjIdx.empty()) {
-      return;
+    if (lvl.switchSel(IsBackward, mCurSel)) {
+      SelItemChange(GOOD_RESOURCE_LEVEL_OBJECT, mCurSel[0]);
     }
-
-    if (mCurSel.empty()) {
-      SetCurSelFirstObj(IsBackward);
-    } else {
-      LoopCurSel(IsBackward);
-    }
-
-    SelItemChange(GOOD_RESOURCE_LEVEL_OBJECT, mCurSel[0]);
   }
 
   bool IsLevelObjUsed(const std::vector<int> &v) const

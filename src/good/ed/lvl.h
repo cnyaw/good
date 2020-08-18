@@ -1147,6 +1147,28 @@ public:
     }
   }
 
+  void selFirstObj(bool backward, std::vector<int> &sel) const
+  {
+    if (backward) {
+      sel.push_back(mObjIdx[mObjIdx.size() - 1]);
+    } else {
+      sel.push_back(mObjIdx[0]);
+    }
+  }
+
+  bool switchSel(bool backward, std::vector<int> &sel) const
+  {
+    if (mObjIdx.empty()) {
+      return false;
+    }
+    if (sel.empty()) {
+      selFirstObj(backward, sel);
+    } else {
+      loopSel(backward, sel);
+    }
+    return true;
+  }
+
   //
   // Add tool.
   //
