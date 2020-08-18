@@ -100,9 +100,8 @@ void drawImageToCanvas_i(int canvas, int x, int y, ImgT img, int srcx, int srcy,
   img.drawToCanvas(x, y, c, srcx, srcy, srcw, srch);
 }
 
-void drawImage(int canvas, int x, int y, int texId, int srcx, int srcy, int srcw, int srch, unsigned int color, float rot = .0f, float scalex = 1.0f, float scaley = 1.0f)
+void drawImage_i(int canvas, int x, int y, const ImgT &img, int srcx, int srcy, int srcw, int srch, unsigned int color, float rot = .0f, float scalex = 1.0f, float scaley = 1.0f)
 {
-  ImgT img = getImage(mRes.getTex(texId).mFileName);
   if (!mCanvas.isUsed(canvas)) {
     ((T*)this)->gx.drawImage(x, y, img, srcx, srcy, srcw, srch, color, rot, scalex, scaley);
     mDirty = true;
@@ -111,33 +110,10 @@ void drawImage(int canvas, int x, int y, int texId, int srcx, int srcy, int srcw
   }
 }
 
-void drawTextToScreen_i(int x, int y, const std::vector<int> &unicode, int size, unsigned int color) const
+void drawImage(int canvas, int x, int y, int texId, int srcx, int srcy, int srcw, int srch, unsigned int color, float rot = .0f, float scalex = 1.0f, float scaley = 1.0f)
 {
-  int xoffset = 0;
-  for (size_t i = 0; i < unicode.size(); i++) {
-    ImgT img = getImage(size, unicode[i]);
-    if (img.isValid()) {
-      ((T*)this)->gx.drawImage(x + xoffset, y, img, 0, 0, img.getWidth(), img.getHeight(), color, .0f, 1.0f, 1.0f);
-      mDirty = true;
-      xoffset += img.getWidth();
-    } else {
-      xoffset += GOOD_DEFAULT_TEXT_OFFSET;
-    }
-  }
-}
-
-void drawTextToCanvas_i(int canvas, int x, int y, const std::vector<int> &unicode, int size, unsigned int color)
-{
-  int xoffset = 0;
-  for (size_t i = 0; i < unicode.size(); i++) {
-    ImgT img = getImage(size, unicode[i]);
-    if (img.isValid()) {
-      drawImageToCanvas_i(canvas, x + xoffset, y, img, 0, 0, img.getWidth(), img.getHeight(), color);
-      xoffset += img.getWidth();
-    } else {
-      xoffset += GOOD_DEFAULT_TEXT_OFFSET;
-    }
-  }
+  ImgT img = getImage(mRes.getTex(texId).mFileName);
+  drawImage_i(canvas, x, y, img, srcx, srcy, srcw, srch, color, rot, scalex, scaley);
 }
 
 void drawText(int canvas, int x, int y, char const *utf8text, int size, unsigned int color)
@@ -148,10 +124,15 @@ void drawText(int canvas, int x, int y, char const *utf8text, int size, unsigned
   size = clampTextSize_i(size);
   std::vector<int> unicode;
   sw2::Util::utf8ToU16(utf8text, unicode);
-  if (!mCanvas.isUsed(canvas)) {
-    drawTextToScreen_i(x, y, unicode, size, color);
-  } else {
-    drawTextToCanvas_i(canvas, x, y, unicode, size, color);
+  int xoffset = 0;
+  for (size_t i = 0; i < unicode.size(); i++) {
+    ImgT img = getImage(size, unicode[i]);
+    if (img.isValid()) {
+      drawImage_i(canvas, x + xoffset, y, img, 0, 0, img.getWidth(), img.getHeight(), color, .0f, 1.0f, 1.0f);
+      xoffset += img.getWidth();
+    } else {
+      xoffset += GOOD_DEFAULT_TEXT_OFFSET;
+    }
   }
 }
 
