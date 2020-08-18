@@ -1120,6 +1120,34 @@ public:
   }
 
   //
+  // Selection.
+  //
+
+  void loopSel(bool backward, std::vector<int> &sel) const
+  {
+    for (size_t i = 0; i < mObjIdx.size(); i++) {
+      if (mObjIdx[i] != sel[0]) {
+        continue;
+      }
+      sel.clear();
+      if (backward) {
+        if (0 == i) {
+          sel.push_back(mObjIdx[mObjIdx.size() - 1]);
+        } else {
+          sel.push_back(mObjIdx[i - 1]);
+        }
+      } else {
+        if (mObjIdx.size() - 1 == i) {
+          sel.push_back(mObjIdx[0]);
+        } else {
+          sel.push_back(mObjIdx[i + 1]);
+        }
+      }
+      break;
+    }
+  }
+
+  //
   // Add tool.
   //
 

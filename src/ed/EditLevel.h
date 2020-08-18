@@ -34,26 +34,7 @@ public:
   void LoopCurSel(bool IsBackward)
   {
     PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
-    for (size_t i = 0; i < lvl.mObjIdx.size(); i++) {
-      if (lvl.mObjIdx[i] != mCurSel[0]) {
-        continue;
-      }
-      mCurSel.clear();
-      if (IsBackward) {
-        if (0 == i) {
-          mCurSel.push_back(lvl.mObjIdx[lvl.mObjIdx.size() - 1]);
-        } else {
-          mCurSel.push_back(lvl.mObjIdx[i - 1]);
-        }
-      } else {
-        if (lvl.mObjIdx.size() - 1 == i) {
-          mCurSel.push_back(lvl.mObjIdx[0]);
-        } else {
-          mCurSel.push_back(lvl.mObjIdx[i + 1]);
-        }
-      }
-      break;
-    }
+    lvl.loopSel(IsBackward, mCurSel);
   }
 
   void SetCurSelFirstObj(bool IsBackward)
