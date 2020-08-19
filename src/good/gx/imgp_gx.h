@@ -318,6 +318,40 @@ public:
     return *this;
   }
 
+  Imgp& invert(int x, int y, int w, int h)
+  {
+    if (0 == dat) {
+      return *this;
+    }
+
+    if (0 > x) {
+      w += x;
+      x = 0;
+    }
+
+    if (0 > y) {
+      h += y;
+      y = 0;
+    }
+
+    if (x + w > this->w) {
+      w = this->w - x;
+    }
+
+    if (y + h > this->h) {
+      h = this->h - y;
+    }
+
+    unsigned int *p = (unsigned int*)dat;
+    for (int i = x; i < x + w; i++) {
+      for (int j = y; j < y + h; j++) {
+        p[i + this->w * j] ^= 0x00ffffff;
+      }
+    }
+
+    return *this;
+  }
+
   Imgp& mirror()
   {
     if (0 == dat) {
