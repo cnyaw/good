@@ -44,12 +44,11 @@ API Reference http://good-ed.smallworld.idv.tw/wiki/index.php?title=Good_API_Ref
 * Misc samples
 * Programming Lua
 * Cross Platform Packages
-* Stand-alone WIN32 EXE
 * Simple Animator
 
 # Platforms
 * Microsoft Windows
-* iPhone/iPod Touch/iPad
+* iOS
 * Android
 * PSP
 * MOD
