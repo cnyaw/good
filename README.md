@@ -2,7 +2,7 @@
 
 Windows editor and Android APK download https://github.com/cnyaw/goodbin <br/>
 Blog https://good-ed.blogspot.com/ <br/>
-API Reference http://good-ed.smallworld.idv.tw/wiki/index.php?title=Good_API_Reference
+API Reference https://agile-hollows-18660.herokuapp.com/good-ed/goodapi.html
 
 ![ed](gooded.png)
 
