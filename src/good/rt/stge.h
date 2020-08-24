@@ -252,7 +252,7 @@ int getTaskCount(int iObjMgr) const
 
 float getUserData(int idParticle, int index, int iObjMgr) const
 {
-  if (iObjMgrValid(iObjMgr) && 0 <= index && 4 > index) {
+  if (iObjMgrValid(iObjMgr) && 0 <= index && stge::Object::NUM_USERDATA > index) {
     const ParticleMgrT& om = mObjMgr[iObjMgr];
     if (om.objects.isUsed(idParticle)) {
       return om.objects[idParticle].user[index];
@@ -379,7 +379,7 @@ void setUserData(int idParticle, int index, float data, int iObjMgr)
     return;
   }
 
-  if (0 > index || 4 <= index) {
+  if (0 > index || stge::Object::NUM_USERDATA <= index) {
     return;
   }
 
