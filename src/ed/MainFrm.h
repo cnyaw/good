@@ -862,7 +862,7 @@ public:
 
   void OnShowApiRef(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    ShellOpen(_T("http://good-ed.smallworld.idv.tw/wiki/index.php?title=Good_API_Reference"));
+    ShellOpen(_T("https://agile-hollows-18660.herokuapp.com/good-ed/goodapi.html"));
   }
 
   void OnViewShowFps(UINT uNotifyCode, int nID, CWindow wndCtl)
