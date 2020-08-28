@@ -1156,6 +1156,9 @@ void setRot(int idObj, float newRot)
   }
 
   newRot = fmod(newRot , 360.0f);
+  if (.0f > newRot) {
+    newRot += 360.0f;
+  }
 
   ActorT& a = mActors[idObj];
   if (a.mRot == newRot) {
