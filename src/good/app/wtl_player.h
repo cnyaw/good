@@ -152,6 +152,7 @@ public:
       isTipShown = true;
       timeTip = 0;
     }
+    mDirty = true;
   }
 
   void OnInit()
@@ -350,6 +351,7 @@ public:
         break;
       }
     } else if (showTexInfo) {
+      const int prev = iTexs;
       const int nMaxTexs = gx::GLImageResource::inst().GetTextureCount();
       switch (nChar)
       {
@@ -369,6 +371,9 @@ public:
       case VK_HOME:
         iTexs = 0;
         break;
+      }
+      if (prev != iTexs) {
+        mDirty = true;
       }
     }
   }
