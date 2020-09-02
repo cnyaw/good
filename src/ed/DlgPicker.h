@@ -53,18 +53,53 @@ public:
   }
 };
 
-class CDlgTexturePicker : public CDlgResourceItemPicker<CDlgTexturePicker>
+template<class MainT>
+class CDlgTexturePicker : public CDialogImpl<CDlgTexturePicker<MainT> >
 {
 public:
   enum { IDD = IDD_CHOICETEXTURE };
 
-  void DoInitListBox()
+  int mId;
+  CTextureResListView<MainT> mTexRes;
+
+  CDlgTexturePicker() : mId(-1)
   {
-    PrjT const& prj = PrjT::inst();
-    for (size_t i = 0; i < prj.mRes.mTexIdx.size(); ++i) {
-      int idx = mItem.AddString(prj.mRes.getTex(prj.mRes.mTexIdx[i]).getName().c_str());
-      mItem.SetItemData(idx, prj.mRes.mTexIdx[i]);
+  }
+
+  BEGIN_MSG_MAP_EX(CDlgTexturePicker)
+    MSG_WM_INITDIALOG(OnInitDialog)
+    MSG_WM_TIMER(OnTimer)
+    COMMAND_ID_HANDLER_EX(IDOK, OnCloseCmd)
+    COMMAND_ID_HANDLER_EX(IDCANCEL, OnCloseCmd)
+  END_MSG_MAP()
+
+  BOOL OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
+  {
+    CenterWindow(GetParent());
+    ::EnableWindow(GetDlgItem(IDOK), FALSE);
+    HWND hList = GetDlgItem(IDC_LIST1);
+    RECT rcClient;
+    ::GetClientRect(hList, &rcClient);
+    mTexRes.Create(m_hWnd, rcClient, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);
+    ::DestroyWindow(hList);
+    SetTimer(1, 1000);
+    return TRUE;
+  }
+
+  void OnTimer(UINT_PTR nIDEvent)
+  {
+    if (-1 != mTexRes.mCurSel) {
+      ::EnableWindow(GetDlgItem(IDOK), TRUE);
+      KillTimer(1);
     }
+  }
+
+  void OnCloseCmd(UINT uNotifyCode, int nID, CWindow wndCtl)
+  {
+    if (IDOK == nID) {
+      mId = mTexRes.GetResId(mTexRes.mCurSel);
+    }
+    EndDialog(nID);
   }
 };
 

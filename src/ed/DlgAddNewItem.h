@@ -11,9 +11,10 @@
 
 #pragma once
 
+template<class MainT>
 class CDlgPageMapProp :
-  public CPropertyPageImpl<CDlgPageMapProp>,
-  public CWinDataExchange<CDlgPageMapProp>
+  public CPropertyPageImpl<CDlgPageMapProp<MainT> >,
+  public CWinDataExchange<CDlgPageMapProp<MainT> >
 {
 public:
   enum { IDD = IDD_NEWMAP };
@@ -109,7 +110,7 @@ failed:
 
   void OnSelTexture(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    CDlgTexturePicker dlg;
+    CDlgTexturePicker<MainT> dlg;
     if (IDOK != dlg.DoModal()) {
       return;
     }
@@ -265,7 +266,7 @@ public:
 
   void OnSelTexture(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    CDlgTexturePicker dlg;
+    CDlgTexturePicker<MainT> dlg;
     if (IDOK != dlg.DoModal()) {
       return;
     }
@@ -286,8 +287,8 @@ public:
 
   int mId;                              // Dummy.
 
-  CDlgPageMapProp mMapProp;
-  CDlgPageMapGrid<MainT, CDlgPageMapProp> mMapGrid;
+  CDlgPageMapProp<MainT> mMapProp;
+  CDlgPageMapGrid<MainT, CDlgPageMapProp<MainT> > mMapGrid;
   CDlgPageSpriteProp<MainT> mSpriteProp;
 
   CDlgAddNewItem(int res) : mMapGrid(mMapProp)
