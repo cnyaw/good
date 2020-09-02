@@ -11,48 +11,6 @@
 
 #pragma once
 
-template<class T>
-class CDlgResourceItemPicker : public CDialogImpl<T>
-{
-public:
-
-  int mId;
-  CListBox mItem;
-
-  CDlgResourceItemPicker() : mId(-1)
-  {
-  }
-
-  BEGIN_MSG_MAP_EX(CDlgResourceItemPicker)
-    MSG_WM_INITDIALOG(OnInitDialog)
-    COMMAND_ID_HANDLER_EX(IDOK, OnCloseCmd)
-    COMMAND_ID_HANDLER_EX(IDCANCEL, OnCloseCmd)
-    COMMAND_HANDLER_EX(IDC_LIST1, LBN_SELCHANGE, OnItemSelChange)
-  END_MSG_MAP()
-
-  BOOL OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
-  {
-    CenterWindow(GetParent());
-    ::EnableWindow(GetDlgItem(IDOK), FALSE);
-    mItem = GetDlgItem(IDC_LIST1);
-    static_cast<T*>(this)->DoInitListBox();
-    return TRUE;
-  }
-
-  void OnCloseCmd(UINT uNotifyCode, int nID, CWindow wndCtl)
-  {
-    if (IDOK == nID) {
-      mId = (int)mItem.GetItemData(mItem.GetCurSel());
-    }
-    EndDialog(nID);
-  }
-
-  void OnItemSelChange(UINT uNotifyCode, int nID, CWindow wndCtl)
-  {
-    ::EnableWindow(GetDlgItem(IDOK), LB_ERR != mItem.GetCurSel() && (int)mItem.GetItemData(mItem.GetCurSel()) != mId);
-  }
-};
-
 template<class MainT>
 class CDlgTexturePicker : public CDialogImpl<CDlgTexturePicker<MainT> >
 {
