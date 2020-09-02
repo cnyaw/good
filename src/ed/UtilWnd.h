@@ -514,6 +514,11 @@ public:
   {
     mCurHot = mCurSel = -1;
     mThumbImg.clear();
+    UpdateListLayout();
+  }
+
+  void UpdateListLayout()
+  {
     RECT rcClient;
     GetClientRect(&rcClient);
     CSize sz(rcClient.right, rcClient.bottom);

@@ -1024,6 +1024,8 @@ public:
 
     ti.AddTail(resName.c_str(), 2).SetData(resId);
     ti.Expand();
+
+    mExpView.ResPageUpdateListLayout();
   }
 
   void AddResourceEditor(std::string const& resName, int resId, HWND hEditor)

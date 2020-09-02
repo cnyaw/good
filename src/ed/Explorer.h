@@ -262,6 +262,13 @@ public:
     }
   }
 
+  void ResPageUpdateListLayout()
+  {
+    for (size_t i = 0; i < mResListView.size(); i++) {
+      mResListView[i]->UpdateListLayout();
+    }
+  }
+
   void SetCurSel(int id)
   {
     CTreeItem hItem = FindTreeItem(id);
@@ -750,6 +757,7 @@ end:
         }
 
         mTree.DeleteItem(sel);          // Delete tree item.
+        ResPageUpdateListLayout();
       }
     }
 
