@@ -480,6 +480,18 @@ public:
     }
   }
 
+  virtual void OnClickItem()
+  {
+    int id = GetResId(mCurSel);
+    MainT::inst().mExpView.SetCurSel(id);
+    NotifyLevelEditorSetCurSel(id);
+  }
+
+  virtual void OnDblClickItem()
+  {
+    MainT::inst().mExpView.AddEditorView(GetResType(), GetResId(mCurSel));
+  }
+
   void SetCurSel(int id)
   {
     for (int i = 0; i < GetResCount(); ++i) {
@@ -554,7 +566,7 @@ public:
     if (-1 == mCurSel) {
       return;
     }
-    MainT::inst().mExpView.AddEditorView(GetResType(), GetResId(mCurSel));
+    OnDblClickItem();
   }
 
   void OnLButtonDown(UINT nFlags, CPoint point)
@@ -564,9 +576,7 @@ public:
     }
     mCurSel = mCurHot;
     Invalidate(FALSE);
-    int id = GetResId(mCurSel);
-    MainT::inst().mExpView.SetCurSel(id);
-    NotifyLevelEditorSetCurSel(id);
+    OnClickItem();
   }
 
   void OnMouseMove(UINT nFlags, CPoint point)

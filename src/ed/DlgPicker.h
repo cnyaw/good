@@ -12,13 +12,28 @@
 #pragma once
 
 template<class MainT>
+class CTexturePickerTexResListView : public CTextureResListView<MainT>
+{
+public:
+  virtual void OnClickItem()
+  {
+    // NOP.
+  }
+
+  virtual void OnDblClickItem()
+  {
+    // NOP.
+  }
+};
+
+template<class MainT>
 class CDlgTexturePicker : public CDialogImpl<CDlgTexturePicker<MainT> >
 {
 public:
   enum { IDD = IDD_CHOICETEXTURE };
 
   int mId;
-  CTextureResListView<MainT> mTexRes;
+  CTexturePickerTexResListView<MainT> mTexRes;
 
   CDlgTexturePicker() : mId(-1)
   {
