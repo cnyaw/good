@@ -77,6 +77,11 @@ public:
     }
   }
 
+  bool isValid() const
+  {
+    return 0 != dat && 0 != w && 0 != h;
+  }
+
   bool expand(int w2, int h2)
   {
     if (0 == dat || 4 != bpp) {
