@@ -154,6 +154,11 @@ public:
     return *this;
   }
 
+  Imgp& fill(const Imgp& img)
+  {
+    return fill(img, 0, 0, w, h);
+  }
+
   Imgp& fill(const Imgp& img, int x, int y, int w, int h)
   {
     if (0 == dat || 0 == img.dat) {
