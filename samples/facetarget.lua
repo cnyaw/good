@@ -22,7 +22,7 @@ AnimRot.OnStep = function(param)
   end
 end
 
-function FaceToTarget(tx, ty)
+function CalcNewDir(tx, ty)
   local ox, oy = Good.GetPos(rot_obj_id)
   local a = math.atan2(tx - ox, oy - ty)
   new_dir = a * 180 / math.pi
@@ -40,6 +40,10 @@ function FaceToTarget(tx, ty)
       new_dir = new_dir - 360
     end
   end
+end
+
+function FaceToTarget(tx, ty)
+  CalcNewDir(tx, ty)
   Good.SetScript(rot_obj_id, 'AnimRot')
 end
 
