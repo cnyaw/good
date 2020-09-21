@@ -171,6 +171,14 @@ function PtInRect(x, y, left, top, right, bottom)
   end
 end
 
+function RotSign(vx, vy, tx, ty)
+  if (vy * tx > vx * ty) then
+    return -1
+  else
+    return 1
+  end
+end
+
 function Rshift(x, by)                  -- Bitwise right shift.
   return math.floor(x / 2 ^ by)
 end
