@@ -1,4 +1,14 @@
 
+function FillImage(canvas, x, y, tex, w, h)
+  Graphics.FillRect(canvas, x, y, w, h, COLOR_YELLOW)
+  local cx, cy = Resource.GetTexSize(tex)
+  for ay = 0, h, cy do
+    for ax = 0, w, cx do
+      Graphics.DrawImage(canvas, ax, ay, tex, 0, 0, cx, cy)
+    end
+  end
+end
+
 function GenColorObj(parent, w, h, color, script)
   local _parent = parent
   if (nil == parent) then
