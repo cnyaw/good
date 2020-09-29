@@ -110,6 +110,7 @@ public:
   sw2::IntRect mDim;
   int mBgColor;
   bool mRepX, mRepY;
+  std::string mName;
 
   LevelCmdRemoveObj(int idLevel, int id) : UndoCommand(GOOD_LEVELED_CMD_REMOVEOBJ), mLevelId(idLevel)
   {
@@ -133,6 +134,7 @@ public:
     mDim = o.mDim;
     mBgColor = o.mBgColor;
     mRepX = o.mRepX, mRepY = o.mRepY;
+    mName = o.mName;
   }
 
   virtual bool exec()
@@ -153,6 +155,7 @@ public:
     o.mBgColor = mBgColor;
     o.mRepX = mRepX;
     o.mRepY = mRepY;
+    o.mName = mName;
 
     if (mIdParent == mLevelId) {
       lvl.mObjIdx.pop_back();
