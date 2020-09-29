@@ -680,12 +680,12 @@ public:
     std::string s; int i; bool b; float f;
 
     if (GetChangedProp(ppi, _T("Name"), s)) {
-      lvl.setObjProp(mObjId, s, o.mVisible, o.mRot, o.mScaleX, o.mScaleY, o.mAnchorX, o.mAnchorY, o.mRepX, o.mRepY);
+      lvl.setObjName(mObjId, s);
       if (s.empty()) {                  // Special case.
         ppi->prop->SetValue(CComVariant(o.getName().c_str()));
       }
     } else if (GetChangedProp(ppi, _T("Visible"), b)) {
-      lvl.setObjProp(mObjId, o.mName, b, o.mRot, o.mScaleX, o.mScaleY, o.mAnchorX, o.mAnchorY, o.mRepX, o.mRepY);
+      lvl.setObjProp(mObjId, b, o.mRot, o.mScaleX, o.mScaleY, o.mAnchorX, o.mAnchorY, o.mRepX, o.mRepY);
     } else if (GetChangedProp(ppi, _T("PosX"), i)) {
       std::vector<int> v;
       v.push_back(mObjId);
@@ -695,19 +695,19 @@ public:
       v.push_back(mObjId);
       lvl.moveObj(v, 0, i - o.mPosY);
     } else if (GetChangedProp(ppi, _T("Rot"), f)) {
-      lvl.setObjProp(mObjId, o.mName, o.mVisible, f, o.mScaleX, o.mScaleY, o.mAnchorX, o.mAnchorY, o.mRepX, o.mRepY);
+      lvl.setObjProp(mObjId, o.mVisible, f, o.mScaleX, o.mScaleY, o.mAnchorX, o.mAnchorY, o.mRepX, o.mRepY);
     } else if (GetChangedProp(ppi, _T("ScaleX"), f)) {
-      lvl.setObjProp(mObjId, o.mName, o.mVisible, o.mRot, f, o.mScaleY, o.mAnchorX, o.mAnchorY, o.mRepX, o.mRepY);
+      lvl.setObjProp(mObjId, o.mVisible, o.mRot, f, o.mScaleY, o.mAnchorX, o.mAnchorY, o.mRepX, o.mRepY);
     } else if (GetChangedProp(ppi, _T("ScaleY"), f)) {
-      lvl.setObjProp(mObjId, o.mName, o.mVisible, o.mRot, o.mScaleX, f, o.mAnchorX, o.mAnchorY, o.mRepX, o.mRepY);
+      lvl.setObjProp(mObjId, o.mVisible, o.mRot, o.mScaleX, f, o.mAnchorX, o.mAnchorY, o.mRepX, o.mRepY);
     } else if (GetChangedProp(ppi, _T("AnchorX"), f)) {
-      lvl.setObjProp(mObjId, o.mName, o.mVisible, o.mRot, o.mScaleX, o.mScaleY, f, o.mAnchorY, o.mRepX, o.mRepY);
+      lvl.setObjProp(mObjId, o.mVisible, o.mRot, o.mScaleX, o.mScaleY, f, o.mAnchorY, o.mRepX, o.mRepY);
     } else if (GetChangedProp(ppi, _T("AnchorY"), f)) {
-      lvl.setObjProp(mObjId, o.mName, o.mVisible, o.mRot, o.mScaleX, o.mScaleY, o.mAnchorX, f, o.mRepX, o.mRepY);
+      lvl.setObjProp(mObjId, o.mVisible, o.mRot, o.mScaleX, o.mScaleY, o.mAnchorX, f, o.mRepX, o.mRepY);
     } else if (GetChangedProp(ppi, _T("RepeatX"), b)) {
-      lvl.setObjProp(mObjId, o.mName, o.mVisible, o.mRot, o.mScaleX, o.mScaleY, o.mAnchorX, o.mAnchorY, b, o.mRepY);
+      lvl.setObjProp(mObjId, o.mVisible, o.mRot, o.mScaleX, o.mScaleY, o.mAnchorX, o.mAnchorY, b, o.mRepY);
     } else if (GetChangedProp(ppi, _T("RepeatY"), b)) {
-      lvl.setObjProp(mObjId, o.mName, o.mVisible, o.mRot, o.mScaleX, o.mScaleY, o.mAnchorX, o.mAnchorY, o.mRepX, b);
+      lvl.setObjProp(mObjId, o.mVisible, o.mRot, o.mScaleX, o.mScaleY, o.mAnchorX, o.mAnchorY, o.mRepX, b);
     } else if (GetChangedProp(ppi, _T("Script"), s)) {
       lvl.setObjScript(mObjId, s);
     } else {

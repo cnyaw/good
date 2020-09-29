@@ -331,25 +331,17 @@ public:
 };
 
 template<class LvlT>
-class LevelCmdSetProp : public UndoCommand
+class LevelCmdSetName : public UndoCommand
 {
 public:
   int mLevelId;
   int mId;
   std::string mName;
-  bool mVisible;
-  float mRot, mScaleX, mScaleY, mAnchorX, mAnchorY;
-  bool mRepX, mRepY;
 
-  LevelCmdSetProp(int idLevel, int id, std::string const& name, bool vis, float rot, float sx, float sy, float ax, float ay, bool repx, bool repy) : UndoCommand(GOOD_LEVELED_CMD_SETPROP), mLevelId(idLevel)
+  LevelCmdSetName(int idLevel, int id, std::string const& name) : UndoCommand(GOOD_LEVELED_CMD_SETNAME), mLevelId(idLevel)
   {
     mId = id;
     mName = name;
-    mVisible = vis;
-    mRot = rot;
-    mScaleX = sx; mScaleY = sy;
-    mAnchorX = ax; mAnchorY = ay;
-    mRepX = repx; mRepY = repy;
   }
 
   virtual bool exec()
@@ -371,6 +363,45 @@ public:
       mName = copy.mName;
       return true;
     }
+
+    return false;
+  }
+};
+
+template<class LvlT>
+class LevelCmdSetProp : public UndoCommand
+{
+public:
+  int mLevelId;
+  int mId;
+  bool mVisible;
+  float mRot, mScaleX, mScaleY, mAnchorX, mAnchorY;
+  bool mRepX, mRepY;
+
+  LevelCmdSetProp(int idLevel, int id, bool vis, float rot, float sx, float sy, float ax, float ay, bool repx, bool repy) : UndoCommand(GOOD_LEVELED_CMD_SETPROP), mLevelId(idLevel)
+  {
+    mId = id;
+    mVisible = vis;
+    mRot = rot;
+    mScaleX = sx; mScaleY = sy;
+    mAnchorX = ax; mAnchorY = ay;
+    mRepX = repx; mRepY = repy;
+  }
+
+  virtual bool exec()
+  {
+    return redo();
+  }
+
+  virtual bool undo()
+  {
+    return redo();
+  }
+
+  virtual bool redo()
+  {
+    typename LvlT::ObjectT& o = PrjT::inst().getLevel(mLevelId).getObj(mId);
+    typename LvlT::ObjectT copy = o;
 
     if (o.setVisible(mVisible)) {
       mVisible = copy.mVisible;
@@ -723,10 +754,22 @@ public:
     return false;
   }
 
-  bool setObjProp(int idObj, std::string const& name, bool vis, float rot, float sx, float sy, float ax, float ay, bool repx, bool repy)
+  bool setObjName(int idObj, std::string const& name)
+  {
+    LevelCmdSetName<Level>* pcmd = new LevelCmdSetName<Level>(mId, idObj, name);
+
+    if (mUndo.execAndAdd(pcmd)) {
+      PrjT::inst().mModified = true;
+      return true;
+    }
+
+    return false;
+  }
+
+  bool setObjProp(int idObj, bool vis, float rot, float sx, float sy, float ax, float ay, bool repx, bool repy)
   {
     LevelCmdSetProp<Level>* pcmd;
-    pcmd = new LevelCmdSetProp<Level>(mId, idObj, name, vis, rot, sx, sy, ax, ay, repx, repy);
+    pcmd = new LevelCmdSetProp<Level>(mId, idObj, vis, rot, sx, sy, ax, ay, repx, repy);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
