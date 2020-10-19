@@ -26,6 +26,35 @@
 #include "gx/imgp_gx.h"
 #include "snd/openal_snd.h"
 
+class EmscFileSystem : public sw2::ArchiveFileSystem
+{
+public:
+  mutable std::string pkgName;
+
+  EmscFileSystem()
+  {
+  }
+
+  virtual bool isFileExist(std::string const& name) const
+  {
+    return good::isGoodArchive(name);
+  }
+
+  virtual bool loadFile(std::string const& name, std::ostream& outs, std::string const& password) const
+  {
+    if (!good::isGoodArchive(name)) {
+      return false;
+    }
+    pkgName = name;
+    char buff[128];
+    sprintf(buff, "loadPkg('%s', 'cLoadPkg')", name.c_str());
+    emscripten_run_script(buff);
+    return false;                       // FIXME: workaround now, return fail but addFileSystem in cLoadPkg.
+  }
+};
+
+EmscFileSystem fs;
+
 class EmccApplication : public good::rt::Application<EmccApplication, good::gx::SDLImage, good::snd::ALSound, good::gx::Imgp>
 {
   EmccApplication() : gx(mScreen)
@@ -70,6 +99,9 @@ public:
 
     trace("package loaded %s %dx%d", name.c_str(), mRes.mWidth, mRes.mHeight);
     emscripten_set_canvas_size(mRes.mWidth, mRes.mHeight);
+
+    mAr->addFileSystem(&fs);
+
     return true;
   }
 
@@ -171,20 +203,16 @@ void GoodTraceTool(int level, const char* format, va_list args)
   app.trace(buf);
 }
 
-int main(int argc, char* argv[])
+extern "C" {
+
+int EMSCRIPTEN_KEEPALIVE cLoadPkg(void *pBuff, int size)
 {
-  SW2_TRACE_FUNC(GoodTraceTool);
-  if (2 == argc) {
-    char buff[128];
-    sprintf(buff, "loadPkg('%s', 'cRunPkg')", argv[1]);
-    emscripten_run_script(buff);
-  } else {
-    app.trace("no good package assigned");
-  }
-  return 0;
+  std::string stream((const char*)pBuff, size);
+  std::istringstream ss(stream);
+  return app.addFileSystem(fs.pkgName, ss);
 }
 
-extern "C" int EMSCRIPTEN_KEEPALIVE cRunPkg(void *pBuff, int size)
+int EMSCRIPTEN_KEEPALIVE cRunPkg(void *pBuff, int size)
 {
   printf("init good, data len=%d\n", size);
   std::string stream((const char*)pBuff, size);
@@ -195,5 +223,20 @@ extern "C" int EMSCRIPTEN_KEEPALIVE cRunPkg(void *pBuff, int size)
   printf("init good done\n");
   emscripten_set_main_loop(trigger, 0, 1);
   app.uninit();
+  return 0;
+}
+
+} // extern "C"
+
+int main(int argc, char* argv[])
+{
+  SW2_TRACE_FUNC(GoodTraceTool);
+  if (2 == argc) {
+    char buff[128];
+    sprintf(buff, "loadPkg('%s', 'cRunPkg')", argv[1]);
+    emscripten_run_script(buff);
+  } else {
+    app.trace("no good package assigned");
+  }
   return 0;
 }
