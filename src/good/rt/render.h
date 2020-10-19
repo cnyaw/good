@@ -392,7 +392,6 @@ ImgT getSysFontImage(int size, int ch) const
   if (!img.loadFromChar(size, ch, mAntiAlias)) {
     img.create(size, size, 4);
     img.fill(0).rect(0xffffffff, 0, 0, img.w, img.h);;
-    sprintf(chrmap, "chrmap;sys;%d;none", size);
   }
 
   ImgT i = ImgT::getImage(chrmap, img);
