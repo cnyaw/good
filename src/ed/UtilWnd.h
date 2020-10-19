@@ -435,15 +435,7 @@ public:
     HBITMAP membmp = CreateCompatibleBitmap(hdc, gx.w, gx.h);
     membmp = (HBITMAP)SelectObject(memdc, membmp);
 
-    BITMAPINFO bmi = {0};
-    bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-    bmi.bmiHeader.biWidth = gx.w;
-    bmi.bmiHeader.biHeight = -gx.h;
-    bmi.bmiHeader.biPlanes = 1;
-    bmi.bmiHeader.biBitCount = 32;
-    bmi.bmiHeader.biClrImportant = BI_RGB;
-    bmi.bmiHeader.biXPelsPerMeter = bmi.bmiHeader.biYPelsPerMeter = 1;
-    SetDIBitsToDevice(memdc, 0, 0, gx.w, gx.h, 0, 0, 0, gx.h, gx.dat, &bmi, DIB_RGB_COLORS);
+    gx.blt(memdc, 0, 0);
 
     BLENDFUNCTION bf;
     bf.BlendOp = AC_SRC_OVER;
