@@ -33,3 +33,26 @@ function loadPkg(file, ccallName) {
   xhr.open("GET", "uploads/" + file, true);
   xhr.send(null);
 }
+
+function loadImageFromChar(size, ch, bAntiAlias) {
+  var canvas = document.createElement('canvas');
+  canvas.width = 2 * size;
+  canvas.height = 2 * size;
+  var ctx = canvas.getContext('2d');
+  ctx.fillStyle = 'rgba(0,0,0,0)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'white';
+  ctx.font = size + 'px Arial';
+  ctx.textBaseline = 'top';
+  var s = String.fromCharCode(ch);
+  var m = ctx.measureText(s);
+  var w = m.width, h = size;
+  ctx.fillText(s, 0, 0);
+  var imgd = ctx.getImageData(0, 0, w, h);
+  var pix = imgd.data;
+  var bytes = new Uint8Array(pix);
+  var buf = Module._malloc(bytes.length);
+  Module.HEAPU8.set(bytes, buf);
+  Module.ccall('cLoadImageFromChar', 'number', ['number', 'number', 'number', 'number'], [w, h, buf, bytes.length]);
+  Module._free(buf);
+}

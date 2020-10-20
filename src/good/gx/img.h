@@ -342,6 +342,11 @@ public:
       return true;
     }
 #endif
+#ifdef GOOD_SUPPORT_EMSC_IMG
+    if (EmscLoadImageFromChar(size, ch, bAntiAlias, this)) {
+      return true;
+    }
+#endif
     return false;
   }
 
