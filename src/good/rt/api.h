@@ -80,20 +80,20 @@ void doLuaScript(const char *str, ...)
 
 void drawImageToCanvas_i(int canvas, int x, int y, ImgT img, int srcx, int srcy, int srcw, int srch, unsigned int color)
 {
-  if (img.mSur->w < srcw) {
-    srcw = img.mSur->w;
+  if (img.getWidth() < srcw) {
+    srcw = img.getWidth();
   }
 
-  if (img.mSur->h < srch) {
-    srch = img.mSur->h;
+  if (img.getHeight() < srch) {
+    srch = img.getHeight();
   }
 
-  if (img.mSur->w < srcx + srcw) {
-    srcw = img.mSur->w - srcx;
+  if (img.getWidth() < srcx + srcw) {
+    srcw = img.getWidth() - srcx;
   }
 
-  if (img.mSur->h < srcy + srch) {
-    srch = img.mSur->h - srcy;
+  if (img.getHeight() < srcy + srch) {
+    srch = img.getHeight() - srcy;
   }
 
   CanvasT &c = mCanvas[canvas];
