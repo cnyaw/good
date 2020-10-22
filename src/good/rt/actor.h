@@ -95,7 +95,7 @@ public:
     mSpriteAnimator = true;
     mScriptAnimator = false;
 
-    mImg = ImgT(0);
+    mImg = ImgT();
 
     AppT const& app = AppT::getInst();
 

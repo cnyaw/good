@@ -1284,12 +1284,12 @@ void updateResTex(int idTex, int x, int y, int idCanvas, int sx, int sy, int sw,
     sh = c.h - sy;
   }
 
-  if (img.mSur->w < x + sw) {
-    sw = img.mSur->w - x;
+  if (img.getWidth() < x + sw) {
+    sw = img.getWidth() - x;
   }
 
-  if (img.mSur->h < y + sh) {
-    sh = img.mSur->h - y;
+  if (img.getHeight() < y + sh) {
+    sh = img.getHeight() - y;
   }
 
   img.draw(x, y, c, sx, sy, sw, sh);

@@ -352,7 +352,7 @@ ImgT getImage(ActorT const &a, std::string const& name) const
 ImgT getImage(std::string const& name) const
 {
   if (0 == mAr) {
-    return ImgT(0);
+    return ImgT();
   }
 
   if (ImgT::existImage(name)) {
