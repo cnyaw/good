@@ -84,7 +84,7 @@ public:
       GL_PACK_TEX_WIDTH,
       GL_PACK_TEX_HEIGHT,
       0,
-#ifdef _android_
+#if defined(_android_) || defined(__EMSCRIPTEN__)
       GL_RGBA,
 #else
       GL_BGRA_EXT,
@@ -94,7 +94,7 @@ public:
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-#ifdef _android_
+#if defined(_android_) || defined(__EMSCRIPTEN__)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 #else
@@ -212,13 +212,16 @@ public:
   int obj_index;
   std::vector<float> vert, texcoord;
   std::vector<unsigned char> colors;
+#ifndef __EMSCRIPTEN__
   std::vector<unsigned short> indexs;
+#endif
 
   GLGraphics(int w = 320, int h = 480) : SCREEN_W(w), SCREEN_H(h), xAnchor(.0f), yAnchor(.0f), obj_index(0)
   {
     vert.resize(3 * NUM_VERT_PER_OBJ * MAX_OBJ); // xyz.
     texcoord.resize(2 * NUM_VERT_PER_OBJ * MAX_OBJ); // uv.
     colors.resize(4 * NUM_VERT_PER_OBJ * MAX_OBJ); // rgba.
+#ifndef __EMSCRIPTEN__
     indexs.resize(6 * MAX_OBJ);
     for (int i = 0, j = 0; i < 6 * MAX_OBJ; i += 6, j += 4) {
       indexs[i + 0] = 0 + j;
@@ -228,6 +231,7 @@ public:
       indexs[i + 4] = 3 + j;
       indexs[i + 5] = 0 + j;
     }
+#endif
   }
 
   void init()
@@ -279,6 +283,11 @@ public:
     nLastDrawCalls = nDrawCalls;
     nDrawCalls = 0;
     imgWhitePixel = 0;
+#ifdef __EMSCRIPTEN__
+    glVertexPointer(3, GL_FLOAT, 0, &*vert.begin());
+    glTexCoordPointer(2, GL_FLOAT, 0, &*texcoord.begin());
+    glColorPointer(4, GL_UNSIGNED_BYTE, 0, &*colors.begin());
+#endif
   }
 
   void endDraw()
@@ -297,7 +306,11 @@ public:
   void flush()
   {
     if (obj_index) {
+#ifdef __EMSCRIPTEN__
+      glDrawArrays(GL_QUADS, 0, 4 * obj_index);
+#else
       glDrawElements(GL_TRIANGLES, 6 * obj_index, GL_UNSIGNED_SHORT, &*indexs.begin());
+#endif
       nDrawCalls += 1;
       obj_index = 0;
     }

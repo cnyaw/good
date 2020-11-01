@@ -12,7 +12,6 @@
 #include <math.h>
 
 #include "SDL/SDL.h"
-#include "SDL/SDL_image.h"
 #include "SDL/SDL_opengl.h"
 
 #include <emscripten.h>
@@ -29,9 +28,9 @@ class GxImage;
 
 bool EmscLoadImageFromChar(int size, int ch, bool bAntiAlias, good::gx::GxImage *pImg);
 
-#define GOOD_SUPPORT_PNG
+#define GOOD_SUPPORT_STB_IMG
 #define GOOD_SUPPORT_EMSC_IMG
-#include "gx/sdl_gx.h"
+#include "gx/opengl_gx.h"
 #include "gx/imgp_gx.h"
 #include "snd/openal_snd.h"
 
@@ -64,15 +63,15 @@ public:
 
 EmscFileSystem fs;
 
-class EmccApplication : public good::rt::Application<EmccApplication, good::gx::SDLImage, good::snd::ALSound, good::gx::Imgp>
+class EmccApplication : public good::rt::Application<EmccApplication, good::gx::GLImage, good::snd::ALSound, good::gx::Imgp>
 {
-  EmccApplication() : gx(mScreen)
+  EmccApplication()
   {
   }
 
 public:
 
-  good::gx::SDLGraphics gx;
+  good::gx::GLGraphics gx;
   SDL_Surface* mScreen;
 
   static EmccApplication& getInst()
@@ -88,12 +87,9 @@ public:
       return false;
     }
 
-    int flag = SDL_DOUBLEBUF | SDL_HWSURFACE;
-    if (mRes.mFullScreen) {
-      flag |= SDL_FULLSCREEN;
-    }
+    SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
-    mScreen = SDL_SetVideoMode(mRes.mWidth, mRes.mHeight, mRes.mColorBits, flag);
+    mScreen = SDL_SetVideoMode(mRes.mWidth, mRes.mHeight, 16, SDL_OPENGL);
     if (!mScreen) {
       SW2_TRACE_ERROR("set video mode(%dx%dx%d) failed", mRes.mWidth, mRes.mHeight, mRes.mColorBits);
       SDL_Quit();
@@ -104,7 +100,10 @@ public:
       SDL_WM_SetCaption(mRes.mName.c_str(), NULL);
     }
 
-    gx.mSur = mScreen;
+    gx.init();
+    gx.SCREEN_W = mRes.mWidth;
+    gx.SCREEN_H = mRes.mHeight;
+    gx.resize(mRes.mWidth, mRes.mHeight);
 
     trace("package loaded %s %dx%d", name.c_str(), mRes.mWidth, mRes.mHeight);
     emscripten_set_canvas_size(mRes.mWidth, mRes.mHeight);
@@ -116,7 +115,7 @@ public:
 
   void doUninit()
   {
-    good::gx::SDLImageResource::inst().clear();
+    good::gx::GLImageResource::inst().clear();
     SDL_Quit();
   }
 
@@ -264,11 +263,13 @@ int EMSCRIPTEN_KEEPALIVE cRunPkg(void *pBuff, int size)
 
 int main(int argc, char* argv[])
 {
+  srand(time(0));
   SW2_TRACE_FUNC(GoodTraceTool);
   if (2 == argc) {
     char buff[128];
     sprintf(buff, "loadPkg('%s', 'cRunPkg')", argv[1]);
     emscripten_run_script(buff);
+    emscripten_exit_with_live_runtime();
   } else {
     app.trace("no good package assigned");
   }
