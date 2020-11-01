@@ -60,6 +60,9 @@ extern "C" {
 // #define GOOD_SUPPORT_EMSC_IMG
 // Is enable HTML5 image decoder.
 //
+// #define GOOD_SUPPORT_STB_IMG
+// Is enable stb image decoder.
+//
 // #define GOOD_RENDER_WITH_DIRTY_FLAG
 // Render screen only when dirty flag is set.
 //

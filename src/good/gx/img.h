@@ -27,6 +27,15 @@ extern "C" {
 }
 #endif
 
+#ifdef GOOD_SUPPORT_STB_IMG
+#define STBI_NO_LINEAR
+#define STBI_NO_HDR
+#define STBI_ASSERT(x)
+#define STBIR_ASSERT(x)
+#define STBIW_ASSERT(x)
+#include "stb_image.h"
+#endif
+
 namespace good {
 
 namespace gx {
@@ -308,6 +317,16 @@ public:
 
   bool loadFromStream(std::string const& stream)
   {
+#ifdef GOOD_SUPPORT_STB_IMG
+  int n;
+  dat = (char*)stbi_load_from_memory((const stbi_uc*)stream.data(), (int)stream.size(), &w, &h, &n, 4);
+  if (isValid()) {
+    bpp = 4;
+    return true;
+  } else {
+    return false;
+  }
+#else
 #ifdef GOOD_SUPPORT_GDIPLUS
     return Win32GdiplusLoadImage(stream);
 #else
@@ -328,6 +347,7 @@ public:
       return false;
     }
 #endif
+#endif // GOOD_SUPPORT_STB_IMG
   }
 
   bool loadFromChar(int size, int ch, bool bAntiAlias)
