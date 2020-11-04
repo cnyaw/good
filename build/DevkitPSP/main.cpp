@@ -69,8 +69,8 @@ int setupCallbacks(void)
 }
 
 #define GOOD_SUPPORT_STGE
-#define GOOD_SUPPORT_PNG
-#define GOOD_SUPPORT_JPG
+#define GOOD_SUPPORT_STB_IMG
+#define STB_IMAGE_IMPLEMENTATION
 #define GOOD_SUPPORT_NO_LOGO
 #include "rt/rt.h"
 #include "DevkitPSP_app.h"

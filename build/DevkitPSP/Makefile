@@ -21,8 +21,8 @@ EXTRA_TARGETS = EBOOT.PBP
 PSP_EBOOT_TITLE = Good devkitPSP 1.6.4
 PSP_EBOOT_ICON = icon.png
 
-LIBS = -lpspgum -lpspgu -lm -lstdc++ -lz -lpng -ljpeg
-INCDIR = ../../../../open/yard-1.5 ../../../../open/lua-5.1.4/src ../../../smallworld2/include ../../../stge ../../src/good
+LIBS = -lpspgum -lpspgu -lm -lstdc++ -lz
+INCDIR = ../../../../open/stb ../../../../open/yard-1.5 ../../../../open/lua-5.1.4/src ../../../smallworld2/include ../../../stge ../../src/good
 
 PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build.mak
