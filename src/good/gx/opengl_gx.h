@@ -376,6 +376,19 @@ public:
     }
   }
 
+  void applyObjTex(float x0, float y0, float x1, float y1) const
+  {
+    float *pTexCoord = ((float*)&*texcoord.begin()) + 2 * NUM_VERT_PER_OBJ * obj_index;
+    pTexCoord[0] = x0;
+    pTexCoord[1] = y0;
+    pTexCoord[2] = x1;
+    pTexCoord[3] = y0;
+    pTexCoord[4] = x1;
+    pTexCoord[5] = y1;
+    pTexCoord[6] = x0;
+    pTexCoord[7] = y1;
+  }
+
   bool drawImage(int x, int y, GLImage const& img, int srcx, int srcy, int srcw, int srch, unsigned int color, float rot, float xscale, float yscale)
   {
     if (!img.isValid()) {
@@ -408,22 +421,11 @@ public:
 
     float imgw = GL_Surface<GLImageResource>::GL_PACK_TEX_WIDTH;
     float imgh = GL_Surface<GLImageResource>::GL_PACK_TEX_HEIGHT;
-
     srcx += img.mSur->left;
     srcy += img.mSur->top;
-
     float x0 = (.5f + srcx) / (float)imgw, y0 = (.5f + srcy) / (float)imgh; // Apply half pixel correction to avoid texture edge color problem.
     float x1 = (-.5f + srcx + srcw) / (float)imgw, y1 = (-.5f + srcy + srch) / (float)imgh;
-
-    float *pTexCoord = ((float*)&*texcoord.begin()) + 2 * NUM_VERT_PER_OBJ * obj_index;
-    pTexCoord[0] = x0;
-    pTexCoord[1] = y0;
-    pTexCoord[2] = x1;
-    pTexCoord[3] = y0;
-    pTexCoord[4] = x1;
-    pTexCoord[5] = y1;
-    pTexCoord[6] = x0;
-    pTexCoord[7] = y1;
+    applyObjTex(x0, y0, x1, y1);
 
     applyObjColor(color);
 
@@ -458,22 +460,11 @@ public:
 
     float imgw = GL_Surface<GLImageResource>::GL_PACK_TEX_WIDTH;
     float imgh = GL_Surface<GLImageResource>::GL_PACK_TEX_HEIGHT;
-
     int srcx = imgWhitePixel.mSur->left;
     int srcy = imgWhitePixel.mSur->top;
-
     float x0 = (.5f + srcx) / (float)imgw, y0 = (.5f + srcy) / (float)imgh; // Apply half pixel correction to avoid texture edge color problem.
     float x1 = (-.5f + srcx + 1) / (float)imgw, y1 = (-.5f + srcy + 1) / (float)imgh;
-
-    float *pTexCoord = ((float*)&*texcoord.begin()) + 2 * NUM_VERT_PER_OBJ * obj_index;
-    pTexCoord[0] = x0;
-    pTexCoord[1] = y0;
-    pTexCoord[2] = x1;
-    pTexCoord[3] = y0;
-    pTexCoord[4] = x1;
-    pTexCoord[5] = y1;
-    pTexCoord[6] = x0;
-    pTexCoord[7] = y1;
+    applyObjTex(x0, y0, x1, y1);
 
     applyObjColor(color);
 
@@ -501,17 +492,7 @@ public:
     mat.postTranslate(x + w / 2.0f, y + h / 2.0f, 0);
     mat.postScale((float)w, (float)h, 1);
     applyObjVert(mat);
-
-    float *pTexCoord = ((float*)&*texcoord.begin()) + 2 * NUM_VERT_PER_OBJ * obj_index;
-    pTexCoord[0] = .0f;
-    pTexCoord[1] = .0f;
-    pTexCoord[2] = 1.0f;
-    pTexCoord[3] = .0f;
-    pTexCoord[4] = 1.0f;
-    pTexCoord[5] = 1.0f;
-    pTexCoord[6] = .0f;
-    pTexCoord[7] = 1.0f;
-
+    applyObjTex(.0f, .0f, 1.0f, 1.0f);
     applyObjColor(color);
 
     obj_index += 1;
