@@ -36,23 +36,11 @@ extern "C" {
 // #define GOOD_MAX_STGE_OBJ_MGR
 // Number of STGE object manager.
 //
-// #define GOOD_SUPPORT_SDL
-// Define in editor player uses SDL renderer, default is OpenGL.
-//
-// #define GOOD_SUPPORT_IMGP_GX
-// Use ImgpGraphics gx.
-//
 // #define GOOD_SUPPORT_STGE
 // Is enable STGE feature.
 //
 // #define GOOD_SUPPORT_GDIPLUS
 // Is enable GDI+ image decoder, windows only.
-//
-// #define GOOD_SUPPORT_PNG
-// Is enable PNG  decoder.
-//
-// #define GOOD_SUPPORT_JPG
-// Is enable JPG decoder.
 //
 // #define GOOD_SUPPORT_ANDROID_IMG
 // Is enable android system image decoder.

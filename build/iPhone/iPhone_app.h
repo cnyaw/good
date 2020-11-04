@@ -11,17 +11,18 @@
 
 #pragma once
 
-#define GOOD_SUPPORT_PNG
-#define GOOD_SUPPORT_JPG
+#define GOOD_SUPPORT_STB_IMG
+#define STB_IMAGE_IMPLEMENTATION
 
 #include "gx/opengl_gx.h"
+#include "gx/imgp_gx.h"
 #include "snd/openal_snd.h"
 
 namespace good {
 
 namespace rt {
 
-class IPhoneApplication : public Application<IPhoneApplication, gx::GLImage, snd::ALSound>
+class IPhoneApplication : public Application<IPhoneApplication, gx::GLImage, snd::ALSound, gx::Imgp>
 {
   enum {
     TIME_HANDLE_VIRTUAL_MOVE = 8,

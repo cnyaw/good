@@ -16,8 +16,7 @@
 #ifdef WIN32
 # define GOOD_SUPPORT_GDIPLUS
 #else
-# define GOOD_SUPPORT_PNG
-# define GOOD_SUPPORT_JPG
+# define GOOD_SUPPORT_STB_IMG
 #endif
 
 #include "../gx/sdl_gx.h"
