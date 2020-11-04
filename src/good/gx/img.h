@@ -18,7 +18,12 @@
 
 #ifdef GOOD_SUPPORT_STB_IMG
 #define STBI_NO_LINEAR
+#define STBI_NO_PSD
+#define STBI_NO_TGA
+#define STBI_NO_GIF
 #define STBI_NO_HDR
+#define STBI_NO_PIC
+#define STBI_NO_PNM
 #define STBI_ASSERT(x)
 #define STBIR_ASSERT(x)
 #define STBIW_ASSERT(x)
