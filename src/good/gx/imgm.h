@@ -210,7 +210,18 @@ public:
 
     ifs.read((char*)s.data(), lenstream);
 
-    return getImage(name, s);
+    return getImage_i(name, s);
+  }
+
+  RectT const* getImage_i(std::string const& name, std::string const& stream)
+  {
+    GxImage img;
+    if (!img.loadFromStream(stream)) {
+      SW2_TRACE_ERROR("load image stream %s failed", name.c_str());
+      mImg[name] = RectT();
+      return 0;
+    }
+    return getImage_i(name, img);
   }
 
   RectT const* getImage(std::string const& name, std::string const& stream)
@@ -219,24 +230,11 @@ public:
     if (mImg.end() != it) {
       return &it->second;
     }
-
-    GxImage img;
-    if (!img.loadFromStream(stream)) {
-      SW2_TRACE_ERROR("load image stream %s failed", name.c_str());
-      mImg[name] = RectT();
-      return 0;
-    }
-
-    return getImage(name, img);
+    return getImage_i(name, stream);
   }
 
-  RectT const* getImage(std::string const& name, GxImage &img)
+  RectT const* getImage_i(std::string const& name, GxImage &img)
   {
-    typename std::map<std::string, RectT>::const_iterator it = mImg.find(name);
-    if (mImg.end() != it) {
-      return &it->second;
-    }
-
     RectT sur;
     if (((T*)this)->LoadSurface(img, sur)) {
       mImg[name] = sur;
@@ -246,6 +244,15 @@ public:
       mImg[name] = sur;
       return 0;
     }
+  }
+
+  RectT const* getImage(std::string const& name, GxImage &img)
+  {
+    typename std::map<std::string, RectT>::const_iterator it = mImg.find(name);
+    if (mImg.end() != it) {
+      return &it->second;
+    }
+    return getImage_i(name, img);
   }
 };
 
