@@ -204,6 +204,8 @@ public:
     MAX_OBJ = 1024
   };
 
+  typedef GL_Surface<GLImageResource> SurT;
+
   int SCREEN_W, SCREEN_H;
 
   int nDrawCalls, nLastDrawCalls;
@@ -295,11 +297,18 @@ public:
     flush();
   }
 
-  template<class T>
-  void checkFlush(const T &tex)
+  void checkFlush(const SurT *tex)
   {
     if (tex != GLImageResource::inst().lastTex || MAX_OBJ == obj_index) {
       flush();
+    }
+  }
+
+  void checkTexChange(SurT *pSur)
+  {
+    if (pSur != GLImageResource::inst().lastTex) {
+      glBindTexture(GL_TEXTURE_2D, pSur->tex);
+      GLImageResource::inst().lastTex = pSur;
     }
   }
 
@@ -419,8 +428,8 @@ public:
 
     applyObjTransform(x, y, srcw, srch, xscale, yscale, rot);
 
-    float imgw = GL_Surface<GLImageResource>::GL_PACK_TEX_WIDTH;
-    float imgh = GL_Surface<GLImageResource>::GL_PACK_TEX_HEIGHT;
+    float imgw = SurT::GL_PACK_TEX_WIDTH;
+    float imgh = SurT::GL_PACK_TEX_HEIGHT;
     srcx += img.mSur->left;
     srcy += img.mSur->top;
     float x0 = (.5f + srcx) / (float)imgw, y0 = (.5f + srcy) / (float)imgh; // Apply half pixel correction to avoid texture edge color problem.
@@ -431,10 +440,7 @@ public:
 
     obj_index += 1;
 
-    if (img.mSur->tex != GLImageResource::inst().lastTex) {
-      glBindTexture(GL_TEXTURE_2D, img.mSur->tex->tex);
-      GLImageResource::inst().lastTex = img.mSur->tex;
-    }
+    checkTexChange(img.mSur->tex);
 
     return true;
   }
@@ -458,8 +464,8 @@ public:
 
     applyObjTransform(x, y, w, h, xscale, yscale, rot);
 
-    float imgw = GL_Surface<GLImageResource>::GL_PACK_TEX_WIDTH;
-    float imgh = GL_Surface<GLImageResource>::GL_PACK_TEX_HEIGHT;
+    float imgw = SurT::GL_PACK_TEX_WIDTH;
+    float imgh = SurT::GL_PACK_TEX_HEIGHT;
     int srcx = imgWhitePixel.mSur->left;
     int srcy = imgWhitePixel.mSur->top;
     float x0 = (.5f + srcx) / (float)imgw, y0 = (.5f + srcy) / (float)imgh; // Apply half pixel correction to avoid texture edge color problem.
@@ -470,10 +476,7 @@ public:
 
     obj_index += 1;
 
-    if (imgWhitePixel.mSur->tex != GLImageResource::inst().lastTex) {
-      glBindTexture(GL_TEXTURE_2D, imgWhitePixel.mSur->tex->tex);
-      GLImageResource::inst().lastTex = imgWhitePixel.mSur->tex;
-    }
+    checkTexChange(imgWhitePixel.mSur->tex);
 
     return true;
   }
@@ -483,7 +486,7 @@ public:
     GLImageResource::inst().restoreSur();
   }
 
-  bool drawTex(int x, int y, GL_Surface<GLImageResource> *pSur, int w, int h, unsigned int color)
+  bool drawTex(int x, int y, SurT *pSur, int w, int h, unsigned int color)
   {
     checkFlush(pSur);
 
@@ -497,10 +500,7 @@ public:
 
     obj_index += 1;
 
-    if (pSur != GLImageResource::inst().lastTex) {
-      glBindTexture(GL_TEXTURE_2D, pSur->tex);
-      GLImageResource::inst().lastTex = pSur;
-    }
+    checkTexChange(pSur);
 
     return true;
   }
