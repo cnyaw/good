@@ -312,10 +312,14 @@ public:
   bool loadFromStream(std::string const& stream)
   {
 #ifdef GOOD_SUPPORT_GDIPLUS
-    return Win32GdiplusLoadImage(stream);
+    if (Win32GdiplusLoadImage(stream)) {
+      return true;
+    }
 #endif
 #ifdef GOOD_SUPPORT_ANDROID_IMG
-    return AndroidLoadImage(stream);
+    if (AndroidLoadImage(stream)) {
+      return true;
+    }
 #endif
 #ifdef GOOD_SUPPORT_STB_IMG
   int n;
@@ -323,8 +327,6 @@ public:
   if (isValid()) {
     bpp = 4;
     return true;
-  } else {
-    return false;
   }
 #endif
     return false;
@@ -356,7 +358,6 @@ public:
     if (0 == dat) {
       return;
     }
-
     BITMAPINFO bmi = {0};
     bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
     bmi.bmiHeader.biWidth = w;
@@ -365,7 +366,6 @@ public:
     bmi.bmiHeader.biBitCount = 32;
     bmi.bmiHeader.biClrImportant = BI_RGB;
     bmi.bmiHeader.biXPelsPerMeter = bmi.bmiHeader.biYPelsPerMeter = 1;
-
     SetDIBitsToDevice(hdc, x, y, w, h, 0, 0, 0, h, dat, &bmi, DIB_RGB_COLORS);
   }
 #endif
