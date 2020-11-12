@@ -1082,35 +1082,24 @@ public:
   void PlayGame(std::string const& name, int StartLevel)
   {
     ShowWindow(SW_HIDE);
-#ifdef GOOD_SUPPORT_SDL
-    good::rt::SDLApplication::getInst().go(name);
-#else
     good::rt::CPlayerWindow& wndMain = good::rt::CPlayerWindow::getInst();
-
     if (wndMain.CreateEx() == NULL) {
       SW2_TRACE_ERROR("Main gl window creation failed!\n");
     } else {
-
       wndMain.Reset(StartLevel);
-
       if (!wndMain.init(name)) {
         SW2_TRACE_ERROR("Init good failed!\n");
       }
-
       wndMain.ShowWindow(SW_SHOW);
-
       wndMain.theLoop.AddMessageFilter(&wndMain);
       timeBeginPeriod(1);
       wndMain.theLoop.Run();
       timeEndPeriod(1);
       wndMain.theLoop.RemoveMessageFilter(&wndMain);
-
       for (size_t i = 0; i < wndMain.logs.size(); i++) {
         SW2_TRACE_MESSAGE(wndMain.logs[i].c_str());
       }
     }
-
-#endif
     ShowWindow(SW_SHOW);
   }
 

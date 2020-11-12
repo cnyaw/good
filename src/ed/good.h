@@ -109,14 +109,7 @@ enum APP_GOOD_RESOURCE_TYPE
 #include "resource.h"
 #include "resource1.h"
 
-#ifdef GOOD_SUPPORT_SDL
-# include "../good/app/sdl_app.h"
-# pragma comment(lib, "SDL.lib")
-# pragma comment(lib, "SDLmain.lib")
-#else
-# include "../good/app/wtl_player.h"    // Imply enable GOOD_SUPPORT_GDIPLUS.
-#endif
-
+#include "../good/app/wtl_player.h"
 #include "../good/gx/gdi_gx.h"
 
 typedef good::ed::Project PrjT;
