@@ -162,20 +162,11 @@ public:
       return it->second;
     }
 
-    std::ifstream ifs(name.c_str(), std::ios::binary);
-    if (!ifs) {
+    std::string str;
+    if (!loadFileBinaryContent(name.c_str(), str)) {
       SW2_TRACE_ERROR("open sound file %s failed", name.c_str());
       return -1;
     }
-
-    ifs.seekg(0, std::ios_base::end);
-    int lenstream = (int)ifs.tellg();
-    ifs.seekg(0, std::ios_base::beg);
-
-    std::string str;
-    str.resize(lenstream);
-
-    ifs.read((char*)str.data(), lenstream);
 
     return getSound(name, bBgm, str);
   }

@@ -292,20 +292,10 @@ public:
 
   bool load(std::string const& name)
   {
-    std::ifstream ifs(name.c_str(), std::ios::binary);
-    if (!ifs) {
-      return 0;
-    }
-
-    ifs.seekg(0, std::ios_base::end);
-    int lenstream = (int)ifs.tellg();
-    ifs.seekg(0, std::ios_base::beg);
-
     std::string s;
-    s.resize(lenstream);
-
-    ifs.read((char*)s.data(), lenstream);
-
+    if (!loadFileBinaryContent(name.c_str(), s)) {
+      return false;
+    }
     return loadFromStream(s);
   }
 

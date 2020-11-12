@@ -194,21 +194,12 @@ public:
       return &it->second;
     }
 
-    std::ifstream ifs(name.c_str(), std::ios::binary);
-    if (!ifs) {
+    std::string s;
+    if (!loadFileBinaryContent(name.c_str(), s)) {
       SW2_TRACE_ERROR("open image resource %s failed", name.c_str());
       mImg[name] = RectT();
       return 0;
     }
-
-    ifs.seekg(0, std::ios_base::end);
-    int lenstream = (int)ifs.tellg();
-    ifs.seekg(0, std::ios_base::beg);
-
-    std::string s;
-    s.resize(lenstream);
-
-    ifs.read((char*)s.data(), lenstream);
 
     return getImage_i(name, s);
   }

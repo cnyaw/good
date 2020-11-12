@@ -71,6 +71,20 @@ std::string getName(T const& t, std::string const& tag)
   }
 }
 
+bool loadFileBinaryContent(const char *pFileName, std::string &outs)
+{
+  std::ifstream ifs(pFileName, std::ios::binary);
+  if (!ifs) {
+    return false;
+  }
+  ifs.seekg(0, std::ios_base::end);
+  int lenstream = (int)ifs.tellg();
+  ifs.seekg(0, std::ios_base::beg);
+  outs.resize(lenstream);
+  ifs.read((char*)outs.data(), lenstream);
+  return true;
+}
+
 int loadRGB(std::string const& rgb)
 {
   std::stringstream ss(rgb);
