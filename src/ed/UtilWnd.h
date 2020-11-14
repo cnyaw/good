@@ -481,7 +481,7 @@ public:
 
   virtual void OnDblClickItem()
   {
-    MainT::inst().mExpView.AddEditorView(GetResType(), GetResId(mCurSel));
+    MainT::inst().mExpView.OpenResItemView(GetResType(), GetResId(mCurSel));
   }
 
   void SetCurSel(int id)

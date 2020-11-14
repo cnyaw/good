@@ -553,6 +553,33 @@ end:
     return false;
   }
 
+  int OpenResItemView(int typeItem, int idItem)
+  {
+    //
+    // Find exist view.
+    //
+
+    MainT& m = MainT::inst();
+    for (int i = 0; i < m.mTabView.GetPageCount(); ++i) {
+      HWND hwnd = m.mTabView.GetPageHWND(i);
+      int id = (int)::SendMessage(hwnd, WM_GOOD_GETRESOURCEID, 0, 0);
+      if (id == idItem) {
+        m.mTabView.SetActivePage(i);
+        return 1;
+      }
+    }
+
+    //
+    // Open new view.
+    //
+
+    if (AddEditorView(typeItem, idItem)) {
+      return 1;
+    }
+
+    return 0;
+  }
+
   LRESULT OnTreeDblClk(LPNMHDR pnmh)
   {
     if (mTree != pnmh->hwndFrom) {
@@ -579,28 +606,7 @@ end:
     int typeItem = (int)mTree.GetItemData(group);
     int idItem = (int)mTree.GetItemData(sel);
 
-    //
-    // Find exist view.
-    //
-
-    for (int i = 0; i < m.mTabView.GetPageCount(); ++i) {
-      HWND hwnd = m.mTabView.GetPageHWND(i);
-      int id = (int)::SendMessage(hwnd, WM_GOOD_GETRESOURCEID, 0, 0);
-      if (id == idItem) {
-        m.mTabView.SetActivePage(i);
-        return 1;
-      }
-    }
-
-    //
-    // Open new view.
-    //
-
-    if (AddEditorView(typeItem, idItem)) {
-      return 1;
-    }
-
-    return 0;
+    return OpenResItemView(typeItem, idItem);
   }
 
   bool RemoveResItem(int typeItem, int idItem)
