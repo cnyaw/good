@@ -156,11 +156,11 @@ bool isGoodArchive(std::string const& name)
 #ifdef WIN32
 void ShellOpen(const char *path)
 {
-  SHELLEXECUTEINFO si = {sizeof(SHELLEXECUTEINFO)};
-  si.lpVerb = TEXT("open");
+  SHELLEXECUTEINFOA si = {sizeof(SHELLEXECUTEINFOA)};
+  si.lpVerb = "open";
   si.lpFile = path;
   si.nShow = SW_SHOWNORMAL;
-  ShellExecuteEx(&si);
+  ShellExecuteExA(&si);
 }
 #endif
 
