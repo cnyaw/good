@@ -718,10 +718,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\good\ed\grp.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\good\ed\lvl.h"
 				>
 			</File>

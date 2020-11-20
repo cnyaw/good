@@ -66,7 +66,6 @@ enum
 #include "spr.h"
 #include "obj.h"
 #include "lvl.h"
-#include "grp.h"
 
 #include "prj.h"
 

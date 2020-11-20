@@ -52,8 +52,6 @@ public:
   ResT mRes;
   mutable bool mModified;               // Is mRes modified?
 
-  std::vector<Group> mGroup;
-
   //
   // Singleton.
   //
@@ -160,49 +158,9 @@ public:
       return false;
     }
 
-    if (!loadGroups(res.mId, ins)) {
-      return false;
-    }
-
     closeAll();
 
     mRes = res;
-
-    return true;
-  }
-
-  template<class PoolT>
-  bool loadGroups(PoolT& p, std::istream& ins)
-  {
-    ins.clear();
-    ins.seekg(0, ins.beg);
-
-    sw2::Ini ini;
-    if (!ini.load(ins)) {
-      SW2_TRACE_ERROR("bad ini file format");
-      return false;
-    }
-
-    if (!ini.find("good")) {
-      SW2_TRACE_ERROR("[good] section not found");
-      return false;
-    }
-
-    sw2::Ini sec = ini["good"];
-
-    std::stringstream ss(sec["groups"].value);
-
-    std::vector<int> v;
-    v.assign(std::istream_iterator<int>(ss), std::istream_iterator<int>());
-
-    mGroup.clear();
-    for (size_t i = 0; i < v.size(); ++ i) {
-      Group g;
-      if (!g.load(p, ini, v[i])) {
-        return false;
-      }
-      mGroup.push_back(g);
-    }
 
     return true;
   }
@@ -959,34 +917,12 @@ public:
       return false;
     }
 
-    //
-    // Groups.
-    //
-
-    if (!storeGroups(ini)) {
-      return false;
-    }
-
     if (!ini.store(outs)) {
       return false;
     }
 
     mModified = false;
 
-    return true;
-  }
-
-  bool storeGroups(sw2::Ini& ini) const
-  {
-    std::vector<int> v;
-    for (size_t i = 0; i < mGroup.size(); i++) {
-      const Group &g = mGroup[i];
-      if (!g.store(ini)) {
-        return false;
-      }
-      v.push_back(g.mId);
-    }
-    ini["good"]["groups"] = intVecToStr(v);
     return true;
   }
 

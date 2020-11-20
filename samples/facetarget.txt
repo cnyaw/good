@@ -3,7 +3,6 @@ version=0.3
 name=face targe
 texs=0
 levels=1
-groups=
 
 [scripts]
 4=./facetarget.lua

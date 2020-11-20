@@ -2,7 +2,6 @@
 version=0.3
 name=line
 levels=0
-groups=
 
 [scripts]
 1=./line.lua
