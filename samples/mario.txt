@@ -90,6 +90,7 @@ objects=3 7 8 9 10 21 22 24 26 11 18
 
 [object3]
 texture=2
+dim=0 0 256 224
 
 [object7]
 sprite=6

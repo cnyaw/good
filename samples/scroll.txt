@@ -39,12 +39,14 @@ objects=3 9 6 7
 name=bg
 texture=2
 repX=1
+dim=0 0 256 224
 
 [object9]
 name=sun
 texture=8
 repX=1
 x=-112
+dim=0 0 400 81
 
 [object6]
 name=bg2
@@ -52,6 +54,7 @@ texture=5
 repX=1
 x=16
 y=-16
+dim=0 0 216 165
 
 [object7]
 sprite=16

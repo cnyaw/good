@@ -23,10 +23,12 @@ repX=1
 repY=1
 x=32
 y=16
+dim=0 0 100 95
 
 [object5]
 texture=1
 x=176
 y=112
 script=Test
+dim=0 0 107 107
 
