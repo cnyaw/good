@@ -27,6 +27,7 @@ public:
   typedef Level<PrjT> LevelT;
 };
 
+template<class ImgT>
 class Project
 {
 private:
@@ -39,14 +40,14 @@ public:
 
   enum { UNDO_LEVEL = INT_MAX };
 
-  typedef Traits<Project> TraitsT;
+  typedef Traits<Project<ImgT> > TraitsT;
   typedef good::Resource<TraitsT> ResT;
-  typedef TraitsT::SoundT SoundT;
-  typedef TraitsT::TextureT TextureT;
-  typedef TraitsT::MapT MapT;
-  typedef TraitsT::SpriteT SpriteT;
-  typedef TraitsT::ObjectT ObjectT;
-  typedef TraitsT::LevelT LevelT;
+  typedef typename TraitsT::SoundT SoundT;
+  typedef typename TraitsT::TextureT TextureT;
+  typedef typename TraitsT::MapT MapT;
+  typedef typename TraitsT::SpriteT SpriteT;
+  typedef typename TraitsT::ObjectT ObjectT;
+  typedef typename TraitsT::LevelT LevelT;
 
   ResT mRes;
   mutable bool mModified;               // Is mRes modified?
@@ -276,7 +277,6 @@ public:
   // Tex opt.
   //
 
-  template<class ImgT>
   int addTex(std::string const& fileName)
   {
     //
@@ -353,7 +353,6 @@ public:
   // Map opt.
   //
 
-  template<class ImgT>
   int addMap(std::string const& name, int width, int height, int tileWidth, int tileHeight, int texture)
   {
     //
@@ -433,7 +432,6 @@ public:
   // Sprite opt.
   //
 
-  template<class ImgT>
   int addSprite(std::string const& name, int width, int height, int texture)
   {
     //
@@ -537,7 +535,6 @@ public:
     return id;
   }
 
-  template<class ImgT>
   int addLevelObj(int idLvl, int x, int y)
   {
     LevelT& lvl = getLevel(idLvl);
@@ -552,14 +549,13 @@ public:
 
     if (lvl.isAddTexTool()) {
       sw2::IntRect rc;
-      getObjDim<ImgT>(lvl.getObj(idObj), rc);
+      getObjDim(lvl.getObj(idObj), rc);
       lvl.getObj(idObj).setDim(0, 0, rc.width(), rc.height());
     }
 
     return idObj;
   }
 
-  template<class ImgT>
   void getObjDim(ObjectT const& obj, sw2::IntRect &rc)
   {
     switch (obj.mType)

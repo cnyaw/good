@@ -163,7 +163,7 @@ public:
   {
     PrjT& prj = PrjT::inst();
 
-    int idMap = prj.addMap<ImgT>((char const*)mProp.mName, mProp.mWidth, mProp.mHeight, mProp.mTileWidth, mProp.mTileHeight, mProp.mTexture);
+    int idMap = prj.addMap((char const*)mProp.mName, mProp.mWidth, mProp.mHeight, mProp.mTileWidth, mProp.mTileHeight, mProp.mTexture);
     if (-1 == idMap) {
       return FALSE;
     }
@@ -221,7 +221,7 @@ public:
 
     PrjT& prj = PrjT::inst();
 
-    int idSprite = prj.addSprite<ImgT>((char const*)mName, mTileWidth, mTileHeight, mTexture);
+    int idSprite = prj.addSprite((char const*)mName, mTileWidth, mTileHeight, mTexture);
     if (-1 == idSprite) {
       return FALSE;
     }

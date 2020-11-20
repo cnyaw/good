@@ -966,7 +966,7 @@ public:
       }
 
       sw2::IntRect rc;
-      PrjT::inst().getObjDim<ImgT>(o, rc);
+      PrjT::inst().getObjDim(o, rc);
 
       int neww = rc.width() + deltaX, newh = rc.height() + deltaY;
       if (0 >= neww || 0 >= newh) {
@@ -1057,7 +1057,6 @@ public:
   // Alignment.
   //
 
-  template<class ImgT>
   bool doAlignObjs(std::vector<int> const& ids, int type)
   {
     //
@@ -1075,7 +1074,7 @@ public:
     PrjT &prj = PrjT::inst();
 
     sw2::IntRect rcPivot;
-    prj.getObjDim<ImgT>(getObj(ids.back()), rcPivot);
+    prj.getObjDim(getObj(ids.back()), rcPivot);
 
     //
     // Move objects.
@@ -1088,7 +1087,7 @@ public:
       PrjT::ObjectT const& o = getObj(ids[i]);
 
       sw2::IntRect rc;
-      prj.getObjDim<ImgT>(o, rc);
+      prj.getObjDim(o, rc);
 
       int offsetX = 0, offsetY = 0;
 
@@ -1118,28 +1117,24 @@ public:
     return true;
   }
 
-  template<class ImgT>
   bool alignLeft(std::vector<int> const& ids)
   {
-    return doAlignObjs<ImgT>(ids, ALIGN_LEFT);
+    return doAlignObjs(ids, ALIGN_LEFT);
   }
 
-  template<class ImgT>
   bool alignRight(std::vector<int> const& ids)
   {
-    return doAlignObjs<ImgT>(ids, ALIGN_RIGHT);
+    return doAlignObjs(ids, ALIGN_RIGHT);
   }
 
-  template<class ImgT>
   bool alignTop(std::vector<int> const& ids)
   {
-    return doAlignObjs<ImgT>(ids, ALIGN_TOP);
+    return doAlignObjs(ids, ALIGN_TOP);
   }
 
-  template<class ImgT>
   bool alignBottom(std::vector<int> const& ids)
   {
-    return doAlignObjs<ImgT>(ids, ALIGN_BOTTOM);
+    return doAlignObjs(ids, ALIGN_BOTTOM);
   }
 
   bool centerObj_i(int WndX, int WndY, int WndW, int WndH, const std::vector<int> &ids, bool isHorz)
@@ -1154,7 +1149,7 @@ public:
     for (size_t i = 0; i < ids.size(); i++) {
       const PrjT::ObjectT &o = getObj(ids[i]);
       sw2::IntRect rc;
-      prj.getObjDim<ImgT>(o, rc);
+      prj.getObjDim(o, rc);
       int OffsetX = WndX + (WndW - rc.width()) / 2;
       int OffsetY = WndY + (WndH - rc.height()) / 2;
       int idParent = getParent(ids[i]);

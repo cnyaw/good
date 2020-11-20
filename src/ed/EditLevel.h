@@ -135,7 +135,7 @@ public:
       ptCur.y = ptCur.y / sh * sh;
     }
 
-    int id = PrjT::inst().addLevelObj<ImgT>(mEditor.mId, ptCur.x, ptCur.y);
+    int id = PrjT::inst().addLevelObj(mEditor.mId, ptCur.x, ptCur.y);
     if (-1 == id) {
       return;
     }
@@ -1720,16 +1720,16 @@ public:
     switch (nID)
     {
     case ID_LEVELEDIT_ALIGNLEFT:
-      lvl.alignLeft<ImgT>(mEditView.mCurSel);
+      lvl.alignLeft(mEditView.mCurSel);
       break;
     case ID_LEVELEDIT_ALIGNRIGHT:
-      lvl.alignRight<ImgT>(mEditView.mCurSel);
+      lvl.alignRight(mEditView.mCurSel);
       break;
     case ID_LEVELEDIT_ALIGNTOP:
-      lvl.alignTop<ImgT>(mEditView.mCurSel);
+      lvl.alignTop(mEditView.mCurSel);
       break;
     case ID_LEVELEDIT_ALIGNBOTTOM:
-      lvl.alignBottom<ImgT>(mEditView.mCurSel);
+      lvl.alignBottom(mEditView.mCurSel);
       break;
     }
     mEditView.Invalidate();

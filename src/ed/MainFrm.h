@@ -478,7 +478,7 @@ public:
       CString n(Buff + s, i - s);
       n = path + _T("\\") + n;
       std::string name = GetRelativePath((const char*)n, mFileName);
-      int id = prj.addTex<ImgT>(name);
+      int id = prj.addTex(name);
       if (-1 != id) {
         AddResourceItem(_T("Texture"), prj.getTex(id).getName(), id, GOOD_RESOURCE_TEXTURE, CreateEditor<CTextureEditor<CMainFrame> >(id));
       }
