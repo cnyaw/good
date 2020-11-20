@@ -124,6 +124,9 @@ BEGIN
     BUTTON      ID_LEVELEDIT_ALIGNTOP
     BUTTON      ID_LEVELEDIT_ALIGNBOTTOM
     SEPARATOR
+    BUTTON      ID_LEVELEDIT_VERTICLE
+    BUTTON      ID_LEVELEDIT_HORIZONTAL
+    SEPARATOR
     BUTTON      ID_LEVELEDIT_GRID
     BUTTON      ID_LEVELEDIT_LINE
 END
@@ -720,6 +723,12 @@ BEGIN
     ID_LEVELEDIT_ADDDUMMY   "New Dummy Object\nNew Dummy Obj"
     ID_LEVELEDIT_LINE       "Line\nToggle Line"
     ID_LEVELEDIT_ADDLVLOBJ  "New Level Object\nNew Level Obj"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_LEVELEDIT_VERTICLE   "Verticle\nVerticle"
+    ID_LEVELEDIT_HORIZONTAL "Horizontal\nHorizontal"
 END
 
 #endif    // English (U.S.) resources

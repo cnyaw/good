@@ -1328,6 +1328,9 @@ public:
     UIEnable(ID_LEVELEDIT_ALIGNTOP, MultiSel);
     UIEnable(ID_LEVELEDIT_ALIGNBOTTOM, MultiSel);
 
+    UIEnable(ID_LEVELEDIT_VERTICLE, !mEditView.mCurSel.empty());
+    UIEnable(ID_LEVELEDIT_HORIZONTAL, !mEditView.mCurSel.empty());
+
     UISetCheck(ID_LEVELEDIT_GRID, lvl.isShowSnap());
     UISetCheck(ID_LEVELEDIT_LINE, lvl.isShowLine());
 
@@ -1491,6 +1494,8 @@ public:
     UPDATE_ELEMENT(ID_LEVELEDIT_ALIGNRIGHT, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_ALIGNTOP, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_ALIGNBOTTOM, UPDUI_TOOLBAR)
+    UPDATE_ELEMENT(ID_LEVELEDIT_VERTICLE, UPDUI_TOOLBAR)
+    UPDATE_ELEMENT(ID_LEVELEDIT_HORIZONTAL, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_GRID, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_LINE, UPDUI_TOOLBAR)
   END_UPDATE_UI_MAP()
@@ -1511,6 +1516,8 @@ public:
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_LINE, OnToggleLine)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_MOVEITEM, OnMoveTool)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_REMOVE, OnRemoveTool)
+    COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_VERTICLE, OnCenterObjVert)
+    COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_HORIZONTAL, OnCenterObjHorz)
     COMMAND_RANGE_HANDLER_EX(ID_SNAP_8, ID_SNAP_64, OnSnapSize)
     COMMAND_RANGE_HANDLER_EX(ID_LEVELEDIT_MOVEUP, ID_LEVELEDIT_BOTTOMMOST, OnChangeItemZorder)
     COMMAND_RANGE_HANDLER_EX(ID_LEVELEDIT_ALIGNLEFT, ID_LEVELEDIT_ALIGNBOTTOM, OnAlignObject)
@@ -1754,6 +1761,22 @@ public:
       lvl.moveObjBottommost(id);
       break;
     }
+    mEditView.Invalidate(FALSE);
+  }
+
+  void OnCenterObjHorz(UINT uNotifyCode, int nID, CWindow wndCtl)
+  {
+    int w = min(mEditView.m_sizeAll.cx, mEditView.m_sizeClient.cx);
+    int h = min(mEditView.m_sizeAll.cy, mEditView.m_sizeClient.cy);
+    PrjT::inst().getLevel(mId).centerObjHorz(mEditView.m_ptOffset.x, mEditView.m_ptOffset.y, w, h, mEditView.mCurSel);
+    mEditView.Invalidate(FALSE);
+  }
+
+  void OnCenterObjVert(UINT uNotifyCode, int nID, CWindow wndCtl)
+  {
+    int w = min(mEditView.m_sizeAll.cx, mEditView.m_sizeClient.cx);
+    int h = min(mEditView.m_sizeAll.cy, mEditView.m_sizeClient.cy);
+    PrjT::inst().getLevel(mId).centerObjVert(mEditView.m_ptOffset.x, mEditView.m_ptOffset.y, w, h, mEditView.mCurSel);
     mEditView.Invalidate(FALSE);
   }
 

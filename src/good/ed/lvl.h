@@ -909,26 +909,28 @@ public:
   // Move obj.
   //
 
+  bool moveObj_i(int id, int offsetX, int offsetY, bool failUndo, int tagCmd)
+  {
+    LevelCmdMoveObj<Level> *pcmd = new LevelCmdMoveObj<Level>(mId, id, offsetX, offsetY);
+    if (!mUndo.execAndAdd(pcmd)) {
+      if (failUndo) {
+        mUndo.undo();
+      }
+      return false;
+    }
+    pcmd->mTag = tagCmd;
+    return true;
+  }
+
   bool moveObj(std::vector<int> const& ids, int offsetX, int offsetY)
   {
     int tag = mUndo.mTag;
-
     for (size_t i = 0; i < ids.size(); ++i) {
-      LevelCmdMoveObj<Level>* pcmd;
-      pcmd = new LevelCmdMoveObj<Level>(mId, ids[i], offsetX, offsetY);
-
-      if (!mUndo.execAndAdd(pcmd)) {
-        if (0 < i) {
-          mUndo.undo();
-        }
+      if (!moveObj_i(ids[i], offsetX, offsetY, 0 < i, tag)) {
         return false;
       }
-
-      pcmd->mTag = tag;
     }
-
     PrjT::inst().mModified = true;
-
     return true;
   }
 
@@ -1106,17 +1108,9 @@ public:
         break;
       }
 
-      LevelCmdMoveObj<Level>* pcmd;
-      pcmd = new LevelCmdMoveObj<Level>(mId, ids[i], offsetX, offsetY);
-
-      if (!mUndo.execAndAdd(pcmd)) {
-        if (0 < i) {
-          mUndo.undo();
-        }
+      if (!moveObj_i(ids[i], offsetX, offsetY, 0 < i, tag)) {
         return false;
       }
-
-      pcmd->mTag = tag;
     }
 
     prj.mModified = true;
@@ -1146,6 +1140,53 @@ public:
   bool alignBottom(std::vector<int> const& ids)
   {
     return doAlignObjs<ImgT>(ids, ALIGN_BOTTOM);
+  }
+
+  bool centerObj_i(int WndX, int WndY, int WndW, int WndH, const std::vector<int> &ids, bool isHorz)
+  {
+    if (ids.empty()) {
+      return false;
+    }
+
+    PrjT &prj = PrjT::inst();
+
+    int tag = mUndo.mTag;
+    for (size_t i = 0; i < ids.size(); i++) {
+      const PrjT::ObjectT &o = getObj(ids[i]);
+      sw2::IntRect rc;
+      prj.getObjDim<ImgT>(o, rc);
+      int OffsetX = WndX + (WndW - rc.width()) / 2;
+      int OffsetY = WndY + (WndH - rc.height()) / 2;
+      int idParent = getParent(ids[i]);
+      while (idParent != mId) {         // Convert to local pos of parent.
+        const ObjectT &p = getObj(idParent);
+        OffsetX -= p.mPosX;
+        OffsetY -= p.mPosY;
+        idParent = getParent(idParent);
+      }
+      if (isHorz) {
+        OffsetY = o.mPosY;
+      } else {
+        OffsetX = o.mPosX;
+      }
+      if (!moveObj_i(ids[i], OffsetX - o.mPosX, OffsetY - o.mPosY, 0 < i, tag)) {
+        return false;
+      }
+    }
+
+    prj.mModified = true;
+
+    return true;
+  }
+
+  bool centerObjHorz(int WndX, int WndY, int WndW, int WndH, const std::vector<int> &ids)
+  {
+    return centerObj_i(WndX, WndY, WndW, WndH, ids, true);
+  }
+
+  bool centerObjVert(int WndX, int WndY, int WndW, int WndH, const std::vector<int> &ids)
+  {
+    return centerObj_i(WndX, WndY, WndW, WndH, ids, false);
   }
 
   //
