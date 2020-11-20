@@ -52,5 +52,5 @@ API Reference https://agile-hollows-18660.herokuapp.com/good-ed/goodapi.html
 * Android
 * PSP
 * MOD
-* Web Browser
+* HTML5
 * ESP32
