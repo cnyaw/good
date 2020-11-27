@@ -570,6 +570,9 @@ public:
     } else if (PrjT::ObjectT::TYPE_COLBG == o.mType) {
       AddProp(prop, PropCreateSimple("Width", o.mDim.empty() ? 32 : o.mDim.width()));
       AddProp(prop, PropCreateSimple("Height", o.mDim.empty() ? 32 : o.mDim.height()));
+    } else if (PrjT::ObjectT::TYPE_TEXT == o.mType) {
+      AddProp(prop, PropCreateSimple("Text", o.mText.c_str()));
+      AddProp(prop, PropCreateSimple("TextSize", o.mTextSize));
     }
 
     if (PrjT::ObjectT::TYPE_MAPBG != o.mType) {
@@ -623,6 +626,14 @@ public:
         prop.SetItemValue(propmap["ScaleY"], &CComVariant(o.mScaleY));
         prop.SetItemValue(propmap["AnchorX"], &CComVariant(o.mAnchorX));
         prop.SetItemValue(propmap["AnchorY"], &CComVariant(o.mAnchorY));
+      } else if (PrjT::ObjectT::TYPE_TEXT == o.mType) {
+        prop.SetItemValue(propmap["TextSize"], &CComVariant(o.mTextSize));
+        prop.SetItemValue(propmap["Text"], &CComVariant(o.mText.c_str()));
+        prop.SetItemValue(propmap["Rot"], &CComVariant(o.mRot));
+        prop.SetItemValue(propmap["ScaleX"], &CComVariant(o.mScaleX));
+        prop.SetItemValue(propmap["ScaleY"], &CComVariant(o.mScaleY));
+        prop.SetItemValue(propmap["AnchorX"], &CComVariant(o.mAnchorX));
+        prop.SetItemValue(propmap["AnchorY"], &CComVariant(o.mAnchorY));
       } else if (PrjT::ObjectT::TYPE_MAPBG == o.mType) {
         prop.SetItemValue(propmap["RepeatX"], &CComVariant((int)o.mRepX));
         prop.SetItemValue(propmap["RepeatY"], &CComVariant((int)o.mRepY));
@@ -667,6 +678,10 @@ public:
       return !(b != o.mRepY);
     } else if (GetChangingProp(prop, ppi, _T("Script"), s)) {
       return !(s != o.mScript);
+    } if (GetChangingProp(prop, ppi, _T("TextSize"), i)) {
+      return !(i != o.mTextSize);
+    } if (GetChangingProp(prop, ppi, _T("Text"), s)) {
+      return !(s != o.mText);
     }
 
     return 1;                           // NOT allow change.
@@ -710,6 +725,10 @@ public:
       lvl.setObjProp(mObjId, o.mVisible, o.mRot, o.mScaleX, o.mScaleY, o.mAnchorX, o.mAnchorY, o.mRepX, b);
     } else if (GetChangedProp(ppi, _T("Script"), s)) {
       lvl.setObjScript(mObjId, s);
+    } else if (GetChangedProp(ppi, _T("TextSize"), i)) {
+      lvl.setObjTextSize(mObjId, i);
+    } else if (GetChangedProp(ppi, _T("Text"), s)) {
+      lvl.setObjText(mObjId, s);
     } else {
 
       int w = 32, h = 32;               // Set def sz.

@@ -135,13 +135,14 @@
 #define ID_LEVELEDIT_ADDLVLOBJ          32943
 #define ID_LEVELEDIT_VERTICLE           32945
 #define ID_LEVELEDIT_HORIZONTAL         32946
+#define ID_LEVELEDIT_ADDTEXT            32952
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        266
-#define _APS_NEXT_COMMAND_VALUE         32947
+#define _APS_NEXT_COMMAND_VALUE         32953
 #define _APS_NEXT_CONTROL_VALUE         1026
 #define _APS_NEXT_SYMED_VALUE           107
 #endif

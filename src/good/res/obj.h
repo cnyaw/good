@@ -216,7 +216,7 @@ public:
 
     mTextSize = sec["textsize"];
     if (0 == mTextSize) {
-      mTextSize = 16;
+      mTextSize = GOOD_DEFAULT_TEXT_SIZE;
     }
 
     mRepX = sec["repX"];

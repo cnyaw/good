@@ -244,7 +244,7 @@ public:
 
     case TYPE_TEXT:
       sec["text"] = mText;
-      if (16 != mTextSize) {
+      if (GOOD_DEFAULT_TEXT_SIZE != mTextSize) {
         sec["textsize"] = mTextSize;
       }
       break;

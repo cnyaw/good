@@ -919,36 +919,28 @@ public:
       case PrjT::ObjectT::TYPE_MAPBG:
         {
           PrjT::MapT const& map = prj.getMap(inst.mMapId);
-
           good::gx::ImgpImage imgTex = good::gx::ImgpImage::getImage(prj.getTex(map.mTileset.mTextureId).mFileName);
           if (!imgTex.isValid()) {
             break;
           }
-
           POINT adj0 = {rc.left % map.mTileset.mTileWidth, rc.top % map.mTileset.mTileHeight};
-
           POINT adj = {
             adj0.x + (map.mTileset.mTileWidth * (rcm.left / map.mTileset.mTileWidth)),
             adj0.y + (map.mTileset.mTileHeight * (rcm.top / map.mTileset.mTileHeight))
           };
-
           ::OffsetRect(&rcm, -rcm.left + adj.x, -rcm.top + adj.y);
-
           int left = (int)((rcm.left - rc.left) / map.mTileset.mTileWidth);
           int right = min(map.mWidth - 1, (int)((rcm.right - rc.left) / map.mTileset.mTileWidth));
           int top = (int)((rcm.top - rc.top) / map.mTileset.mTileHeight);
           int bottom = min(map.mHeight - 1, (int)((rcm.bottom - rc.top) / map.mTileset.mTileHeight));
-
           if (0 < left) {               // Draw an extra tile to avoid tear.
             left -= 1;
             rcm.left -= map.mTileset.mTileWidth;
           }
-
           if (0 < top) {
             top -= 1;
             rcm.top -= map.mTileset.mTileHeight;
           }
-
           CommonDrawMap(good::gx::ImgpGraphics(gx), map, imgTex, rcm.left - rcv.left, rcm.top - rcv.top, left, top, right, bottom, 0xffffffff);
         }
         break;
@@ -959,12 +951,10 @@ public:
           if (!imgTex.isValid()) {
             break;
           }
-
           int offsetx = rcm.left - rc.left;
           int offsety = rcm.top - rc.top;
           int w = min(rcm.right - rcm.left, imgTex.getWidth() - abs(inst.mDim.left) - offsetx);
           int h = min(rcm.bottom - rcm.top, imgTex.getHeight() - abs(inst.mDim.top) - offsety);
-
           imgTex.drawToCanvas(rcm.left - rcv.left, rcm.top - rcv.top, gx, inst.mDim.left + offsetx, inst.mDim.top + offsety, w, h);
         }
         break;
@@ -980,25 +970,27 @@ public:
       case PrjT::ObjectT::TYPE_SPRITE:
         {
           PrjT::SpriteT const& spr = prj.getSprite(inst.mSpriteId);
-
           good::gx::ImgpImage imgTex = good::gx::ImgpImage::getImage(prj.getTex(spr.mTileset.mTextureId).mFileName);
           if (!imgTex.isValid()) {
             break;
           }
-
           int tile = spr.mFrame[0];
           int srcx = spr.mTileset.mTileWidth * (tile % spr.mTileset.mCxTile);
           int srcy = spr.mTileset.mTileHeight * (tile / spr.mTileset.mCxTile);
-
           int offsetx = rcm.left - rc.left;
           int offsety = rcm.top - rc.top;
-
           imgTex.drawToCanvas(rcm.left - rcv.left, rcm.top - rcv.top, gx, srcx + offsetx, srcy + offsety, rcm.right - rcm.left, rcm.bottom - rcm.top);
         }
         break;
 
       case PrjT::ObjectT::TYPE_DUMMY:
       case PrjT::ObjectT::TYPE_LVLOBJ:
+      case PrjT::ObjectT::TYPE_TEXT:
+        {
+          RECT r = rc;
+          ::OffsetRect(&r, -rcv.left, -rcv.top);
+          gx.rect(ConvertColor(inst.mBgColor), r.left, r.top, r.right - r.left, r.bottom - r.top);
+        }
         break;
       }
 

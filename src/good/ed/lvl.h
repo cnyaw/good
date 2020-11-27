@@ -598,6 +598,80 @@ public:
   }
 };
 
+template<class LvlT>
+class LevelCmdSetText : public UndoCommand
+{
+public:
+  int mLevelId;
+  int mId;
+  std::string mText;
+
+  LevelCmdSetText(int idLevel, int id, const std::string &s) : UndoCommand(GOOD_LEVELED_CMD_SETTEXT)
+  {
+    mLevelId = idLevel;
+    mId = id;
+    mText = s;
+  }
+
+  virtual bool exec()
+  {
+    return redo();
+  }
+
+  virtual bool undo()
+  {
+    return redo();
+  }
+
+  virtual bool redo()
+  {
+    typename LvlT::ObjectT &o = PrjT::inst().getLevel(mLevelId).getObj(mId);
+    std::string prevText = o.mText;
+    bool ret = o.setText(mText);
+    if (ret) {
+      mText = prevText;
+    }
+    return ret;
+  }
+};
+
+template<class LvlT>
+class LevelCmdSetTextSize : public UndoCommand
+{
+public:
+  int mLevelId;
+  int mId;
+  int mTextSize;
+
+  LevelCmdSetTextSize(int idLevel, int id, int size) : UndoCommand(GOOD_LEVELED_CMD_SETTEXTSIZE)
+  {
+    mLevelId = idLevel;
+    mId = id;
+    mTextSize = size;
+  }
+
+  virtual bool exec()
+  {
+    return redo();
+  }
+
+  virtual bool undo()
+  {
+    return redo();
+  }
+
+  virtual bool redo()
+  {
+    typename LvlT::ObjectT &o = PrjT::inst().getLevel(mLevelId).getObj(mId);
+    int prevSize = o.mTextSize;
+    bool ret = o.setTextSize(mTextSize);
+    if (ret) {
+      mTextSize = prevSize;
+    }
+    return ret;
+  }
+};
+
 template<class PrjT>
 class Level : public good::Level<Object<PrjT> >
 {
@@ -617,7 +691,8 @@ public:
     TOOL_ADDMAPBG,
     TOOL_ADDSPRITE,
     TOOL_ADDDUMMY,
-    TOOL_ADDLVLOBJ
+    TOOL_ADDLVLOBJ,
+    TOOL_ADDTEXT
   };
 
   typedef Object<PrjT> ObjectT;
@@ -783,6 +858,32 @@ public:
   {
     LevelCmdSetScript<Level>* pcmd;
     pcmd = new LevelCmdSetScript<Level>(mId, idObj, script);
+
+    if (mUndo.execAndAdd(pcmd)) {
+      PrjT::inst().mModified = true;
+      return true;
+    }
+
+    return false;
+  }
+
+  bool setObjText(int idObj, const std::string &s)
+  {
+    LevelCmdSetText<Level>* pcmd;
+    pcmd = new LevelCmdSetText<Level>(mId, idObj, s);
+
+    if (mUndo.execAndAdd(pcmd)) {
+      PrjT::inst().mModified = true;
+      return true;
+    }
+
+    return false;
+  }
+
+  bool setObjTextSize(int idObj, int size)
+  {
+    LevelCmdSetTextSize<Level>* pcmd;
+    pcmd = new LevelCmdSetTextSize<Level>(mId, idObj, size);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -1285,6 +1386,11 @@ public:
     return TOOL_ADDTEXBG == mTool;
   }
 
+  bool isAddTextTool() const
+  {
+    return TOOL_ADDTEXT == mTool;
+  }
+
   bool isMoveTool() const
   {
     return TOOL_MOVE == mTool;
@@ -1315,6 +1421,13 @@ public:
     mAddSpr = id;
     mAddCol = 0xff0000ff;
     mTool = TOOL_ADDLVLOBJ;
+  }
+
+  void setAddTextTool()
+  {
+    mAddMap = mAddTex = mAddSpr = 0xfc;
+    mAddCol = 0xff0000ff;
+    mTool = TOOL_ADDTEXT;
   }
 
   void setMoveTool()
@@ -1435,6 +1548,8 @@ public:
     int type = -1;
     if (0xff == idSprite && 0xff == idTexture && 0xff == idMap) {
       type = PrjT::ObjectT::TYPE_DUMMY;
+    } else if (0xfc == idSprite && 0xfc == idTexture && 0xfc == idMap) {
+      type = PrjT::ObjectT::TYPE_TEXT;
     } else if (0xfe == idTexture && 0xfe == idMap) {
       type = PrjT::ObjectT::TYPE_LVLOBJ;
     } else if (0 <= idSprite) {
@@ -1479,6 +1594,7 @@ public:
     o.mAnchorX = o.mAnchorY = .0f;
     o.mDim.setEmpty();
     o.mType = type;
+    o.mTextSize = GOOD_DEFAULT_TEXT_SIZE;
 
     lvl.mObj[id] = o;
     if (idParent == lvl.mId) {

@@ -568,6 +568,14 @@ public:
       case PrjT::ObjectT::TYPE_LVLOBJ:
         mEditor.mImages.Draw(memdc, 6, rc.left - rcv.left, rc.top - rcv.top, ILS_NORMAL);
         break;
+
+      case PrjT::ObjectT::TYPE_TEXT:
+        {
+          RECT r = rc;
+          ::OffsetRect(&r, -rcv.left, -rcv.top);
+          DoPaintTextObj(memdc, r.left, r.top, inst.mText, inst.mTextSize, inst.mBgColor & 0xffffff);
+        }
+        break;
       }
 
       ::OffsetRect(&rc, -rcv.left, -rcv.top);
@@ -657,6 +665,34 @@ public:
         }
       }
     }
+  }
+
+  void DoPaintTextObj(CDC &memdc, int x, int y, const std::string &s, int size, unsigned int color)
+  {
+    if (s.empty()) {
+      return;
+    }
+
+    std::vector<int> u32;
+    sw2::Util::utf8ToU16(s.c_str(), u32);
+
+    std::vector<wchar_t> u16(u32.begin(), u32.end());
+
+    LOGFONT lf;
+    GetObject(GetStockObject(DEFAULT_GUI_FONT), sizeof(LOGFONT), &lf);
+    lf.lfHeight = -size;
+    HFONT hFont = CreateFontIndirect(&lf);
+    hFont = (HFONT)SelectObject(memdc, hFont);
+
+    RECT rc = {0};
+    DrawTextW(memdc, (LPCWSTR)&u16[0], (int)u16.size(), &rc, DT_LEFT|DT_TOP|DT_SINGLELINE|DT_CALCRECT);
+
+    SetTextColor(memdc, color);
+    SetBkMode(memdc, TRANSPARENT);
+    OffsetRect(&rc, x, y);
+    DrawTextW(memdc, (LPCWSTR)&u16[0], (int)u16.size(), &rc, DT_LEFT|DT_TOP|DT_SINGLELINE);
+
+    DeleteObject(SelectObject(memdc, hFont));
   }
 
   void DoPaint(HDC hdc)
@@ -1315,6 +1351,7 @@ public:
     UISetCheck(ID_LEVELEDIT_ADDSPRITE, lvl.isAddSpriteTool());
     UISetCheck(ID_LEVELEDIT_ADDDUMMY, lvl.isAddDummyTool());
     UISetCheck(ID_LEVELEDIT_ADDLVLOBJ, lvl.isAddLevelobjTool());
+    UISetCheck(ID_LEVELEDIT_ADDTEXT, lvl.isAddTextTool());
 
     bool SingleSel = 1 == mEditView.mCurSel.size();
     UIEnable(ID_LEVELEDIT_BOTTOMMOST, SingleSel && lvl.canMoveObjBottommost(mEditView.mCurSel[0]));
@@ -1486,6 +1523,7 @@ public:
     UPDATE_ELEMENT(ID_LEVELEDIT_ADDSPRITE, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_ADDDUMMY, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_ADDLVLOBJ, UPDUI_TOOLBAR)
+    UPDATE_ELEMENT(ID_LEVELEDIT_ADDTEXT, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_TOPMOST, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_MOVEUP, UPDUI_TOOLBAR)
     UPDATE_ELEMENT(ID_LEVELEDIT_MOVEDOWN, UPDUI_TOOLBAR)
@@ -1512,6 +1550,7 @@ public:
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_ADDSPRITE, OnAddObjTool)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_ADDDUMMY, OnAddObjTool)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_ADDLVLOBJ, OnAddObjTool)
+    COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_ADDTEXT, OnAddObjTool)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_GRID, OnToggleGrid)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_LINE, OnToggleLine)
     COMMAND_ID_HANDLER_EX(ID_LEVELEDIT_MOVEITEM, OnMoveTool)
@@ -1710,6 +1749,8 @@ public:
       if (IDOK == dlg.DoModal()) {
         lvl.setAddLevelObjTool(dlg.mId);
       }
+    } else if (ID_LEVELEDIT_ADDTEXT == nID) {
+      lvl.setAddTextTool();
     }
     mEditView.SetFocus();
   }
