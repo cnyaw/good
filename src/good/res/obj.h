@@ -23,6 +23,7 @@ public:
     TYPE_MAPBG,
     TYPE_DUMMY,
     TYPE_LVLOBJ,                        // External child obj of a lvl.
+    TYPE_TEXT,
   };
 
   //
@@ -105,6 +106,13 @@ public:
   float mAnchorX, mAnchorY;
 
   //
+  // Text obj.
+  //
+
+  int mTextSize;
+  std::string mText;
+
+  //
   // Child obj id.
   //
 
@@ -144,6 +152,9 @@ public:
 
     case TYPE_LVLOBJ:
       return good::getName(*this, "lvobj");
+
+    case TYPE_TEXT:
+      return good::getName(*this, "text");
 
     default:
       return good::getName(*this, "object");
@@ -198,6 +209,16 @@ public:
       mType = TYPE_COLBG;
     }
 
+    if (!sec["text"].value.empty()) {
+      mType = TYPE_TEXT;
+      mText = sec["text"].value;
+    }
+
+    mTextSize = sec["textsize"];
+    if (0 == mTextSize) {
+      mTextSize = 16;
+    }
+
     mRepX = sec["repX"];
     mRepY = sec["repY"];
 
@@ -205,11 +226,9 @@ public:
 
     mScaleX = sec["xscale"];
     mScaleY = sec["yscale"];
-
     if (.0f == mScaleX) {
       mScaleX = 1.0f;
     }
-
     if (.0f == mScaleY) {
       mScaleY = 1.0f;
     }
@@ -236,7 +255,6 @@ public:
     {
       std::stringstream ss(sec["objects"].value);
       mObjIdx.assign(std::istream_iterator<int>(ss), std::istream_iterator<int>());
-
       for (size_t i = 0; i < mObjIdx.size(); ++ i) {
         if (!Objs[mObjIdx[i]].load(p, ini, mObjIdx[i], Objs)) {
           return false;

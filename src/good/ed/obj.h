@@ -156,6 +156,32 @@ public:
     return true;
   }
 
+  bool setText(const std::string &text)
+  {
+    if (text == mText) {
+      return false;
+    }
+
+    mText = text;
+
+    PrjT::inst().mModified = true;
+
+    return true;
+  }
+
+  bool setTextSize(int size)
+  {
+    if (size == mTextSize) {
+      return false;
+    }
+
+    mTextSize = size;
+
+    PrjT::inst().mModified = true;
+
+    return true;
+  }
+
   bool setVisible(bool visible)
   {
     if (visible == mVisible) {
@@ -214,6 +240,13 @@ public:
       sec["sprite"] = getLevelObjId();
       sec["texture"] = 0xfe;
       sec["map"] = 0xfe;
+      break;
+
+    case TYPE_TEXT:
+      sec["text"] = mText;
+      if (16 != mTextSize) {
+        sec["textsize"] = mTextSize;
+      }
       break;
 
     default:

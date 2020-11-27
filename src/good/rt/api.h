@@ -427,17 +427,8 @@ int genResTex(int idCanvas)
   return id;
 }
 
-int genTextObj(int idParent, char const *utf8text, int size, char const *script)
+void genTextObj_i(int idDummy, char const *utf8text, int size, int idType, ResT *pRes)
 {
-  if (0 == utf8text) {
-    return -1;
-  }
-
-  int newid = genDummy(idParent, 0);
-  if (-1 == newid) {
-    return -1;
-  }
-
   size = clampTextSize_i(size);
 
   std::vector<int> unicode;
@@ -445,7 +436,7 @@ int genTextObj(int idParent, char const *utf8text, int size, char const *script)
 
   float xoffset = .0f;
   for (size_t i = 0; i < unicode.size(); i++) {
-    int chid = allocActor();
+    int chid = allocActorId_i(idType, -1, pRes);
     if (-1 == chid) {
       break;
     }
@@ -459,8 +450,22 @@ int genTextObj(int idParent, char const *utf8text, int size, char const *script)
     } else {
       xoffset += GOOD_DEFAULT_TEXT_OFFSET;
     }
-    mActors[newid].addChild(chid);
+    mActors[idDummy].addChild(chid);
   }
+}
+
+int genTextObj(int idParent, char const *utf8text, int size, char const *script)
+{
+  if (0 == utf8text) {
+    return -1;
+  }
+
+  int newid = genDummy(idParent, 0);
+  if (-1 == newid) {
+    return -1;
+  }
+
+  genTextObj_i(newid, utf8text, size, GOOD_CREATE_OBJ_ANY_ID, 0);
 
   if (script) {
     ActorT& a = mActors[newid];

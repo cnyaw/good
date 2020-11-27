@@ -564,6 +564,9 @@ public:
   {
     if (ObjectT::TYPE_LVLOBJ != o.mType) {
       mActors[idItem].init(o);
+      if (ObjectT::TYPE_TEXT == o.mType) {
+        createTextObj_i(idItem, o, pRes);
+      }
     }
 
     for (size_t i = 0; i < o.mObjIdx.size(); ++i) {
@@ -612,6 +615,7 @@ public:
       break;
 
     case ObjectT::TYPE_DUMMY:
+    case ObjectT::TYPE_TEXT:
       a.create(idItem, ActorT::TYPES_DUMMY, -1);
       break;
     }
@@ -652,6 +656,16 @@ public:
     mActors[idParent].addChild(idItem); // idParent.addChild(idItem); ref may invalid if pool grow up.
 
     return idItem;
+  }
+
+  void createTextObj_i(int idItem, ObjectT const& o, ResT *pRes)
+  {
+    genTextObj_i(idItem, o.mText.c_str(), o.mTextSize, GOOD_CREATE_OBJ_EXCLUDE_RES_ID, pRes);
+    unsigned int c = getBgColor(idItem);
+    for (int i = 0; i < getChildCount(idItem); i++) {
+      int id = getChild(idItem, i);
+      setBgColor(id, c);
+    }
   }
 
   int createLevel(int resId)
