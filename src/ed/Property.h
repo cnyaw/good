@@ -552,7 +552,6 @@ public:
     } else if (PrjT::ObjectT::TYPE_TEXT == o.mType) {
       AddProp(prop, PropCreateSimple("Text", o.mText.c_str()));
       AddProp(prop, PropCreateSimple("TextSize", o.mTextSize));
-      return;
     } else if (PrjT::ObjectT::TYPE_MAPBG == o.mType) {
       AddProp(prop, PropCreateSimple("RepeatX", o.mRepX));
       AddProp(prop, PropCreateSimple("RepeatY", o.mRepY));
@@ -576,7 +575,7 @@ public:
       AddProp(prop, PropCreateSimple("Height", o.mDim.empty() ? 32 : o.mDim.height()));
     }
 
-    if (PrjT::ObjectT::TYPE_MAPBG != o.mType) {
+    if (PrjT::ObjectT::TYPE_MAPBG != o.mType && PrjT::ObjectT::TYPE_TEXT != o.mType) {
       AddProp(prop, PropCreateSimple("Rot", FloatToStr(o.mRot)));
       AddProp(prop, PropCreateSimple("ScaleX", FloatToStr(o.mScaleX)));
       AddProp(prop, PropCreateSimple("ScaleY", FloatToStr(o.mScaleY)));
