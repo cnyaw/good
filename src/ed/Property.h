@@ -549,6 +549,10 @@ public:
       std::string oi = GetLevelObjInfo(o.getLevelObjId());
       AddProp(prop, PropCreateSimple("Object", oi.c_str()))->SetEnabled(FALSE);
       return;
+    } else if (PrjT::ObjectT::TYPE_TEXT == o.mType) {
+      AddProp(prop, PropCreateSimple("Text", o.mText.c_str()));
+      AddProp(prop, PropCreateSimple("TextSize", o.mTextSize));
+      return;
     } else if (PrjT::ObjectT::TYPE_MAPBG == o.mType) {
       AddProp(prop, PropCreateSimple("RepeatX", o.mRepX));
       AddProp(prop, PropCreateSimple("RepeatY", o.mRepY));
@@ -570,9 +574,6 @@ public:
     } else if (PrjT::ObjectT::TYPE_COLBG == o.mType) {
       AddProp(prop, PropCreateSimple("Width", o.mDim.empty() ? 32 : o.mDim.width()));
       AddProp(prop, PropCreateSimple("Height", o.mDim.empty() ? 32 : o.mDim.height()));
-    } else if (PrjT::ObjectT::TYPE_TEXT == o.mType) {
-      AddProp(prop, PropCreateSimple("Text", o.mText.c_str()));
-      AddProp(prop, PropCreateSimple("TextSize", o.mTextSize));
     }
 
     if (PrjT::ObjectT::TYPE_MAPBG != o.mType) {
@@ -629,11 +630,6 @@ public:
       } else if (PrjT::ObjectT::TYPE_TEXT == o.mType) {
         prop.SetItemValue(propmap["TextSize"], &CComVariant(o.mTextSize));
         prop.SetItemValue(propmap["Text"], &CComVariant(o.mText.c_str()));
-        prop.SetItemValue(propmap["Rot"], &CComVariant(o.mRot));
-        prop.SetItemValue(propmap["ScaleX"], &CComVariant(o.mScaleX));
-        prop.SetItemValue(propmap["ScaleY"], &CComVariant(o.mScaleY));
-        prop.SetItemValue(propmap["AnchorX"], &CComVariant(o.mAnchorX));
-        prop.SetItemValue(propmap["AnchorY"], &CComVariant(o.mAnchorY));
       } else if (PrjT::ObjectT::TYPE_MAPBG == o.mType) {
         prop.SetItemValue(propmap["RepeatX"], &CComVariant((int)o.mRepX));
         prop.SetItemValue(propmap["RepeatY"], &CComVariant((int)o.mRepY));
