@@ -47,7 +47,7 @@ function loadImageFromChar(size, ch, bAntiAlias) {
   var s = String.fromCharCode(ch);
   var m = ctx.measureText(s);
   var w = m.width, h = size;
-  ctx.fillText(s, 0, 0);
+  ctx.fillText(s, 0, 2);
   var imgd = ctx.getImageData(0, 0, w, h);
   var pix = imgd.data;
   var bytes = new Uint8Array(pix);
