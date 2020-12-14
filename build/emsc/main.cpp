@@ -91,7 +91,7 @@ public:
 
     mScreen = SDL_SetVideoMode(mRes.mWidth, mRes.mHeight, 16, SDL_OPENGL);
     if (!mScreen) {
-      SW2_TRACE_ERROR("set video mode(%dx%dx%d) failed", mRes.mWidth, mRes.mHeight, mRes.mColorBits);
+      SW2_TRACE_ERROR("set video mode(%dx%d) failed", mRes.mWidth, mRes.mHeight);
       SDL_Quit();
       return false;
     }
