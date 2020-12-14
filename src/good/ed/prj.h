@@ -79,19 +79,14 @@ public:
     return true;
   }
 
-  bool setWindowSettings(int w, int h, int colors, bool bFullscreen)
+  bool setWindowSettings(int w, int h)
   {
-    if (w == mRes.mWidth &&
-        h == mRes.mHeight &&
-        colors == mRes.mColorBits &&
-        bFullscreen == mRes.mFullScreen) {
+    if (w == mRes.mWidth && h == mRes.mHeight) {
       return false;
     }
 
     mRes.mWidth = w;
     mRes.mHeight = h;
-    mRes.mColorBits = colors;
-    mRes.mFullScreen = bFullscreen;
 
     mModified = true;
 
@@ -189,8 +184,6 @@ public:
 
     mRes.mWidth = 640;
     mRes.mHeight = 480;
-    mRes.mColorBits = 16;
-    mRes.mFullScreen = false;
     mRes.mFps = GOOD_DEFAULT_TICK_PER_SECOND;
   }
 
@@ -829,23 +822,10 @@ public:
     // Settings.
     //
 
-    if (640 != mRes.mWidth ||
-        480 != mRes.mHeight ||
-        16 != mRes.mColorBits ||
-        false != mRes.mFullScreen) {
-
+    if (640 != mRes.mWidth || 480 != mRes.mHeight) {
       std::vector<int> v;
       v.push_back(mRes.mWidth);
       v.push_back(mRes.mHeight);
-      if (mRes.mFullScreen) {
-        v.push_back(mRes.mColorBits);
-        v.push_back(1);
-      } else {
-        if (16 != mRes.mColorBits) {
-          v.push_back(mRes.mColorBits);
-        }
-      }
-
       secPrj["window"] = intVecToStr(v);
     }
 

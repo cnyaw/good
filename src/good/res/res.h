@@ -49,9 +49,7 @@ public:
   // Settings.
   //
 
-  bool mFullScreen;
   int mWidth, mHeight;                  // Window size.
-  int mColorBits;
   int mFps;
 
   //
@@ -219,8 +217,6 @@ public:
 
     mWidth = 640;
     mHeight = 480;
-    mColorBits = 16;
-    mFullScreen = false;
     mFps = GOOD_DEFAULT_TICK_PER_SECOND;
 
     std::vector<int> v;
@@ -235,14 +231,6 @@ public:
 
     if (2 <= v.size()) {
       mHeight = v[1];
-    }
-
-    if (3 <= v.size()) {
-      mColorBits = v[2];
-    }
-
-    if (4 <= v.size()) {
-      mFullScreen = 0 != v[3];
     }
 
     if (sec.find("fps")) {

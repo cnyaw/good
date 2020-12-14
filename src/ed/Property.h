@@ -888,10 +888,8 @@ public:
 
     AddProp(prop, PropCreateCategory("Window"));
     AddProp(prop, PropCreateSimple("Frame Rate", res.mFps))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple("Full Screen", res.mFullScreen))->SetEnabled(FALSE);
     AddProp(prop, PropCreateSimple("Width", res.mWidth));
     AddProp(prop, PropCreateSimple("Height", res.mHeight));
-    AddProp(prop, PropCreateSimple("Color Bits", res.mColorBits))->SetEnabled(FALSE);
 
     AddProp(prop, PropCreateCategory("Summary"));
     AddProp(prop, PropCreateSimple("#Audio", (int)res.mSnd.size()))->SetEnabled(FALSE);
@@ -930,18 +928,14 @@ public:
     PrjT& prj = PrjT::inst();
     PrjT::ResT const &res = prj.mRes;
 
-    std::string s; int i; bool b;
+    std::string s; int i;
 
     if (GetChangedProp(ppi, _T("Name"), s)) {
       prj.setName(s);
     } else if (GetChangedProp(ppi, _T("Width"), i)) {
-      prj.setWindowSettings(i, res.mHeight, res.mColorBits, res.mFullScreen);
+      prj.setWindowSettings(i, res.mHeight);
     } else if (GetChangedProp(ppi, _T("Height"), i)) {
-      prj.setWindowSettings(res.mWidth, i, res.mColorBits, res.mFullScreen);
-    } else if (GetChangedProp(ppi, _T("Color Bits"), i)) {
-      prj.setWindowSettings(res.mWidth, res.mHeight, i, res.mFullScreen);
-    } else if (GetChangedProp(ppi, _T("Full Screen"), b)) {
-      prj.setWindowSettings(res.mWidth, res.mHeight, res.mColorBits, b);
+      prj.setWindowSettings(res.mWidth, i);
     }
   }
 };
