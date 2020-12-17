@@ -88,10 +88,7 @@ public:
     }
 
     std::vector<int> v;
-    {
-      std::stringstream ss(sec["data"].value);
-      v.assign(std::istream_iterator<int>(ss), std::istream_iterator<int>());
-    }
+    assignListFromString(sec["data"].value, v);
 
     if (0 != (v.size() % 2)) {
       return false;

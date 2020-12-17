@@ -80,10 +80,7 @@ public:
     sw2::Ini sec = ini["good"];
 
     std::vector<int> v;
-    {
-      std::stringstream ss(sec["window"].value);
-      v.assign(std::istream_iterator<int>(ss), std::istream_iterator<int>());
-    }
+    assignListFromString(sec["window"].value, v);
 
     if (1 <= v.size()) {
       w = v[0];

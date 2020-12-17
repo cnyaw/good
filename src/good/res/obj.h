@@ -237,28 +237,22 @@ public:
     mAnchorY = sec["ypivot"];
 
     {
-      std::stringstream ss(sec["dim"].value);
       std::vector<int> v;
-      v.assign(std::istream_iterator<int>(ss), std::istream_iterator<int>());
-
+      assignListFromString(sec["dim"].value, v);
       v.push_back(0);                   // Default value, if no assign.
       v.push_back(0);
       v.push_back(0);
       v.push_back(0);
-
       mDim.left = v[0];
       mDim.top = v[1];
       mDim.right = v[0] + v[2];
       mDim.bottom = v[1] + v[3];
     }
 
-    {
-      std::stringstream ss(sec["objects"].value);
-      mObjIdx.assign(std::istream_iterator<int>(ss), std::istream_iterator<int>());
-      for (size_t i = 0; i < mObjIdx.size(); ++ i) {
-        if (!Objs[mObjIdx[i]].load(p, ini, mObjIdx[i], Objs)) {
-          return false;
-        }
+    assignListFromString(sec["objects"].value, mObjIdx);
+    for (size_t i = 0; i < mObjIdx.size(); ++ i) {
+      if (!Objs[mObjIdx[i]].load(p, ini, mObjIdx[i], Objs)) {
+        return false;
       }
     }
 

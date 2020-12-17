@@ -45,7 +45,7 @@ std::string intVecToStr(std::vector<int> const &v)
 bool loadGrid(sw2::Ini& sec, std::string const& sgrid, int range, std::vector<GridLine>& lines)
 {
   std::vector<int> v;
-  v.assign(std::istream_iterator<int>(std::stringstream((std::string)sec[sgrid].value)), std::istream_iterator<int>());
+  assignListFromString(sec[sgrid].value, v);
 
   for (size_t i = 0; i < v.size(); ) {
 

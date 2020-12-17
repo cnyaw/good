@@ -13,11 +13,17 @@
 
 namespace good {
 
+template<class T>
+void assignListFromString(const std::string &s, std::vector<T> &v)
+{
+  std::stringstream ss(s);
+  v.assign(std::istream_iterator<T>(ss), std::istream_iterator<T>());
+}
+
 template<class PoolT, class VecT, class MapT>
 bool loadResources(PoolT& p, MapT& t, VecT& v, std::string const& name, sw2::Ini& sec, sw2::Ini const& ini)
 {
-  std::stringstream ss(sec[name].value);
-  v.assign(std::istream_iterator<int>(ss), std::istream_iterator<int>());
+  assignListFromString(sec[name].value, v);
   t.clear();
 
   for (size_t i = 0; i < v.size(); ++ i) {
@@ -87,15 +93,11 @@ bool loadFileBinaryContent(const char *pFileName, std::string &outs)
 
 int loadRGB(std::string const& rgb)
 {
-  std::stringstream ss(rgb);
-
   std::vector<int> v;
-  v.assign(std::istream_iterator<int>(ss), std::istream_iterator<int>());
-
+  assignListFromString(rgb, v);
   v.push_back(255);                     // Default value, if no keyColor assign.
   v.push_back(255);
   v.push_back(255);
-
   return (v[0] & 0xff) | ((v[1] & 0xff) << 8) | ((v[2] & 0xff) << 16);
 }
 
