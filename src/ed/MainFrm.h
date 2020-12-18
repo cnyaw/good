@@ -1164,6 +1164,12 @@ public:
 
   void SetActivePage(int id)
   {
+    HWND hwnd = mTabView.GetPageHWND(mTabView.GetActivePage());
+    int idCurrPage = (int)::SendMessage(hwnd, WM_GOOD_GETRESOURCEID, 0, 0);
+    if (PrjT::inst().mRes.isLevel(idCurrPage)) {
+      return;
+    }
+
     int idx = -1;
     for (int i = 0; i < mTabView.GetPageCount(); ++i) {
       if ((int)::SendMessage(mTabView.GetPageHWND(i), WM_GOOD_GETRESOURCEID, 0, 0) == id) {
