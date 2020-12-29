@@ -177,7 +177,15 @@ public class goodJniActivity extends Activity
   }
 
   static public int[] imgGetCharImage(int size, int ch, boolean bAntiAlias) {
-    String text = String.valueOf((char)ch);
+    String text;
+    if (0xffff < ch) {
+      // Convert to surrogate pair.
+      int h = (ch - 0x10000) / 0x400 + 0xd800;
+      int l = (ch - 0x10000) % 0x400 + 0xdC00;
+      text = String.valueOf((char)h) + String.valueOf((char)l);
+    } else {
+      text = String.valueOf((char)ch);
+    }
     Paint paint = new Paint();
     paint.setAntiAlias(bAntiAlias);
     paint.setTextSize(size);

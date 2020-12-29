@@ -448,10 +448,20 @@ public:
     HFONT hFont = CreateFontIndirect(&lf);
     hFont = (HFONT)SelectObject(memdc, hFont);
 
-    wchar_t buff[2] = {(wchar_t)ch, 0};
+    wchar_t buff[3] = {0};
+
+    if (0xffff < ch) {
+      // Convert to surrogate pair.
+      int h = (ch - 0x10000) / 0x400 + 0xd800;
+      int l = (ch - 0x10000) % 0x400 + 0xdC00;
+      buff[0] = (wchar_t)h;
+      buff[1] = (wchar_t)l;
+    } else {
+      buff[0] = (wchar_t)ch;
+    }
 
     RECT rc = {0};
-    DrawTextW(memdc, buff, 1, &rc, DT_LEFT|DT_TOP|DT_SINGLELINE|DT_CALCRECT);
+    DrawTextW(memdc, buff, -1, &rc, DT_LEFT|DT_TOP|DT_SINGLELINE|DT_CALCRECT);
 
     BITMAPINFO bmi = {0};
     bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -468,7 +478,7 @@ public:
       FillRect(memdc, &rc, (HBRUSH)GetStockObject(BLACK_BRUSH));
       SetTextColor(memdc, RGB(255,255,255));
       SetBkMode(memdc, TRANSPARENT);
-      DrawTextW(memdc, buff, 1, &rc, DT_LEFT|DT_TOP|DT_SINGLELINE);
+      DrawTextW(memdc, buff, -1, &rc, DT_LEFT|DT_TOP|DT_SINGLELINE);
       w = rc.right;
       h = rc.bottom;
       bpp = 4;

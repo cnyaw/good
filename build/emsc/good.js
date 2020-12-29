@@ -44,7 +44,15 @@ function loadImageFromChar(size, ch, bAntiAlias) {
   ctx.fillStyle = 'white';
   ctx.font = size + 'px Arial';
   ctx.textBaseline = 'top';
-  var s = String.fromCharCode(ch);
+  var s;
+  if (0xffff < ch) {
+    // Convert to surrogate pair.
+    var h = (ch - 0x10000) / 0x400 + 0xd800;
+    var l = (ch - 0x10000) % 0x400 + 0xdC00;
+    s = String.fromCharCode(h) + String.fromCharCode(l);
+  } else {
+    s = String.fromCharCode(ch);
+  }
   var m = ctx.measureText(s);
   var w = m.width, h = size;
   ctx.fillText(s, 0, 2);
