@@ -676,7 +676,19 @@ public:
     std::vector<int> u32;
     sw2::Util::utf8ToU16(s.c_str(), u32);
 
-    std::vector<wchar_t> u16(u32.begin(), u32.end());
+    std::vector<wchar_t> u16;
+    for (size_t i = 0; i < u32.size(); i++) {
+      int ch = u32[i];
+      if (0xffff < ch) {
+        // Convert to surrogate pair.
+        int h = (ch - 0x10000) / 0x400 + 0xd800;
+        int l = (ch - 0x10000) % 0x400 + 0xdC00;
+        u16.push_back((wchar_t)h);
+        u16.push_back((wchar_t)l);
+      } else {
+        u16.push_back((wchar_t)ch);
+      }
+    }
 
     LOGFONT lf;
     GetObject(GetStockObject(DEFAULT_GUI_FONT), sizeof(LOGFONT), &lf);
