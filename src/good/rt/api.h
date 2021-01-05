@@ -123,7 +123,7 @@ void drawText(int canvas, int x, int y, char const *utf8text, int size, unsigned
   }
   size = clampTextSize_i(size);
   std::vector<int> unicode;
-  sw2::Util::utf8ToU16(utf8text, unicode);
+  sw2::Util::utf8ToU32(utf8text, unicode);
   int xoffset = 0;
   for (size_t i = 0; i < unicode.size(); i++) {
     ImgT img = getImage(size, unicode[i]);
@@ -432,7 +432,7 @@ void genTextObj_i(int idDummy, char const *utf8text, int size, int idType, ResT 
   size = clampTextSize_i(size);
 
   std::vector<int> unicode;
-  sw2::Util::utf8ToU16(utf8text, unicode);
+  sw2::Util::utf8ToU32(utf8text, unicode);
 
   float xoffset = .0f;
   for (size_t i = 0; i < unicode.size(); i++) {

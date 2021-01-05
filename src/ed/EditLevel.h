@@ -674,7 +674,7 @@ public:
     }
 
     std::vector<int> u32;
-    sw2::Util::utf8ToU16(s.c_str(), u32);
+    sw2::Util::utf8ToU32(s.c_str(), u32);
 
     std::vector<wchar_t> u16;
     for (size_t i = 0; i < u32.size(); i++) {
