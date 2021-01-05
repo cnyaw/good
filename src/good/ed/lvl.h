@@ -982,12 +982,12 @@ public:
     return true;
   }
 
-  bool copyObj(std::vector<int> const& selObjs, std::vector<int> &newObjs)
+  bool copyObj(typename const PrjT::LevelT &lvl, std::vector<int> const& selObjs, std::vector<int> &newObjs)
   {
     int tag = mUndo.mTag;
 
     for (size_t i = 0; i < selObjs.size(); i++) {
-      PrjT::ObjectT const& o = getObj(selObjs[i]);
+      PrjT::ObjectT const& o = lvl.getObj(selObjs[i]);
 
       int id = addObj(o.mSpriteId, o.mMapId, o.mTextureId, o.mPosX, o.mPosY);
       if (-1 == id) {

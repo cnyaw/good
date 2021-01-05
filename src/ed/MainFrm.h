@@ -38,6 +38,9 @@ public:
 
   CRecentDocumentList mMru;
 
+  int m_idSelListLvlId;
+  std::vector<int> m_idSelList;
+
   static CMainFrame& inst()
   {
     static CMainFrame instance;
@@ -963,6 +966,9 @@ public:
     if (visible) {
       OnViewOutputWindow(0, 0, 0);
     }
+
+    m_idSelListLvlId = -1;
+    m_idSelList.clear();
   }
 
   void OnWindowActivate(UINT uNotifyCode, int nID, CWindow wndCtl)

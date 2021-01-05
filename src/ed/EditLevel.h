@@ -1112,6 +1112,27 @@ public:
     }
   }
 
+  bool CopyObjs(const PrjT::LevelT &lvlSrc, PrjT::LevelT &lvlDst, const std::vector<int> &selObj)
+  {
+    std::vector<int> newObj;
+    if (!lvlDst.copyObj(lvlSrc, selObj, newObj)) {
+      return false;
+    }
+    mCurSel = newObj;
+    for (size_t i = 0; i < newObj.size(); i++) {
+      int id = newObj[i];
+      mEditor.AddTreeItem(id);
+      if (mHot == id) {
+        mHot = id;
+        if (1 == newObj.size()) {
+          SelItemChange(GOOD_RESOURCE_LEVEL_OBJECT, id);
+        }
+      }
+    }
+    Invalidate(FALSE);
+    return true;
+  }
+
   void DragCurSel()
   {
     SetCapture();
@@ -1191,20 +1212,8 @@ public:
 
           if (changed) {
             if (!dragCopy && (::GetKeyState(VK_LMENU) & 0x8000)) { // Drag and copy with Alt-key.
-              std::vector<int> sel;
-              if (lvl.copyObj(mCurSel, sel)) {
+              if (CopyObjs(lvl, lvl, mCurSel)) {
                 dragCopy = true;
-                mCurSel = sel;
-                for (size_t i = 0; i < sel.size(); i++) {
-                  int id = sel[i];
-                  mEditor.AddTreeItem(id);
-                  if (mHot == id) {
-                    mHot = id;
-                    if (1 == sel.size()) {
-                      SelItemChange(GOOD_RESOURCE_LEVEL_OBJECT, id);
-                    }
-                  }
-                }
               }
             }
 
@@ -1562,7 +1571,9 @@ public:
     COMMAND_RANGE_HANDLER_EX(ID_LEVELEDIT_ALIGNLEFT, ID_LEVELEDIT_ALIGNBOTTOM, OnAlignObject)
     COMMAND_ID_HANDLER_EX(ID_LINE_CUSTOMIZE, OnLineCustomize)
     COMMAND_ID_HANDLER_EX(ID_SNAP_CUSTOMIZE, OnSnapCustomize)
+    COMMAND_ID_HANDLER_EX(ID_EDIT_COPY, OnEditCopy)
     COMMAND_ID_HANDLER_EX(ID_EDIT_GOTO, OnEditGoto)
+    COMMAND_ID_HANDLER_EX(ID_EDIT_PASTE, OnEditPaste)
     NOTIFY_CODE_HANDLER_EX(TBN_DROPDOWN, OnDropDown)
     NOTIFY_CODE_HANDLER_EX(NM_CLICK, OnTreeClk)
     NOTIFY_CODE_HANDLER_EX(TVN_KEYDOWN, OnTreeKeyDown)
@@ -1821,6 +1832,13 @@ public:
     mEditView.Invalidate(FALSE);
   }
 
+  void OnEditCopy(UINT uNotifyCode, int nID, CWindow wndCtl)
+  {
+    CMainFrame &m = CMainFrame::inst();
+    m.m_idSelListLvlId = mId;
+    m.m_idSelList = mEditView.mCurSel;
+  }
+
   void OnEditGoto(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
     PrjT::LevelT const& lvl = PrjT::inst().getLevel(mId);
@@ -1836,6 +1854,18 @@ public:
       OffsetRect(&rcClient, dlg.mOffsetX, dlg.mOffsetY);
       mEditView.ScrollToView(rcClient);
     }
+  }
+
+  void OnEditPaste(UINT uNotifyCode, int nID, CWindow wndCtl)
+  {
+    PrjT &prj = PrjT::inst();
+    const CMainFrame &m = CMainFrame::inst();
+    if (!prj.mRes.isLevel(m.m_idSelListLvlId)) {
+      return;
+    }
+    PrjT::LevelT &lvlSrc = PrjT::inst().getLevel(m.m_idSelListLvlId);
+    PrjT::LevelT &lvlDst = PrjT::inst().getLevel(mId);
+    mEditView.CopyObjs(lvlSrc, lvlDst, m.m_idSelList);
   }
 
   void OnMoveTool(UINT uNotifyCode, int nID, CWindow wndCtl)
