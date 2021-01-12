@@ -57,9 +57,9 @@ void callPackage(const char* name)
 int clampTextSize_i(int size) const
 {
   if (GOOD_DRAW_TEXT_FIXED_FONT == getFont()) {
-    return sw2::clamp(size, 1, GOOD_MAX_TEXT_SIZE);
+    return sw2::Util::clamp(size, 1, GOOD_MAX_TEXT_SIZE);
   } else {
-    return sw2::clamp(size, GOOD_MIN_TEXT_SIZE, GOOD_MAX_TEXT_SIZE);
+    return sw2::Util::clamp(size, GOOD_MIN_TEXT_SIZE, GOOD_MAX_TEXT_SIZE);
   }
 }
 
