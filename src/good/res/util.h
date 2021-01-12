@@ -83,9 +83,7 @@ bool loadFileBinaryContent(const char *pFileName, std::string &outs)
   if (!ifs) {
     return false;
   }
-  ifs.seekg(0, std::ios_base::end);
-  int lenstream = (int)ifs.tellg();
-  ifs.seekg(0, std::ios_base::beg);
+  int lenstream = sw2::Util::getStreamLen(ifs);
   outs.resize(lenstream);
   ifs.read((char*)outs.data(), lenstream);
   return true;
