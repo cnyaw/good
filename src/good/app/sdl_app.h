@@ -124,13 +124,9 @@ public:
     }
 
     int flag = SDL_DOUBLEBUF | SDL_HWSURFACE;
-    if (mRes.mFullScreen) {
-      flag |= SDL_FULLSCREEN;
-    }
-
-    mScreen = SDL_SetVideoMode(mRes.mWidth, mRes.mHeight, mRes.mColorBits, flag);
+    mScreen = SDL_SetVideoMode(mRes.mWidth, mRes.mHeight, 16, flag);
     if (!mScreen) {
-      SW2_TRACE_ERROR("set video mode(%dx%dx%d) failed", mRes.mWidth, mRes.mHeight, mRes.mColorBits);
+      SW2_TRACE_ERROR("set video mode(%dx%dx%d) failed", mRes.mWidth, mRes.mHeight, 16);
       SDL_Quit();
       return false;
     }
