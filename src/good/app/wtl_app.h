@@ -51,7 +51,9 @@ public:
   {
     if (GetFocus() == m_hWnd || bAlwaysUpdate) {
 
+      int ks = 0;
       if (GetFocus() == m_hWnd) {
+        ks = GetKeyState();
         POINT pt;
         GetCursorPos(&pt);
         ScreenToClient(&pt);
@@ -65,7 +67,7 @@ public:
 
       CClientDC dc(m_hWnd);
       dc.wglMakeCurrent(m_hRC);
-      trigger(GetKeyState(), lastMousePt);
+      trigger(ks, lastMousePt);
       dc.wglMakeCurrent(NULL);
 
       if (mExit) {

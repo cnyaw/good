@@ -304,7 +304,7 @@ public:
       if (MAX_CMD_LINE_HIST < cmdHist.size()) {
         cmdHist.erase(cmdHist.begin());
       }
-      iCmdHist = cmdHist.size();
+      iCmdHist = (int)cmdHist.size();
       lazyRunCmdLine = cmdLine;
       cmdLine = "";
       break;
