@@ -79,13 +79,16 @@ std::string getName(T const& t, std::string const& tag)
 
 bool loadFileBinaryContent(const char *pFileName, std::string &outs)
 {
-  std::ifstream ifs(pFileName, std::ios::binary);
-  if (!ifs) {
+  FILE *f = fopen(pFileName, "rb");
+  if (!f) {
     return false;
   }
-  int lenstream = sw2::Util::getStreamLen(ifs);
-  outs.resize(lenstream);
-  ifs.read((char*)outs.data(), lenstream);
+  fseek(f, 0, SEEK_END);
+  long len = ftell(f);
+  fseek(f, 0, SEEK_SET);
+  outs.resize(len);
+  fread((void*)outs.data(), 1, len, f);
+  fclose(f);
   return true;
 }
 

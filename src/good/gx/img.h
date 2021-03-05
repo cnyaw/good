@@ -293,9 +293,16 @@ public:
   bool load(std::string const& name)
   {
     std::string s;
-    if (!loadFileBinaryContent(name.c_str(), s)) {
+    FILE *f = fopen(name.c_str(), "rb");
+    if (!f) {
       return false;
     }
+    fseek(f, 0, SEEK_END);
+    long len = ftell(f);
+    fseek(f, 0, SEEK_SET);
+    s.resize(len);
+    fread((void*)s.data(), 1, len, f);
+    fclose(f);
     return loadFromStream(s);
   }
 
