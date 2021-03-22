@@ -882,7 +882,7 @@ public:
   {
     PrjT::ResT const& res = PrjT::inst().mRes;
 
-    AddProp(prop, PropCreateCategory("Property"));
+    AddProp(prop, PropCreateCategory("Project"));
     AddProp(prop, PropCreateSimple("Name", res.mName.c_str()));
     AddProp(prop, PropCreateSimple("File", res.mFileName.c_str()))->SetEnabled(FALSE);
 
