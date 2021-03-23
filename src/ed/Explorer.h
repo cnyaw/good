@@ -225,7 +225,9 @@ public:
     FillResourceTree2<GOOD_RESOURCE_SCRIPT>(res.mScript, res.mScriptIdx, _T("Script"));
     FillResourceTree2<GOOD_RESOURCE_PARTICLE>(res.mStgeScript, res.mStgeScriptIdx, _T("Particle"));
     FillResourceTree2<GOOD_RESOURCE_DEPENDENCY>(res.mDep, res.mDepIdx, _T("Dependency"));
-    mTree.InsertItem(_T("Project"), 3, 3, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_PROJECT); // Project info.
+    CTreeItem itemPrj = mTree.InsertItem(_T("Project"), 3, 3, TVI_ROOT, TVI_LAST); // Project info.
+    itemPrj.SetData(GOOD_RESOURCE_PROJECT);
+    mTree.SelectItem(itemPrj);
     ResPageSetList();
   }
 
@@ -240,6 +242,7 @@ public:
     mTree.InsertItem(_T("Script"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_SCRIPT);
     mTree.InsertItem(_T("Particle"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_PARTICLE);
     mTree.InsertItem(_T("Dependency"), 0, 0, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_DEPENDENCY);
+    mTree.InsertItem(_T("Project"), 3, 3, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_PROJECT); // Project info.
   }
 
   void Refresh(int id)

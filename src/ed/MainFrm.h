@@ -304,7 +304,6 @@ public:
     PrjT::inst().closeAll();
 
     InitTree();
-    mExpView.mTree.InsertItem(_T("Project"), 3, 3, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_PROJECT); // Project info.
 
     SystemParametersInfo(SPI_SETLISTBOXSMOOTHSCROLLING, 0, FALSE, SPIF_SENDCHANGE);
 
