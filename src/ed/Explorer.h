@@ -225,9 +225,8 @@ public:
     FillResourceTree2<GOOD_RESOURCE_SCRIPT>(res.mScript, res.mScriptIdx, _T("Script"));
     FillResourceTree2<GOOD_RESOURCE_PARTICLE>(res.mStgeScript, res.mStgeScriptIdx, _T("Particle"));
     FillResourceTree2<GOOD_RESOURCE_DEPENDENCY>(res.mDep, res.mDepIdx, _T("Dependency"));
-    CTreeItem itemPrj = mTree.InsertItem(_T("Project"), 3, 3, TVI_ROOT, TVI_LAST); // Project info.
-    itemPrj.SetData(GOOD_RESOURCE_PROJECT);
-    mTree.SelectItem(itemPrj);
+    CTreeItem ti = FindTreeGroup(GOOD_RESOURCE_PROJECT);
+    mTree.SelectItem(ti);
     ResPageSetList();
   }
 
@@ -827,6 +826,18 @@ end:
   // Impl helper.
   //
 
+  CTreeItem FindTreeGroup(int type) const
+  {
+    CTreeItem ti = mTree.GetChildItem(NULL);
+    while (ti) {                        // Find group item.
+      if ((int)ti.GetData() == type) {
+        break;
+      }
+      ti = mTree.GetNextSiblingItem(ti);
+    }
+    return ti;
+  }
+
   CTreeItem FindTreeItem(int id) const
   {
     CTreeItem hItem = NULL;
@@ -844,7 +855,6 @@ end:
       }
       hGroup = hGroup.GetNextSibling(); // Next group.
     }
-
     return hItem;
   }
 };

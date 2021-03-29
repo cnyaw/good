@@ -627,7 +627,6 @@ public:
     //
 
     InitTree();
-    mExpView.mTree.InsertItem(_T("Project"), 3, 3, TVI_ROOT, TVI_LAST).SetData(GOOD_RESOURCE_PROJECT); // Project info.
     mExpView.mProp.Reset();
     OnWindowCloseAll(0, 0, 0);
 
@@ -1010,15 +1009,7 @@ public:
 
   void AddResourceItem(CString const& groupName, std::string const& resName, int resId, int ResType, HWND hEditor)
   {
-    CTreeViewCtrlEx& tree = mExpView.mTree;
-    CTreeItem ti = tree.GetChildItem(NULL);
-    while (ti) {                        // Find group item.
-      if (ResType == (int)ti.GetData()) {
-        break;
-      }
-      ti = tree.GetNextSiblingItem(ti);
-    }
-
+    CTreeItem ti = mExpView.FindTreeGroup(ResType);
     if (ti.IsNull()) {
       return;
     }
