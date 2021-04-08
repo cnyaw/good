@@ -571,7 +571,7 @@ public:
 
     for (size_t i = 0; i < o.mObjIdx.size(); ++i) {
       int idObj = o.mObjIdx[i];
-      if (-1 == createChildObj_i(idItem, lvl, idObj, idType, pPkgName, pRes)) {
+      if (-1 == createChildObj_i(idItem, lvl, idObj, -1, idType, pPkgName, pRes)) {
         mActors[idItem].free();         // Free obj; ref may invalid if pool grow up.
         return -1;
       }
@@ -621,7 +621,7 @@ public:
     }
   }
 
-  int createChildObj_i(int idParent, LevelT const& lvl, int resId, int idType, char const *pPkgName, ResT *pRes)
+  int createChildObj_i(int idParent, LevelT const& lvl, int resId, int preferId, int idType, char const *pPkgName, ResT *pRes)
   {
     const ObjectT *po = getLevelObjRes_i(lvl, resId, pRes);
     if (0 == po) {
@@ -629,7 +629,7 @@ public:
     }
 
     if (ObjectT::TYPE_LVLOBJ == po->mType) {
-      int idItem = createChildObj_i(idParent, lvl, po->getLevelObjId(), GOOD_CREATE_OBJ_EXCLUDE_RES_ID, pPkgName, pRes);
+      int idItem = createChildObj_i(idParent, lvl, po->getLevelObjId(), resId, GOOD_CREATE_OBJ_EXCLUDE_RES_ID, pPkgName, pRes);
       if (-1 != idItem) {
         ActorT &a = mActors[idItem];
         a.mPosX = (float)po->mPosX;
@@ -642,7 +642,12 @@ public:
       return idItem;
     }
 
-    int idItem = allocActorId_i(idType, resId, pRes);
+    int idItem = -1;
+    if (-1 != preferId) {
+      idItem = allocActorId_i(GOOD_CREATE_OBJ_RES_ID, preferId, pRes);
+    } else {
+      idItem = allocActorId_i(idType, resId, pRes);
+    }
     if (-1 == idItem) {
       return -1;
     }

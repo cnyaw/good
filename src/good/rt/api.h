@@ -254,7 +254,7 @@ int genObj(int idParent, int idRes, char const *script)
     std::map<int, LevelT>::const_iterator it;
     for (it = mRes.mLevel.begin(); mRes.mLevel.end() != it; ++it) {
       if (it->second.isObj(idRes)) {
-        newid = createChildObj_i(idParent, it->second, idRes, GOOD_CREATE_OBJ_ANY_ID, 0, 0); // Gen child obj of a lvl.
+        newid = createChildObj_i(idParent, it->second, idRes, -1, GOOD_CREATE_OBJ_ANY_ID, 0, 0); // Gen child obj of a lvl.
         break;
       }
     }
@@ -379,7 +379,7 @@ int genObjEx(char const *pPkgName, int idParent, int idRes, char const *script)
         if (!mActors.isUsed(idParent)) {
           idParent = mRoot;
         }
-        int newid = createChildObj_i(idParent, it->second, idRes, GOOD_CREATE_OBJ_ANY_ID, pPkgName, &Res); // Gen child obj of a lvl.
+        int newid = createChildObj_i(idParent, it->second, idRes, -1, GOOD_CREATE_OBJ_ANY_ID, pPkgName, &Res); // Gen child obj of a lvl.
         if (-1 != newid) {
           mDirty = true;
           ActorT& a = mActors[newid];
