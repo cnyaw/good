@@ -158,11 +158,16 @@ function Lshift(x, by)                  -- Bitwise left shift.
   return x * 2 ^ by
 end
 
-function PtInObj(x, y, o)
+function PtInObj(x, y, o, world)
   if (0 == Good.GetVisible(o)) then
     return false
   end
-  local ox, oy = Good.GetPos(o)
+  local ox, oy
+  if (nil ~= world) then
+    ox, oy = Good.GetPos(o, world)
+  else
+    ox, oy = Good.GetPos(o)
+  end
   local l, t, w, h = Good.GetDim(o)
   local sx, sy = Good.GetScale(o)
   local ax, ay = Good.GetAnchor(o)
