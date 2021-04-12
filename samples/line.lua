@@ -2,20 +2,6 @@ local DOT_SZ = 5
 local DOT_GAP = 8
 local DOT_COLOR = 0xffff0000
 
-function GenDotLineObj(parent, x1, y1, x2, y2, sz, gap, color)
-  local len = math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
-  local delta = 1 / (len / gap)
-  local t = 0
-  while (true) do
-    local o = GenColorObj(parent, sz, sz, color)
-    Good.SetPos(o, Lerp(x1, x2, t), Lerp(y1, y2, t))
-    t = t + delta
-    if (1 <= t) then
-      break
-    end
-  end
-end
-
 function BeginDrag(param)
   param.mouse_down = true
   param.x, param.y = Input.GetMousePos()
