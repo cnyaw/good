@@ -20,6 +20,30 @@ class Object : public good::Object
 {
 public:
 
+  std::string getName() const
+  {
+    std::string name = good::Object::getName();
+    switch (mType)
+    {
+    case TYPE_SPRITE:
+      return name + " - Sprite";
+    case TYPE_COLBG:
+      return name + " - Color";
+    case TYPE_TEXBG:
+      return name + " - Texture";
+    case TYPE_MAPBG:
+      return name + " - Map";
+    case TYPE_DUMMY:
+      return name + " - Dummy";
+    case TYPE_LVLOBJ:
+      return name + " - Level Object";
+    case TYPE_TEXT:
+      return name + " - Text";
+    default:
+      return name + " - Object";
+    }
+  }
+
   //
   // Release undo command resource.
   //

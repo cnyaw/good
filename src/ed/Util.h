@@ -186,24 +186,4 @@ void GetObjDim(const PrjT::LevelT &lvl, const PrjT::ObjectT &obj, RECT &rc)
   }
 }
 
-std::string GetObjectName(PrjT::ObjectT const &o)
-{
-  std::string name = o.getName();
-  switch (o.mType)
-  {
-  case PrjT::ObjectT::TYPE_SPRITE:
-    return name + " - Sprite";
-  case PrjT::ObjectT::TYPE_COLBG:
-    return name + " - Color";
-  case PrjT::ObjectT::TYPE_TEXBG:
-    return name + " - Texture";
-  case PrjT::ObjectT::TYPE_MAPBG:
-    return name + " - Map";
-  case PrjT::ObjectT::TYPE_DUMMY:
-    return name + " - Dummy";
-  default:
-    return name + " - Object";
-  }
-}
-
 // end of Util.h
