@@ -50,6 +50,11 @@ extern "C" {
 //
 // #define GOOD_SUPPORT_STB_IMG
 // Is enable stb image decoder.
+// Should implement bool EmscLoadImageFromChar(int size, int ch, bool bAntiAlias, gx::GxImage *pImg);
+//
+// #define GOOD_SUPPORT_STB_TRUETYPE
+// Is enable stb_truetype for load image from char.
+// Should implement bool StbLoadImageFromChar(int size, int ch, bool bAntiAlias, gx::GxImage *pImg);
 //
 // #define GOOD_RENDER_WITH_DIRTY_FLAG
 // Render screen only when dirty flag is set.

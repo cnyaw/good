@@ -346,6 +346,11 @@ public:
       return true;
     }
 #endif
+#ifdef GOOD_SUPPORT_STB_TRUETYPE
+    if (StbLoadImageFromChar(size, ch, bAntiAlias, this)) {
+      return true;
+    }
+#endif
     return false;
   }
 
