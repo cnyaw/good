@@ -290,6 +290,24 @@ public:
     }
   }
 
+  unsigned int getPixel(int x, int y) const
+  {
+    if (0 > x || 0 > y || w <= x || h <= y) {
+      return 0;
+    } else {
+      return ((const int*)dat)[x + y * w];
+    }
+  }
+
+  void putPixel(int x, int y, unsigned int clr)
+  {
+    if (0 > x || 0 > y || w <= x || h <= y) {
+      return;
+    } else {
+      ((int*)dat)[x + y * w] = clr;
+    }
+  }
+
   bool load(std::string const& name)
   {
     std::string s;
