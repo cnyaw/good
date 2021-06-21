@@ -73,6 +73,7 @@ public:
 
   good::gx::GLGraphics gx;
   SDL_Surface* mScreen;
+  int app_keys;
 
   static EmccApplication& getInst()
   {
@@ -109,6 +110,7 @@ public:
     emscripten_set_canvas_size(mRes.mWidth, mRes.mHeight);
 
     mAr->addFileSystem(&fs);
+    app_keys = 0;
 
     return true;
   }
@@ -126,8 +128,8 @@ public:
 
   void step()
   {
-    Uint32 keys = 0;
-    poll(keys);
+    Uint32 keys = app_keys;
+    SDL_PumpEvents();
 
     sw2::IntPoint ptMouse;
     Uint8 btnMouse = SDL_GetMouseState(&ptMouse.x, &ptMouse.y);
@@ -151,49 +153,6 @@ public:
     if (mExit) {
       ::exit(0);
     }
-  }
-
-  bool poll(Uint32& keys) const
-  {
-    SDL_Event event;
-
-    while (SDL_PollEvent(&event)) {
-      switch(event.type)
-      {
-      case SDL_KEYDOWN:
-        switch (event.key.keysym.sym)
-        {
-        case SDLK_UP: keys |= GOOD_KEYS_UP; break;
-        case SDLK_DOWN: keys |= GOOD_KEYS_DOWN; break;
-        case SDLK_LEFT: keys |= GOOD_KEYS_LEFT; break;
-        case SDLK_RIGHT: keys |= GOOD_KEYS_RIGHT; break;
-        case SDLK_ESCAPE: keys |= GOOD_KEYS_ESCAPE; break;
-        case SDLK_RETURN: keys |= GOOD_KEYS_RETURN; break;
-        case SDLK_z: keys |= GOOD_KEYS_BTN_A; break;
-        case SDLK_x: keys |= GOOD_KEYS_BTN_B; break;
-        }
-        return false;
-
-      case SDL_KEYUP:
-        switch (event.key.keysym.sym)
-        {
-        case SDLK_UP: keys &= ~GOOD_KEYS_UP; break;
-        case SDLK_DOWN: keys &= ~GOOD_KEYS_DOWN; break;
-        case SDLK_LEFT: keys &= ~GOOD_KEYS_LEFT; break;
-        case SDLK_RIGHT: keys &= ~GOOD_KEYS_RIGHT; break;
-        case SDLK_ESCAPE: keys &= ~GOOD_KEYS_ESCAPE; break;
-        case SDLK_RETURN: keys &= ~GOOD_KEYS_RETURN; break;
-        case SDLK_z: keys &= ~GOOD_KEYS_BTN_A; break;
-        case SDLK_x: keys &= ~GOOD_KEYS_BTN_B; break;
-        }
-        return false;
-
-      case SDL_QUIT:
-        return true;
-      }
-    }
-
-    return false;
   }
 };
 
@@ -243,6 +202,12 @@ int EMSCRIPTEN_KEEPALIVE cLoadPkg(void *pBuff, int size)
   std::string stream((const char*)pBuff, size);
   std::istringstream ss(stream);
   return app.addFileSystem(fs.pkgName, ss);
+}
+
+int EMSCRIPTEN_KEEPALIVE cSetKeyStates(int keys)
+{
+  app.app_keys = keys;
+  return 1;
 }
 
 int EMSCRIPTEN_KEEPALIVE cRunPkg(void *pBuff, int size)
