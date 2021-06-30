@@ -457,6 +457,14 @@ public:
     mThumbImg.clear();
   }
 
+  size_t GetCxMaxTile() const
+  {
+    RECT rcClient;
+    GetClientRect(&rcClient);
+    size_t cxMaxTile = max(1, rcClient.right / CX_THUMB);
+    return cxMaxTile;
+  }
+
   virtual int GetResCount() const=0;
   virtual int GetResId(int sel) const=0;
   virtual std::string GetResName(int id) const=0;
@@ -491,6 +499,11 @@ public:
       if (idRes == id) {
         if (mCurSel != i) {
           mCurSel = i;
+          size_t cxMaxTile = GetCxMaxTile();
+          size_t x = mCurSel % cxMaxTile, y = mCurSel / cxMaxTile;
+          RECT rc = {0, 0, CX_THUMB, CY_THUMB};
+          ::OffsetRect(&rc, CX_THUMB * x, CY_THUMB * y);
+          ScrollToView(rc);
           Invalidate(FALSE);
           MainT::inst().mExpView.SetCurSel(id);
         }
@@ -575,10 +588,7 @@ public:
   {
     int nItem = GetResCount();
 
-    RECT rcClient;
-    GetClientRect(&rcClient);
-
-    size_t cxMaxTile = max(1, rcClient.right / CX_THUMB);
+    size_t cxMaxTile = GetCxMaxTile();
 
     int cx = cxMaxTile;
     int cy = 1 + nItem / cxMaxTile;
@@ -623,9 +633,6 @@ public:
   {
     RECT rcClient;
     GetClientRect(&rcClient);
-
-    size_t cxMaxTile = max(1, rcClient.right / CX_THUMB);
-
     ::OffsetRect(&rcClient, m_ptOffset.x, m_ptOffset.y);
 
     CMemoryDC mdc(dc, rcClient);
@@ -637,6 +644,7 @@ public:
 
     mdc.SelectBrush((HBRUSH)::GetStockObject(NULL_BRUSH));
 
+    size_t cxMaxTile = GetCxMaxTile();
     for (int i = 0; i < GetResCount(); ++i) {
       size_t x = i % cxMaxTile, y = i / cxMaxTile;
 
