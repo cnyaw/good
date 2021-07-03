@@ -22,8 +22,8 @@ namespace gx {
 struct DevkitPSPSurface : public ImageSurface
 {
   enum {
-    PACK_TEX_WIDTH = 1024,
-    PACK_TEX_HEIGHT = 1024
+    PACK_TEX_WIDTH = 512,
+    PACK_TEX_HEIGHT = 512
   };
 
   bool init()
@@ -51,6 +51,7 @@ public:
   bool LoadSurface(GxImage &img, DevkitPSPImageRect& sur)
   {
     LastTex = 0;
+    img.resize(img.w * TEX_SCALE, img.h * TEX_SCALE);
     return ImageManager<DevkitPSPImageManager, DevkitPSPSurface, DevkitPSPImageRect>::LoadSurface(img, sur);
   }
 };
@@ -76,12 +77,12 @@ public:
 
   int getWidth() const
   {
-    return mSur->w;
+    return mSur->w / TEX_SCALE;
   }
 
   int getHeight() const
   {
-    return mSur->h;
+    return mSur->h / TEX_SCALE;
   }
 
   static bool existImage(std::string const& name)
@@ -300,11 +301,19 @@ public:
     applyObjTransform(x, y, srcw, srch, xscale, yscale, rot, .5f);
     applyObjColor(color);
 
+    float imgw = (float)DevkitPSPSurface::PACK_TEX_WIDTH;
+    float imgh = (float)DevkitPSPSurface::PACK_TEX_HEIGHT;
+
+    srcx = (int)srcx * TEX_SCALE;
+    srcy = (int)srcy * TEX_SCALE;
+    srcw = (int)srcw * TEX_SCALE;
+    srch = (int)srch * TEX_SCALE;
+
     srcx += img.mSur->left;
     srcy += img.mSur->top;
 
-    float x0 = srcx / (float)DevkitPSPSurface::PACK_TEX_WIDTH, y0 = (srcy) / (float)DevkitPSPSurface::PACK_TEX_HEIGHT;
-    float x1 = (srcx + srcw) / (float)DevkitPSPSurface::PACK_TEX_WIDTH, y1 = (srcy + srch) / (float)DevkitPSPSurface::PACK_TEX_HEIGHT;
+    float x0 = srcx / (float)imgw, y0 = (srcy) / (float)imgh;
+    float x1 = (srcx + srcw) / (float)imgw, y1 = (srcy + srch) / (float)imgh;
 
     typedef struct {
       float u, v;
@@ -331,14 +340,7 @@ public:
     sceGuEnable(GU_TEXTURE_2D);
 
     if (DevkitPSPImageManager::inst().LastTex != img.mSur->tex) {
-      int tw = (int)(DevkitPSPSurface::PACK_TEX_WIDTH * TEX_SCALE);
-      int th = (int)(DevkitPSPSurface::PACK_TEX_HEIGHT * TEX_SCALE);
-      GxImage imgTex;
-      imgTex.create(DevkitPSPSurface::PACK_TEX_WIDTH, DevkitPSPSurface::PACK_TEX_HEIGHT, 4);
-      imgTex.draw(0, 0, img.mSur->tex->img);
-      imgTex.resize(tw, th);
-      sceGuTexImage(0, tw, th, tw, imgTex.dat);
-      DevkitPSPImageManager::inst().LastTex = img.mSur->tex;
+      sceGuTexImage(0, DevkitPSPSurface::PACK_TEX_WIDTH, DevkitPSPSurface::PACK_TEX_HEIGHT, DevkitPSPSurface::PACK_TEX_WIDTH, img.mSur->tex->img.dat);
     }
 
     sceGumDrawArray(GU_SPRITES, GU_TEXTURE_32BITF | GU_VERTEX_32BITF | GU_TRANSFORM_3D, 2, 0, v);
