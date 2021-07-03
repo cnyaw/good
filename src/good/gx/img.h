@@ -30,6 +30,10 @@
 #include "stb_image.h"
 #endif
 
+#ifdef GOOD_SUPPORT_STB_TRUETYPE
+#include "stb_truetype.h"
+#endif
+
 namespace good {
 
 namespace gx {
@@ -337,12 +341,12 @@ public:
     }
 #endif
 #ifdef GOOD_SUPPORT_STB_IMG
-  int n;
-  dat = (char*)stbi_load_from_memory((const stbi_uc*)stream.data(), (int)stream.size(), &w, &h, &n, 4);
-  if (isValid()) {
-    bpp = 4;
-    return true;
-  }
+    int n;
+    dat = (char*)stbi_load_from_memory((const stbi_uc*)stream.data(), (int)stream.size(), &w, &h, &n, 4);
+    if (isValid()) {
+      bpp = 4;
+      return true;
+    }
 #endif
     return false;
   }
@@ -365,7 +369,7 @@ public:
     }
 #endif
 #ifdef GOOD_SUPPORT_STB_TRUETYPE
-    if (StbLoadImageFromChar(size, ch, bAntiAlias, this)) {
+    if (StbLoadImageFromChar(size, ch, bAntiAlias)) {
       return true;
     }
 #endif
@@ -580,6 +584,36 @@ public:
     return AndroidFromIntArray(iarr);
   }
 #endif // GOOD_SUPPORT_ANDROID_IMG
+#ifdef GOOD_SUPPORT_STB_TRUETYPE
+  bool StbLoadImageFromChar(int size, int ch, bool bAntiAlias)
+  {
+    const stbtt_fontinfo *font = StbGetFont();
+    if (0 == font) {
+      return false;
+    }
+    float sf = stbtt_ScaleForPixelHeight(font, size);
+    int x0, y0, x1, y1;
+    stbtt_GetFontBoundingBox(font, &x0, &y0, &x1, &y1);
+    int font_bb_y0 = (int)(y0 * sf);
+    int width, height, xoff, yoff;
+    unsigned char *bitmap = stbtt_GetCodepointBitmap(font, 0, sf, ch, &width, &height, &xoff, &yoff);
+    bpp = 4;
+    w = width;
+    int exh = size + yoff + font_bb_y0;
+    h = exh + height;
+    dat = new char[w * h * bpp];
+    memset(dat, 0, w * h * bpp);
+    for (int j = 0; j < height; j++) {
+      for (int i = 0; i < width; i++) {
+        if (bitmap[j * width + i] >> 5) {
+          putPixel(i, j + exh, 0xffffffff);
+        }
+      }
+    }
+    stbtt_FreeBitmap(bitmap, font->userdata);
+    return true;
+  }
+#endif // GOOD_SUPPORT_STB_TRUETYPE
 };
 
 } // namespace gx
