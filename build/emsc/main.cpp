@@ -129,8 +129,12 @@ public:
 
   void step()
   {
+    SDL_Event e;
+    while (SDL_PollEvent(&e)) {
+      // NOP.
+    }
+
     Uint32 keys = app_keys;
-    SDL_PumpEvents();
 
     sw2::IntPoint ptMouse;
     Uint8 btnMouse = SDL_GetMouseState(&ptMouse.x, &ptMouse.y);
