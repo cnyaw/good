@@ -16,6 +16,7 @@
 
 #include <emscripten.h>
 
+#define GOOD_SUPPORT_ONLY_ONE_TEXTURE
 #define GOOD_SUPPORT_STGE
 #define GOOD_SUPPORT_NO_LOGO
 #include "rt/rt.h"
@@ -157,6 +158,11 @@ public:
 };
 
 EmccApplication &app = EmccApplication::getInst();
+
+void NotifyImageManagerSurfaceChanged()
+{
+  app.handleImageManagerSurfaceChanged();
+}
 
 void trigger()
 {

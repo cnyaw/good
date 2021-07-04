@@ -37,7 +37,6 @@ public:
   typedef WtlApplicationImpl<PlayerT> BaseT;
 
   std::string datFont;
-  gx::GLImage mFont;
 
   bool showFPS, showOutput, showTexInfo;
 
@@ -56,7 +55,7 @@ public:
   int iTexs;
   int maxDrawCalls, maxActors;
 
-  CPlayerWindowImpl() : showFPS(false), showOutput(false), showTexInfo(false), mFont(0), maxDrawCalls(0), maxActors(0), caretTimer(0), iCmdHist(0)
+  CPlayerWindowImpl() : showFPS(false), showOutput(false), showTexInfo(false), maxDrawCalls(0), maxActors(0), caretTimer(0), iCmdHist(0)
   {
     tip = "Press Ctrl+Alt+O to toggle trace messages";
   }
@@ -124,8 +123,6 @@ public:
     iTexs = maxDrawCalls = maxActors = 0;
 
     mStartLevel = StartLevel;
-
-    mFont = gx::GLImage(0);
   }
 
   void ToggleFps()
@@ -169,21 +166,19 @@ public:
   void onPackageChanged()
   {
     BaseT::onPackageChanged();
-    mFont = gx::GLImage(0);
   }
 
   void SimpleDrawText(int x, int y, std::string const &s, sw2::uint color = 0xffffffff)
   {
-    if (!mFont.isValid()) {
-      gx::GLImageResource &gx = gx::GLImageResource::inst();
-      mFont.mSur = gx.getImage("good.ed.texture.font2.bmp", datFont);
+    gx::GLImage font = gx::GLImageResource::inst().getImage("good.ed.texture.font2.bmp", datFont);
+    if (!font.isValid()) {
+      return;
     }
-
     for (size_t i = 0; i < s.size(); i++) {
       int idx = s[i] - ' ';
       int srcx = CX_FONT2 * (idx % CCH_ROW_FONT2);
       int srcy = CY_FONT2 * (idx / CCH_ROW_FONT2);
-      gx.drawImage(x + CX_FONT2 * (int)i, y, mFont, srcx, srcy, CX_FONT2, CY_FONT2, color, .0f, 1.0f, 1.0f);
+      gx.drawImage(x + CX_FONT2 * (int)i, y, font, srcx, srcy, CX_FONT2, CY_FONT2, color, .0f, 1.0f, 1.0f);
     }
   }
 

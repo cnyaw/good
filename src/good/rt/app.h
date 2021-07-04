@@ -860,6 +860,15 @@ public:
 
     return true;
   }
+
+#ifdef GOOD_SUPPORT_ONLY_ONE_TEXTURE
+  void handleImageManagerSurfaceChanged()
+  {
+    for (int i = mActors.first(); -1 != i; i = mActors.next(i)) {
+      mActors[i].mImg = ImgT();
+    }
+  }
+#endif
 };
 
 } // namespace rt

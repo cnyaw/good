@@ -14,6 +14,10 @@
 #include "img.h"
 #include "rcpack.h"
 
+#ifdef GOOD_SUPPORT_ONLY_ONE_TEXTURE
+void NotifyImageManagerSurfaceChanged();
+#endif
+
 namespace good {
 
 namespace gx {
@@ -36,7 +40,7 @@ public:
 
   bool init(int TEX_WIDTH, int TEX_HEIGHT)
   {
-    root = new RectPackNode(0, 0, TEX_WIDTH, TEX_HEIGHT);
+    reset(TEX_WIDTH, TEX_HEIGHT);
     if (0 == root) {
       return false;
     }
@@ -54,6 +58,12 @@ public:
       root->free();
       root = 0;
     }
+  }
+
+  void reset(int TEX_WIDTH, int TEX_HEIGHT)
+  {
+    free();
+    root = new RectPackNode(0, 0, TEX_WIDTH, TEX_HEIGHT);
   }
 
   bool add(sw2::IntRect &r)
@@ -157,6 +167,26 @@ public:
         return true;
       }
     }
+
+#ifdef GOOD_SUPPORT_ONLY_ONE_TEXTURE
+    if (!mSur.empty()) {
+      SurT *psur = mSur[0];
+      if (psur) {
+        mImg.clear();
+        psur->reset(psur->img.w, psur->img.h);
+#ifdef GOOD_WTL_PLAYER
+        memset(psur->img.dat, 0xcd, psur->img.w * psur->img.h * psur->img.bpp);
+#endif
+        NotifyImageManagerSurfaceChanged();
+        if (psur->add(rc)) {
+          UpdateSurface(psur, rc, img, sur);
+          return true;
+        }
+      }
+      return false;
+    }
+    // There is no packed texture created yet, fall through to create one.
+#endif
 
     //
     // Add the image to new texture pack.
