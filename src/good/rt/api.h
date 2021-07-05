@@ -1304,6 +1304,7 @@ void updateResTex(int idTex, int x, int y, int idCanvas, int sx, int sy, int sw,
   } else {
     mTexDirty = true;
   }
+  mDirty = true;
 }
 
 // end of api.h
