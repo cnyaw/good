@@ -395,7 +395,7 @@ int genObjEx(char const *pPkgName, int idParent, int idRes, char const *script)
   }
 }
 
-int genResTex(int idCanvas)
+int genResTex(int idCanvas, const char *name)
 {
   if (!mCanvas.isUsed(idCanvas)) {
     return -1;
@@ -406,19 +406,30 @@ int genResTex(int idCanvas)
     return -1;
   }
 
+  const char *pn;
   char n[32];
-  sprintf(n, "Resource.GenTex%d", id);
+  if (name) {
+    pn = name;
+  } else {
+    sprintf(n, "Resource.GenTex%d", id);
+    pn = n;
+  }
+
+  if (ImgT::existImage(pn)) {
+    mRes.mId.free(id);
+    return -1;
+  }
 
   CanvasT &c = mCanvas[idCanvas];
 
-  ImgT img = ImgT::getImage(n, c);
+  ImgT img = ImgT::getImage(pn, c);
   if (!img.isValid()) {
     mRes.mId.free(id);
     return -1;
   }
 
   TextureT t;
-  t.mFileName = n;
+  t.mFileName = t.mName = pn;
   t.mId = id;
 
   mRes.mTexIdx.push_back(id);

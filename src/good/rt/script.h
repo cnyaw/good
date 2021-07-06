@@ -1046,14 +1046,19 @@ public:
   //
 
   //
-  // [in] canvas id [out] tex id.
+  // [in] canvas id[, name] [out] tex id.
   //
 
   static int GenResTex(lua_State* L)
   {
     int canvas = luaL_checkint(L, 1);
 
-    lua_pushinteger(L, AppT::getInst().genResTex(canvas));
+    const char* name = 0;
+    if (2 <= lua_gettop(L)) {
+      name = luaL_checkstring(L, 2);
+    }
+
+    lua_pushinteger(L, AppT::getInst().genResTex(canvas, name));
 
     return 1;
   }
