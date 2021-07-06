@@ -21,14 +21,6 @@
 #define GOOD_SUPPORT_NO_LOGO
 #include "rt/rt.h"
 
-namespace good {
-namespace gx {
-class GxImage;
-}
-}
-
-bool EmscLoadImageFromChar(int size, int ch, bool bAntiAlias, good::gx::GxImage *pImg);
-
 #define GOOD_SUPPORT_STB_IMG
 #define GOOD_SUPPORT_EMSC_IMG
 #include "gx/opengl_gx.h"
@@ -180,31 +172,11 @@ void GoodTraceTool(int level, const char* format, va_list args)
   app.trace(buf);
 }
 
-good::gx::GxImage *g_pImg;
-
-bool EmscLoadImageFromChar(int size, int ch, bool bAntiAlias, good::gx::GxImage *pImg)
-{
-  if (0 == pImg) {
-    return false;
-  }
-  g_pImg = pImg;
-  char buff[128];
-  sprintf(buff, "loadImageFromChar(%d,%d,%d)", size, ch, bAntiAlias);
-  emscripten_run_script(buff);
-  return true;
-}
-
 extern "C" {
 
 int EMSCRIPTEN_KEEPALIVE cLoadImageFromChar(int w, int h, void *pBuff, int size)
 {
-  g_pImg->w = w;
-  g_pImg->h = h;
-  g_pImg->bpp = 4;
-  char *pdat = new char[w * h * 4];
-  memcpy(pdat, pBuff, w * h * 4);
-  g_pImg->dat = pdat;
-  return 0;
+  return good::gx::GxImage::cLoadImageFromChar(w, h, pBuff, size);
 }
 
 int EMSCRIPTEN_KEEPALIVE cLoadPkg(void *pBuff, int size)

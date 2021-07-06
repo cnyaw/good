@@ -364,7 +364,7 @@ public:
     }
 #endif
 #ifdef GOOD_SUPPORT_EMSC_IMG
-    if (EmscLoadImageFromChar(size, ch, bAntiAlias, this)) {
+    if (EmscLoadImageFromChar(size, ch, bAntiAlias)) {
       return true;
     }
 #endif
@@ -584,6 +584,42 @@ public:
     return AndroidFromIntArray(iarr);
   }
 #endif // GOOD_SUPPORT_ANDROID_IMG
+
+#ifdef GOOD_SUPPORT_EMSC_IMG
+  class EmscTempImage
+  {
+    EmscTempImage() {}
+  public:
+    good::gx::GxImage *g_pEmscImg;
+    static EmscTempImage& inst()
+    {
+      static EmscTempImage i;
+      return i;
+    }
+  };
+
+  bool EmscLoadImageFromChar(int size, int ch, bool bAntiAlias)
+  {
+    EmscTempImage::inst().g_pEmscImg = this;
+    char buff[128];
+    sprintf(buff, "loadImageFromChar(%d,%d,%d)", size, ch, bAntiAlias);
+    emscripten_run_script(buff);
+    return true;
+  }
+
+  static int cLoadImageFromChar(int w, int h, void *pBuff, int size)
+  {
+    good::gx::GxImage *pImg = EmscTempImage::inst().g_pEmscImg;
+    pImg->w = w;
+    pImg->h = h;
+    pImg->bpp = 4;
+    char *pdat = new char[w * h * 4];
+    memcpy(pdat, pBuff, w * h * 4);
+    pImg->dat = pdat;
+    return 0;
+  }
+#endif // GOOD_SUPPORT_EMSC_IMG
+
 #ifdef GOOD_SUPPORT_STB_TRUETYPE
   bool StbLoadImageFromChar(int size, int ch, bool bAntiAlias)
   {
