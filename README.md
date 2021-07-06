@@ -2,7 +2,8 @@
 
 Windows editor and Android APK download https://github.com/cnyaw/goodbin <br/>
 Blog https://good-ed.blogspot.com/ <br/>
-API Reference https://agile-hollows-18660.herokuapp.com/good-ed/goodapi.html
+API Reference https://agile-hollows-18660.herokuapp.com/good-ed/goodapi.html <br/>
+Play some games online https://agile-hollows-18660.herokuapp.com
 
 ![ed](gooded.png)
 
