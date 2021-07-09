@@ -186,4 +186,38 @@ void GetObjDim(const PrjT::LevelT &lvl, const PrjT::ObjectT &obj, RECT &rc)
   }
 }
 
+bool SelMultiFile(LPCTSTR lpszFilter, std::vector<std::string> &paths)
+{
+  CFileDialog dlg(TRUE, NULL, NULL, OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_ALLOWMULTISELECT, lpszFilter);
+
+  const int LenBuff = 4096;
+  TCHAR Buff[LenBuff] = {0};
+  dlg.m_ofn.lpstrFile = Buff;
+  dlg.m_ofn.nMaxFile = LenBuff;
+
+  if (IDOK != dlg.DoModal()) {
+    return false;
+  }
+
+  if (0 != Buff[dlg.m_ofn.nFileOffset - 1]) {
+    Buff[dlg.m_ofn.nFileOffset - 1] = 0;
+  }
+
+  CString path = Buff;
+  for (int i = path.GetLength() + 1, s = i; i < LenBuff; i++) {
+    if (0 != Buff[i]) {
+      continue;
+    }
+    CString n(Buff + s, i - s);
+    n = path + _T("\\") + n;
+    paths.push_back(std::string(n));
+    if (0 == Buff[i + 1]) {
+      break;
+    }
+    s = i + 1;
+  }
+
+  return true;
+}
+
 // end of Util.h

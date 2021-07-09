@@ -456,38 +456,16 @@ public:
 
   void OnAddNewTex(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    CFileDialog dlg(TRUE, NULL, NULL, OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_ALLOWMULTISELECT, _T("Image Files(*.bmp,*.jpg,*.gif,*.png)\0*.bmp;*.jpg;") _T("*.gif;*.png\0"));
-
-    const int LenBuff = 4096;
-    TCHAR Buff[LenBuff] = {0};
-    dlg.m_ofn.lpstrFile = Buff;
-    dlg.m_ofn.nMaxFile = LenBuff;
-
-    if (IDOK != dlg.DoModal()) {
-      return;
-    }
-
-    if (0 != Buff[dlg.m_ofn.nFileOffset - 1]) {
-      Buff[dlg.m_ofn.nFileOffset - 1] = 0;
-    }
-
-    PrjT& prj = PrjT::inst();
-    CString path = Buff;
-    for (int i = path.GetLength() + 1, s = i; i < LenBuff; i++) {
-      if (0 != Buff[i]) {
-        continue;
+    std::vector<std::string> files;
+    if (SelMultiFile(_T("Image Files(*.bmp,*.jpg,*.gif,*.png)\0*.bmp;*.jpg;*.gif;*.png\0"), files)) {
+      PrjT& prj = PrjT::inst();
+      for (size_t i = 0; i < files.size(); i++) {
+        std::string name = GetRelativePath(files[i], mFileName);
+        int id = prj.addTex(name);
+        if (-1 != id) {
+          AddResourceItem(_T("Texture"), prj.getTex(id).getName(), id, GOOD_RESOURCE_TEXTURE, CreateEditor<CTextureEditor<CMainFrame> >(id));
+        }
       }
-      CString n(Buff + s, i - s);
-      n = path + _T("\\") + n;
-      std::string name = GetRelativePath((const char*)n, mFileName);
-      int id = prj.addTex(name);
-      if (-1 != id) {
-        AddResourceItem(_T("Texture"), prj.getTex(id).getName(), id, GOOD_RESOURCE_TEXTURE, CreateEditor<CTextureEditor<CMainFrame> >(id));
-      }
-      if (0 == Buff[i + 1]) {
-        break;
-      }
-      s = i + 1;
     }
   }
 
