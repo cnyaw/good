@@ -408,56 +408,53 @@ public:
 
   void OnAddNewScript(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    CFileDialog dlg(TRUE, _T("lua"), NULL, OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_FILEMUSTEXIST, _T("Script Files(*.lua)\0*.lua\0"));
-    if (IDOK != dlg.DoModal()) {
-      return;
-    }
-
-    std::string name = GetRelativePath(dlg.m_szFileName, mFileName);
-
-    PrjT& prj = PrjT::inst();
-    int id = prj.addScript(name);
-    if (-1 != id) {
-      AddResourceItem(_T("Script"), ExtractFileName(name), id, GOOD_RESOURCE_SCRIPT, NULL);
+    std::vector<std::string> files;
+    if (SelMultiFile(_T("lua"), _T("Script Files(*.lua)\0*.lua\0"), files)) {
+      PrjT& prj = PrjT::inst();
+      for (size_t i = 0; i < files.size(); i++) {
+        std::string name = GetRelativePath(files[i], mFileName);
+        int id = prj.addScript(name);
+        if (-1 != id) {
+          AddResourceItem(_T("Script"), ExtractFileName(name), id, GOOD_RESOURCE_SCRIPT, NULL);
+        }
+      }
     }
   }
 
   void OnAddNewSound(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    CFileDialog dlg(TRUE, NULL, NULL, OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("Sound Files(*wav,*.ogg)\0*.wav;*.ogg\0"));
-    if (IDOK != dlg.DoModal()) {
-      return;
-    }
-
-    std::string name = GetRelativePath(dlg.m_szFileName, mFileName);
-
-    PrjT& prj = PrjT::inst();
-    int id = prj.addSnd(name);
-    if (-1 != id) {
-      AddResourceItem(_T("Audio"), prj.getSnd(id).getName(), id, GOOD_RESOURCE_AUDIO, NULL);
+    std::vector<std::string> files;
+    if (SelMultiFile(NULL, _T("Sound Files(*wav,*.ogg)\0*.wav;*.ogg\0"), files)) {
+      PrjT& prj = PrjT::inst();
+      for (size_t i = 0; i < files.size(); i++) {
+        std::string name = GetRelativePath(files[i], mFileName);
+        int id = prj.addSnd(name);
+        if (-1 != id) {
+          AddResourceItem(_T("Audio"), prj.getSnd(id).getName(), id, GOOD_RESOURCE_AUDIO, NULL);
+        }
+      }
     }
   }
 
   void OnAddNewStgeScript(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
-    CFileDialog dlg(TRUE, _T("stge"), NULL, OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("Stge Script Files(*.stge)\0*.stge\0"));
-    if (IDOK != dlg.DoModal()) {
-      return;
-    }
-
-    std::string name = GetRelativePath(dlg.m_szFileName, mFileName);
-
-    PrjT& prj = PrjT::inst();
-    int id = prj.addStgeScript(name);
-    if (-1 != id) {
-      AddResourceItem(_T("Particle"), ExtractFileName(name), id, GOOD_RESOURCE_PARTICLE, CreateEditor<CStgeScriptEditor<CMainFrame> >(id));
+    std::vector<std::string> files;
+    if (SelMultiFile(_T("stge"), _T("Stge Script Files(*.stge)\0*.stge\0"), files)) {
+      PrjT& prj = PrjT::inst();
+      for (size_t i = 0; i < files.size(); i++) {
+        std::string name = GetRelativePath(files[i], mFileName);
+        int id = prj.addStgeScript(name);
+        if (-1 != id) {
+          AddResourceItem(_T("Particle"), ExtractFileName(name), id, GOOD_RESOURCE_PARTICLE, CreateEditor<CStgeScriptEditor<CMainFrame> >(id));
+        }
+      }
     }
   }
 
   void OnAddNewTex(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
     std::vector<std::string> files;
-    if (SelMultiFile(_T("Image Files(*.bmp,*.jpg,*.gif,*.png)\0*.bmp;*.jpg;*.gif;*.png\0"), files)) {
+    if (SelMultiFile(NULL, _T("Image Files(*.bmp,*.jpg,*.gif,*.png)\0*.bmp;*.jpg;*.gif;*.png\0"), files)) {
       PrjT& prj = PrjT::inst();
       for (size_t i = 0; i < files.size(); i++) {
         std::string name = GetRelativePath(files[i], mFileName);

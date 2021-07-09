@@ -186,9 +186,9 @@ void GetObjDim(const PrjT::LevelT &lvl, const PrjT::ObjectT &obj, RECT &rc)
   }
 }
 
-bool SelMultiFile(LPCTSTR lpszFilter, std::vector<std::string> &paths)
+bool SelMultiFile(LPCTSTR lpszDefExt, LPCTSTR lpszFilter, std::vector<std::string> &paths)
 {
-  CFileDialog dlg(TRUE, NULL, NULL, OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_ALLOWMULTISELECT, lpszFilter);
+  CFileDialog dlg(TRUE, lpszDefExt, NULL, OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_ALLOWMULTISELECT, lpszFilter);
 
   const int LenBuff = 4096;
   TCHAR Buff[LenBuff] = {0};
