@@ -13,25 +13,32 @@ if (strUrl.indexOf("?") != -1) {
   }
 }
 
+function stringToArrayBuffer(str) {
+  var arrbuf = new ArrayBuffer(str.length);
+  var bufView = new Uint8Array(arrbuf);
+  for (var i = 0; i < str.length; i++) {
+    bufView[i] = str.charCodeAt(i);
+  }
+  return arrbuf;
+}
+
 function loadPkg(file, ccallName) {
   var xhr = new XMLHttpRequest();
-  xhr.responseType = "arraybuffer";
-  xhr.onload = function(e) {
-    if (4 == xhr.readyState) {
-      var arrayBuffer = xhr.response;
-      if (arrayBuffer) {
-        var bytes = new Uint8Array(arrayBuffer);
-        var buf = Module._malloc(bytes.length);
-        Module.HEAPU8.set(bytes, buf);
-        Module.ccall(ccallName, 'number', ['number', 'number'], [buf, bytes.length]);
-        Module._free(buf);
-      }
-    } else {
-      Module.print("loadpkg " + file + " fail");
-    }
-  };
-  xhr.open("GET", "uploads/" + file, true);
+  xhr.overrideMimeType('text/plain; charset=x-user-defined');
+  xhr.open('GET', "uploads/" + file, false);
   xhr.send(null);
+  if (200 === xhr.status) {
+    var arrayBuffer = stringToArrayBuffer(xhr.response);
+    if (arrayBuffer) {
+      var bytes = new Uint8Array(arrayBuffer);
+      var buf = Module._malloc(bytes.length);
+      Module.HEAPU8.set(bytes, buf);
+      Module.ccall(ccallName, 'number', ['number', 'number'], [buf, bytes.length]);
+      Module._free(buf);
+    }
+  } else {
+    Module.print("loadpkg " + file + " fail");
+  }
 }
 
 function loadImageFromChar(size, ch, bAntiAlias) {
