@@ -1336,7 +1336,7 @@ public:
   static int IsPlaying(lua_State* L)
   {
     int idSnd = luaL_checkint(L, 1);
-    lua_pushboolean(L, SndT(idSnd).isPlaying());
+    lua_pushboolean(L, AppT::getInst().isSoundPlaying(idSnd));
 
     return 1;
   }
@@ -1423,7 +1423,7 @@ public:
   static int Stop(lua_State* L)
   {
     int idSnd = luaL_checkint(L, 1);
-    SndT(idSnd).stop();
+    AppT::getInst().stopSound(idSnd);
 
     return 0;
   }

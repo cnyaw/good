@@ -873,6 +873,11 @@ bool isAnimPlaying(int idObj) const
   }
 }
 
+bool isSoundPlaying(int idSnd) const
+{
+  return SndT(idSnd).isPlaying();
+}
+
 void killAllChild(int idObj)
 {
   if (!mActors.isUsed(idObj)) {
@@ -1265,6 +1270,11 @@ void stopAnim(int idObj)
   if (mActors.isUsed(idObj)) {
     mActors[idObj].stopAnim();
   }
+}
+
+void stopSound(int idSnd)
+{
+  SndT(idSnd).stop();
 }
 
 void updateResTex(int idTex, int x, int y, int idCanvas, int sx, int sy, int sw, int sh)
