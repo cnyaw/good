@@ -31,7 +31,7 @@ public:
 
   unsigned int rgba(unsigned int color) const
   {
-#if defined(DEVKIT_PSP) || defined(_android_)
+#if defined(DEVKIT_PSP) || defined(_android_) || defined(__EMSCRIPTEN__)
     unsigned char b = (color & 0xff);
     unsigned char g = ((color >> 8) & 0xff);
     unsigned char r = ((color >> 16) & 0xff);
