@@ -39,7 +39,8 @@ std::string intVecToStr(std::vector<int> const &v)
 {
   std::stringstream ss;
   std::copy(v.begin(), v.end(), std::ostream_iterator<int>(ss, " "));
-  return sw2::Util::trim(ss.str());
+  std::string s = ss.str();
+  return sw2::Util::trim(s);
 }
 
 bool loadGrid(sw2::Ini& sec, std::string const& sgrid, int range, std::vector<GridLine>& lines)

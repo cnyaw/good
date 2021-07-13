@@ -344,7 +344,7 @@ public:
 
     if (!mObjIdx.empty()) {
       for (size_t i = 0; i < mObjIdx.size(); ++ i) {
-        std::map<int, Object>::const_iterator it = Objs.find(mObjIdx[i]);
+        typename std::map<int, Object>::const_iterator it = Objs.find(mObjIdx[i]);
         if (Objs.end() == it || !it->second.store(ini, Objs)) {
           return false;
         }
