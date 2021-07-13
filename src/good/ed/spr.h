@@ -15,7 +15,7 @@ namespace good {
 
 namespace ed {
 
-template<class SpriteDataT>
+template<class PrjT, class SpriteDataT>
 class SpriteCmdInsert : public UndoCommand
 {
 public:
@@ -65,7 +65,7 @@ public:
   }
 };
 
-template<class SpriteDataT>
+template<class PrjT, class SpriteDataT>
 class SpriteCmdRemove : public UndoCommand
 {
 public:
@@ -105,7 +105,7 @@ public:
   }
 };
 
-template<class SpriteDataT>
+template<class PrjT, class SpriteDataT>
 class SpriteCmdSetTime : public UndoCommand
 {
 public:
@@ -250,7 +250,7 @@ public:
 
   bool setTime(size_t iFrame, int count, int time)
   {
-    typedef SpriteCmdSetTime<Sprite> CmdT;
+    typedef SpriteCmdSetTime<PrjT, Sprite> CmdT;
 
     UndoCommand* pcmd = mUndo.getCurCommand();
     if (0 != pcmd && GOOD_SPRITEED_CMD_SETTIME == pcmd->getId()) {
@@ -275,8 +275,8 @@ public:
 
   bool insertFrame(size_t iFrame, std::vector<int> const& tiles, int time)
   {
-    SpriteCmdInsert<Sprite>* pcmd;
-    pcmd = new SpriteCmdInsert<Sprite>(mId, iFrame, tiles, time);
+    typedef SpriteCmdInsert<PrjT, Sprite> CmdT;
+    CmdT *pcmd = new CmdT(mId, iFrame, tiles, time);
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
       return true;
@@ -287,8 +287,8 @@ public:
 
   bool removeFrame(size_t iFrame)
   {
-    SpriteCmdRemove<Sprite>* pcmd;
-    pcmd = new SpriteCmdRemove<Sprite>(mId, iFrame);
+    typedef SpriteCmdRemove<PrjT, Sprite> CmdT;
+    CmdT *pcmd = new CmdT(mId, iFrame);
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
       return true;

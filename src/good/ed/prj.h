@@ -260,7 +260,7 @@ public:
     if (isTexUsed_i(id, mRes.mMap, oName) || isTexUsed_i(id, mRes.mSprite, oName)) {
       return true;
     }
-    std::map<int, LevelT>::const_iterator it = mRes.mLevel.begin();
+    typename std::map<int, LevelT>::const_iterator it = mRes.mLevel.begin();
     for (; mRes.mLevel.end() != it; ++it) {
       const LevelT &lvl = it->second;
       if (isTexUsed_i(id, lvl, lvlName, oName)) {
@@ -273,7 +273,7 @@ public:
   template<class ResMapT>
   bool isTexUsed_i(int id, const ResMapT &map, std::string &oName) const
   {
-    for (ResMapT::const_iterator it = map.begin(); map.end() != it; ++it) {
+    for (typename ResMapT::const_iterator it = map.begin(); map.end() != it; ++it) {
       if (it->second.mTileset.mTextureId == id) {
         oName = it->second.getName();
         return true;
@@ -284,7 +284,7 @@ public:
 
   bool isTexUsed_i(int id, const LevelT &lvl, std::string &lvlName, std::string &oName) const
   {
-    std::map<int, ObjectT>::const_iterator it = lvl.mObj.begin();
+    typename std::map<int, ObjectT>::const_iterator it = lvl.mObj.begin();
     for (; lvl.mObj.end() != it; ++it) {
       if (it->second.mTextureId == id) {
         lvlName = lvl.getName();
@@ -351,7 +351,7 @@ public:
 
   bool isMapUsed(int id, std::string &lvlName, std::string &oName) const
   {
-    std::map<int, LevelT>::const_iterator it = mRes.mLevel.begin();
+    typename std::map<int, LevelT>::const_iterator it = mRes.mLevel.begin();
     for (; mRes.mLevel.end() != it; ++it) {
       const LevelT &lvl = it->second;
       if (isMapUsed_i(id, lvl, lvlName, oName)) {
@@ -363,7 +363,7 @@ public:
 
   bool isMapUsed_i(int id, const LevelT &lvl, std::string &lvlName, std::string &oName) const
   {
-    std::map<int, ObjectT>::const_iterator it = lvl.mObj.begin();
+    typename std::map<int, ObjectT>::const_iterator it = lvl.mObj.begin();
     for (; lvl.mObj.end() != it; ++it) {
       if (it->second.mMapId == id) {
         lvlName = lvl.getName();
@@ -426,7 +426,7 @@ public:
 
   bool isSpriteUsed(int id, std::string &lvlName, std::string &oName) const
   {
-    std::map<int, LevelT>::const_iterator it = mRes.mLevel.begin();
+    typename std::map<int, LevelT>::const_iterator it = mRes.mLevel.begin();
     for (; mRes.mLevel.end() != it; ++it) {
       const LevelT &lvl = it->second;
       if (isSpriteUsed_i(id, lvl, lvlName, oName)) {
@@ -438,7 +438,7 @@ public:
 
   bool isSpriteUsed_i(int id, const LevelT &lvl, std::string &lvlName, std::string &oName) const
   {
-    std::map<int, ObjectT>::const_iterator it = lvl.mObj.begin();
+    typename std::map<int, ObjectT>::const_iterator it = lvl.mObj.begin();
     for (; lvl.mObj.end() != it; ++it) {
       if (it->second.mSpriteId == id) {
         lvlName = lvl.getName();
@@ -581,7 +581,7 @@ public:
 
   bool isLevelObjUsed(int id, std::string &lvlName, std::string &oName) const
   {
-    std::map<int, LevelT>::const_iterator it = mRes.mLevel.begin();
+    typename std::map<int, LevelT>::const_iterator it = mRes.mLevel.begin();
     for (; mRes.mLevel.end() != it; ++it) {
       const LevelT &lvl = it->second;
       if (isLevelObjUsed_i(id, lvl, lvlName, oName)) {
@@ -593,7 +593,7 @@ public:
 
   bool isLevelObjUsed_i(int id, const LevelT &lvl, std::string &lvlName, std::string &oName) const
   {
-    std::map<int, ObjectT>::const_iterator it = lvl.mObj.begin();
+    typename std::map<int, ObjectT>::const_iterator it = lvl.mObj.begin();
     for (; lvl.mObj.end() != it; ++it) {
       if (it->second.getLevelObjId() == id) {
         lvlName = lvl.getName();
@@ -994,11 +994,11 @@ public:
     // Gather general resource items.
     //
 
-    for (std::map<int, SoundT>::const_iterator it = res.mSnd.begin(); res.mSnd.end() != it; ++it) {
+    for (typename std::map<int, SoundT>::const_iterator it = res.mSnd.begin(); res.mSnd.end() != it; ++it) {
       createPackageAddItems(additems, it->second.mFileName);
     }
 
-    for (std::map<int, TextureT>::const_iterator it = res.mTex.begin(); res.mTex.end() != it; ++it) {
+    for (typename std::map<int, TextureT>::const_iterator it = res.mTex.begin(); res.mTex.end() != it; ++it) {
       createPackageAddItems(additems, it->second.mFileName);
     }
 

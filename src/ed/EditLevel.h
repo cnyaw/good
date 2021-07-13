@@ -1687,7 +1687,7 @@ public:
         int UndoCmd = lvl.mUndo.getCurCommand()->getId();
         int ObjId = -1;
         if (good::ed::GOOD_LEVELED_CMD_SETNAME == UndoCmd) {
-          ObjId = ((good::ed::LevelCmdSetName<PrjT::LevelT>*)lvl.mUndo.getCurCommand())->mId;
+          ObjId = ((good::ed::LevelCmdSetName<PrjT, PrjT::LevelT>*)lvl.mUndo.getCurCommand())->mId;
         }
         if (lvl.undo()) {
           RefreshAddRemove(IsUndoRedoRequireRefresh(UndoCmd));
@@ -1710,7 +1710,7 @@ public:
         if (good::ed::GOOD_LEVELED_CMD_SETSIZE == UndoCmd) {
           UpdateView(0);
         } else if (good::ed::GOOD_LEVELED_CMD_SETNAME == UndoCmd) {
-          UpdateView(((good::ed::LevelCmdSetName<PrjT::LevelT>*)lvl.mUndo.getCurCommand())->mId);
+          UpdateView(((good::ed::LevelCmdSetName<PrjT, PrjT::LevelT>*)lvl.mUndo.getCurCommand())->mId);
         }
       }
       return true;

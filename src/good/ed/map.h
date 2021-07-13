@@ -15,7 +15,7 @@ namespace good {
 
 namespace ed {
 
-template<class TileDataT>
+template<class PrjT, class TileDataT>
 class MapCmdDraw : public UndoCommand
 {
 public:
@@ -74,7 +74,7 @@ public:
   }
 };
 
-template<class TileDataT>
+template<class PrjT, class TileDataT>
 class MapCmdDrawPattern : public UndoCommand
 {
 public:
@@ -173,7 +173,7 @@ public:
   }
 };
 
-template<class TileDataT>
+template<class PrjT, class TileDataT>
 class MapCmdFill : public UndoCommand
 {
 public:
@@ -321,7 +321,7 @@ public:
 
   bool draw(int x, int y, int tile)
   {
-    typedef MapCmdDraw<Map> CmdT;
+    typedef MapCmdDraw<PrjT, Map> CmdT;
     if (!mDrawFlag) {
       CmdT* pcmd = new CmdT(mId, tile, x, y);
       if (mUndo.execAndAdd(pcmd)) {
@@ -341,7 +341,7 @@ public:
 
   bool draw(int x, int y, std::vector<int> const& pattern, int w, int h)
   {
-    typedef MapCmdDrawPattern<Map> CmdT;
+    typedef MapCmdDrawPattern<PrjT, Map> CmdT;
     if (!mDrawFlag) {
       CmdT* pcmd = new CmdT(mId, pattern, w, h, x, y);
       if (mUndo.execAndAdd(pcmd)) {
@@ -361,7 +361,7 @@ public:
 
   bool fill(int x, int y, int fill)
   {
-    typedef MapCmdFill<Map> CmdT;
+    typedef MapCmdFill<PrjT, Map> CmdT;
     if (!mDrawFlag) {
       CmdT* pcmd = new CmdT(mId, fill, x, y);
       if (mUndo.execAndAdd(pcmd)) {

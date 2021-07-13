@@ -15,7 +15,7 @@ namespace good {
 
 namespace ed {
 
-template<class LvlT>
+template<class PrjT, class LvlT>
 class LevelCmdAddObj : public UndoCommand
 {
 public:
@@ -62,7 +62,7 @@ public:
   }
 };
 
-template<class LvlT>
+template<class PrjT, class LvlT>
 class LevelCmdMoveObj : public UndoCommand
 {
 public:
@@ -73,7 +73,7 @@ public:
   LevelCmdMoveObj(int idLevel, int id, int offsetX, int offsetY) : UndoCommand(GOOD_LEVELED_CMD_MOVEOBJ), mLevelId(idLevel)
   {
     mId = id;
-    PrjT::ObjectT& o = PrjT::inst().getLevel(idLevel).getObj(id);
+    typename PrjT::ObjectT& o = PrjT::inst().getLevel(idLevel).getObj(id);
     mPosX = o.mPosX, mPosY = o.mPosY;
     o.mPosX += offsetX, o.mPosY += offsetY;
   }
@@ -94,7 +94,7 @@ public:
   }
 };
 
-template<class LvlT>
+template<class PrjT, class LvlT>
 class LevelCmdRemoveObj : public UndoCommand
 {
 public:
@@ -175,7 +175,7 @@ public:
   }
 };
 
-template<class LvlT>
+template<class PrjT, class LvlT>
 class LevelCmdZorderObj : public UndoCommand
 {
 public:
@@ -253,7 +253,7 @@ public:
   }
 };
 
-template<class LvlT>
+template<class PrjT, class LvlT>
 class LevelCmdSetBgColor : public UndoCommand
 {
 public:
@@ -292,7 +292,7 @@ public:
   }
 };
 
-template<class LvlT>
+template<class PrjT, class LvlT>
 class LevelCmdSetDim : public UndoCommand
 {
 public:
@@ -330,7 +330,7 @@ public:
   }
 };
 
-template<class LvlT>
+template<class PrjT, class LvlT>
 class LevelCmdSetName : public UndoCommand
 {
 public:
@@ -368,7 +368,7 @@ public:
   }
 };
 
-template<class LvlT>
+template<class PrjT, class LvlT>
 class LevelCmdSetProp : public UndoCommand
 {
 public:
@@ -432,7 +432,7 @@ public:
   }
 };
 
-template<class LvlT>
+template<class PrjT, class LvlT>
 class LevelCmdChangeParent : public UndoCommand
 {
 public:
@@ -473,7 +473,7 @@ public:
       lvl.mObjIdx.pop_back();
       lvl.mObjIdx.insert(lvl.mObjIdx.begin() + mOrgIdx, mId);
     } else {
-      PrjT::ObjectT &o = lvl.getObj(mOrgParentId);
+      typename PrjT::ObjectT &o = lvl.getObj(mOrgParentId);
       o.mObjIdx.pop_back();
       o.mObjIdx.insert(o.mObjIdx.begin() + mOrgIdx, mId);
     }
@@ -487,7 +487,7 @@ public:
   }
 };
 
-template<class LvlT>
+template<class PrjT, class LvlT>
 class LevelCmdSetScript : public UndoCommand
 {
 public:
@@ -526,7 +526,7 @@ public:
   }
 };
 
-template<class LvlT>
+template<class PrjT, class LvlT>
 class LevelCmdSetSize : public UndoCommand
 {
 public:
@@ -562,7 +562,7 @@ public:
   }
 };
 
-template<class LvlT>
+template<class PrjT, class LvlT>
 class LevelCmdSetLevelPos : public UndoCommand
 {
 public:
@@ -598,7 +598,7 @@ public:
   }
 };
 
-template<class LvlT>
+template<class PrjT, class LvlT>
 class LevelCmdSetText : public UndoCommand
 {
 public:
@@ -635,7 +635,7 @@ public:
   }
 };
 
-template<class LvlT>
+template<class PrjT, class LvlT>
 class LevelCmdSetTextSize : public UndoCommand
 {
 public:
@@ -695,6 +695,7 @@ public:
     TOOL_ADDTEXT
   };
 
+  typedef good::Level<Object<PrjT> > BaseT;
   typedef Object<PrjT> ObjectT;
 
   UndoImpl mUndo;
@@ -762,8 +763,8 @@ public:
 
   bool setSize(int newWidth, int newHeight)
   {
-    LevelCmdSetSize<Level>* pcmd;
-    pcmd = new LevelCmdSetSize<Level>(mId, newWidth, newHeight);
+    typedef LevelCmdSetSize<PrjT, Level> CmdT;
+    CmdT *pcmd = new CmdT(BaseT::mId, newWidth, newHeight);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -805,8 +806,8 @@ public:
 
   bool setObjBgColor(int idObj, unsigned int color)
   {
-    LevelCmdSetBgColor<Level>* pcmd;
-    pcmd = new LevelCmdSetBgColor<Level>(mId, idObj, color);
+    typedef LevelCmdSetBgColor<PrjT, Level> CmdT;
+    CmdT *pcmd = new CmdT(BaseT::mId, idObj, color);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -818,8 +819,8 @@ public:
 
   bool setObjDim(int idObj, int newx, int newy, int neww, int newh)
   {
-    LevelCmdSetDim<Level>* pcmd;
-    pcmd = new LevelCmdSetDim<Level>(mId, idObj, newx, newy, neww, newh);
+    typedef LevelCmdSetDim<PrjT, Level> CmdT;
+    CmdT *pcmd = new CmdT(BaseT::mId, idObj, newx, newy, neww, newh);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -831,7 +832,8 @@ public:
 
   bool setObjName(int idObj, std::string const& name)
   {
-    LevelCmdSetName<Level>* pcmd = new LevelCmdSetName<Level>(mId, idObj, name);
+    typedef LevelCmdSetName<PrjT, Level> CmdT;
+    CmdT *pcmd = new CmdT(BaseT::mId, idObj, name);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -843,8 +845,8 @@ public:
 
   bool setObjProp(int idObj, bool vis, float rot, float sx, float sy, float ax, float ay, bool repx, bool repy)
   {
-    LevelCmdSetProp<Level>* pcmd;
-    pcmd = new LevelCmdSetProp<Level>(mId, idObj, vis, rot, sx, sy, ax, ay, repx, repy);
+    typedef LevelCmdSetProp<PrjT, Level> CmdT;
+    CmdT *pcmd = new CmdT(BaseT::mId, idObj, vis, rot, sx, sy, ax, ay, repx, repy);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -856,8 +858,8 @@ public:
 
   bool setObjScript(int idObj, const std::string &script)
   {
-    LevelCmdSetScript<Level>* pcmd;
-    pcmd = new LevelCmdSetScript<Level>(mId, idObj, script);
+    typedef LevelCmdSetScript<PrjT, Level> CmdT;
+    CmdT *pcmd = new CmdT(BaseT::mId, idObj, script);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -869,8 +871,8 @@ public:
 
   bool setObjText(int idObj, const std::string &s)
   {
-    LevelCmdSetText<Level>* pcmd;
-    pcmd = new LevelCmdSetText<Level>(mId, idObj, s);
+    typedef LevelCmdSetText<PrjT, Level> CmdT;
+    CmdT *pcmd = new CmdT(BaseT::mId, idObj, s);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -882,8 +884,8 @@ public:
 
   bool setObjTextSize(int idObj, int size)
   {
-    LevelCmdSetTextSize<Level>* pcmd;
-    pcmd = new LevelCmdSetTextSize<Level>(mId, idObj, size);
+    typedef LevelCmdSetTextSize<PrjT, Level> CmdT;
+    CmdT *pcmd = new CmdT(BaseT::mId, idObj, size);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -899,26 +901,26 @@ public:
 
   int getParent(int id) const
   {
-    std::map<int, ObjectT>::const_iterator it = mObj.begin();
-    for (; mObj.end() != it; ++it) {
-      typename const ObjectT &o = it->second;
+    typename std::map<int, ObjectT>::const_iterator it = BaseT::mObj.begin();
+    for (; BaseT::mObj.end() != it; ++it) {
+      const ObjectT &o = it->second;
       for (size_t i = 0; i < o.mObjIdx.size(); i++) {
         if (o.mObjIdx[i] == id) {
           return it->first;
         }
       }
     }
-    return mId;
+    return BaseT::mId;
   }
 
   bool isParentVisible(int id) const
   {
     while (true) {
       id = getParent(id);
-      if (mId == id) {
-        return mVisible;
+      if (BaseT::mId == id) {
+        return BaseT::mVisible;
       }
-      if (!getObj(id).mVisible) {
+      if (!BaseT::getObj(id).mVisible) {
         return false;
       }
     }
@@ -927,8 +929,8 @@ public:
 
   int addObj(int idSprite, int idMap, int idTexture, int x, int y)
   {
-    LevelCmdAddObj<Level>* pcmd;
-    pcmd = new LevelCmdAddObj<Level>(mId, idSprite, idMap, idTexture, x, y);
+    typedef LevelCmdAddObj<PrjT, Level> CmdT;
+    CmdT *pcmd = new CmdT(BaseT::mId, idSprite, idMap, idTexture, x, y);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -962,7 +964,7 @@ public:
 
   bool recursiveRemoveObj(int id, int tag)
   {
-    PrjT::ObjectT &o = getObj(id);
+    typename PrjT::ObjectT &o = BaseT::getObj(id);
 
     for (int i = (int)o.mObjIdx.size() - 1; 0 <= i; i--) {
       if (!recursiveRemoveObj(o.mObjIdx[i], tag)) {
@@ -970,8 +972,8 @@ public:
       }
     }
 
-    LevelCmdRemoveObj<Level>* pcmd;
-    pcmd = new LevelCmdRemoveObj<Level>(mId, id);
+    typedef LevelCmdRemoveObj<PrjT, Level> CmdT;
+    CmdT *pcmd = new CmdT(BaseT::mId, id);
 
     if (!mUndo.execAndAdd(pcmd)) {
       return false;
@@ -982,12 +984,12 @@ public:
     return true;
   }
 
-  bool copyObj(typename const PrjT::LevelT &lvl, std::vector<int> const& selObjs, std::vector<int> &newObjs)
+  bool copyObj(const typename PrjT::LevelT &lvl, std::vector<int> const& selObjs, std::vector<int> &newObjs)
   {
     int tag = mUndo.mTag;
 
     for (size_t i = 0; i < selObjs.size(); i++) {
-      PrjT::ObjectT const& o = lvl.getObj(selObjs[i]);
+      const typename PrjT::ObjectT &o = lvl.getObj(selObjs[i]);
 
       int id = addObj(o.mSpriteId, o.mMapId, o.mTextureId, o.mPosX, o.mPosY);
       if (-1 == id) {
@@ -996,7 +998,7 @@ public:
 
       mUndo.getCurCommand()->mTag = tag; // Set as the same undo group.
 
-      PrjT::ObjectT& o2 = getObj(id);
+      typename PrjT::ObjectT& o2 = BaseT::getObj(id);
       o2 = o;                           // Duplicate obj o to new obj o2.
       o2.mId = id;                      // Set new obj o2's id.
 
@@ -1012,7 +1014,8 @@ public:
 
   bool moveObj_i(int id, int offsetX, int offsetY, bool failUndo, int tagCmd)
   {
-    LevelCmdMoveObj<Level> *pcmd = new LevelCmdMoveObj<Level>(mId, id, offsetX, offsetY);
+    typedef LevelCmdMoveObj<PrjT, Level> CmdT;
+    CmdT *pcmd = new CmdT(BaseT::mId, id, offsetX, offsetY);
     if (!mUndo.execAndAdd(pcmd)) {
       if (failUndo) {
         mUndo.undo();
@@ -1037,8 +1040,8 @@ public:
 
   bool setLevelPos(int posX, int posY)
   {
-    LevelCmdSetLevelPos<Level>* pcmd;
-    pcmd = new LevelCmdSetLevelPos<Level>(mId, posX, posY);
+    typedef LevelCmdSetLevelPos<PrjT, Level> CmdT;
+    CmdT *pcmd = new CmdT(BaseT::mId, posX, posY);
 
     if (!mUndo.execAndAdd(pcmd)) {
       return false;
@@ -1060,7 +1063,7 @@ public:
 
     for (size_t i = 0; i < ids.size(); ++i) {
 
-      PrjT::ObjectT const& o = getObj(ids[i]);
+      const typename PrjT::ObjectT &o = BaseT::getObj(ids[i]);
 
       if (PrjT::ObjectT::TYPE_COLBG != o.mType && PrjT::ObjectT::TYPE_TEXBG != o.mType) {
         continue;
@@ -1074,8 +1077,8 @@ public:
         continue;
       }
 
-      LevelCmdSetDim<Level>* pcmd;
-      pcmd = new LevelCmdSetDim<Level>(mId, ids[i], o.mDim.left, o.mDim.top, neww, newh);
+      typedef LevelCmdSetDim<PrjT, Level> CmdT;
+      CmdT *pcmd = new CmdT(BaseT::mId, ids[i], o.mDim.left, o.mDim.top, neww, newh);
 
       if (!mUndo.execAndAdd(pcmd)) {
         if (0 < i) {
@@ -1108,7 +1111,7 @@ public:
 
   bool canMoveObjDown(int id) const
   {
-    return getObjIndex(id) != 0;
+    return BaseT::getObjIndex(id) != 0;
   }
 
   bool canMoveObjTopmost(int id) const
@@ -1118,33 +1121,33 @@ public:
 
   bool canMoveObjUp(int id) const
   {
-    return getObjIndex(id) != mObjIdx.size() - 1;
+    return BaseT::getObjIndex(id) != BaseT::mObjIdx.size() - 1;
   }
 
   bool moveObjBottommost(int id)
   {
-    return doZorderObj(id, LevelCmdZorderObj<Level>::MOVE_BOTTOMMOST);
+    return doZorderObj(id, LevelCmdZorderObj<PrjT, Level>::MOVE_BOTTOMMOST);
   }
 
   bool moveObjDown(int id)
   {
-    return doZorderObj(id, LevelCmdZorderObj<Level>::MOVE_DOWN);
+    return doZorderObj(id, LevelCmdZorderObj<PrjT, Level>::MOVE_DOWN);
   }
 
   bool moveObjTopmost(int id)
   {
-    return doZorderObj(id, LevelCmdZorderObj<Level>::MOVE_TOPMOST);
+    return doZorderObj(id, LevelCmdZorderObj<PrjT, Level>::MOVE_TOPMOST);
   }
 
   bool moveObjUp(int id)
   {
-    return doZorderObj(id, LevelCmdZorderObj<Level>::MOVE_UP);
+    return doZorderObj(id, LevelCmdZorderObj<PrjT, Level>::MOVE_UP);
   }
 
   bool doZorderObj(int id, int move)
   {
-    LevelCmdZorderObj<Level>* pcmd;
-    pcmd = new LevelCmdZorderObj<Level>(mId, id, move);
+    typedef LevelCmdZorderObj<PrjT, Level> CmdT;
+    CmdT *pcmd = new CmdT(BaseT::mId, id, move);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -1175,7 +1178,7 @@ public:
     PrjT &prj = PrjT::inst();
 
     sw2::IntRect rcPivot;
-    prj.getObjDim(getObj(ids.back()), rcPivot);
+    prj.getObjDim(BaseT::getObj(ids.back()), rcPivot);
 
     //
     // Move objects.
@@ -1185,7 +1188,7 @@ public:
 
     for (size_t i = 0; i < ids.size() - 1; i++) {
 
-      PrjT::ObjectT const& o = getObj(ids[i]);
+      const typename PrjT::ObjectT &o = BaseT::getObj(ids[i]);
 
       sw2::IntRect rc;
       prj.getObjDim(o, rc);
@@ -1248,14 +1251,14 @@ public:
 
     int tag = mUndo.mTag;
     for (size_t i = 0; i < ids.size(); i++) {
-      const PrjT::ObjectT &o = getObj(ids[i]);
+      const typename PrjT::ObjectT &o = BaseT::getObj(ids[i]);
       sw2::IntRect rc;
       prj.getObjDim(o, rc);
       int OffsetX = WndX + (WndW - rc.width()) / 2;
       int OffsetY = WndY + (WndH - rc.height()) / 2;
       int idParent = getParent(ids[i]);
-      while (idParent != mId) {         // Convert to local pos of parent.
-        const ObjectT &p = getObj(idParent);
+      while (idParent != BaseT::mId) {  // Convert to local pos of parent.
+        const ObjectT &p = BaseT::getObj(idParent);
         OffsetX -= p.mPosX;
         OffsetY -= p.mPosY;
         idParent = getParent(idParent);
@@ -1291,8 +1294,8 @@ public:
 
   bool changeParent(int idObj, int idNewParent)
   {
-    LevelCmdChangeParent<Level>* pcmd;
-    pcmd = new LevelCmdChangeParent<Level>(mId, idObj, idNewParent);
+    typedef LevelCmdChangeParent<PrjT, Level> CmdT;
+    CmdT *pcmd = new CmdT(BaseT::mId, idObj, idNewParent);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -1308,22 +1311,22 @@ public:
 
   void loopSel(bool backward, std::vector<int> &sel) const
   {
-    for (size_t i = 0; i < mObjIdx.size(); i++) {
-      if (mObjIdx[i] != sel[0]) {
+    for (size_t i = 0; i < BaseT::mObjIdx.size(); i++) {
+      if (BaseT::mObjIdx[i] != sel[0]) {
         continue;
       }
       sel.clear();
       if (backward) {
         if (0 == i) {
-          sel.push_back(mObjIdx[mObjIdx.size() - 1]);
+          sel.push_back(BaseT::mObjIdx[BaseT::mObjIdx.size() - 1]);
         } else {
-          sel.push_back(mObjIdx[i - 1]);
+          sel.push_back(BaseT::mObjIdx[i - 1]);
         }
       } else {
-        if (mObjIdx.size() - 1 == i) {
-          sel.push_back(mObjIdx[0]);
+        if (BaseT::mObjIdx.size() - 1 == i) {
+          sel.push_back(BaseT::mObjIdx[0]);
         } else {
-          sel.push_back(mObjIdx[i + 1]);
+          sel.push_back(BaseT::mObjIdx[i + 1]);
         }
       }
       break;
@@ -1333,15 +1336,15 @@ public:
   void selFirstObj(bool backward, std::vector<int> &sel) const
   {
     if (backward) {
-      sel.push_back(mObjIdx[mObjIdx.size() - 1]);
+      sel.push_back(BaseT::mObjIdx[BaseT::mObjIdx.size() - 1]);
     } else {
-      sel.push_back(mObjIdx[0]);
+      sel.push_back(BaseT::mObjIdx[0]);
     }
   }
 
   bool switchSel(bool backward, std::vector<int> &sel) const
   {
-    if (mObjIdx.empty()) {
+    if (BaseT::mObjIdx.empty()) {
       return false;
     }
     if (sel.empty()) {
@@ -1449,8 +1452,8 @@ public:
     mAddMap = mAddTex = mAddSpr = -1;
     mAddCol = 0xff0000ff;
 
-    PrjT::LevelT& lvl = PrjT::inst().getLevel(mId);
-    const PrjT::ObjectT &o = lvl.getObj(id);
+    typename PrjT::LevelT& lvl = PrjT::inst().getLevel(BaseT::mId);
+    const typename PrjT::ObjectT &o = lvl.getObj(id);
 
     switch (o.mType)
     {
@@ -1484,7 +1487,7 @@ public:
 
   void setToolByResId(int id)
   {
-    const PrjT::ResT &res = PrjT::inst().mRes;
+    const typename PrjT::ResT &res = PrjT::inst().mRes;
     if (res.isSprite(id)) {
       mAddMap = mAddTex = -1;
       mAddCol = 0xff0000ff;
@@ -1579,7 +1582,7 @@ public:
       assert(idObj == id);
     }
 
-    PrjT::ObjectT o;
+    typename PrjT::ObjectT o;
     o.mId = id;
     o.mVisible = true;
     o.mSpriteId = idSprite;
@@ -1610,7 +1613,7 @@ public:
 
   static bool moveObj(Level& lvl, int id, int& oldX, int& oldY)
   {
-    std::map<int, ObjectT>::iterator it = lvl.mObj.find(id);
+    typename std::map<int, ObjectT>::iterator it = lvl.mObj.find(id);
     if (lvl.mObj.end() == it) {
       return false;
     }
@@ -1634,7 +1637,7 @@ public:
         return false;
       }
     } else {
-      std::map<int, ObjectT>::iterator it = lvl.mObj.find(idParent);
+      typename std::map<int, ObjectT>::iterator it = lvl.mObj.find(idParent);
       if (lvl.mObj.end() == it) {
         return false;
       }
@@ -1764,7 +1767,7 @@ public:
       return false;
     }
 
-    std::string secName = good::getSecName(mId, "level");
+    std::string secName = good::getSecName(BaseT::mId, "level");
 
     sw2::Ini sec = ini[secName];
 
@@ -1791,8 +1794,8 @@ public:
       mShowSnap = sec["showLine"];
     }
 
-    if (!loadGrid(sec, "vgrid", mWidth, mVertGrid) ||
-        !loadGrid(sec, "hgrid", mHeight, mHorzGrid)) {
+    if (!loadGrid(sec, "vgrid", BaseT::mWidth, mVertGrid) ||
+        !loadGrid(sec, "hgrid", BaseT::mHeight, mHorzGrid)) {
       return false;
     }
 
@@ -1805,9 +1808,9 @@ public:
     // Settings.
     //
 
-    std::string secName = good::getSecName(mId, "level");
+    std::string secName = good::getSecName(BaseT::mId, "level");
 
-    if (!ObjectT::store_i(ini, secName, mObj)) {
+    if (!ObjectT::store_i(ini, secName, BaseT::mObj)) {
       return false;
     }
 
@@ -1817,11 +1820,11 @@ public:
     // Property.
     //
 
-    if (PrjT::inst().mRes.mWidth != mWidth) {
-      sec["width"] = mWidth;
+    if (PrjT::inst().mRes.mWidth != BaseT::mWidth) {
+      sec["width"] = BaseT::mWidth;
     }
-    if (PrjT::inst().mRes.mHeight != mHeight) {
-      sec["height"] = mHeight;
+    if (PrjT::inst().mRes.mHeight != BaseT::mHeight) {
+      sec["height"] = BaseT::mHeight;
     }
 
     if (!mShowSnap) {
