@@ -133,6 +133,31 @@ void CommonDrawMap(GxT& gx, MapT const& map, ImgT& img, int dx, int dy, int left
   }
 }
 
+template<class GxT, class MapT, class ImgT>
+void CommonDrawMap(GxT &gx, const MapT &map, ImgT &img, int cx, int cy, const sw2::IntRect &rcv, sw2::IntRect &rcm, sw2::IntRect &rc, unsigned int color)
+{
+  sw2::IntPoint adj0(cx % map.mTileset.mTileWidth, cy % map.mTileset.mTileHeight);
+  sw2::IntPoint adj(adj0.x + (map.mTileset.mTileWidth * (rcm.left / map.mTileset.mTileWidth)), adj0.y + (map.mTileset.mTileHeight * (rcm.top / map.mTileset.mTileHeight)));
+  rcm.offset(-rcm.left + adj.x, -rcm.top + adj.y);
+
+  int left = (int)((rcm.left - rc.left) / map.mTileset.mTileWidth);
+  int right = (std::min)(map.mWidth - 1, (int)((rcm.right - rc.left) / map.mTileset.mTileWidth));
+  int top = (int)((rcm.top - rc.top) / map.mTileset.mTileHeight);
+  int bottom = (std::min)(map.mHeight - 1, (int)((rcm.bottom - rc.top) / map.mTileset.mTileHeight));
+
+  if (0 < left) {                       // Draw an extra tile to avoid tear.
+    left -= 1;
+    rcm.left -= map.mTileset.mTileWidth;
+  }
+
+  if (0 < top) {
+    top -= 1;
+    rcm.top -= map.mTileset.mTileHeight;
+  }
+
+  CommonDrawMap(gx, map, img, rcm.left - rcv.left, rcm.top - rcv.top, left, top, right, bottom, color);
+}
+
 template<class GxT, class SpriteT, class ImgT>
 void CommonDrawSprite(GxT &gx, const SpriteT &spr, ImgT &img, int x, int y, int frame)
 {

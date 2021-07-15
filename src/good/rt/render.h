@@ -45,41 +45,18 @@ void renderMapBg(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, u
   T *pThis = (T*)this;
   for (int ay = ny + rcv.top; -h <= ay && ay < ybound; ay += h) {
     for (int ax = nx + rcv.left; -w <= ax && ax < xbound; ax += w) {
-
       sw2::IntRect rc(0, 0, w, h);
       rc.offset(ax, ay);
-
       sw2::IntRect rcm;
       if (!rc.intersect(rcv, rcm)) {
         continue;
       }
-
-      sw2::IntPoint adj0((int)cx % map.mTileset.mTileWidth, (int)cy % map.mTileset.mTileHeight);
-      sw2::IntPoint adj(adj0.x + (map.mTileset.mTileWidth * (rcm.left / map.mTileset.mTileWidth)), adj0.y + (map.mTileset.mTileHeight * (rcm.top / map.mTileset.mTileHeight)));
-      rcm.offset(-rcm.left + adj.x, -rcm.top + adj.y);
-
-      int left = (int)((rcm.left - rc.left) / map.mTileset.mTileWidth);
-      int right = (std::min)(map.mWidth - 1, (int)((rcm.right - rc.left) / map.mTileset.mTileWidth));
-      int top = (int)((rcm.top - rc.top) / map.mTileset.mTileHeight);
-      int bottom = (std::min)(map.mHeight - 1, (int)((rcm.bottom - rc.top) / map.mTileset.mTileHeight));
-
-      if (0 < left) {                   // Draw an extra tile to avoid tear.
-        left -= 1;
-        rcm.left -= map.mTileset.mTileWidth;
-      }
-
-      if (0 < top) {
-        top -= 1;
-        rcm.top -= map.mTileset.mTileHeight;
-      }
-
       ImgT img = getImage(a, mRes.getTex(map.mTileset.mTextureId).mFileName);
       if (!img.isValid()) {
         return;
       }
-
       pThis->gx.setAnchor(a.mAnchorX, a.mAnchorY);
-      CommonDrawMap(pThis->gx, map, img, rcm.left - rcv.left, rcm.top - rcv.top, left, top, right, bottom, color);
+      CommonDrawMap(pThis->gx, map, img, (int)cx, (int)cy, rcv, rcm, rc, color);
     }
   }
 }

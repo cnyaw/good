@@ -929,25 +929,10 @@ public:
           if (!imgTex.isValid()) {
             break;
           }
-          POINT adj0 = {rc.left % map.mTileset.mTileWidth, rc.top % map.mTileset.mTileHeight};
-          POINT adj = {
-            adj0.x + (map.mTileset.mTileWidth * (rcm.left / map.mTileset.mTileWidth)),
-            adj0.y + (map.mTileset.mTileHeight * (rcm.top / map.mTileset.mTileHeight))
-          };
-          ::OffsetRect(&rcm, -rcm.left + adj.x, -rcm.top + adj.y);
-          int left = (int)((rcm.left - rc.left) / map.mTileset.mTileWidth);
-          int right = min(map.mWidth - 1, (int)((rcm.right - rc.left) / map.mTileset.mTileWidth));
-          int top = (int)((rcm.top - rc.top) / map.mTileset.mTileHeight);
-          int bottom = min(map.mHeight - 1, (int)((rcm.bottom - rc.top) / map.mTileset.mTileHeight));
-          if (0 < left) {               // Draw an extra tile to avoid tear.
-            left -= 1;
-            rcm.left -= map.mTileset.mTileWidth;
-          }
-          if (0 < top) {
-            top -= 1;
-            rcm.top -= map.mTileset.mTileHeight;
-          }
-          CommonDrawMap(good::gx::ImgpGraphics(gx), map, imgTex, rcm.left - rcv.left, rcm.top - rcv.top, left, top, right, bottom, 0xffffffff);
+          sw2::IntRect rcv2(rcv.left, rcv.top, rcv.right, rcv.bottom);
+          sw2::IntRect rcm2(rcm.left, rcm.top, rcm.right, rcm.bottom);
+          sw2::IntRect rc2(rc.left, rc.top, rc.right, rc.bottom);
+          CommonDrawMap(good::gx::ImgpGraphics(gx), map, imgTex, rc.left, rc.top, rcv2, rcm2, rc2, 0xffffffff);
         }
         break;
 
