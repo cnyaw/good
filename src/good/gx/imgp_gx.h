@@ -71,7 +71,7 @@ public:
       y = 0;
     }
 
-    if (1.0f < alpha) {
+    if (1.0f <= alpha) {
       return draw(img, x, y, w, h, srcx, srcy);
     }
 
