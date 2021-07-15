@@ -309,14 +309,7 @@ public:
     }
 
     if (!spr.mFrame.empty() && img.isValid()) {
-      int tile = spr.mFrame[mCurFrame];
-      int srcx = spr.mTileset.mTileWidth * (tile % spr.mTileset.mCxTile);
-      int srcy = spr.mTileset.mTileHeight * (tile / spr.mTileset.mCxTile);
-      GxT(dc).drawImage(
-                rc.left, rc.top,
-                img,
-                srcx, srcy,
-                spr.mTileset.mTileWidth, spr.mTileset.mTileHeight);
+      CommonDrawSprite(GxT(dc), spr, img, rc.left, rc.top, mCurFrame);
     }
   }
 

@@ -792,10 +792,8 @@ public:
       if (!imgTex.isValid()) {
         return false;
       }
-      int tile = spr.mFrame[0];
-      int srcx = spr.mTileset.mTileWidth * (tile % spr.mTileset.mCxTile);
-      int srcy = spr.mTileset.mTileHeight * (tile / spr.mTileset.mCxTile);
-      imgTex.drawToCanvas(0, 0, img, srcx, srcy, spr.mTileset.mTileWidth, spr.mTileset.mTileHeight);
+      good::gx::ImgpGraphics gx(img);
+      CommonDrawSprite(gx, spr, imgTex, 0, 0, 0);
     }
     return true;
   }
@@ -982,12 +980,7 @@ public:
           if (!imgTex.isValid()) {
             break;
           }
-          int tile = spr.mFrame[0];
-          int srcx = spr.mTileset.mTileWidth * (tile % spr.mTileset.mCxTile);
-          int srcy = spr.mTileset.mTileHeight * (tile / spr.mTileset.mCxTile);
-          int offsetx = rcm.left - rc.left;
-          int offsety = rcm.top - rc.top;
-          imgTex.drawToCanvas(rcm.left - rcv.left, rcm.top - rcv.top, gx, srcx + offsetx, srcy + offsety, rcm.right - rcm.left, rcm.bottom - rcm.top);
+          CommonDrawSprite(good::gx::ImgpGraphics(gx), spr, imgTex, rcm.left - rcv.left, rcm.top - rcv.top, 0);
         }
         break;
 

@@ -536,21 +536,12 @@ public:
       case PrjT::ObjectT::TYPE_SPRITE:
         {
           PrjT::SpriteT const& spr = prj.getSprite(inst.mSpriteId);
-
           ImgT img = LoadTileset(prj.getTex(spr.mTileset.mTextureId).mFileName);
           if (!img.isValid()) {
             IsImgValid = false;
             break;
           }
-
-          int tile = spr.mFrame[0];
-          int srcx = spr.mTileset.mTileWidth * (tile % spr.mTileset.mCxTile);
-          int srcy = spr.mTileset.mTileHeight * (tile / spr.mTileset.mCxTile);
-
-          int offsetx = rcm.left - rc.left;
-          int offsety = rcm.top - rc.top;
-
-          gx.drawImage(rcm.left - rcv.left, rcm.top - rcv.top, img, srcx + offsetx, srcy + offsety, rcm.right - rcm.left, rcm.bottom - rcm.top);
+          CommonDrawSprite(gx, spr, img, rcm.left - rcv.left, rcm.top - rcv.top, 0);
         }
         break;
 

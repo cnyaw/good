@@ -124,23 +124,22 @@ void CommonDrawMap(GxT& gx, MapT const& map, ImgT& img, int dx, int dy, int left
       if (0 > tile) {
         continue;
       }
-
-      int dstx = map.mTileset.mTileWidth * (x - left) +
-                 map.mTileset.mTileWidth - map.mTileset.mTileWidth;
+      int dstx = map.mTileset.mTileWidth * (x - left) + map.mTileset.mTileWidth - map.mTileset.mTileWidth;
       int dsty = map.mTileset.mTileHeight * (y - top);
       int srcx = map.mTileset.mTileWidth * (tile % map.mTileset.mCxTile);
       int srcy = map.mTileset.mTileHeight * (tile / map.mTileset.mCxTile);
-
-      gx.drawImage(
-            dx + dstx, dy + dsty,
-            img,
-            srcx, srcy,
-            map.mTileset.mTileWidth, map.mTileset.mTileHeight,
-            color,
-            .0f,
-            1.0f, 1.0f);
+      gx.drawImage(dx + dstx, dy + dsty, img, srcx, srcy, map.mTileset.mTileWidth, map.mTileset.mTileHeight, color, .0f, 1.0f, 1.0f);
     }
   }
+}
+
+template<class GxT, class SpriteT, class ImgT>
+void CommonDrawSprite(GxT &gx, const SpriteT &spr, ImgT &img, int x, int y, int frame)
+{
+  int tile = spr.mFrame[frame];
+  int srcx = spr.mTileset.mTileWidth * (tile % spr.mTileset.mCxTile);
+  int srcy = spr.mTileset.mTileHeight * (tile / spr.mTileset.mCxTile);
+  gx.drawImage(x, y, img, srcx, srcy, spr.mTileset.mTileWidth, spr.mTileset.mTileHeight, 0xffffffff, .0f, 1.0f, 1.0f);
 }
 
 unsigned int converBgColor(unsigned int c)

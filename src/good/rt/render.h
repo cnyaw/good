@@ -172,17 +172,9 @@ void renderSprite(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, 
     return;
   }
 
-  int frame = a.mCurrFrame;
-  int tile = spr.mFrame[frame];
-  int srcx = spr.mTileset.mTileWidth * (tile % spr.mTileset.mCxTile);
-  int srcy = spr.mTileset.mTileHeight * (tile / spr.mTileset.mCxTile);
-
-  int offsetx = rcm.left - rc.left;
-  int offsety = rcm.top - rc.top;
-
   T *pThis = (T*)this;
   pThis->gx.setAnchor(a.mAnchorX, a.mAnchorY);
-  pThis->gx.drawImage(rcm.left - rcv.left, rcm.top - rcv.top, img, srcx + offsetx, srcy + offsety, rcm.width(), rcm.height(), color, rot, xscale, yscale);
+  CommonDrawSprite(pThis->gx, spr, img, rcm.left - rcv.left, rcm.top - rcv.top, a.mCurrFrame);
 }
 
 bool renderChilds(ActorT const& a, sw2::IntRect const& rcv, float rot, float xscale, float yscale) const
