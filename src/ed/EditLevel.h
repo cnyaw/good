@@ -492,12 +492,10 @@ public:
             IsImgValid = false;
             break;
           }
-
           int offsetx = rcm.left - rc.left;
           int offsety = rcm.top - rc.top;
           int w = min(rcm.right - rcm.left, img.getWidth() - abs(inst.mDim.left) - offsetx);
           int h = min(rcm.bottom - rcm.top, img.getHeight() - abs(inst.mDim.top) - offsety);
-
           gx.drawImage(rcm.left - rcv.left, rcm.top - rcv.top, img, inst.mDim.left + offsetx, inst.mDim.top + offsety, w, h);
         }
         break;

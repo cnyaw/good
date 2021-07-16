@@ -178,6 +178,22 @@ bool isGoodArchive(std::string const& name)
           std::string::npos != name.find(".zip");
 }
 
+template<class PrjT, class LevelT, class ObjectT>
+void getObjDim(const LevelT &lvl, const ObjectT &obj, sw2::IntRect &rc)
+{
+  PrjT::inst().getObjDim(obj, rc);
+  if (rc.empty()) {
+    rc = sw2::IntRect(0, 0, 32, 32);
+    rc.offset(obj.mPosX, obj.mPosY);
+  }
+  int idParent = lvl.getParent(obj.mId);
+  while (lvl.mId != idParent) {
+    const ObjectT &objParent = lvl.getObj(idParent);
+    rc.offset(objParent.mPosX, objParent.mPosY);
+    idParent = lvl.getParent(idParent);
+  }
+}
+
 } // namespace good
 
 #ifdef WIN32
