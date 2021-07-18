@@ -349,6 +349,8 @@ public:
       CString s;
       s.Format(_T("%d"), spr.mTime[mCurSel]);
       mEditor.mFrameTimeTxt.SetWindowText(s);
+      mEditor.mCurTile = spr.mFrame[mCurSel];
+      mEditor.mTilesetView.Invalidate(FALSE);
     } else {
       mEditor.mFrameTimeTxt.SetWindowText(_T(""));
     }
