@@ -8,7 +8,6 @@ Play some games online https://agile-hollows-18660.herokuapp.com
 ![ed](gooded.png)
 
 # Resource Editors
-* Audio Viewer
 * Texture Viewer
 * Map Editor
 * Sprite Editor
@@ -16,7 +15,7 @@ Play some games online https://agile-hollows-18660.herokuapp.com
 * Particle Viewer
 
 # Graphics
-* Support Formats: BMP|JPG|PNG
+* Support Formats: BMP/JPG/PNG
 * Scale
 * Rotate
 * Alpha
@@ -33,10 +32,10 @@ Play some games online https://agile-hollows-18660.herokuapp.com
 * Anti-Alias
 
 # Audio
-* Support Formats: WAV|OGG
+* Support Formats: WAV/OGG
 
 # Particle
-* STGE https://github.com/cnyaw/stge
+* STGE (https://github.com/cnyaw/stge)
 
 # Object Hierarchy
 * Dummy Object
@@ -48,10 +47,10 @@ Play some games online https://agile-hollows-18660.herokuapp.com
 * Simple Animator
 
 # Platforms
-* Microsoft Windows
+* Microsoft Windows (https://github.com/cnyaw/goodbin/tree/master/latest-build-win32-editor)
 * iOS
-* Android
+* Android (https://github.com/cnyaw/goodbin/tree/master/latest-build-android-apk)
 * PSP
 * MOD
-* HTML5
+* HTML5 (https://agile-hollows-18660.herokuapp.com)
 * ESP32
