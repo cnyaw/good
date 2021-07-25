@@ -158,13 +158,20 @@ void CommonDrawMap(GxT &gx, const MapT &map, ImgT &img, int cx, int cy, const sw
   CommonDrawMap(gx, map, img, rcm.left - rcv.left, rcm.top - rcv.top, left, top, right, bottom, color);
 }
 
-template<class GxT, class SpriteT, class ImgT>
-void CommonDrawSprite(GxT &gx, const SpriteT &spr, ImgT &img, int x, int y, int frame, unsigned int color = 0xffffffff, float rot = .0f, float xscale = 1.0f, float yscale = 1.0f)
+template<class SpriteT>
+void CalcDrawSpriteTexOffset(const SpriteT &spr, int frame, int &srcx, int &srcy)
 {
   int tile = spr.mFrame[frame];
-  int srcx = spr.mTileset.mTileWidth * (tile % spr.mTileset.mCxTile);
-  int srcy = spr.mTileset.mTileHeight * (tile / spr.mTileset.mCxTile);
-  gx.drawImage(x, y, img, srcx, srcy, spr.mTileset.mTileWidth, spr.mTileset.mTileHeight, color, rot, xscale, yscale);
+  srcx = spr.mTileset.mTileWidth * (tile % spr.mTileset.mCxTile);
+  srcy = spr.mTileset.mTileHeight * (tile / spr.mTileset.mCxTile);
+}
+
+template<class GxT, class SpriteT, class ImgT>
+void CommonDrawSprite(GxT &gx, const SpriteT &spr, ImgT &img, int x, int y, int frame, int offsetx = 0, int offsety = 0, unsigned int color = 0xffffffff, float rot = .0f, float xscale = 1.0f, float yscale = 1.0f)
+{
+  int srcx, srcy;
+  CalcDrawSpriteTexOffset(spr, frame, srcx, srcy);
+  gx.drawImage(x, y, img, srcx + offsetx, srcy + offsety, spr.mTileset.mTileWidth, spr.mTileset.mTileHeight, color, rot, xscale, yscale);
 }
 
 unsigned int converBgColor(unsigned int c)

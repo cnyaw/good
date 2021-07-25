@@ -149,9 +149,15 @@ void renderSprite(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, 
     return;
   }
 
+  int srcx, srcy;
+  CalcDrawSpriteTexOffset(spr, a.mCurrFrame, srcx, srcy);
+
+  int offsetx = rcm.left - rc.left;
+  int offsety = rcm.top - rc.top;
+
   T *pThis = (T*)this;
   pThis->gx.setAnchor(a.mAnchorX, a.mAnchorY);
-  CommonDrawSprite(pThis->gx, spr, img, rcm.left - rcv.left, rcm.top - rcv.top, a.mCurrFrame, color, rot, xscale, yscale);
+  pThis->gx.drawImage(rcm.left - rcv.left, rcm.top - rcv.top, img, srcx + offsetx, srcy + offsety, rcm.width(), rcm.height(), color, rot, xscale, yscale);
 }
 
 bool renderChilds(ActorT const& a, sw2::IntRect const& rcv, float rot, float xscale, float yscale) const
