@@ -159,12 +159,12 @@ void CommonDrawMap(GxT &gx, const MapT &map, ImgT &img, int cx, int cy, const sw
 }
 
 template<class GxT, class SpriteT, class ImgT>
-void CommonDrawSprite(GxT &gx, const SpriteT &spr, ImgT &img, int x, int y, int frame, float rot = .0f, float xscale = 1.0f, float yscale = 1.0f)
+void CommonDrawSprite(GxT &gx, const SpriteT &spr, ImgT &img, int x, int y, int frame, unsigned int color = 0xffffffff, float rot = .0f, float xscale = 1.0f, float yscale = 1.0f)
 {
   int tile = spr.mFrame[frame];
   int srcx = spr.mTileset.mTileWidth * (tile % spr.mTileset.mCxTile);
   int srcy = spr.mTileset.mTileHeight * (tile / spr.mTileset.mCxTile);
-  gx.drawImage(x, y, img, srcx, srcy, spr.mTileset.mTileWidth, spr.mTileset.mTileHeight, 0xffffffff, rot, xscale, yscale);
+  gx.drawImage(x, y, img, srcx, srcy, spr.mTileset.mTileWidth, spr.mTileset.mTileHeight, color, rot, xscale, yscale);
 }
 
 unsigned int converBgColor(unsigned int c)
