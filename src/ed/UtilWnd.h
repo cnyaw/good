@@ -965,7 +965,7 @@ public:
           if (!imgTex.isValid()) {
             break;
           }
-          CommonDrawSprite(good::gx::ImgpGraphics(gx), spr, imgTex, rcm.left - rcv.left, rcm.top - rcv.top, 0);
+          CommonDrawSprite(good::gx::ImgpGraphics(gx), spr, imgTex, rcm.left - rcv.left + spr.mOffsetX, rcm.top - rcv.top + spr.mOffsetY, 0);
         }
         break;
 

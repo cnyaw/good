@@ -516,7 +516,7 @@ public:
             IsImgValid = false;
             break;
           }
-          CommonDrawSprite(gx, spr, img, rcm.left - rcv.left, rcm.top - rcv.top, 0);
+          CommonDrawSprite(gx, spr, img, rcm.left - rcv.left + spr.mOffsetX, rcm.top - rcv.top + spr.mOffsetY, 0);
         }
         break;
 
