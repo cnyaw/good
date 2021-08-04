@@ -45,19 +45,6 @@ public:
     return true;
   }
 
-  bool setPreload(bool bPreload)
-  {
-    if (bPreload == mPreload) {
-      return false;
-    }
-
-    mPreload = bPreload;
-
-    PrjT::inst().mModified = true;
-
-    return true;
-  }
-
   bool setStream(bool bStream)
   {
     if (bStream == mStream) {
@@ -95,10 +82,6 @@ public:
 
     if (!mFileName.empty()) {
       sec["fileName"] = mFileName;
-    }
-
-    if (mPreload) {
-      sec["preload"] = mPreload;
     }
 
     if (mStream) {

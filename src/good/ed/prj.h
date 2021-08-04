@@ -207,7 +207,6 @@ public:
     SoundT snd;
     snd.mId = id;
     snd.mFileName = fileName;
-    snd.mPreload = false;
     snd.mLoop = false;
     snd.mStream = false;
 

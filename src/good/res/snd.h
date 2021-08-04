@@ -23,7 +23,6 @@ public:
 
   std::string mFileName;
 
-  bool mPreload;
   bool mStream;                         // Streaming.
   bool mLoop;
 
@@ -64,7 +63,6 @@ public:
     }
 
     mFileName = sec["fileName"].value;
-    mPreload = sec["preload"];
     mStream = sec["stream"];
     mLoop = sec["loop"];
 

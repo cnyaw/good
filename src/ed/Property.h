@@ -1055,7 +1055,6 @@ public:
     AddProp(prop, PropCreateSimple("Id", snd.mId))->SetEnabled(FALSE);
     AddProp(prop, PropCreateSimple("Name", snd.getName().c_str()));
     AddProp(prop, PropCreateSimple("File", snd.mFileName.c_str()))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple("Preload", snd.mPreload));
     AddProp(prop, PropCreateSimple("Stream", snd.mStream));
     AddProp(prop, PropCreateSimple("Loop", snd.mLoop));
   }
@@ -1067,8 +1066,6 @@ public:
 
     if (GetChangingProp(prop, ppi, _T("Name"), s)) {
       return !(s != snd.getName());
-    } else if (GetChangingProp(prop, ppi, _T("Preload"), b)) {
-      return !(b != snd.mPreload);
     } else if (GetChangingProp(prop, ppi, _T("Stream"), b)) {
       return !(b != snd.mStream);
     } else if (GetChangingProp(prop, ppi, _T("Loop"), b)) {
@@ -1088,8 +1085,6 @@ public:
       if (s.empty()) {                  // Special case.
         ppi->prop->SetValue(CComVariant(snd.getName().c_str()));
       }
-    } else if (GetChangedProp(ppi, _T("Preload"), b)) {
-      snd.setPreload(b);
     } else if (GetChangedProp(ppi, _T("Stream"), b)) {
       snd.setStream(b);
     } else if (GetChangedProp(ppi, _T("Loop"), b)) {
