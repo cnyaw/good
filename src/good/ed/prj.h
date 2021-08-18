@@ -494,13 +494,12 @@ public:
     }
 
     if (lvl.isAddColorTool()) {
-      lvl.getObj(idObj).setBgColor(lvl.mAddCol);
+      lvl.getObj(idObj).setBgColor(lvl.mAddCol); // Set default color.
     }
 
     if (lvl.isAddTexTool()) {
-      sw2::IntRect rc;
-      getObjDim(lvl.getObj(idObj), rc);
-      lvl.getObj(idObj).setDim(0, 0, rc.width(), rc.height());
+      ImgT img = ImgT::getImage(getTex(lvl.mAddTex).mFileName);
+      lvl.getObj(idObj).setDim(0, 0, img.getWidth(), img.getHeight()); // Set default dim.
     }
 
     return idObj;
