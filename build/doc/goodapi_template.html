@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Good Game Engine API</title>
+<style>
+button.accordion {
+  background-color:#eee;
+  color:#444;
+  cursor:pointer;
+  padding:8px;
+  width:100%;
+  border:none;
+  text-align:left;
+  outline:none;
+  font-size:16px;
+  font-weight:bold;
+  transition:0.4s;
+}
+
+button.active, button.accordion:hover {
+  background-color:#ccc;
+}
+
+button.accordion:after {
+  content:'\002B';
+  color:#777;
+  font-weight:bold;
+  float:right;
+  margin-left:5px;
+}
+
+button.accordion.active:after {
+  content:'\2212';
+}
+
+div.panel {
+  padding:0 18px;
+  display:none;
+  background-color:white;
+  overflow:hidden;
+}
+
+.sidenav {
+  height:100%;
+  width:160px;
+  position:fixed;
+  z-index:1;
+  top:0;
+  left:0;
+  background-color:#eee;
+  overflow-x:hidden;
+}
+
+.sidenav a {
+  padding:1px;
+  font-size:16px;
+  color:black;
+  display:block;
+}
+
+.main {
+  margin-left:160px; /* Same as the width of the sidenav */
+  padding:0px 10px;
+}
+
+.footer {
+  margin-left:160px; /* Same as the width of the sidenav */
+  padding:10px;
+  background-color:#eee;
+}
+
+@media screen and (max-height:450px) {
+  .sidenav {padding-top:2px;}
+  .sidenav a {font-size:16px;}
+}
+
+a {
+  text-decoration:none;
+}
+
+a:hover {
+  color:red;
+}
+</style>
+</head>
+<body>
+
+<div class="sidenav" id="sidenav">
+</div>
+
+<div class="main" id="main">
+</div>
+
+<div class="footer">
+ <p>Copyright &copy; 2020, Waync Cheng. <a href="https://good-ed.blogspot.com/">Blog</a> | <a href="https://github.com/cnyaw/good/">GitHub</a></p>
+</div>
+
+<script>
+var s_api = '\
+@@@good_api_json@@@
+';
+
+var obj = JSON.parse(s_api);
+
+function buildMenu() {
+  var s = '';
+  for (var i = 0; i < obj.modules.length; i++) {
+    var mod = obj.modules[i];
+    s = s + '<button class="accordion">' + mod.name + '</button>';
+    s = s + '<div class="panel">';
+    for (var j = 0; j < mod.api.length; j++) {
+      var api = mod.api[j];
+      s = s + '<a href="javascript:showApi(\'' + mod.name + '\',\'' + api.name + '\')">' + api.name + '</a>';
+    }
+    s = s + '</div>';
+  }
+  document.getElementById("sidenav").innerHTML = s;
+}
+
+function expandFirstMod() {
+  document.getElementsByClassName("accordion")[0].click();
+}
+
+function findApi(mod, name) {
+  for (var i = 0; i < mod.api.length; i++) {
+    var api = mod.api[i];
+    if (api.name === name) {
+      return api;
+    }
+  }
+  return null;
+}
+
+function findModule(name) {
+  for (var i = 0; i < obj.modules.length; i++) {
+    var mod = obj.modules[i];
+    if (mod.name === name) {
+      return mod;
+    }
+  }
+  return null;
+}
+
+function parseExam(s) {
+  for (var i = 0; i < obj.modules.length; i++) {
+    var mod = obj.modules[i];
+    for (var j = 0; j < mod.api.length; j++) {
+      var api = mod.api[j];
+      var link = '<a href="javascript:showApi(\'' + mod.name + '\',\'' + api.name + '\')">' + mod.name + '.' + api.name + '</a>';
+      var pat = new RegExp('\\b' + mod.name + '\x2e' + api.name + '\\b', 'gi');
+      s = s.replace(pat, link);
+    }
+  }
+  return s;
+}
+
+function setupModAccordion() {
+  var acc = document.getElementsByClassName("accordion");
+  for (var i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var panel = this.nextElementSibling;
+      if (panel.style.display === "block") {
+        panel.style.display = "none";
+      } else {
+        panel.style.display = "block";
+      }
+    });
+  }
+}
+
+function showApi(modname, name) {
+  var mod = findModule(modname);
+  var api = findApi(mod, name);
+  var s = '<h1>' + mod.name + '.' + api.name + '</h1>';
+  if (null != api.desc) {
+    s = s + '<p>' + api.desc + '</p>';
+  }
+  if (null != api.proto) {
+    s = s + '<h2>Prototype</h2>';
+    s = s + '<p>' + api.proto + '</p>';
+  }
+  if (null != api.param) {
+    s = s + '<h2>Param</h2>';
+    for (var i = 0; i < api.param.length; i++) {
+      var p = api.param[i];
+      s = s + p.name + '<blockquote>' + p.desc + '</blockquote>';
+    }
+  }
+  if (null != api.ret) {
+    s = s + '<h2>Return</h2>';
+    s = s + '<p>' + api.ret + '</p>';
+  }
+  if (null != api.ex) {
+    s = s + '<h2>Example</h2>';
+    s = s + '<pre>' + parseExam(api.ex) + '</pre>';
+  }
+  document.getElementById("main").innerHTML = s;
+}
+
+buildMenu();
+setupModAccordion();
+expandFirstMod();
+showApi(obj.modules[0].name, obj.modules[0].api[0].name);
+</script>
+
+</body>
+</html>
