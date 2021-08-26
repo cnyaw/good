@@ -25,7 +25,7 @@ Logo.OnStep = function(param)
 end
 
 function SetAlpha(id, t, st)
-    Good.SetVisible(id, 1)
+    Good.SetVisible(id, Good.VISIBLE)
     local dt = (t - st) / 40
     alpha = math.floor(256 * dt)
     Good.SetBgColor(id, 0xffffff + alpha * 0x1000000)

@@ -57,7 +57,7 @@ end
 function DealCards(param)
   for i = 0, 24 do
     local o = param.cards[i]
-    if (0 == Good.GetVisible(o)) then
+    if (Good.INVISIBLE == Good.GetVisible(o)) then
       local c = DealOneCard()
       if (-1 == c) then
         return -- no more new card
@@ -67,7 +67,7 @@ function DealCards(param)
       local ox = CX_CARD * GetNumber(c)
       local oy = CY_CARD * GetFace(c)
       Good.SetDim(o, ox, oy, CX_CARD, CY_CARD)
-      Good.SetVisible(o, 1)
+      Good.SetVisible(o, Good.VISIBLE)
       Good.AddChild(-1, o) -- make sure it it visible
     end
   end
@@ -85,8 +85,8 @@ function CheckClearPair(param)
         local col2, row2 = i % 5, math.floor(i / 5)
         --Good.Trace(col1 .. ":" .. row1 .. ", " .. col2 .. ":" .. row2)
         if (1 >= math.abs(col1 - col2) and 1 >= math.abs(row1 - row2)) then
-          Good.SetVisible(param.cards[param.sel], 0)
-          Good.SetVisible(param.cards[i], 0)
+          Good.SetVisible(param.cards[param.sel], Good.INVISIBLE)
+          Good.SetVisible(param.cards[i], Good.INVISIBLE)
           return true
         else
           return false
@@ -103,10 +103,10 @@ end
 function Rearrange(param)
   for i = 0, 24 do
     local o = param.cards[i]
-    if (0 == Good.GetVisible(o)) then
+    if (Good.INVISIBLE == Good.GetVisible(o)) then
       for j = i + 1, 24 do
         local o2 = param.cards[j]
-        if (0 ~= Good.GetVisible(o2)) then
+        if (Good.INVISIBLE ~= Good.GetVisible(o2)) then
           local x1, y1 = Good.GetPos(o)
           local x2, y2 = Good.GetPos(o2)
           Good.SetPos(o, x2, y2)

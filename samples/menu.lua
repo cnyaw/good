@@ -26,7 +26,7 @@ function Icon.sCreate(param)
   x = x + ENTERX
   Good.SetPos(id, x, y)
 
-  Good.SetVisible(id, 1)
+  Good.SetVisible(id, Good.VISIBLE)
   Good.SetBgColor(id, 0xffffff)
 
   param.time = ENTERTIME
@@ -69,7 +69,7 @@ function genIcon(param)
   end
   local o = GenTexObj(-1, ICONS, ICONW, ICONH, ICONW * (param.menu % 4), ICONH * math.floor(param.menu / 4), 'Icon')
   Good.SetPos(o, MENUX + MENUW, MENUY + param.menu * MENUH - MENUH/2)
-  Good.SetVisible(o, 0)
+  Good.SetVisible(o, Good.INVISIBLE)
   param.icon = o
 end
 

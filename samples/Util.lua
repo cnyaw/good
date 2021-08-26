@@ -173,7 +173,7 @@ function Lshift(x, by)                  -- Bitwise left shift.
 end
 
 function PtInObj(x, y, o, world)
-  if (0 == Good.GetVisible(o)) then
+  if (Good.INVISIBLE == Good.GetVisible(o)) then
     return false
   end
   local ox, oy

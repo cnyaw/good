@@ -857,8 +857,8 @@ public:
   //   "name":"idObj",
   //   "desc":"The object ID."
   // }],
-  // "ret":"Return 1 if is visible else return 0.",
-  // "ex":"if (0 == Good.GetVisible(btnGo)) then<br/>
+  // "ret":"Return Good.VISIBLE if is visible else return Good.INVISIBLE.",
+  // "ex":"if (Good.INVISIBLE == Good.GetVisible(btnGo)) then<br/>
   //   return<br/>
   // end"
   // [/API]
@@ -1491,7 +1491,7 @@ public:
   //   "desc":"The object ID."
   // },{
   //   "name":"bVisible",
-  //   "desc":"1 for visible else 0 for invisible."
+  //   "desc":"Good.VISIBLE for visible else Good.INVISIBLE for invisible."
   // }],
   // "ret":"n/a",
   // "ex":"Good.SetVisible(o, 1)"
@@ -1576,6 +1576,16 @@ public:
   // "desc":"Object type constant, dummy object."
   // [/API]
   //
+  // [API]
+  // "name":"VISIBLE",
+  // "desc":"Object visibility constant, object is visible."
+  // [/API]
+  //
+  // [API]
+  // "name":"INVISIBLE",
+  // "desc":"Object visibility constant, object is invisible."
+  // [/API]
+  //
 
   static bool installGoodModuleApi(lua_State* L)
   {
@@ -1586,6 +1596,8 @@ public:
       {"MAPBG", AppT::ActorT::TYPES_MAPBG},
       {"SPRITE", AppT::ActorT::TYPES_SPRITE},
       {"DUMMY", AppT::ActorT::TYPES_DUMMY},
+      {"INVISIBLE", 0},
+      {"VISIBLE", 1},
       { 0 }
     };
 
