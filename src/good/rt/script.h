@@ -833,7 +833,9 @@ public:
   //   "desc":"The object ID."
   // }],
   // "ret":"Return type of the object else return -1.",
-  // "ex":"local type = Good.GetType(o)"
+  // "ex":"if (Good.SPRITE == Good.GetType(o)) then<br/>
+  //   Good.PlayAnim(o)<br/>
+  // end"
   // [/API]
   //
 
@@ -1543,6 +1545,38 @@ public:
     return 0;
   }
 
+  //
+  // [API]
+  // "name":"LEVEL",
+  // "desc":"Object type constant, level object."
+  // [/API]
+  //
+  // [API]
+  // "name":"COLBG",
+  // "desc":"Object type constant, color block object."
+  // [/API]
+  //
+  // [API]
+  // "name":"TEXBG",
+  // "desc":"Object type constant, texture block object."
+  // [/API]
+  //
+  // [API]
+  // "name":"MAPBG",
+  // "desc":"Object type constant, map object."
+  // [/API]
+  //
+  // [API]
+  // "name":"SPRITE",
+  // "desc":"Object type constant, sprite object."
+  // [/API]
+  //
+  // [API]
+  // "name":"DUMMY",
+  // "desc":"Object type constant, dummy object."
+  // [/API]
+  //
+
   static bool installGoodModuleApi(lua_State* L)
   {
     static RegConstType GoodConst[] = {
@@ -1743,6 +1777,63 @@ public:
 
     return 1;
   }
+
+  //
+  // [API]
+  // "name":"UP",
+  // "desc":"Input flag constant, up arrow key."
+  // [/API]
+  //
+  // [API]
+  // "name":"DOWN",
+  // "desc":"Input flag constant, down arrow key."
+  // [/API]
+  //
+  // [API]
+  // "name":"LEFT",
+  // "desc":"Input flag constant, left arrow key."
+  // [/API]
+  //
+  // [API]
+  // "name":"RIGHT",
+  // "desc":"Input flag constant, right arrow key."
+  // [/API]
+  //
+  // [API]
+  // "name":"RETURN",
+  // "desc":"Input flag constant, enter/return key."
+  // [/API]
+  //
+  // [API]
+  // "name":"BTN_A",
+  // "desc":"Input flag constant, button A key."
+  // [/API]
+  //
+  // [API]
+  // "name":"BTN_B",
+  // "desc":"Input flag constant, button B key."
+  // [/API]
+  //
+  // [API]
+  // "name":"LBUTTON",
+  // "desc":"Input flag constant, left mouse button key."
+  // [/API]
+  //
+  // [API]
+  // "name":"RBUTTON",
+  // "desc":"Input flag constant, right mouse button key."
+  // [/API]
+  //
+  // [API]
+  // "name":"ESCAPE",
+  // "desc":"Input flag constant, ESC key."
+  // [/API]
+  //
+  // [API]
+  // "name":"ANY",
+  // "desc":"Input flag constant, any key."
+  // [/API]
+  //
 
   static bool installInputModuleApi(lua_State* L)
   {
@@ -2926,6 +3017,18 @@ public:
 
     return 0;
   }
+
+  //
+  // [API]
+  // "name":"SYSTEM_FONT",
+  // "desc":"Select font constant, system font."
+  // [/API]
+  //
+  // [API]
+  // "name":"FIXED_FONT",
+  // "desc":"Select font constant, fixed 5x8 font."
+  // [/API]
+  //
 
   static bool installGraphicsModuleApi(lua_State* L)
   {
