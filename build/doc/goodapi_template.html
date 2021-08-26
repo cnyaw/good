@@ -199,6 +199,22 @@ function showApi(modname, name) {
   document.getElementById("main").innerHTML = s;
 }
 
+function sortApiByName() {
+  for (var i = 0; i < obj.modules.length; i++) {
+    var mod = obj.modules[i];
+    mod.api.sort(function(a, b) {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (b.name > a.name) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+}
+
+sortApiByName();
 buildMenu();
 setupModAccordion();
 expandFirstMod();
