@@ -8,7 +8,7 @@ if (strUrl.indexOf("?") != -1) {
   for (var i = 0; i < getPara.length; i++) {
     var param = getPara[i].split("=");
     if ("pkg" == param[0]) {
-      Module.arguments = [param[1]];
+      arguments = [param[1]];
     }
   }
 }
