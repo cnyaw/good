@@ -11,6 +11,8 @@
 
 #pragma once
 
+#include <math.h>
+
 #ifdef GOOD_SUPPORT_GDIPLUS
 # include <gdiplus.h>
 # pragma comment(lib, "Gdiplus.lib")
@@ -204,13 +206,37 @@ public:
   {
     switch (bpp)
     {
+    case 2:                             // 565 only.
+      {
+        char *newdat = new char[w * h * 4];
+        if (0 == newdat) {
+          return false;
+        }
+        for (int i = 0; i < h; i++) {
+          for (int j = 0; j < w; j++) {
+            int ij = j + i * w;
+            unsigned short c = ((unsigned short*)dat)[ij];
+            unsigned char r5 = (c >> 11) & 0x1f;
+            unsigned char g6 = (c >> 5) & 0x3f;
+            unsigned char b5 = c & 0x1f;
+            int i4 = ij * 4;
+            newdat[i4 + 0] = (unsigned char)floor(b5 * 255 / 31.0 + 0.5);
+            newdat[i4 + 1] = (unsigned char)floor(g6 * 255 / 63.0 + 0.5);
+            newdat[i4 + 2] = (unsigned char)floor(r5 * 255 / 31.0 + 0.5);
+            newdat[i4 + 3] = (unsigned char)0xff;
+          }
+        }
+        delete [] dat;
+        dat = newdat;
+        bpp = 4;
+      }
+      break;
     case 3:
       {
         char *newdat = new char[w * h * 4];
         if (0 == newdat) {
           return false;
         }
-
         for (int i = 0; i < h; i++) {
           for (int j = 0; j < w; j++) {
             int ij = j + i * w;
@@ -222,13 +248,11 @@ public:
             newdat[i4 + 3] = (char)0xff;
           }
         }
-
         delete [] dat;
         dat = newdat;
         bpp = 4;
       }
       return true;
-
     case 4:
       return true;
     }
