@@ -165,10 +165,14 @@ public:
   // Property.
   //
 
-  void getPos(float& x, float& y) const
+  void getPos(float& x, float& y, bool world = true) const
   {
     x = mPosX;
     y = mPosY;
+
+    if (!world) {
+      return;
+    }
 
     AppT const& app = AppT::getInst();
 

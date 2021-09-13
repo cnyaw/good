@@ -672,12 +672,7 @@ void getPos(int idObj, float &x, float &y, bool world = false) const
 {
   if (mActors.isUsed(idObj)) {
     ActorT const& a = mActors[idObj];
-    if (world) {
-      a.getPos(x, y);
-    } else {
-      x = a.mPosX;
-      y = a.mPosY;
-    }
+    a.getPos(x, y, world);
   }
 }
 
