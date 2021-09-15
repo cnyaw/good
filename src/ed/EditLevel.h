@@ -341,7 +341,7 @@ public:
     if (prevHot != mHot) {
       if (-1 != mHot) {
         PrjT::ObjectT const& inst = lvl.getObj(mHot);
-        std::string str = inst.getName();
+        std::string str = inst.getNameWithType();
         mt.mStatus.SetPaneText(2, str.c_str());
       } else {
         if (!mCurSel.empty()) {

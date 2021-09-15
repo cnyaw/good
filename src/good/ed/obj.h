@@ -20,7 +20,7 @@ class Object : public good::Object
 {
 public:
 
-  std::string getName() const
+  std::string getNameWithType() const
   {
     std::string name = good::Object::getName();
     switch (mType)
