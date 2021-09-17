@@ -20,28 +20,33 @@ class Object : public good::Object
 {
 public:
 
-  std::string getNameWithType() const
+  std::string getTypeStr() const
   {
-    std::string name = good::Object::getName();
     switch (mType)
     {
     case TYPE_SPRITE:
-      return name + " - Sprite";
+      return "Sprite";
     case TYPE_COLBG:
-      return name + " - Color";
+      return "Color";
     case TYPE_TEXBG:
-      return name + " - Texture";
+      return "Texture";
     case TYPE_MAPBG:
-      return name + " - Map";
+      return "Map";
     case TYPE_DUMMY:
-      return name + " - Dummy";
+      return "Dummy";
     case TYPE_LVLOBJ:
-      return name + " - Level Object";
+      return "Level Object";
     case TYPE_TEXT:
-      return name + " - Text";
+      return "Text";
     default:
-      return name + " - Object";
+      return "Object";
     }
+  }
+
+  std::string getNameWithType() const
+  {
+    std::string name = good::Object::getName();
+    return name + " - " + getTypeStr();
   }
 
   //

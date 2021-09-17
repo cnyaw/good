@@ -1,3 +1,49 @@
+Good Game Editor 1.7(?)
+-----------------------------------------
+* Util新增PtInObj、Lerp、LerpARgb、GetARgbFromColor及GetColorFromARgb。
+* 新增Resource.GetSpriteSize。
+* 專案檔中關卡貼圖物件寫入長寬以利載入最佳化處理。
+* 貼圖資訊新增顯示每張圖貼中包含的子貼圖數量資訊。
+* 修正動作編輯器(Sprite Editor)Undo/Redo的錯誤。
+* 動作物件預設名稱從Object改為Sprite。
+* Animator系統新增自訂lerp函式功能。
+* menu範例加入mine(踩地雷)、link(連連看)及animator選項。
+* Util新增ScaleToSize。
+* 修正載入圖形時dirty flag狀態。
+* Good.FindChild支援可以遞迴方式搜尋子物件。
+* 播放器(In Editor Player)新增簡易指令命令列(Command line)功能。
+* 新增除錯函數print(對等Good.Trace)。
+* 關卡編輯器(LevelEditor)新增GotoView功能立即捲動至指定座標。
+* 物件屬性檢視器(Property View)新增專案統計資訊。
+* 關卡編輯器(LevelEditor)新增輔助線功能及編輯視窗。
+* Util移除Good.GetScreenPos。
+* Good.GetPos新增world參數取得世界座標。
+* 關卡編輯器(LevelEditor)新增外部關卡物件類型(External Level Object)。
+* 修正創建白色色塊物件失敗的錯誤。
+* 新增Graphics.GetFont及Graphics.SetFont支援選擇字型Graphics.SYSTEM_FONT(預設)及Graphics.FIXED_FONT(5x8)。
+* 擴充Good.GetTexId以取得精靈物件(Sprite)貼圖ID。
+* Sound.Play更名為Sound.Resume。
+* Resource.GetSpriteSize功能合併入Resource.GetTileSize。
+* OnCreate事件觸發時機改為在所有物件都生成後再觸發。
+* 資源檢視器(Resource Explorer)新增貼圖(Texture)、精靈(Sprite)、地圖(Map)及關卡(Level)分頁。
+* 新增Resource.GenTex支援動態生成貼圖。
+* 移除Good.CloneObj。
+* 移除內建Script文字編輯器改為調用外部文字編輯器。
+* 播放器FPS資訊新增顯示目前虛擬畫布數量。
+* 新增Graphics.GetPixel以取得虛擬畫布指定座標點顏色。
+* 移除輸出可執行檔(Executable)遊戲功能。
+* 關卡編輯器(LevelEditor)透過資源檢視器(Resource Explorer)來選取新增物件類型取代原資源選取視窗功能。
+* 新增範例line(滑鼠畫點線)。
+* 新增範例facetarget(轉動朝向)。
+* Util新增FillImage。
+* 修正關卡編輯器(LevelEditor)Undo/Redo修改物件名稱時資源樹物件名件未同步更改的錯誤。
+* 關卡編輯器(LevelEditor)新增物件置中功能。
+* 關卡編輯器(LevelEditor)新增文字物件類型(Text Object)。
+* 移除無用的專案參數ColorBits及FullScreen。
+* 關卡編輯器(LevelEditor)新增基本的物件Copy/Paste支援。
+* 支援一次新增多個聲音(Audio)、script或particle資源。
+* 資源檢視器顯示選取的資源類型。
+
 Good Game Editor 1.6.4(2018/5/9)
 -----------------------------------------
 
@@ -9,7 +55,7 @@ Good Game Editor 1.6.4(2018/5/9)
 * 修正取得色塊物件大小尺寸的錯誤。
 * 一個DrawCall最多支援一次畫1024個物件。
 * 新增Graphics.GenCanvas、Graphics.KillCanvas支援建立及刪除虛擬畫布。
-* 新增Resource.UpdateTex支援以虛擬畫面更新貼圖資料。
+* 新增Resource.UpdateTex支援以虛擬畫布更新貼圖資料。
 * Graphics.FillRect、Graphics.DrawImage及Graphics.DrawText支援繪至虛擬畫布。
 
 Good Game Editor 1.6.3(2017/10/11)

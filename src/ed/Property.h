@@ -241,7 +241,7 @@ public:
   {
     PrjT::TextureT const& o = PrjT::inst().getTex(mId);
 
-    AddProp(prop, PropCreateCategory("Property"));
+    AddProp(prop, PropCreateCategory("Texture"));
     AddProp(prop, PropCreateSimple("Id", o.mId))->SetEnabled(FALSE);
     AddProp(prop, PropCreateSimple("Name", o.getName().c_str()));
     AddProp(prop, PropCreateSimple("File", o.mFileName.c_str()))->SetEnabled(FALSE);
@@ -307,7 +307,7 @@ public:
     PrjT::MapT const& o = PrjT::inst().getMap(mId);
     std::string tex = PrjT::inst().getTex(o.mTileset.mTextureId).getName();
 
-    AddProp(prop, PropCreateCategory("Property"));
+    AddProp(prop, PropCreateCategory("Map"));
     AddProp(prop, PropCreateSimple("Id", o.mId))->SetEnabled(FALSE);
     AddProp(prop, PropCreateSimple("Name", o.getName().c_str()));
     AddProp(prop, PropCreateSimple("Width", o.mWidth))->SetEnabled(FALSE);
@@ -378,7 +378,7 @@ public:
     PrjT::SpriteT const& o = prj.getSprite(mId);
     std::string tex = prj.getTex(o.mTileset.mTextureId).getName();
 
-    AddProp(prop, PropCreateCategory("Property"));
+    AddProp(prop, PropCreateCategory("Sprite"));
     AddProp(prop, PropCreateSimple("Id", o.mId))->SetEnabled(FALSE);
     AddProp(prop, PropCreateSimple("Name", o.getName().c_str()));
     AddProp(prop, PropCreateSimple("Tile Width", o.mTileset.mTileWidth))->SetEnabled(FALSE);
@@ -526,7 +526,7 @@ public:
     PrjT const& prj = PrjT::inst();
     PrjT::ObjectT const& o = prj.getLevel(mId).getObj(mObjId);
 
-    AddProp(prop, PropCreateCategory("Property"));
+    AddProp(prop, PropCreateCategory(("Level Object - " + o.getTypeStr()).c_str()));
     AddProp(prop, PropCreateSimple("Id", o.mId))->SetEnabled(FALSE);
     AddProp(prop, PropCreateSimple("Name", o.getName().c_str()));
 
@@ -800,7 +800,7 @@ public:
   {
     PrjT::LevelT const& o = PrjT::inst().getLevel(mId);
 
-    AddProp(prop, PropCreateCategory("Property"));
+    AddProp(prop, PropCreateCategory("Level"));
     AddProp(prop, PropCreateSimple("Id", o.mId))->SetEnabled(FALSE);
     AddProp(prop, PropCreateSimple("Name", o.getName().c_str()));
     AddProp(prop, PropCreateSimple("PosX", o.mPosX));
@@ -973,7 +973,7 @@ public:
   {
     std::string script = PrjT::inst().getScript(mId);
 
-    AddProp(prop, PropCreateCategory("Property"));
+    AddProp(prop, PropCreateCategory("Script"));
     AddProp(prop, PropCreateSimple("Id", mId))->SetEnabled(FALSE);
     AddProp(prop, PropCreateSimple("File", script.c_str()))->SetEnabled(FALSE);
   }
@@ -1012,7 +1012,7 @@ public:
   {
     std::string script = PrjT::inst().getStgeScript(mId);
 
-    AddProp(prop, PropCreateCategory("Property"));
+    AddProp(prop, PropCreateCategory("Particle"));
     AddProp(prop, PropCreateSimple("Id", mId))->SetEnabled(FALSE);
     AddProp(prop, PropCreateSimple("File", script.c_str()))->SetEnabled(FALSE);
   }
@@ -1051,7 +1051,7 @@ public:
   {
     PrjT::SoundT const& snd = PrjT::inst().getSnd(mId);
 
-    AddProp(prop, PropCreateCategory("Property"));
+    AddProp(prop, PropCreateCategory("Sound"));
     AddProp(prop, PropCreateSimple("Id", snd.mId))->SetEnabled(FALSE);
     AddProp(prop, PropCreateSimple("Name", snd.getName().c_str()));
     AddProp(prop, PropCreateSimple("File", snd.mFileName.c_str()))->SetEnabled(FALSE);
@@ -1124,7 +1124,7 @@ public:
 
   virtual void FillProperty(CPropertyListCtrl& prop)
   {
-    AddProp(prop, PropCreateCategory("Property"));
+    AddProp(prop, PropCreateCategory("Dependency"));
     AddProp(prop, PropCreateSimple("Id", mId))->SetEnabled(FALSE);
 
     std::string name = PrjT::inst().getDep(mId);
