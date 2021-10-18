@@ -1,6 +1,7 @@
 //
 // 2017/7/12 Waync created.
 //
+
 var strUrl = location.search;
 if (strUrl.indexOf("?") != -1) {
   var getSearch = strUrl.split("?");
@@ -46,9 +47,9 @@ function u32chToChar(ch) {
     // Convert to surrogate pair.
     var h = (ch - 0x10000) / 0x400 + 0xd800;
     var l = (ch - 0x10000) % 0x400 + 0xdC00;
-    return s = String.fromCharCode(h) + String.fromCharCode(l);
+    return String.fromCharCode(h) + String.fromCharCode(l);
   } else {
-    return s = String.fromCharCode(ch);
+    return String.fromCharCode(ch);
   }
 }
 
