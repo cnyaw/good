@@ -19,15 +19,15 @@ template<class PrjT, class LvlT>
 class LevelCmdAddObj : public UndoCommand
 {
 public:
-  int mLevelId;
+  int mLevelId, mParentId;
   int mId;
   int mIdSprite;
   int mIdMap;
   int mIdTexture;
   int mPosX, mPosY;
-  unsigned int mBgColor;
+  typename PrjT::ObjectT mSavProp;
 
-  LevelCmdAddObj(int idLevel, int idSprite, int idMap, int idTexture, int x, int y) : UndoCommand(GOOD_LEVELED_CMD_ADDOBJ), mLevelId(idLevel)
+  LevelCmdAddObj(int idLevel, int idParent, int idSprite, int idMap, int idTexture, int x, int y) : UndoCommand(GOOD_LEVELED_CMD_ADDOBJ), mLevelId(idLevel), mParentId(idParent)
   {
     mId = -1;
     mIdSprite = idSprite;
@@ -38,23 +38,24 @@ public:
 
   virtual bool exec()
   {
-    return -1 != (mId = LvlT::addObj(PrjT::inst().getLevel(mLevelId), mLevelId, -1, mIdSprite, mIdMap, mIdTexture, mPosX, mPosY));
+    return -1 != (mId = LvlT::addObj(PrjT::inst().getLevel(mLevelId), mParentId, -1, mIdSprite, mIdMap, mIdTexture, mPosX, mPosY));
   }
 
   virtual bool undo()
   {
     LvlT& lvl = PrjT::inst().getLevel(mLevelId);
-
-    mBgColor = lvl.getObj(mId).mBgColor;
-
+    const typename PrjT::ObjectT& o = lvl.getObj(mId);
+    mSavProp = o;
     return LvlT::removeObj(lvl, mId);
   }
 
   virtual bool redo()
   {
     LvlT& lvl = PrjT::inst().getLevel(mLevelId);
-    if (mId == LvlT::addObj(lvl, mLevelId, mId, mIdSprite, mIdMap, mIdTexture, mPosX, mPosY)) {
-      lvl.getObj(mId).setBgColor(mBgColor);
+    if (mId == LvlT::addObj(lvl, mParentId, mId, mIdSprite, mIdMap, mIdTexture, mPosX, mPosY)) {
+      typename PrjT::ObjectT& o = lvl.getObj(mId);
+      o = mSavProp;
+      o.mId = mId;
       return true;
     } else {
       return false;
@@ -927,10 +928,10 @@ public:
     return true;
   }
 
-  int addObj(int idSprite, int idMap, int idTexture, int x, int y)
+  int addObj(int idParent, int idSprite, int idMap, int idTexture, int x, int y)
   {
     typedef LevelCmdAddObj<PrjT, Level> CmdT;
-    CmdT *pcmd = new CmdT(BaseT::mId, idSprite, idMap, idTexture, x, y);
+    CmdT *pcmd = new CmdT(BaseT::mId, idParent, idSprite, idMap, idTexture, x, y);
 
     if (mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
@@ -984,14 +985,12 @@ public:
     return true;
   }
 
-  bool copyObj(const typename PrjT::LevelT &lvl, std::vector<int> const& selObjs, std::vector<int> &newObjs)
+  bool copyObj_i(const typename PrjT::LevelT &lvl, int idParent, std::vector<int> const& selObjs, std::vector<int> &newObjs, int tag)
   {
-    int tag = mUndo.mTag;
-
     for (size_t i = 0; i < selObjs.size(); i++) {
       const typename PrjT::ObjectT &o = lvl.getObj(selObjs[i]);
 
-      int id = addObj(o.mSpriteId, o.mMapId, o.mTextureId, o.mPosX, o.mPosY);
+      int id = addObj(idParent, o.mSpriteId, o.mMapId, o.mTextureId, o.mPosX, o.mPosY);
       if (-1 == id) {
         continue;
       }
@@ -1002,10 +1001,22 @@ public:
       o2 = o;                           // Duplicate obj o to new obj o2.
       o2.mId = id;                      // Set new obj o2's id.
 
+      if (!o.mObjIdx.empty()) {
+        o2.mObjIdx.clear();
+        std::vector<int> dummy;
+        (void)copyObj_i(lvl, id, o.mObjIdx, dummy, tag);
+      }
+
       newObjs.push_back(id);
     }
 
     return !newObjs.empty();
+  }
+
+  bool copyObj(const typename PrjT::LevelT &lvl, std::vector<int> const& selObjs, std::vector<int> &newObjs)
+  {
+    int tag = mUndo.mTag;
+    return copyObj_i(lvl, BaseT::mId, selObjs, newObjs, tag);
   }
 
   //

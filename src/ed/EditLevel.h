@@ -1457,12 +1457,15 @@ public:
   void AddTreeItem(const std::vector<int> &v)
   {
     PrjT::LevelT const& lvl = PrjT::inst().getLevel(mId);
-
     CTreeItem trLvl = mTree.GetChildItem(NULL);
     for (size_t i = 0; i < v.size(); ++i) {
       int idObj = v[i];
       PrjT::ObjectT const &o = lvl.getObj(idObj);
-      trLvl.AddTail(o.getName().c_str(), o.mType + 1).SetData(idObj);
+      CTreeItem ti = trLvl.AddTail(o.getName().c_str(), o.mType + 1);
+      ti.SetData(idObj);
+      if (!o.mObjIdx.empty()) {
+        InitTreeItem(ti, o.mObjIdx);
+      }
     }
   }
 

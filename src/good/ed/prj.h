@@ -488,7 +488,7 @@ public:
   int addLevelObj(int idLvl, int x, int y)
   {
     LevelT& lvl = getLevel(idLvl);
-    int idObj = lvl.addObj(lvl.mAddSpr, lvl.mAddMap, lvl.mAddTex, x, y);
+    int idObj = lvl.addObj(idLvl, lvl.mAddSpr, lvl.mAddMap, lvl.mAddTex, x, y);
     if (-1 == idObj) {
       return -1;
     }
