@@ -658,7 +658,7 @@ public:
     int width, height, xoff, yoff;
     unsigned char *bitmap = stbtt_GetCodepointBitmap(font, 0, sf, ch, &width, &height, &xoff, &yoff);
     bpp = 4;
-    w = width;
+    w = 0 >= width ? size / 6 : width;
     int exh = size + yoff + font_bb_y0;
     h = exh + height;
     dat = new char[w * h * bpp];
