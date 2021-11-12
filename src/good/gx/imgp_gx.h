@@ -467,7 +467,7 @@ public:
   // Text.
   //
 
-  const unsigned char* getChar5_8() const
+  const unsigned char* getChar5_8(char ch) const
   {
     static const unsigned char char5_8[] = // font 5x8, bitmap
     {
@@ -567,7 +567,13 @@ public:
       0x82, 0x6c, 0x10, 0xff,             // }
       0x40, 0x80, 0x40, 0x80, 0xff,       // ~
     };
-    return char5_8;
+    int c = ch - ' ';
+    const unsigned char* p = char5_8;
+    while (c --) {
+      while (0xff != *p++) {
+      }
+    }
+    return p;
   }
 
   int calcTextWidth(const char* str, int len, int size = 2) const
@@ -583,12 +589,7 @@ public:
         x += 5 * size + 2;
         continue;
       }
-      int c = ch - ' ';
-      const unsigned char* p = getChar5_8();
-      while (c --) {
-        while (0xff != *p++) {
-        }
-      }
+      const unsigned char* p = getChar5_8(ch);
       while (0xff != *p) {
         x += size, p++;
       }
@@ -615,12 +616,7 @@ public:
         x += 5 * size + 2;
         continue;
       }
-      int c = ch - ' ';
-      const unsigned char* p = getChar5_8();
-      while (c --) {
-        while (0xff != *p++) {
-        }
-      }
+      const unsigned char* p = getChar5_8(ch);
       while (0xff != *p) {
         unsigned char mask = 0x80;
         int yy = y;
