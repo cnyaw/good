@@ -656,10 +656,6 @@ public:
         continue;
       }
 
-      int id = GetResId(i);
-
-      std::map<int, good::gx::Imgp>::iterator it = mThumbImg.find(id);
-
       // draw image border
       if (mCurSel == i) {
         mdc.SelectPen(mPenSelBorder);
@@ -671,6 +667,8 @@ public:
       }
 
       // draw cached image
+      int id = GetResId(i);
+      std::map<int, good::gx::Imgp>::iterator it = mThumbImg.find(id);
       if (mThumbImg.end() != it) {
         Blend(mdc, rc.left + CXY_BORDER + (CX_THUMB - it->second.w - 2 * CXY_BORDER)/2, rc.top + (CY_THUMB - CXY_BORDER - it->second.h)/2, it->second);
       }
@@ -681,7 +679,7 @@ public:
         if (LoadResImage(id, img)) {
           ScaleResImageToThumbSize(img);
           mThumbImg[id] = img;
-          img.dat = 0;
+          img.dat = 0;                  // img.dat is saved to mThumbImg[id], avoid img::~Imgp() to free dat.
           bLoadImageOneTime = true;
           Invalidate(FALSE);
         }
