@@ -588,8 +588,6 @@ end:
       return 0;
     }
 
-    MainT& m = MainT::inst();
-
     POINT pt;
     ::GetCursorPos(&pt);
     mTree.ScreenToClient(&pt);
