@@ -194,6 +194,24 @@ public:
     return mResType;
   }
 
+  bool setTexId(int idTex)
+  {
+    AppT& app = AppT::getInst();
+
+    if (TYPES_TEXBG != mResType || !app.mRes.isTex(idTex)) {
+      return false;
+    }
+
+    if (idTex == mResId) {
+      return false;
+    }
+
+    mResId = idTex;
+    mImg = app.getImage(app.mRes.getTex(idTex).mFileName); // Update image cache.
+
+    return true;
+  }
+
   //
   // Releationship.
   //

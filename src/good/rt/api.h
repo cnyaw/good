@@ -1233,18 +1233,9 @@ void setTexId(int idObj, int idTex)
   }
 
   ActorT& a = mActors[idObj];
-  if (ActorT::TYPES_TEXBG != a.mResType || !mRes.isTex(idTex)) {
-    return;
+  if (a.setTexId(idTex)) {
+    mDirty = true;
   }
-
-  if (idTex == a.mResId) {
-    return;
-  }
-
-  a.mResId = idTex;
-  a.mImg = getImage(mRes.getTex(idTex).mFileName); // Update image cache.
-
-  mDirty = true;
 }
 
 void setVisible(int idObj, bool bVisible)
