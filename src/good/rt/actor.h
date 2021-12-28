@@ -198,7 +198,7 @@ public:
   {
     AppT& app = AppT::getInst();
 
-    if (TYPES_MAPBG != mResType || !app.mRes.isMap(idMap)) {
+    if (!app.mRes.isMap(idMap)) {
       return false;
     }
 
@@ -206,7 +206,9 @@ public:
       return false;
     }
 
+    mResType = TYPES_MAPBG;
     mResId = idMap;
+    mImg = ImgT();
 
     return true;
   }
@@ -215,7 +217,7 @@ public:
   {
     AppT& app = AppT::getInst();
 
-    if (TYPES_TEXBG != mResType || !app.mRes.isTex(idTex)) {
+    if (!app.mRes.isTex(idTex)) {
       return false;
     }
 
@@ -223,8 +225,9 @@ public:
       return false;
     }
 
+    mResType = TYPES_TEXBG;
     mResId = idTex;
-    mImg = app.getImage(app.mRes.getTex(idTex).mFileName); // Update image cache.
+    mImg = ImgT();
 
     return true;
   }
@@ -332,7 +335,7 @@ public:
   {
     AppT& app = AppT::getInst();
 
-    if (TYPES_SPRITE != mResType || !app.mRes.isSprite(idSprite)) {
+    if (!app.mRes.isSprite(idSprite)) {
       return false;
     }
 
@@ -346,8 +349,10 @@ public:
       mCurrFrame = 0;
     }
 
+    mResType = TYPES_SPRITE;
     mCurrFrameTime = spr.mTime[mCurrFrame];
     mResId = idSprite;
+    mImg = ImgT();
 
     return true;
   }
