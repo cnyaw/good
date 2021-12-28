@@ -1107,17 +1107,9 @@ void setMapId(int idObj, int idMap)
   }
 
   ActorT& a = mActors[idObj];
-  if (ActorT::TYPES_MAPBG != a.mResType || !mRes.isMap(idMap)) {
-    return;
+  if (a.setMapId(idMap)) {
+    mDirty = true;
   }
-
-  if (idMap == a.mResId) {
-    return;
-  }
-
-  a.mResId = idMap;
-
-  mDirty = true;
 }
 
 void setName(int idObj, const char* name)

@@ -194,6 +194,23 @@ public:
     return mResType;
   }
 
+  bool setMapId(int idMap)
+  {
+    AppT& app = AppT::getInst();
+
+    if (TYPES_MAPBG != mResType || !app.mRes.isMap(idMap)) {
+      return false;
+    }
+
+    if (idMap == mResId) {
+      return false;
+    }
+
+    mResId = idMap;
+
+    return true;
+  }
+
   bool setTexId(int idTex)
   {
     AppT& app = AppT::getInst();
