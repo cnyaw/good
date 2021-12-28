@@ -103,7 +103,7 @@ public:
 
     if (TYPES_SPRITE == resType && app.mRes.isSprite(resId)) {
       mResId = -1;                      // Force apply.
-      if (setSprite(resId)) {
+      if (setSpriteId(resId)) {
         playAnim();
       }
     }
@@ -293,7 +293,7 @@ public:
     lua_remove(app.mLua, -1);
   }
 
-  bool setSprite(int idSprite)
+  bool setSpriteId(int idSprite)
   {
     AppT& app = AppT::getInst();
 

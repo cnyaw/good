@@ -1221,7 +1221,7 @@ void setSpriteId(int idObj, int idSpr)
   }
 
   ActorT& a = mActors[idObj];
-  if (a.setSprite(idSpr)) {
+  if (a.setSpriteId(idSpr)) {
     mDirty = true;
   }
 }
