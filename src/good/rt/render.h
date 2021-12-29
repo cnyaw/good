@@ -36,6 +36,11 @@ void renderMapBg(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, u
 {
   MapT const& map = mRes.getMap(a.mResId);
 
+  ImgT img = getImage(a, mRes.getTex(map.mTileset.mTextureId).mFileName);
+  if (!img.isValid()) {
+    return;
+  }
+
   int w = map.mWidth * map.mTileset.mTileWidth;
   int h = map.mHeight * map.mTileset.mTileHeight;
 
@@ -50,10 +55,6 @@ void renderMapBg(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, u
       sw2::IntRect rcm;
       if (!rc.intersect(rcv, rcm)) {
         continue;
-      }
-      ImgT img = getImage(a, mRes.getTex(map.mTileset.mTextureId).mFileName);
-      if (!img.isValid()) {
-        return;
       }
       pThis->gx.setAnchor(a.mAnchorX, a.mAnchorY);
       CommonDrawMap(pThis->gx, map, img, (int)cx, (int)cy, rcv, rcm, rc, color);
