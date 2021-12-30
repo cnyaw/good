@@ -398,7 +398,7 @@ public:
     pTexCoord[7] = y1;
   }
 
-  bool drawImage(int x, int y, GLImage const& img, int srcx, int srcy, int srcw, int srch, unsigned int color, float rot, float xscale, float yscale)
+  bool drawImage(int x, int y, GLImage const& img, int srcx, int srcy, int srcw, int srch, unsigned int color = 0xffffffff, float rot = .0f, float xscale = 1.0f, float yscale = 1.0f)
   {
     if (!img.isValid()) {
       return false;

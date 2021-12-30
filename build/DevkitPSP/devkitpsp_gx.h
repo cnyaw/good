@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "gx/imgm.h"
+#include "imgm.h"
 
 namespace good {
 

@@ -203,6 +203,26 @@ public:
       return;
     }
 
+    if (0 > x) {
+      sw += x;
+      sx -= x;
+      x = 0;
+    }
+
+    if (0 > y) {
+      sh += y;
+      sy -= y;
+      y = 0;
+    }
+
+    if (x + sw > c.w) {
+      sw = c.w - x;
+    }
+
+    if (y + sh > c.h) {
+      sh = c.h - y;
+    }
+
     SDL_LockSurface(mSur);
 
     for (int i = 0; i < sh; i++) {
@@ -246,7 +266,7 @@ public:
   {
   }
 
-  bool drawImage(int x, int y, SDLImage const& img, int srcx, int srcy, int srcw, int srch, unsigned int color, float rot, float xscale, float yscale)
+  bool drawImage(int x, int y, SDLImage const& img, int srcx, int srcy, int srcw, int srch, unsigned int color = 0xffffffff, float rot = .0f, float xscale = 1.0f, float yscale = 1.0f)
   {
     SDL_Rect rcSrc, rcDst;
     rcSrc.x = srcx, rcSrc.y = srcy, rcSrc.w = srcw, rcSrc.h = srch;

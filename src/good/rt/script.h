@@ -2709,6 +2709,55 @@ public:
 
   //
   // [API]
+  // "name":"DrawMap",
+  // "desc":"Draw a tile map.",
+  // "proto":"void DrawMap(idCanvas, x, y, idMap[, color])",
+  // "param":[{
+  //   "name":"idCanvas",
+  //   "desc":"Target canvas ID. -1 to draw to screen."
+  // },{
+  //   "name":"x",
+  //   "desc":"X position relative to top-left corner."
+  // },{
+  //   "name":"y",
+  //   "desc":"Y position relative to top-left corner."
+  // },{
+  //   "name":"idMap",
+  //   "desc":"A tile map resource ID."
+  // },{
+  //   "name":"color(optional)",
+  //   "desc":"Text color."
+  // }],
+  // "ret":"n/a",
+  // "ex":"Graphics.DrawMap(-1, x, y, idMap)"
+  // [/API]
+  //
+
+  static int DrawMap(lua_State* L)
+  {
+    int canvas = luaL_checkint(L, 1);
+
+    AppT& app = AppT::getInst();
+    if (!app.mCanvas.isUsed(canvas) && !app.mRenderState) {
+      return 0;
+    }
+
+    int x = luaL_checkint(L, 2);
+    int y = luaL_checkint(L, 3);
+    int idMap = luaL_checkint(L, 4);
+
+    unsigned int color = 0xffffffff;
+    if (5 <= lua_gettop(L)) {
+      color = (unsigned int)luaL_checknumber(L, 5);
+    }
+
+    app.drawMap(canvas, x, y, idMap, color);
+
+    return 0;
+  }
+
+  //
+  // [API]
   // "name":"DrawText",
   // "desc":"Draw a text string.",
   // "proto":"void DrawText(idCanvas, x, y, text[, size, color])",
@@ -3052,6 +3101,7 @@ public:
 
     static RegApiType GraphicsApi[] = {
       {"DrawImage", &DrawImage},
+      {"DrawMap", &DrawMap},
       {"DrawText", &DrawText},
       {"FillRect", &FillRect},
       {"GenCanvas", &GenCanvas},

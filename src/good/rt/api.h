@@ -97,7 +97,8 @@ void drawImageToCanvas_i(int canvas, int x, int y, ImgT img, int srcx, int srcy,
   }
 
   CanvasT &c = mCanvas[canvas];
-  img.drawToCanvas(x, y, c, srcx, srcy, srcw, srch);
+  gx::CanvasGraphics<CanvasT> gx(c);
+  gx.drawImage(x, y, img, srcx, srcy, srcw, srch, color);
 }
 
 void drawImage_i(int canvas, int x, int y, const ImgT &img, int srcx, int srcy, int srcw, int srch, unsigned int color, float rot = .0f, float scalex = 1.0f, float scaley = 1.0f)
@@ -114,6 +115,26 @@ void drawImage(int canvas, int x, int y, int texId, int srcx, int srcy, int srcw
 {
   ImgT img = getImage(mRes.getTex(texId).mFileName);
   drawImage_i(canvas, x, y, img, srcx, srcy, srcw, srch, color, rot, scalex, scaley);
+}
+
+void drawMap(int canvas, int x, int y, int mapId, unsigned int color)
+{
+  const MapT &map = mRes.getMap(mapId);
+
+  ImgT img = getImage(mRes.getTex(map.mTileset.mTextureId).mFileName);
+  if (!img.isValid()) {
+    return;
+  }
+
+  if (mCanvas.isUsed(canvas)) {
+    CanvasT &c = mCanvas[canvas];
+    gx::CanvasGraphics<CanvasT> gx(c);
+    sw2::IntRect rcv(0, 0, c.w, c.h);
+    renderMapBg_i(gx, map, img, (float)x, (float)y, rcv, color);
+  } else {
+    sw2::IntRect rcv(0, 0, mRes.mWidth, mRes.mHeight);
+    renderMapBg_i(((T*)this)->gx, map, img, (float)x, (float)y, rcv, color);
+  }
 }
 
 void drawText(int canvas, int x, int y, char const *utf8text, int size, unsigned int color)

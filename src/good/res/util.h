@@ -128,7 +128,7 @@ void CommonDrawMap(GxT& gx, MapT const& map, ImgT& img, int dx, int dy, int left
       int dsty = map.mTileset.mTileHeight * (y - top);
       int srcx = map.mTileset.mTileWidth * (tile % map.mTileset.mCxTile);
       int srcy = map.mTileset.mTileHeight * (tile / map.mTileset.mCxTile);
-      gx.drawImage(dx + dstx, dy + dsty, img, srcx, srcy, map.mTileset.mTileWidth, map.mTileset.mTileHeight, color, .0f, 1.0f, 1.0f);
+      gx.drawImage(dx + dstx, dy + dsty, img, srcx, srcy, map.mTileset.mTileWidth, map.mTileset.mTileHeight, color);
     }
   }
 }

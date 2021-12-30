@@ -32,6 +32,28 @@ void renderColorBg(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv,
   pThis->gx.fillSolidColor(rcm.left - rcv.left, rcm.top - rcv.top, rcm.width(), rcm.height(), color, rot, xscale, yscale);
 }
 
+template<class GxT>
+void renderMapBg_i(GxT &gx, const MapT &map, ImgT &img, float cx, float cy, sw2::IntRect const& rcv, unsigned int color = 0xffffffff, bool repX = false, bool repY = false) const
+{
+  int w = map.mWidth * map.mTileset.mTileWidth;
+  int h = map.mHeight * map.mTileset.mTileHeight;
+
+  int nx, ny, xbound, ybound;
+  calcDrawTileParam(repX, repY, (int)cx, (int)cy, w, h, rcv, nx, ny, xbound, ybound);
+
+  for (int ay = ny + rcv.top; -h <= ay && ay < ybound; ay += h) {
+    for (int ax = nx + rcv.left; -w <= ax && ax < xbound; ax += w) {
+      sw2::IntRect rc(0, 0, w, h);
+      rc.offset(ax, ay);
+      sw2::IntRect rcm;
+      if (!rc.intersect(rcv, rcm)) {
+        continue;
+      }
+      CommonDrawMap(gx, map, img, (int)cx, (int)cy, rcv, rcm, rc, color);
+    }
+  }
+}
+
 void renderMapBg(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, unsigned int color) const
 {
   MapT const& map = mRes.getMap(a.mResId);
@@ -41,25 +63,9 @@ void renderMapBg(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, u
     return;
   }
 
-  int w = map.mWidth * map.mTileset.mTileWidth;
-  int h = map.mHeight * map.mTileset.mTileHeight;
-
-  int nx, ny, xbound, ybound;
-  calcDrawTileParam(a.mRepX, a.mRepY, (int)cx, (int)cy, w, h, rcv, nx, ny, xbound, ybound);
-
   T *pThis = (T*)this;
-  for (int ay = ny + rcv.top; -h <= ay && ay < ybound; ay += h) {
-    for (int ax = nx + rcv.left; -w <= ax && ax < xbound; ax += w) {
-      sw2::IntRect rc(0, 0, w, h);
-      rc.offset(ax, ay);
-      sw2::IntRect rcm;
-      if (!rc.intersect(rcv, rcm)) {
-        continue;
-      }
-      pThis->gx.setAnchor(a.mAnchorX, a.mAnchorY);
-      CommonDrawMap(pThis->gx, map, img, (int)cx, (int)cy, rcv, rcm, rc, color);
-    }
-  }
+  pThis->gx.setAnchor(a.mAnchorX, a.mAnchorY);
+  renderMapBg_i(pThis->gx, map, img, cx, cy, rcv, color, a.mRepX, a.mRepY);
 }
 
 ImgT getTexBgImg_i(ActorT const& a) const
