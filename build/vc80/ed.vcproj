@@ -818,6 +818,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\good\app\emsc_app.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\good\app\emsc_lib.h"
+				>
+			</File>
+			<File
 				RelativePath="..\iPhone\iPhone_app.h"
 				>
 			</File>
@@ -939,10 +947,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\stge\stge\sc.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\stge\stge\scm.h"
 				>
 			</File>
 			<File
