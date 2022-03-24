@@ -42,7 +42,7 @@ Play some games online https://agile-hollows-18660.herokuapp.com
 
 # Misc
 * Misc samples
-* Programming Lua
+* Programming Lua (https://www.lua.org/)
 * Cross Platform Packages
 * Simple Animator
 
