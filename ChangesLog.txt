@@ -43,6 +43,10 @@ Good Game Editor 1.7(?)
 * 關卡編輯器(LevelEditor)新增基本的物件Copy/Paste支援。
 * 支援一次新增多個聲音(Audio)、script或particle資源。
 * 資源檢視器顯示選取的資源類型。
+* 修正關卡編輯器(LevelEditor)不能複製擁有子物件的物件。
+* 允許執行時動態改變物件資源類型。
+* 新增Graphics.DrawMap繪製地圖(Map)至畫面或畫布(Canvas)。
+* 新增Graphics.GetTextDim取得指定字串寬高。
 
 Good Game Editor 1.6.4(2018/5/9)
 -----------------------------------------

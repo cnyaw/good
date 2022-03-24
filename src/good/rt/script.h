@@ -2980,6 +2980,41 @@ public:
 
   //
   // [API]
+  // "name":"GetTextDim",
+  // "desc":"Get the dimension of specified text string.",
+  // "proto":"int,int GetTextDim(text[, size])",
+  // "param":[{
+  //   "name":"text",
+  //   "desc":"A text string."
+  // },{
+  //   "name":"size(optional)",
+  //   "desc":"Text size."
+  // }],
+  // "ret":"Return dimension of the text string in width and height in pixels.",
+  // "ex":"w,h = Graphics.GetTextDim(\'hello world\', 20)"
+  // [/API]
+  //
+
+  static int GetTextDim(lua_State* L)
+  {
+    const char* utf8text = luaL_checkstring(L, 1);
+
+    int size = GOOD_DEFAULT_TEXT_SIZE;
+    if (2 <= lua_gettop(L)) {
+      size = luaL_checkint(L, 2);
+    }
+
+    int w = 0, h = 0;
+    AppT::getInst().getTextDim(utf8text, size, w, h);
+
+    lua_pushinteger(L, w);
+    lua_pushinteger(L, h);
+
+    return 2;
+  }
+
+  //
+  // [API]
   // "name":"KillCanvas",
   // "desc":"Destroy a canvas.",
   // "proto":"void KillCanvas(idCanvas)",
@@ -3108,6 +3143,7 @@ public:
       {"GetAntiAlias", &GetAntiAlias},
       {"GetFont", &GetFont},
       {"GetPixel", &GetPixel},
+      {"GetTextDim", &GetTextDim},
       {"KillCanvas", &KillCanvas},
       {"SetAnchor", &GraphicsSetAnchor},
       {"SetAntiAlias", &SetAntiAlias},

@@ -859,6 +859,26 @@ int getTexId(int idObj) const
   return tex;
 }
 
+void getTextDim(const char* utf8text, int size, int &w, int &h)
+{
+  w = h = 0;
+  if (0 == utf8text) {
+    return;
+  }
+  size = clampTextSize_i(size);
+  std::vector<int> unicode;
+  sw2::Util::utf8ToU32(utf8text, unicode);
+  for (size_t i = 0; i < unicode.size(); i++) {
+    ImgT img = getImage(size, unicode[i]);
+    if (img.isValid()) {
+      w += img.getWidth();
+      h = (std::max)(h, img.getHeight());
+    } else {
+      w += GOOD_DEFAULT_TEXT_OFFSET;
+    }
+  }
+}
+
 int getType(int idObj) const
 {
   if (mActors.isUsed(idObj)) {
@@ -954,7 +974,7 @@ void playAnim(int idObj)
 void playPackage(const char* name)
 {
   if (name) {
-    mNextPlayPkg = name;            // Assume new package is at the same folder.
+    mNextPlayPkg = name;                // Assume new package is at the same folder.
   }
 }
 
