@@ -3005,7 +3005,7 @@ public:
     }
 
     int w = 0, h = 0;
-    AppT::getInst().getTextDim(utf8text, size, w, h);
+    AppT::getInst().getTextDim(utf8text, size, w, h, 0);
 
     lua_pushinteger(L, w);
     lua_pushinteger(L, h);

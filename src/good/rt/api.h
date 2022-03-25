@@ -859,7 +859,7 @@ int getTexId(int idObj) const
   return tex;
 }
 
-void getTextDim(const char* utf8text, int size, int &w, int &h)
+void getTextDim(const char* utf8text, int size, int &w, int &h, std::vector<int> *pChWidth/*optional*/)
 {
   w = h = 0;
   if (0 == utf8text) {
@@ -875,6 +875,9 @@ void getTextDim(const char* utf8text, int size, int &w, int &h)
       h = (std::max)(h, img.getHeight());
     } else {
       w += GOOD_DEFAULT_TEXT_OFFSET;
+    }
+    if (pChWidth) {
+      pChWidth->push_back(w);
     }
   }
 }
