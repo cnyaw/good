@@ -859,7 +859,7 @@ int getTexId(int idObj) const
   return tex;
 }
 
-void getTextDim(const char* utf8text, int size, int &w, int &h, std::vector<int> *pChWidth/*optional*/)
+void getTextDim(const char* utf8text, int size, int &w, int &h, std::vector<int> *pChWidth = 0/*optional*/)
 {
   w = h = 0;
   if (0 == utf8text) {
