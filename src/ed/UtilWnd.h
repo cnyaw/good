@@ -172,48 +172,20 @@ public:
       return;
     }
 
-    CDC memdc;
-    memdc.CreateCompatibleDC(dc);
-    memdc.SelectBitmap(img.mBmp);
+    //
+    // Fill grid pattern.
+    //
 
-    CDC memdc2;
-    memdc2.CreateCompatibleDC(dc);
+    CBitmap pat;
+    pat.LoadBitmap(IDB_BKBRUSH);
 
-    CBitmap membmp2;
-    membmp2.CreateCompatibleBitmap(dc, img.getWidth(), img.getHeight());
-    memdc2.SelectBitmap(membmp2);
+    CBrush br;
+    br.CreatePatternBrush(pat);
 
-    if (img.hasAlphaChannel()) {
+    RECT rcb = {0, 0, img.getWidth(), img.getHeight()};
+    dc.FillRect(&rcb, br);
 
-      //
-      // Fill grid pattern.
-      //
-
-      CBitmap pat;
-      pat.LoadBitmap(IDB_BKBRUSH);
-
-      CBrush br;
-      br.CreatePatternBrush(pat);
-
-      RECT rcb = {0, 0, img.getWidth(), img.getHeight()};
-      memdc2.FillRect(&rcb, br);
-
-      //
-      // Blend bmp.
-      //
-
-      BLENDFUNCTION bf;
-      bf.BlendOp = AC_SRC_OVER;
-      bf.BlendFlags = 0;
-      bf.SourceConstantAlpha = 255;
-      bf.AlphaFormat = AC_SRC_ALPHA;
-
-      memdc2.AlphaBlend(0, 0, img.getWidth(), img.getHeight(), memdc, 0, 0, img.getWidth(), img.getHeight(), bf);
-    } else {
-      memdc2.BitBlt(0, 0, img.getWidth(), img.getHeight(), memdc, 0, 0, SRCCOPY);
-    }
-
-    dc.BitBlt(0, 0, img.getWidth(), img.getHeight(), memdc2, 0, 0, SRCCOPY);
+    GxT(dc).drawImage(0, 0, img, 0, 0, img.getWidth(), img.getHeight());
   }
 };
 
