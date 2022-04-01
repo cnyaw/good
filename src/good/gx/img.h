@@ -13,7 +13,7 @@
 
 #include <math.h>
 
-#ifdef GOOD_SUPPORT_GDIPLUS
+#ifdef GOOD_SUPPORT_GDIPLUS_IMG
 # include <gdiplus.h>
 # pragma comment(lib, "Gdiplus.lib")
 #endif
@@ -356,7 +356,7 @@ public:
 
   bool loadFromStream(std::string const& stream)
   {
-#ifdef GOOD_SUPPORT_GDIPLUS
+#ifdef GOOD_SUPPORT_GDIPLUS_IMG
     if (Win32GdiplusLoadImage(stream)) {
       return true;
     }
@@ -379,7 +379,7 @@ public:
 
   bool loadFromChar(int size, int ch, bool bAntiAlias)
   {
-#ifdef GOOD_SUPPORT_GDIPLUS
+#ifdef GOOD_SUPPORT_GDIPLUS_IMG
     if (Win32LoadImageFromChar(size, ch, bAntiAlias)) {
       return true;
     }
@@ -420,7 +420,7 @@ public:
   }
 #endif
 
-#ifdef GOOD_SUPPORT_GDIPLUS
+#ifdef GOOD_SUPPORT_GDIPLUS_IMG
   bool Win32GdiplusLoadImage(std::string const& stream)
   {
     //
@@ -556,7 +556,7 @@ public:
     ReleaseDC(0, dc);
     return 0 != dat;
   }
-#endif // GOOD_SUPPORT_GDIPLUS
+#endif // GOOD_SUPPORT_GDIPLUS_IMG
 
 #ifdef GOOD_SUPPORT_ANDROID_IMG
   bool AndroidFromIntArray(jintArray iarr)

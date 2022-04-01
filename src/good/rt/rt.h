@@ -39,8 +39,8 @@ extern "C" {
 // #define GOOD_SUPPORT_STGE
 // Is enable STGE feature.
 //
-// #define GOOD_SUPPORT_GDIPLUS
-// Is enable GDI+ image decoder, windows only.
+// #define GOOD_SUPPORT_GDIPLUS_IMG
+// Is enable Win32 GDI+ image decoder.
 //
 // #define GOOD_SUPPORT_ANDROID_IMG
 // Is enable android system image decoder.

@@ -14,7 +14,7 @@
 #include "SDL.h"
 
 #ifdef WIN32
-# define GOOD_SUPPORT_GDIPLUS
+# define GOOD_SUPPORT_GDIPLUS_IMG
 #else
 # define GOOD_SUPPORT_STB_IMG
 #endif
