@@ -731,6 +731,15 @@ public:
       c.draw((*(const CanvasT*)&(mSur->tex->img)), x, y, sw, sh, mSur->left + sx, mSur->top + sy);
     }
   }
+
+  unsigned int getPixel(int x, int y) const
+  {
+    if (isValid()) {
+      return mSur->tex->img.getPixel(mSur->left + x, mSur->top + y);
+    } else {
+      return 0;
+    }
+  }
 };
 
 class ImgpGraphics : public Graphics<ImgpImage>
