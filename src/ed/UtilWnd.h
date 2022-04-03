@@ -397,29 +397,6 @@ public:
     FreeImage();
   }
 
-  void Blend(HDC hdc, int x, int y, const good::gx::Imgp &gx) const
-  {
-    if (0 == gx.dat) {
-      return;
-    }
-
-    HDC memdc = CreateCompatibleDC(hdc);
-    HBITMAP membmp = CreateCompatibleBitmap(hdc, gx.w, gx.h);
-    membmp = (HBITMAP)SelectObject(memdc, membmp);
-
-    gx.blt(memdc, 0, 0);
-
-    BLENDFUNCTION bf;
-    bf.BlendOp = AC_SRC_OVER;
-    bf.BlendFlags = 0;
-    bf.SourceConstantAlpha = 255;
-    bf.AlphaFormat = AC_SRC_ALPHA;
-    AlphaBlend(hdc, x, y, gx.w, gx.h, memdc, 0, 0, gx.w, gx.h, bf);
-
-    DeleteObject(SelectObject(memdc, membmp));
-    DeleteDC(memdc);
-  }
-
   void FreeImage()
   {
     std::map<int, good::gx::Imgp>::iterator it = mThumbImg.begin();
@@ -642,7 +619,7 @@ public:
       int id = GetResId(i);
       std::map<int, good::gx::Imgp>::iterator it = mThumbImg.find(id);
       if (mThumbImg.end() != it) {
-        Blend(mdc, rc.left + CXY_BORDER + (CX_THUMB - it->second.w - 2 * CXY_BORDER)/2, rc.top + (CY_THUMB - CXY_BORDER - it->second.h)/2, it->second);
+        GxT(mdc).drawImage(rc.left + CXY_BORDER + (CX_THUMB - it->second.w - 2 * CXY_BORDER)/2, rc.top + (CY_THUMB - CXY_BORDER - it->second.h)/2, it->second, 0, 0, it->second.w, it->second.h);
       }
 
       // try to load a image(only this time)
