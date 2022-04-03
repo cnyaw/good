@@ -22,21 +22,13 @@ class GdiGraphics : public Graphics<ImgpImage>
 public:
 
   HDC mDc;
-  HDC mMemDc;
 
-  GdiGraphics() : mDc(0), mMemDc(0)
+  GdiGraphics() : mDc(0)
   {
   }
 
-  GdiGraphics(HDC dc) : mDc(dc), mMemDc(0)
+  GdiGraphics(HDC dc) : mDc(dc)
   {
-  }
-
-  ~GdiGraphics()
-  {
-    if (mMemDc) {
-      ::DeleteDC(mMemDc);
-    }
   }
 
   bool drawImage(int x, int y, const Imgp &img, int srcx, int srcy, int srcw, int srch, unsigned int color = 0xffffffff, float rot = .0f, float xscale = 1.0f, float yscale = 1.0f)
