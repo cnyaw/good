@@ -44,7 +44,6 @@ CAppModule _Module;
 
 #ifdef GOOD_SUPPORT_IMGP_GX
 #define GOOD_SUPPORT_GDIPLUS_IMG
-#define GOOD_WTL_PLAYER
 #include "../good/gx/imgp_gx.h"
 #include "../good/snd/openal_snd.h"
 

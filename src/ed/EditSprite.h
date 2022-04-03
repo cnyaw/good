@@ -304,9 +304,7 @@ public:
     RECT rc = {0, 0, spr.mTileset.mTileWidth, spr.mTileset.mTileHeight};
     ::OffsetRect(&rc, spr.mTileset.mTileWidth * x, spr.mTileset.mTileHeight * y + 10);
 
-    if (spr.mFrame.empty() || img.hasAlphaChannel()) {
-      dc.FillRect(&rc, brPat);
-    }
+    dc.FillRect(&rc, brPat);
 
     if (!spr.mFrame.empty() && img.isValid()) {
       CommonDrawSprite(GxT(dc), spr, img, rc.left, rc.top, mCurFrame);

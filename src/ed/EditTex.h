@@ -58,16 +58,10 @@ public:
       return;
     }
 
-    CClientDC dc(m_hWnd);
-
-    CDC memdc;
-    memdc.CreateCompatibleDC(dc);
-    memdc.SelectBitmap(img.mBmp);
-
-    COLORREF clr = memdc.GetPixel(pt.x, pt.y);
+    unsigned int clr = img.getPixel(pt.x, pt.y);
 
     CString str;
-    str.Format(_T("R:%d G:%d B:%d (#%06X)"), GetRValue(clr), GetGValue(clr), GetBValue(clr), clr);
+    str.Format(_T("R:%d G:%d B:%d (#%06X)"), GetBValue(clr), GetGValue(clr), GetRValue(clr), clr);
 
     m.mStatus.SetPaneText(2, str);
   }

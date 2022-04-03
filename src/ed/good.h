@@ -112,7 +112,7 @@ enum APP_GOOD_RESOURCE_TYPE
 #include "../good/app/wtl_player.h"
 #include "../good/gx/gdi_gx.h"
 
-typedef good::gx::GdiImage ImgT;
+typedef good::gx::ImgpImage ImgT;
 typedef good::gx::GdiGraphics GxT;
 typedef good::ed::Project<ImgT> PrjT;
 

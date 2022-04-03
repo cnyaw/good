@@ -14,7 +14,6 @@
 #include "AtlOpengl.h"
 
 #define GOOD_SUPPORT_GDIPLUS_IMG
-#define GOOD_WTL_PLAYER
 
 #include "../gx/opengl_gx.h"
 #include "../gx/imgp_gx.h"

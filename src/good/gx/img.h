@@ -66,9 +66,7 @@ public:
       return false;
     }
 
-#ifdef GOOD_WTL_PLAYER
-    memset(pdat, 0xcd, aw * ah * abpp);
-#endif
+    memset(pdat, 0, aw * ah * abpp);
 
     release();
 

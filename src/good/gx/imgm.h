@@ -174,9 +174,7 @@ public:
       if (psur) {
         mImg.clear();
         psur->reset(psur->img.w, psur->img.h);
-#ifdef GOOD_WTL_PLAYER
-        memset(psur->img.dat, 0xcd, psur->img.w * psur->img.h * psur->img.bpp);
-#endif
+        memset(psur->img.dat, 0, psur->img.w * psur->img.h * psur->img.bpp);
         NotifyImageManagerSurfaceChanged();
         if (psur->add(rc)) {
           UpdateSurface(psur, rc, img, sur);
