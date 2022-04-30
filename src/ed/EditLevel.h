@@ -1368,9 +1368,7 @@ public:
 
     CString str;
     if (0 != mEditView.m_ptOffset.x || 0 != mEditView.m_ptOffset.y) {
-      str.Format(_T("SZ %dx%d LT(%d,%d)"), lvl.mWidth, lvl.mHeight, mEditView.m_ptOffset.x, mEditView.m_ptOffset.y);
-    } else {
-      str.Format(_T("SZ %dx%d"), lvl.mWidth, lvl.mHeight);
+      str.Format(_T("Offset (%d,%d)"), mEditView.m_ptOffset.x, mEditView.m_ptOffset.y);
     }
     mt.mStatus.SetPaneText(1, str);
 

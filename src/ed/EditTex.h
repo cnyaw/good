@@ -97,7 +97,7 @@ public:
 
     CString str;
     if (img.isValid()) {
-      str.Format(_T("%d x %d"), img.getWidth(), img.getHeight());
+      str.Format(_T("%d x %d (px)"), img.getWidth(), img.getHeight());
     }
 
     MainT::inst().mStatus.SetPaneText(1, str);

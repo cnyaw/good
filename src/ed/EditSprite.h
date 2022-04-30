@@ -160,7 +160,7 @@ public:
     if (lastHot != mCurHot || lastSelCnt != mSelCnt) {
       CString str;
       if (-1 != mCurHot) {
-        str.Format(_T("%d (%d)"), mCurHot, spr.mFrame[mCurHot]);
+        str.Format(_T("Frame %d (%d)"), mCurHot, spr.mFrame[mCurHot]);
       }
       MainT::inst().mStatus.SetPaneText(2, str);
       Invalidate(FALSE);
@@ -423,13 +423,13 @@ public:
     MainT& mf = MainT::inst();
 
     CString str;
-    str.Format(_T("%d (frame) %d x %d (pixel)"), spr.mFrame.size(), spr.mTileset.mTileWidth, spr.mTileset.mTileHeight);
+    str.Format(_T("%d (frames)"), spr.mFrame.size());
 
     mf.mStatus.SetPaneText(1, str);
 
     str.Empty();
     if (-1 != mEditView.mCurHot) {
-      str.Format(_T("%d (%d)"), mEditView.mCurHot, spr.mFrame[mEditView.mCurHot]);
+      str.Format(_T("Frame %d (%d)"), mEditView.mCurHot, spr.mFrame[mEditView.mCurHot]);
     }
 
     mf.mStatus.SetPaneText(2, str);

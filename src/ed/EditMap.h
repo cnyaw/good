@@ -595,10 +595,8 @@ public:
     MainT& mf = MainT::inst();
 
     CString str;
-    str.Format(_T("%d x %d (tile) %d x %d (pixel)"), map.mWidth, map.mHeight, map.mTileset.mTileWidth, map.mTileset.mTileHeight);
     mf.mStatus.SetPaneText(1, str);
 
-    str.Empty();
     if (-1 != mEditView.mCurHot) {
       int tile = map.mData[mEditView.mCurHot];
       str.Format(_T("%d : %d (index %d)"), mEditView.mCurHot % map.mWidth, mEditView.mCurHot / map.mWidth, mEditView.mCurHot);
