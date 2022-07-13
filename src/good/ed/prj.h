@@ -265,7 +265,7 @@ public:
   template<class T>
   bool isResExist_i(const std::map<int, T> &m, const std::string &n) const
   {
-    for (std::map<int, T>::const_iterator it = m.begin(); m.end() != it; ++it) {
+    for (typename std::map<int, T>::const_iterator it = m.begin(); m.end() != it; ++it) {
       if (it->second.mFileName == n) {
         SW2_TRACE_ERROR("'%s' is already added.", n.c_str());
         return true;
