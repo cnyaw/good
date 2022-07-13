@@ -201,6 +201,10 @@ public:
       return -1;
     }
 
+    if (isResExist_i(mRes.mSnd, fileName)) {
+      return -1;
+    }
+
     int id = mRes.mId.alloc();
     assert(-1 != id);
 
@@ -233,6 +237,10 @@ public:
     // Return id; -1 failed.
     //
 
+    if (isResExist_i(mRes.mTex, fileName)) {
+      return -1;
+    }
+
     ImgT img = ImgT::getImage(fileName);
     if (!img.isValid()) {
       SW2_TRACE_ERROR("Add texture failed, fail to get image %s", fileName.c_str());
@@ -252,6 +260,18 @@ public:
     mModified = true;
 
     return id;
+  }
+
+  template<class T>
+  bool isResExist_i(const std::map<int, T> &m, const std::string &n) const
+  {
+    for (std::map<int, T>::const_iterator it = m.begin(); m.end() != it; ++it) {
+      if (it->second.mFileName == n) {
+        SW2_TRACE_ERROR("'%s' is already added.", n.c_str());
+        return true;
+      }
+    }
+    return false;
   }
 
   bool isTexUsed(int id, std::string &lvlName, std::string &oName) const
