@@ -614,6 +614,10 @@ public:
       return -1;
     }
 
+    if (isPathExist_i(mRes.mScript, name)) {
+      return -1;
+    }
+
     int id = mRes.mId.alloc();
     assert(-1 != id);
 
@@ -623,6 +627,17 @@ public:
     mModified = true;
 
     return id;
+  }
+
+  bool isPathExist_i(const std::map<int, std::string> &m, const std::string &n) const
+  {
+    for (std::map<int, std::string>::const_iterator it = m.begin(); m.end() != it; ++it) {
+      if (it->second == n) {
+        SW2_TRACE_ERROR("'%s' is already added.", n.c_str());
+        return true;
+      }
+    }
+    return false;
   }
 
   bool removeScript(int id)
@@ -637,6 +652,10 @@ public:
   int addStgeScript(std::string const& name)
   {
     if (name.empty()) {
+      return -1;
+    }
+
+    if (isPathExist_i(mRes.mStgeScript, name)) {
       return -1;
     }
 
@@ -663,6 +682,10 @@ public:
   int addDep(std::string const& name)
   {
     if (name.empty()) {
+      return -1;
+    }
+
+    if (isPathExist_i(mRes.mDep, name)) {
       return -1;
     }
 
