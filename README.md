@@ -1,9 +1,10 @@
 # Cross platform 2D game editor/player
 
-Windows editor and Android APK download https://github.com/cnyaw/goodbin <br/>
-Blog https://good-ed.blogspot.com/ <br/>
-API Reference https://agile-hollows-18660.herokuapp.com/good-ed/goodapi.html <br/>
-Play some games online https://agile-hollows-18660.herokuapp.com
+* Windows editor and Android APK download https://github.com/cnyaw/goodbin
+* Blog https://good-ed.blogspot.com/
+* API Reference https://agile-hollows-18660.herokuapp.com/good-ed/goodapi.html
+* Play some games online https://agile-hollows-18660.herokuapp.com
+* HTML5 resource browser (WIP) https://agile-hollows-18660.herokuapp.com/game/good/good.php
 
 ![ed](gooded.png)
 
