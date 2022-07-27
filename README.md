@@ -6,7 +6,11 @@
 * Play some games online https://agile-hollows-18660.herokuapp.com
 * HTML5 resource browser (WIP) https://agile-hollows-18660.herokuapp.com/game/good/good.php
 
+WIN32 Editor
 ![ed](gooded.png)
+
+HTML5 Editor
+![h5ed](h5gooded.png)
 
 # Resource Editors
 * Texture Viewer
