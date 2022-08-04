@@ -85,17 +85,17 @@ public:
 
     mData.resize(mWidth * mHeight);
 
-    std::stringstream ss1(sec["data"].value), ss2, ss3;
-
-    if (!sw2::Util::unbase64(ss1, ss2)) {
+    std::string os2;
+    if (!sw2::Util::unbase64(sec["data"].value, os2)) {
       return false;
     }
 
-    if (!sw2::Util::unzip(ss2, ss3)) {
+    std::stringstream is2(os2), os3;
+    if (!sw2::Util::unzip(is2, os3)) {
       return false;
     }
 
-    std::string str(ss3.str());
+    std::string str(os3.str());
 
     ::memcpy(&mData[0], str.data(), str.length());
 

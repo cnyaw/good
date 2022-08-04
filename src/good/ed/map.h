@@ -488,12 +488,12 @@ public:
         return false;
       }
 
-      std::stringstream ss3;
-      if (!sw2::Util::base64(ss2, ss3)) {
+      std::string is2(ss2.str()), os3;
+      if (!sw2::Util::base64(is2, os3)) {
         return false;
       }
 
-      sec["data"] = ss3.str();
+      sec["data"] = os3;
     }
 
     //
