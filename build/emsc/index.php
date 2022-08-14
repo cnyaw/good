@@ -2,41 +2,35 @@
 /*
   2017/7/16 Waync created.
 */
-if (isset($_GET['p'])) {
-  // Redirect to play specified package.
-  $file = $_GET['p'];
-  header('Location: good.html?pkg=' . $file);
-  exit;
-} else {
-  // Upload file form.
-  echo '<!DOCTYPE html>';
-  echo '<html>';
-  echo '<body>';
-  echo '<form action="upload.php" method="post" enctype="multipart/form-data">';
-    echo 'Select good package (*.good) to upload:';
-    echo '<input type="file" name="fileToUpload" id="fileToUpload">';
-    echo '<input type="submit" value="Upload Package" name="submit">';
-  echo '</form>';
-  echo '<hr/>';
-  // List uploaded files of [uploads] folder.
-  echo "<table style='text-align:left'>";
-  echo '<tr><th>Last Mod</th><th>File Size</th><th>Pkg Name</th><th></th></tr>';
-  $dir    = './uploads';
-  $files = scandir($dir);
-  foreach($files as $file) {
-    if (!is_dir("$dir/$file")) {
-      echo '<tr>';
-      echo '<td>' . date("F d Y H:i:s", filemtime("$dir/$file")) . '</td>';
-      echo '<td>' . filesize_formatted(filesize("$dir/$file")) . '</td>';
-      echo '<td>' . "<a href='$dir/$file'>" . $file . '</a></td>';
-      echo "<td><a href='index.php?p=$file'>Play</a></td>";
-      echo '</tr>';
-    }
+echo '<!DOCTYPE html>';
+echo '<html>';
+echo '<head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head>';
+echo '<body>';
+echo '<form action="upload.php" method="post" enctype="multipart/form-data">';
+  echo 'Select good package (*.good,*.zip) to upload:';
+  echo '<input type="file" name="fileToUpload" id="fileToUpload">';
+  echo '<input type="submit" value="Upload Package" name="submit">';
+echo '</form>';
+echo '<hr/>';
+// List uploaded files of [uploads] folder.
+echo "<table style='text-align:left'>";
+echo '<tr><th>Name</th><th>Last modified</th><th>Size</th><th></th><th></th></tr>';
+$dir    = './uploads';
+$files = scandir($dir);
+foreach($files as $file) {
+  if (!is_dir("$dir/$file")) {
+    echo '<tr>';
+    echo '<td>' . "<a href='$dir/$file'>" . $file . '</a></td>';
+    echo '<td>' . date("Y-m-d H:i", filemtime("$dir/$file")) . '</td>';
+    echo '<td>' . filesize_formatted(filesize("$dir/$file")) . '</td>';
+    echo "<td><a href='good.html?pkg=$file'>Play</a></td>";
+    echo "<td><a href='gooded.html?pkg=$file'>Edit</a></td>";
+    echo '</tr>';
   }
-  echo '</table>';
-  echo '</body>';
-  echo '</html>';
 }
+echo '</table>';
+echo '</body>';
+echo '</html>';
 
 function filesize_formatted($size)
 {
