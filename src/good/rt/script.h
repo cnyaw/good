@@ -1494,7 +1494,7 @@ public:
   //   "desc":"Good.VISIBLE for visible else Good.INVISIBLE for invisible."
   // }],
   // "ret":"n/a",
-  // "ex":"Good.SetVisible(o, 1)"
+  // "ex":"Good.SetVisible(o, Good.VISIBLE)"
   // [/API]
   //
 
