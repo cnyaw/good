@@ -4,7 +4,7 @@
 * Blog https://good-ed.blogspot.com/
 * API Reference https://agile-hollows-18660.herokuapp.com/good-ed/goodapi.html
 * Play some games online https://agile-hollows-18660.herokuapp.com
-* HTML5 resource browser (WIP) https://agile-hollows-18660.herokuapp.com/game/good/good.php
+* HTML5 resource browser (WIP) https://agile-hollows-18660.herokuapp.com/game/good/
 
 WIN32 Editor
 ![ed](gooded.png)
