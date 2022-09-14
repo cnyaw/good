@@ -51,6 +51,7 @@ public:
 
   int iLogs;
   std::vector<std::string> logs;
+  std::vector<int> idxLineLogs;
 
   int iTexs;
   int maxDrawCalls, maxActors;
@@ -74,7 +75,12 @@ public:
 
   void doTrace(const char *s)
   {
-    logs.push_back(s);
+    int idxLine = (int)logs.size();
+    std::string ss;
+    while (SimpleBreakLine(&s, gx.SCREEN_W, ss)) {
+      logs.push_back(ss);
+      idxLineLogs.push_back(idxLine);
+    }
 
     int nPage = getNumLogsPerPage();
 
@@ -107,6 +113,7 @@ public:
   {
     iLogs = 0;
     logs.clear();
+    idxLineLogs.clear();
 
     iCmdHist = 0;
     cmdHist.clear();
@@ -166,6 +173,22 @@ public:
   void onPackageChanged()
   {
     BaseT::onPackageChanged();
+  }
+
+  bool SimpleBreakLine(const char **s, int maxW, std::string &subs) const
+  {
+    subs = "";
+    int w = 0;
+    const char *p = *s;
+    while (*p) {
+      subs += *p++;
+      w += CX_FONT2;
+      if (w >= maxW) {
+        break;
+      }
+    }
+    *s = p;
+    return !subs.empty();
   }
 
   void SimpleDrawText(int x, int y, std::string const &s, sw2::uint color = 0xffffffff)

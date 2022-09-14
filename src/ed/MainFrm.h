@@ -1067,8 +1067,14 @@ public:
       wndMain.theLoop.Run();
       timeEndPeriod(1);
       wndMain.theLoop.RemoveMessageFilter(&wndMain);
-      for (size_t i = 0; i < wndMain.logs.size(); i++) {
-        SW2_TRACE_MESSAGE(wndMain.logs[i].c_str());
+      assert(wndMain.logs.size() == wndMain.idxLineLogs.size());
+      for (size_t i = 0; i < wndMain.logs.size();) {
+        int idx = wndMain.idxLineLogs[i];
+        std::string s;
+        for (size_t j = i; i < wndMain.logs.size() && idx == wndMain.idxLineLogs[j]; i++, j++) {
+          s += wndMain.logs[j];
+        }
+        SW2_TRACE_MESSAGE(s.c_str());
       }
     }
     ShowWindow(SW_SHOW);
