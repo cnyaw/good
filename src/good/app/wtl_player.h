@@ -296,7 +296,12 @@ public:
     }
 
     if (!lazyRunCmdLine.empty()) {
-      doLuaScript(lazyRunCmdLine.c_str());
+      std::string::size_type n = 0;
+      while (std::string::npos != (n = lazyRunCmdLine.find('%', n))) {
+        lazyRunCmdLine.replace(n, 1, "%%");
+        n += 2;
+      }
+      doLuaScript(lazyRunCmdLine.c_str()); // doLuaScript will do format string, so convert format char % to %% to prevent format error.
       lazyRunCmdLine = "";
     }
   }
