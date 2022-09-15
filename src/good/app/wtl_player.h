@@ -324,6 +324,7 @@ public:
       }
       iCmdHist = (int)cmdHist.size();
       lazyRunCmdLine = cmdLine;
+      trace((std::string(">") + cmdLine).c_str());
       cmdLine = "";
       break;
     case 27:                          // ESC.
