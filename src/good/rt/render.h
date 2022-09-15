@@ -108,8 +108,16 @@ void renderTexBg(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, u
     calcRenderTexBgParam(a, cx, cy, rcv, xscale, yscale, w, h, sw, sh, nx, ny, xbound, ybound);
     for (int ay = ny + rcv.top; -sh <= ay && ay < ybound; ay += sh) {
       for (int ax = nx + rcv.left; -sw <= ax && ax < xbound; ax += sw) {
+        sw2::IntRect rc(0, 0, w, h);
+        rc.offset(ax, ay);
+        sw2::IntRect rcm;
+        if (!rc.intersect(rcv, rcm)) {
+          continue;
+        }
         pThis->gx.setAnchor(a.mAnchorX, a.mAnchorY);
-        pThis->gx.drawImage((int)ax, (int)ay, img, a.mDim.left, a.mDim.top, w, h, color, rot, xscale, yscale);
+        int offsetx = rcm.left - rc.left;
+        int offsety = rcm.top - rc.top;
+        pThis->gx.drawImage(rcm.left - rcv.left, rcm.top - rcv.top, img, a.mDim.left + offsetx, a.mDim.top + offsety, rcm.width(), rcm.height(), color, rot, xscale, yscale);
       }
     }
   } else {
@@ -120,6 +128,12 @@ void renderTexBg(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, u
     ImgT img;
     for (int ay = ny + rcv.top; -sh <= ay && ay < ybound; ay += sh) {
       for (int ax = nx + rcv.left; -sw <= ax && ax < xbound; ax += sw) {
+        sw2::IntRect rc(0, 0, w, h);
+        rc.offset(ax, ay);
+        sw2::IntRect rcm;
+        if (!rc.intersect(rcv, rcm)) {
+          continue;
+        }
         if (!img.isValid()) {
           img = getTexBgImg_i(a);
           if (!img.isValid()) {         // Later validate img.
@@ -127,7 +141,9 @@ void renderTexBg(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, u
           }
         }
         pThis->gx.setAnchor(a.mAnchorX, a.mAnchorY);
-        pThis->gx.drawImage((int)ax, (int)ay, img, a.mDim.left, a.mDim.top, w, h, color, rot, xscale, yscale);
+        int offsetx = rcm.left - rc.left;
+        int offsety = rcm.top - rc.top;
+        pThis->gx.drawImage(rcm.left - rcv.left, rcm.top - rcv.top, img, a.mDim.left + offsetx, a.mDim.top + offsety, rcm.width(), rcm.height(), color, rot, xscale, yscale);
       }
     }
   }
@@ -207,7 +223,7 @@ bool renderChilds(ActorT const& a, sw2::IntRect const& rcv, float rot, float xsc
       break;
 
     case ActorT::TYPES_TEXBG:           // Texture background.
-      renderTexBg(child, cx - rcv.left, cy - rcv.top, rcv, childBgColor, arot, axscale, ayscale);
+      renderTexBg(child, cx, cy, rcv, childBgColor, arot, axscale, ayscale);
       break;
 
     case ActorT::TYPES_SPRITE:          // Object instance.
