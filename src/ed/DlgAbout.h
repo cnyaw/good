@@ -11,6 +11,15 @@
 
 #pragma once
 
+void ShellOpen(const char *path)
+{
+  SHELLEXECUTEINFOA si = {sizeof(SHELLEXECUTEINFOA)};
+  si.lpVerb = "open";
+  si.lpFile = path;
+  si.nShow = SW_SHOWNORMAL;
+  ShellExecuteExA(&si);
+}
+
 class CDlgAbout : public CDialogImpl<CDlgAbout>
 {
 public:

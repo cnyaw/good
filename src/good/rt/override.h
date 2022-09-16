@@ -40,11 +40,6 @@ void doTrace(std::string const &s)
 {
 }
 
-bool doOpenUrl(std::string const& url) const
-{
-  return false;
-}
-
 void doUserIntEvent(int i)
 {
 }

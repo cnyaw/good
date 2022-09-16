@@ -393,11 +393,6 @@ public:
     mDirty = true;                      // Force redraw.
   }
 
-  bool openUrl(std::string const& url) const
-  {
-    return static_cast<T const*>(this)->doOpenUrl(url);
-  }
-
   void playPackage_i(std::string const& name)
   {
     uninit_i();

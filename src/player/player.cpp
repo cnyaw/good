@@ -105,12 +105,6 @@ public:
     good::gx::ImgpImageResource::inst().clear();
   }
 
-  bool doOpenUrl(std::string const& url) const
-  {
-    ShellOpen(url.c_str());
-    return true;
-  }
-
   void onPackageChanged()
   {
     if (GOOD_LOGO_NAME != mRes.mName) {

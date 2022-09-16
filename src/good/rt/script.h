@@ -964,30 +964,6 @@ public:
 
   //
   // [API]
-  // "name":"OpenUrl",
-  // "desc":"Open a URL.",
-  // "proto":"void OpenUrl(url)",
-  // "param":[{
-  //   "name":"url",
-  //   "desc":"The URL to open."
-  // }],
-  // "ret":"n/a",
-  // "ex":"Good.OpenUrl(\'good-ed.blogspot.com\')"
-  // [/API]
-  //
-
-  static int OpenUrl(lua_State* L)
-  {
-    const char* url = luaL_checkstring(L, 1);
-    if (url) {
-      (void)AppT::getInst().openUrl(url);
-    }
-
-    return 0;
-  }
-
-  //
-  // [API]
   // "name":"PauseAnim",
   // "desc":"Pause sprite animtion of an object.",
   // "proto":"void PauseAnim(idObj)",
@@ -1633,7 +1609,6 @@ public:
       {"IsAnimPlaying", &IsAnimPlaying},
       {"KillAllChild", &KillAllChild},
       {"KillObj", &KillObj},
-      {"OpenUrl", &OpenUrl},
       {"OutputDebugString", &OutputDebugString},
       {"PauseAnim", &PauseAnim},
       {"PickObj", &PickObj},

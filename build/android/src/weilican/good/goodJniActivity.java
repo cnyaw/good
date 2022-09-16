@@ -136,13 +136,6 @@ public class goodJniActivity extends Activity
     super.onDestroy();
   }
 
-  static public void doOpenUrl(String url)
-  {
-    Uri uri = Uri.parse(url);
-    Intent it = new Intent(Intent.ACTION_VIEW, uri);
-    thisActivity.startActivity(it);
-  }
-
   //
   // Image support.
   //

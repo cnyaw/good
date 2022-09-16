@@ -102,17 +102,6 @@ public:
       tmpEnv->CallStaticVoidMethod(cls, mid, i);
     }
   }
-
-  bool doOpenUrl(std::string const& url) const
-  {
-    jclass cls = tmpEnv->FindClass(JNI_ACTIVITY);
-    jmethodID mid = tmpEnv->GetStaticMethodID(cls, "doOpenUrl", "(Ljava/lang/String;)V");
-    if (mid) {
-      jstring jstr = tmpEnv->NewStringUTF(url.c_str());
-      tmpEnv->CallStaticVoidMethod(cls, mid, jstr);
-    }
-    return true;
-  }
 };
 
 } // namespace rt

@@ -203,15 +203,4 @@ void getObjDim(const LevelT &lvl, const ObjectT &obj, sw2::IntRect &rc)
 
 } // namespace good
 
-#ifdef WIN32
-void ShellOpen(const char *path)
-{
-  SHELLEXECUTEINFOA si = {sizeof(SHELLEXECUTEINFOA)};
-  si.lpVerb = "open";
-  si.lpFile = path;
-  si.nShow = SW_SHOWNORMAL;
-  ShellExecuteExA(&si);
-}
-#endif
-
 // end of util.h
