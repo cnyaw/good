@@ -234,6 +234,11 @@ public:
       mFps = sec["fps"];
     }
 
+    return loadAllResources(sec, ini);
+  }
+
+  bool loadAllResources(sw2::Ini &sec, const sw2::Ini &ini)
+  {
     //
     // Sounds.
     //
