@@ -169,7 +169,7 @@ int getFirstTask(int iObjMgr) const
 
 int getNextParticle(int idCur, int iObjMgr) const
 {
-  if (!iObjMgrValid(iObjMgr)) {
+  if (!iObjMgrValid(iObjMgr) || !mObjMgr[iObjMgr].objects.isUsed(idCur)) {
     return -1;
   } else {
     return mObjMgr[iObjMgr].objects.next(idCur);
@@ -178,7 +178,7 @@ int getNextParticle(int idCur, int iObjMgr) const
 
 int getNextTask(int idCur, int iObjMgr) const
 {
-  if (!iObjMgrValid(iObjMgr)) {
+  if (!iObjMgrValid(iObjMgr) || !mObjMgr[iObjMgr].actions.isUsed(idCur)) {
     return -1;
   } else {
     return mObjMgr[iObjMgr].actions.next(idCur);
