@@ -159,8 +159,6 @@ public:
       app.mDirty = true;
     }
 
-    app.mActors[app.mRoot].OnUpdateParticle(idThis, om.iMgr);
-
     return true;
   }
 };

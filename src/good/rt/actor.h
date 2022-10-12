@@ -536,11 +536,6 @@ public:
     callScript("OnKillParticle", 2, idParticle, iMgr);
   }
 
-  void OnUpdateParticle(int idParticle, int iMgr)
-  {
-    callScript("OnUpdateParticle", 2, idParticle, iMgr);
-  }
-
   void OnDraw() const
   {
     callScript("OnDraw", 0);
