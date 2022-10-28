@@ -14,6 +14,14 @@
 bool mAntiAlias;
 int mSelFont;                           // GOOD_DRAW_TEXT_FONT.
 
+#define BEGIN_TILE_FILL(XSTART, YSTART, LEFT, TOP, RIGHT, BOTTOM, W, H) \
+  for (int ay = (YSTART) + (TOP); -(H) <= ay && ay < (BOTTOM); ay += (H)) { \
+    for (int ax = (XSTART) + (LEFT); -(W) <= ax && ax < (RIGHT); ax += (W)) {
+
+#define END_TILE_FILL() \
+    } \
+  }
+
 void renderColorBg(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, unsigned int color, float rot, float xscale, float yscale) const
 {
   int l, t, w, h;
@@ -41,17 +49,15 @@ void renderMapBg_i(GxT &gx, const MapT &map, ImgT &img, float cx, float cy, sw2:
   int nx, ny, xbound, ybound;
   calcDrawTileParam(repX, repY, (int)cx, (int)cy, w, h, rcv, nx, ny, xbound, ybound);
 
-  for (int ay = ny + rcv.top; -h <= ay && ay < ybound; ay += h) {
-    for (int ax = nx + rcv.left; -w <= ax && ax < xbound; ax += w) {
-      sw2::IntRect rc(0, 0, w, h);
-      rc.offset(ax, ay);
-      sw2::IntRect rcm;
-      if (!rc.intersect(rcv, rcm)) {
-        continue;
-      }
-      CommonDrawMap(gx, map, img, (int)cx, (int)cy, rcv, rcm, rc, color);
+  BEGIN_TILE_FILL(nx, ny, rcv.left, rcv.top, xbound, ybound, w, h)
+    sw2::IntRect rc(0, 0, w, h);
+    rc.offset(ax, ay);
+    sw2::IntRect rcm;
+    if (!rc.intersect(rcv, rcm)) {
+      continue;
     }
-  }
+    CommonDrawMap(gx, map, img, (int)cx, (int)cy, rcv, rcm, rc, color);
+  END_TILE_FILL()
 }
 
 void renderMapBg(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, unsigned int color) const
@@ -106,42 +112,38 @@ void renderTexBg(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, u
     int h = img.getHeight();
     int sw, sh, nx, ny, xbound, ybound;
     calcRenderTexBgParam(a, cx, cy, rcv, xscale, yscale, w, h, sw, sh, nx, ny, xbound, ybound);
-    for (int ay = ny + rcv.top; -sh <= ay && ay < ybound; ay += sh) {
-      for (int ax = nx + rcv.left; -sw <= ax && ax < xbound; ax += sw) {
-        sw2::IntRect rc(0, 0, w, h);
-        rc.offset(ax, ay);
-        sw2::IntRect rcm;
-        if (!rc.intersect(rcv, rcm)) {
-          continue;
-        }
-        pThis->gx.setAnchor(a.mAnchorX, a.mAnchorY);
-        pThis->gx.drawImage(ax - rcv.left, ay - rcv.top, img, a.mDim.left, a.mDim.top, w, h, color, rot, xscale, yscale);
+    BEGIN_TILE_FILL(nx, ny, rcv.left, rcv.top, xbound, ybound, sw, sh)
+      sw2::IntRect rc(0, 0, w, h);
+      rc.offset(ax, ay);
+      sw2::IntRect rcm;
+      if (!rc.intersect(rcv, rcm)) {
+        continue;
       }
-    }
+      pThis->gx.setAnchor(a.mAnchorX, a.mAnchorY);
+      pThis->gx.drawImage(ax - rcv.left, ay - rcv.top, img, a.mDim.left, a.mDim.top, w, h, color, rot, xscale, yscale);
+    END_TILE_FILL()
   } else {
     int w = a.mDim.width();
     int h = a.mDim.height();
     int sw, sh, nx, ny, xbound, ybound;
     calcRenderTexBgParam(a, cx, cy, rcv, xscale, yscale, w, h, sw, sh, nx, ny, xbound, ybound);
     ImgT img;
-    for (int ay = ny + rcv.top; -sh <= ay && ay < ybound; ay += sh) {
-      for (int ax = nx + rcv.left; -sw <= ax && ax < xbound; ax += sw) {
-        sw2::IntRect rc(0, 0, w, h);
-        rc.offset(ax, ay);
-        sw2::IntRect rcm;
-        if (!rc.intersect(rcv, rcm)) {
-          continue;
-        }
-        if (!img.isValid()) {
-          img = getTexBgImg_i(a);
-          if (!img.isValid()) {         // Later validate img.
-            return;
-          }
-        }
-        pThis->gx.setAnchor(a.mAnchorX, a.mAnchorY);
-        pThis->gx.drawImage(ax - rcv.left, ay - rcv.top, img, a.mDim.left, a.mDim.top, w, h, color, rot, xscale, yscale);
+    BEGIN_TILE_FILL(nx, ny, rcv.left, rcv.top, xbound, ybound, sw, sh)
+      sw2::IntRect rc(0, 0, w, h);
+      rc.offset(ax, ay);
+      sw2::IntRect rcm;
+      if (!rc.intersect(rcv, rcm)) {
+        continue;
       }
-    }
+      if (!img.isValid()) {
+        img = getTexBgImg_i(a);
+        if (!img.isValid()) {         // Later validate img.
+          return;
+        }
+      }
+      pThis->gx.setAnchor(a.mAnchorX, a.mAnchorY);
+      pThis->gx.drawImage(ax - rcv.left, ay - rcv.top, img, a.mDim.left, a.mDim.top, w, h, color, rot, xscale, yscale);
+    END_TILE_FILL()
   }
 }
 
