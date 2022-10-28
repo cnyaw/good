@@ -257,16 +257,14 @@ public:
 };
 
 template<class PrjT>
-class Map : public good::Map<Tileset>
+class Map : public good::Map<Tileset>, public UndoSupport<PrjT>
 {
 public:
   std::vector<GridLine> mVertGrid, mHorzGrid;
 
-  UndoImpl mUndo;
-
   bool mDrawFlag;                       // Flag.
 
-  Map() : mUndo(PrjT::UNDO_LEVEL), mDrawFlag(true)
+  Map() : mDrawFlag(true)
   {
   }
 
@@ -377,40 +375,6 @@ public:
       }
       return static_cast<CmdT*>(pcmd)->exec(x, y);
     }
-  }
-
-  //
-  // Undo/redo support.
-  //
-
-  bool canRedo()
-  {
-    return mUndo.canRedo();
-  }
-
-  bool canUndo()
-  {
-    return mUndo.canUndo();
-  }
-
-  bool redo()
-  {
-    if (mUndo.redo()) {
-      PrjT::inst().mModified = true;
-      return true;
-    }
-
-    return false;
-  }
-
-  bool undo()
-  {
-    if (mUndo.undo()) {
-      PrjT::inst().mModified = true;
-      return true;
-    }
-
-    return false;
   }
 
   //

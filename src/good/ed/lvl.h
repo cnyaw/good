@@ -674,7 +674,7 @@ public:
 };
 
 template<class PrjT>
-class Level : public good::Level<Object<PrjT> >
+class Level : public good::Level<Object<PrjT> >, public UndoSupport<PrjT>
 {
 public:
   enum ALIGNMENT {
@@ -699,8 +699,6 @@ public:
   typedef good::Level<Object<PrjT> > BaseT;
   typedef Object<PrjT> ObjectT;
 
-  UndoImpl mUndo;
-
   bool mShowSnap;
   int mSnapWidth, mSnapHeight;
 
@@ -711,7 +709,7 @@ public:
   int mAddSpr, mAddMap, mAddTex;        // Sel add obj param.
   unsigned int mAddCol;
 
-  Level() : mUndo(PrjT::UNDO_LEVEL), mShowSnap(true), mSnapWidth(16), mSnapHeight(16), mShowLine(true), mTool(TOOL_MOVE)
+  Level() : mShowSnap(true), mSnapWidth(16), mSnapHeight(16), mShowLine(true), mTool(TOOL_MOVE)
   {
   }
 
@@ -1515,40 +1513,6 @@ public:
       mAddMap = id;
       mTool = TOOL_ADDMAPBG;
     }
-  }
-
-  //
-  // Undo/redo support.
-  //
-
-  bool canRedo()
-  {
-    return mUndo.canRedo();
-  }
-
-  bool canUndo()
-  {
-    return mUndo.canUndo();
-  }
-
-  bool redo()
-  {
-    if (mUndo.redo()) {
-      PrjT::inst().mModified = true;
-      return true;
-    }
-
-    return false;
-  }
-
-  bool undo()
-  {
-    if (mUndo.undo()) {
-      PrjT::inst().mModified = true;
-      return true;
-    }
-
-    return false;
   }
 
   //

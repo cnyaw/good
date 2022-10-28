@@ -17,8 +17,8 @@
 
 #include "../good.h"
 
-#include "util.h"
 #include "undo.h"
+#include "util.h"
 
 //
 // Commands.

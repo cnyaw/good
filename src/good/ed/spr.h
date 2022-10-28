@@ -165,12 +165,11 @@ public:
 };
 
 template<class PrjT>
-class Sprite : public good::Sprite<Tileset>
+class Sprite : public good::Sprite<Tileset>, public UndoSupport<PrjT>
 {
 public:
-  UndoImpl mUndo;
 
-  Sprite() : mUndo(PrjT::UNDO_LEVEL)
+  Sprite()
   {
   }
 
@@ -181,40 +180,6 @@ public:
   void clear()
   {
     mUndo.clear();
-  }
-
-  //
-  // Undo/redo support.
-  //
-
-  bool canRedo()
-  {
-    return mUndo.canRedo();
-  }
-
-  bool canUndo()
-  {
-    return mUndo.canUndo();
-  }
-
-  bool redo()
-  {
-    if (mUndo.redo()) {
-      PrjT::inst().mModified = true;
-      return true;
-    }
-
-    return false;
-  }
-
-  bool undo()
-  {
-    if (mUndo.undo()) {
-      PrjT::inst().mModified = true;
-      return true;
-    }
-
-    return false;
   }
 
   //
