@@ -47,7 +47,7 @@ void renderMapBg_i(GxT &gx, const MapT &map, ImgT &img, float cx, float cy, sw2:
   int h = map.mHeight * map.mTileset.mTileHeight;
 
   int nx, ny, xbound, ybound;
-  calcDrawTileParam(repX, repY, (int)cx, (int)cy, w, h, rcv, nx, ny, xbound, ybound);
+  CalcDrawTileParam(repX, repY, (int)cx, (int)cy, w, h, rcv, nx, ny, xbound, ybound);
 
   BEGIN_TILE_FILL(nx, ny, rcv.left, rcv.top, xbound, ybound, w, h)
     sw2::IntRect rc(0, 0, w, h);
@@ -89,7 +89,7 @@ void calcRenderTexBgParam(ActorT const& a, float cx, float cy, sw2::IntRect cons
   sw = std::abs((int)(w * xscale));
   sh = std::abs((int)(h * yscale));
 
-  calcDrawTileParam(a.mRepX, a.mRepY, (int)cx, (int)cy, sw, sh, rcv, nx, ny, xbound, ybound);
+  CalcDrawTileParam(a.mRepX, a.mRepY, (int)cx, (int)cy, sw, sh, rcv, nx, ny, xbound, ybound);
 
   if (a.mRepX) {
     xbound += (int)(sw * a.mAnchorX);
@@ -274,32 +274,6 @@ void renderAll() const
   pThis->onRender();
   pThis->gx.endDraw();
   mRenderState = false;
-}
-
-void calcDrawTileParam(bool repx, bool repy, int x, int y, int cx, int cy, sw2::IntRect const& rcbound, int& nx, int& ny, int& xbound, int& ybound) const
-{
-  nx = x - rcbound.left;
-  ny = y - rcbound.top;
-  xbound = (std::min)(rcbound.right, x + cx);
-  ybound = (std::min)(rcbound.bottom, y + cy);
-
-  if (repx) {
-    if (0 < nx) {
-      nx = (nx % cx) - cx;
-    } else if (0 > nx) {
-      nx = - (-nx % cx);
-    }
-    xbound = rcbound.right;
-  }
-
-  if (repy) {
-    if (0 < ny) {
-      ny = (ny % cy) - cy;
-    } else if (0 > ny) {
-      ny = - (-ny % cy);
-    }
-    ybound = rcbound.bottom;
-  }
 }
 
 ImgT getFixFontImage(int size, int ch) const

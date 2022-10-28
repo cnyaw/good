@@ -201,6 +201,32 @@ void getObjDim(const LevelT &lvl, const ObjectT &obj, sw2::IntRect &rc)
   }
 }
 
+void CalcDrawTileParam(bool repx, bool repy, int x, int y, int cx, int cy, sw2::IntRect const& rcbound, int& nx, int& ny, int& xbound, int& ybound)
+{
+  nx = x - rcbound.left;
+  ny = y - rcbound.top;
+  xbound = (std::min)(rcbound.right, x + cx);
+  ybound = (std::min)(rcbound.bottom, y + cy);
+
+  if (repx) {
+    if (0 < nx) {
+      nx = (nx % cx) - cx;
+    } else if (0 > nx) {
+      nx = - (-nx % cx);
+    }
+    xbound = rcbound.right;
+  }
+
+  if (repy) {
+    if (0 < ny) {
+      ny = (ny % cy) - cy;
+    } else if (0 > ny) {
+      ny = - (-ny % cy);
+    }
+    ybound = rcbound.bottom;
+  }
+}
+
 } // namespace good
 
 // end of util.h
