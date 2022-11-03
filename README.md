@@ -2,9 +2,9 @@
 
 * Windows editor and Android APK download https://github.com/cnyaw/goodbin
 * Blog https://good-ed.blogspot.com/
-* API Reference https://agile-hollows-18660.herokuapp.com/good-ed/goodapi.html
-* Play some games online https://agile-hollows-18660.herokuapp.com
-* HTML5 resource browser (WIP) https://agile-hollows-18660.herokuapp.com/game/good/
+* API Reference https://smallworld.idv.tw/good-ed/goodapi.html
+* Play some games online https://smallworld.idv.tw
+* HTML5 resource browser (WIP) https://smallworld.idv.tw/game/good/
 
 WIN32 Editor
 ![ed](gooded.png)
@@ -60,5 +60,5 @@ Some Games Made By GoodEd
 * Android (https://github.com/cnyaw/goodbin/tree/master/latest-build-android-apk)
 * PSP
 * MOD
-* HTML5 (https://agile-hollows-18660.herokuapp.com)
+* HTML5
 * ESP32
