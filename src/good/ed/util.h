@@ -54,7 +54,8 @@ public:
     }
 
     return false;
-  }};
+  }
+};
 
 struct GridLine
 {
