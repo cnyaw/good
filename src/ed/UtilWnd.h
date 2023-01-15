@@ -685,7 +685,7 @@ public:
   virtual bool LoadResImage(int id, good::gx::Imgp &img) const
   {
     const PrjT::TextureT &tex = PrjT::inst().getTex(id);
-    good::gx::ImgpImage i = good::gx::ImgpImage::getImage(tex.mFileName);
+    ImgT i = ImgT::getImage(tex.mFileName);
     if (i.isValid()) {
       img.create(i.getWidth(), i.getHeight(), 4);
       i.drawToCanvas(0, 0, img, 0, 0, i.getWidth(), i.getHeight());
@@ -735,7 +735,7 @@ public:
     }
     if (!spr.mFrame.empty()) {
       const PrjT::TextureT &tex = PrjT::inst().getTex(spr.mTileset.mTextureId);
-      good::gx::ImgpImage imgTex = good::gx::ImgpImage::getImage(tex.mFileName);
+      ImgT imgTex = ImgT::getImage(tex.mFileName);
       if (!imgTex.isValid()) {
         return false;
       }
@@ -786,7 +786,7 @@ public:
       return false;
     }
     const PrjT::TextureT &tex = PrjT::inst().getTex(map.mTileset.mTextureId);
-    good::gx::ImgpImage imgTex = good::gx::ImgpImage::getImage(tex.mFileName);
+    ImgT imgTex = ImgT::getImage(tex.mFileName);
     if (!imgTex.isValid()) {
       return false;
     }
@@ -872,7 +872,7 @@ public:
       case PrjT::ObjectT::TYPE_MAPBG:
         {
           PrjT::MapT const& map = prj.getMap(inst.mMapId);
-          good::gx::ImgpImage imgTex = good::gx::ImgpImage::getImage(prj.getTex(map.mTileset.mTextureId).mFileName);
+          ImgT imgTex = ImgT::getImage(prj.getTex(map.mTileset.mTextureId).mFileName);
           if (!imgTex.isValid()) {
             break;
           }
@@ -885,7 +885,7 @@ public:
 
       case PrjT::ObjectT::TYPE_TEXBG:
         {
-          good::gx::ImgpImage imgTex = good::gx::ImgpImage::getImage(prj.getTex(inst.mTextureId).mFileName);
+          ImgT imgTex = ImgT::getImage(prj.getTex(inst.mTextureId).mFileName);
           if (!imgTex.isValid()) {
             break;
           }
@@ -908,7 +908,7 @@ public:
       case PrjT::ObjectT::TYPE_SPRITE:
         {
           PrjT::SpriteT const& spr = prj.getSprite(inst.mSpriteId);
-          good::gx::ImgpImage imgTex = good::gx::ImgpImage::getImage(prj.getTex(spr.mTileset.mTextureId).mFileName);
+          ImgT imgTex = ImgT::getImage(prj.getTex(spr.mTileset.mTextureId).mFileName);
           if (!imgTex.isValid()) {
             break;
           }
