@@ -44,10 +44,8 @@ RECT DrawTrackFocusRect(HDC dc, POINT a, POINT b)
   return r;
 }
 
-ImgT LoadTileset(std::string const& fileName)
+ImgT LoadTileset(std::string const& path)
 {
-  std::string path = good::getPathName(PrjT::inst().mRes.mFileName) + fileName;
-
   ImgT img = ImgT::getImage(path);
   if (img.isValid()) {
     return img;
