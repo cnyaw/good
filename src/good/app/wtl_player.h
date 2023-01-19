@@ -170,11 +170,6 @@ public:
     datFont = std::string((char*)FONT2_MOD, sizeof(FONT2_MOD));
   }
 
-  void onPackageChanged()
-  {
-    BaseT::onPackageChanged();
-  }
-
   bool SimpleBreakLine(const char **s, int maxW, std::string &subs) const
   {
     subs = "";
