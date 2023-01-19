@@ -16,7 +16,13 @@ int mSelFont;                           // GOOD_DRAW_TEXT_FONT.
 
 #define BEGIN_TILE_FILL(XSTART, YSTART, LEFT, TOP, RIGHT, BOTTOM, W, H) \
   for (int ay = (YSTART) + (TOP); -(H) <= ay && ay < (BOTTOM); ay += (H)) { \
-    for (int ax = (XSTART) + (LEFT); -(W) <= ax && ax < (RIGHT); ax += (W)) {
+    for (int ax = (XSTART) + (LEFT); -(W) <= ax && ax < (RIGHT); ax += (W)) {\
+      sw2::IntRect rc(0, 0, w, h); \
+      rc.offset(ax, ay); \
+      sw2::IntRect rcm; \
+      if (!rc.intersect(rcv, rcm)) { \
+        continue; \
+      }
 
 #define END_TILE_FILL() \
     } \
@@ -50,12 +56,6 @@ void renderMapBg_i(GxT &gx, const MapT &map, ImgT &img, float cx, float cy, sw2:
   CalcDrawTileParam(repX, repY, (int)cx, (int)cy, w, h, rcv, nx, ny, xbound, ybound);
 
   BEGIN_TILE_FILL(nx, ny, rcv.left, rcv.top, xbound, ybound, w, h)
-    sw2::IntRect rc(0, 0, w, h);
-    rc.offset(ax, ay);
-    sw2::IntRect rcm;
-    if (!rc.intersect(rcv, rcm)) {
-      continue;
-    }
     CommonDrawMap(gx, map, img, (int)cx, (int)cy, rcv, rcm, rc, color);
   END_TILE_FILL()
 }
@@ -113,12 +113,6 @@ void renderTexBg(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, u
     int sw, sh, nx, ny, xbound, ybound;
     calcRenderTexBgParam(a, cx, cy, rcv, xscale, yscale, w, h, sw, sh, nx, ny, xbound, ybound);
     BEGIN_TILE_FILL(nx, ny, rcv.left, rcv.top, xbound, ybound, sw, sh)
-      sw2::IntRect rc(0, 0, w, h);
-      rc.offset(ax, ay);
-      sw2::IntRect rcm;
-      if (!rc.intersect(rcv, rcm)) {
-        continue;
-      }
       pThis->gx.setAnchor(a.mAnchorX, a.mAnchorY);
       pThis->gx.drawImage(ax - rcv.left, ay - rcv.top, img, a.mDim.left, a.mDim.top, w, h, color, rot, xscale, yscale);
     END_TILE_FILL()
@@ -129,12 +123,6 @@ void renderTexBg(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, u
     calcRenderTexBgParam(a, cx, cy, rcv, xscale, yscale, w, h, sw, sh, nx, ny, xbound, ybound);
     ImgT img;
     BEGIN_TILE_FILL(nx, ny, rcv.left, rcv.top, xbound, ybound, sw, sh)
-      sw2::IntRect rc(0, 0, w, h);
-      rc.offset(ax, ay);
-      sw2::IntRect rcm;
-      if (!rc.intersect(rcv, rcm)) {
-        continue;
-      }
       if (!img.isValid()) {
         img = getTexBgImg_i(a);
         if (!img.isValid()) {         // Later validate img.
