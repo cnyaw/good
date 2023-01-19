@@ -168,6 +168,7 @@ template<class PrjT>
 class Sprite : public good::Sprite<Tileset>, public UndoSupport<PrjT>
 {
 public:
+  typedef UndoSupport<PrjT> UndoT;
 
   Sprite()
   {
@@ -179,7 +180,7 @@ public:
 
   void clear()
   {
-    mUndo.clear();
+    UndoT::mUndo.clear();
   }
 
   //
@@ -217,7 +218,7 @@ public:
   {
     typedef SpriteCmdSetTime<PrjT, Sprite> CmdT;
 
-    UndoCommand* pcmd = mUndo.getCurCommand();
+    UndoCommand* pcmd = UndoT::mUndo.getCurCommand();
     if (0 != pcmd && GOOD_SPRITEED_CMD_SETTIME == pcmd->getId()) {
       CmdT* pcmd3 = static_cast<CmdT*>(pcmd);
       if (pcmd3->mIdxFrame == iFrame && pcmd3->mCount == count) {
@@ -226,7 +227,7 @@ public:
     }
 
     CmdT* pcmd2 = new CmdT(*this, iFrame, count, time);
-    if (mUndo.execAndAdd(pcmd2)) {
+    if (UndoT::mUndo.execAndAdd(pcmd2)) {
       PrjT::inst().mModified = true;
       return true;
     }
@@ -242,7 +243,7 @@ public:
   {
     typedef SpriteCmdInsert<PrjT, Sprite> CmdT;
     CmdT *pcmd = new CmdT(mId, iFrame, tiles, time);
-    if (mUndo.execAndAdd(pcmd)) {
+    if (UndoT::mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
       return true;
     }
@@ -254,7 +255,7 @@ public:
   {
     typedef SpriteCmdRemove<PrjT, Sprite> CmdT;
     CmdT *pcmd = new CmdT(mId, iFrame);
-    if (mUndo.execAndAdd(pcmd)) {
+    if (UndoT::mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
       return true;
     }

@@ -260,6 +260,7 @@ template<class PrjT>
 class Map : public good::Map<Tileset>, public UndoSupport<PrjT>
 {
 public:
+  typedef UndoSupport<PrjT> UndoT;
   std::vector<GridLine> mVertGrid, mHorzGrid;
 
   bool mDrawFlag;                       // Flag.
@@ -274,7 +275,7 @@ public:
 
   void clear()
   {
-    mUndo.clear();
+    UndoT::mUndo.clear();
   }
 
   //
@@ -322,14 +323,14 @@ public:
     typedef MapCmdDraw<PrjT, Map> CmdT;
     if (!mDrawFlag) {
       CmdT* pcmd = new CmdT(mId, tile, x, y);
-      if (mUndo.execAndAdd(pcmd)) {
+      if (UndoT::mUndo.execAndAdd(pcmd)) {
         PrjT::inst().mModified = true;
         mDrawFlag = true;
         return true;
       }
       return false;
     } else {
-      UndoCommand* pcmd = mUndo.getCurCommand();
+      UndoCommand* pcmd = UndoT::mUndo.getCurCommand();
       if (0 == pcmd || GOOD_MAPED_CMD_DRAW != pcmd->getId()) {
         return false;
       }
@@ -342,14 +343,14 @@ public:
     typedef MapCmdDrawPattern<PrjT, Map> CmdT;
     if (!mDrawFlag) {
       CmdT* pcmd = new CmdT(mId, pattern, w, h, x, y);
-      if (mUndo.execAndAdd(pcmd)) {
+      if (UndoT::mUndo.execAndAdd(pcmd)) {
         PrjT::inst().mModified = true;
         mDrawFlag = true;
         return true;
       }
       return false;
     } else {
-      UndoCommand* pcmd = mUndo.getCurCommand();
+      UndoCommand* pcmd = UndoT::mUndo.getCurCommand();
       if (0 == pcmd || GOOD_MAPED_CMD_DRAW_PATTERN != pcmd->getId()) {
         return false;
       }
@@ -362,14 +363,14 @@ public:
     typedef MapCmdFill<PrjT, Map> CmdT;
     if (!mDrawFlag) {
       CmdT* pcmd = new CmdT(mId, fill, x, y);
-      if (mUndo.execAndAdd(pcmd)) {
+      if (UndoT::mUndo.execAndAdd(pcmd)) {
         PrjT::inst().mModified = true;
         mDrawFlag = true;
         return true;
       }
       return false;
     } else {
-      UndoCommand* pcmd = mUndo.getCurCommand();
+      UndoCommand* pcmd = UndoT::mUndo.getCurCommand();
       if (0 == pcmd || GOOD_MAPED_CMD_FILL != pcmd->getId()) {
         return false;
       }

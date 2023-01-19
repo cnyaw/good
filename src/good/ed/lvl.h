@@ -677,6 +677,8 @@ template<class PrjT>
 class Level : public good::Level<Object<PrjT> >, public UndoSupport<PrjT>
 {
 public:
+  typedef UndoSupport<PrjT> UndoT;
+
   enum ALIGNMENT {
     ALIGN_LEFT = 0,
     ALIGN_RIGHT,
@@ -719,7 +721,7 @@ public:
 
   void clear()
   {
-    mUndo.clear();
+    UndoT::mUndo.clear();
   }
 
   //
@@ -765,7 +767,7 @@ public:
     typedef LevelCmdSetSize<PrjT, Level> CmdT;
     CmdT *pcmd = new CmdT(BaseT::mId, newWidth, newHeight);
 
-    if (mUndo.execAndAdd(pcmd)) {
+    if (UndoT::mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
       return true;
     }
@@ -808,7 +810,7 @@ public:
     typedef LevelCmdSetBgColor<PrjT, Level> CmdT;
     CmdT *pcmd = new CmdT(BaseT::mId, idObj, color);
 
-    if (mUndo.execAndAdd(pcmd)) {
+    if (UndoT::mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
       return true;
     }
@@ -821,7 +823,7 @@ public:
     typedef LevelCmdSetDim<PrjT, Level> CmdT;
     CmdT *pcmd = new CmdT(BaseT::mId, idObj, newx, newy, neww, newh);
 
-    if (mUndo.execAndAdd(pcmd)) {
+    if (UndoT::mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
       return true;
     }
@@ -834,7 +836,7 @@ public:
     typedef LevelCmdSetName<PrjT, Level> CmdT;
     CmdT *pcmd = new CmdT(BaseT::mId, idObj, name);
 
-    if (mUndo.execAndAdd(pcmd)) {
+    if (UndoT::mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
       return true;
     }
@@ -847,7 +849,7 @@ public:
     typedef LevelCmdSetProp<PrjT, Level> CmdT;
     CmdT *pcmd = new CmdT(BaseT::mId, idObj, vis, rot, sx, sy, ax, ay, repx, repy);
 
-    if (mUndo.execAndAdd(pcmd)) {
+    if (UndoT::mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
       return true;
     }
@@ -860,7 +862,7 @@ public:
     typedef LevelCmdSetScript<PrjT, Level> CmdT;
     CmdT *pcmd = new CmdT(BaseT::mId, idObj, script);
 
-    if (mUndo.execAndAdd(pcmd)) {
+    if (UndoT::mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
       return true;
     }
@@ -873,7 +875,7 @@ public:
     typedef LevelCmdSetText<PrjT, Level> CmdT;
     CmdT *pcmd = new CmdT(BaseT::mId, idObj, s);
 
-    if (mUndo.execAndAdd(pcmd)) {
+    if (UndoT::mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
       return true;
     }
@@ -886,7 +888,7 @@ public:
     typedef LevelCmdSetTextSize<PrjT, Level> CmdT;
     CmdT *pcmd = new CmdT(BaseT::mId, idObj, size);
 
-    if (mUndo.execAndAdd(pcmd)) {
+    if (UndoT::mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
       return true;
     }
@@ -931,7 +933,7 @@ public:
     typedef LevelCmdAddObj<PrjT, Level> CmdT;
     CmdT *pcmd = new CmdT(BaseT::mId, idParent, idSprite, idMap, idTexture, x, y);
 
-    if (mUndo.execAndAdd(pcmd)) {
+    if (UndoT::mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
       return pcmd->mId;
     }
@@ -945,12 +947,12 @@ public:
 
   bool removeObj(std::vector<int> const& ids)
   {
-    int tag = mUndo.mTag;
+    int tag = UndoT::mUndo.mTag;
 
     for (size_t i = 0; i < ids.size(); ++i) {
       if (!recursiveRemoveObj(ids[i], tag)) {
         if (0 < i) {
-          mUndo.undo();
+          UndoT::mUndo.undo();
         }
         return false;
       }
@@ -974,7 +976,7 @@ public:
     typedef LevelCmdRemoveObj<PrjT, Level> CmdT;
     CmdT *pcmd = new CmdT(BaseT::mId, id);
 
-    if (!mUndo.execAndAdd(pcmd)) {
+    if (!UndoT::mUndo.execAndAdd(pcmd)) {
       return false;
     }
 
@@ -993,7 +995,7 @@ public:
         continue;
       }
 
-      mUndo.getCurCommand()->mTag = tag; // Set as the same undo group.
+      UndoT::mUndo.getCurCommand()->mTag = tag; // Set as the same undo group.
 
       typename PrjT::ObjectT& o2 = BaseT::getObj(id);
       o2 = o;                           // Duplicate obj o to new obj o2.
@@ -1013,7 +1015,7 @@ public:
 
   bool copyObj(const typename PrjT::LevelT &lvl, std::vector<int> const& selObjs, std::vector<int> &newObjs)
   {
-    int tag = mUndo.mTag;
+    int tag = UndoT::mUndo.mTag;
     return copyObj_i(lvl, BaseT::mId, selObjs, newObjs, tag);
   }
 
@@ -1025,9 +1027,9 @@ public:
   {
     typedef LevelCmdMoveObj<PrjT, Level> CmdT;
     CmdT *pcmd = new CmdT(BaseT::mId, id, offsetX, offsetY);
-    if (!mUndo.execAndAdd(pcmd)) {
+    if (!UndoT::mUndo.execAndAdd(pcmd)) {
       if (failUndo) {
-        mUndo.undo();
+        UndoT::mUndo.undo();
       }
       return false;
     }
@@ -1037,7 +1039,7 @@ public:
 
   bool moveObj(std::vector<int> const& ids, int offsetX, int offsetY)
   {
-    int tag = mUndo.mTag;
+    int tag = UndoT::mUndo.mTag;
     for (size_t i = 0; i < ids.size(); ++i) {
       if (!moveObj_i(ids[i], offsetX, offsetY, 0 < i, tag)) {
         return false;
@@ -1052,7 +1054,7 @@ public:
     typedef LevelCmdSetLevelPos<PrjT, Level> CmdT;
     CmdT *pcmd = new CmdT(BaseT::mId, posX, posY);
 
-    if (!mUndo.execAndAdd(pcmd)) {
+    if (!UndoT::mUndo.execAndAdd(pcmd)) {
       return false;
     }
 
@@ -1068,7 +1070,7 @@ public:
   bool resizeObj(std::vector<int> const& ids, int deltaX, int deltaY)
   {
     bool changed = false;
-    int tag = mUndo.mTag;
+    int tag = UndoT::mUndo.mTag;
 
     for (size_t i = 0; i < ids.size(); ++i) {
 
@@ -1089,9 +1091,9 @@ public:
       typedef LevelCmdSetDim<PrjT, Level> CmdT;
       CmdT *pcmd = new CmdT(BaseT::mId, ids[i], o.mDim.left, o.mDim.top, neww, newh);
 
-      if (!mUndo.execAndAdd(pcmd)) {
+      if (!UndoT::mUndo.execAndAdd(pcmd)) {
         if (0 < i) {
-          mUndo.undo();
+          UndoT::mUndo.undo();
         }
         return false;
       }
@@ -1158,7 +1160,7 @@ public:
     typedef LevelCmdZorderObj<PrjT, Level> CmdT;
     CmdT *pcmd = new CmdT(BaseT::mId, id, move);
 
-    if (mUndo.execAndAdd(pcmd)) {
+    if (UndoT::mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
       return true;
     }
@@ -1193,7 +1195,7 @@ public:
     // Move objects.
     //
 
-    int tag = mUndo.mTag;
+    int tag = UndoT::mUndo.mTag;
 
     for (size_t i = 0; i < ids.size() - 1; i++) {
 
@@ -1258,7 +1260,7 @@ public:
 
     PrjT &prj = PrjT::inst();
 
-    int tag = mUndo.mTag;
+    int tag = UndoT::mUndo.mTag;
     for (size_t i = 0; i < ids.size(); i++) {
       const typename PrjT::ObjectT &o = BaseT::getObj(ids[i]);
       sw2::IntRect rc;
@@ -1306,7 +1308,7 @@ public:
     typedef LevelCmdChangeParent<PrjT, Level> CmdT;
     CmdT *pcmd = new CmdT(BaseT::mId, idObj, idNewParent);
 
-    if (mUndo.execAndAdd(pcmd)) {
+    if (UndoT::mUndo.execAndAdd(pcmd)) {
       PrjT::inst().mModified = true;
       return true;
     }
