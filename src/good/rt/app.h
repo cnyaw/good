@@ -210,7 +210,7 @@ public:
     return false;
   }
 
-  bool init(std::istream& stream)
+  bool initFromStream(std::istream& stream)
   {
     if (!allocAr()) {
       return false;

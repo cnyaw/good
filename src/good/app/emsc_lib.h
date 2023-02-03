@@ -52,7 +52,7 @@ int EMSCRIPTEN_KEEPALIVE cRunPkg(void *pBuff, int size)
   printf("init good, data len=%d\n", size);
   std::string stream((const char*)pBuff, size);
   std::istringstream ss(stream);
-  if (!app.init(ss)) {
+  if (!app.initFromStream(ss)) {
     return 1;
   }
   printf("init good done\n");
