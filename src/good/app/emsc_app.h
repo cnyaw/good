@@ -104,7 +104,7 @@ public:
     BaseT::trace("package loaded %s %dx%d", name.c_str(), BaseT::mRes.mWidth, BaseT::mRes.mHeight);
     emscripten_set_canvas_size(BaseT::mRes.mWidth, BaseT::mRes.mHeight);
 
-    BaseT::mAr->addFileSystem(&fs);
+    BaseT::mAr->addArchiveFileSystem(&fs);
     app_keys = 0;
 
     return true;

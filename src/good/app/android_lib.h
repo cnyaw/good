@@ -128,7 +128,7 @@ JNIEXPORT void JNICALL Java_weilican_good_goodJniLib_create(JNIEnv * env, jobjec
 
     if (g.init(ss)) {
       g.trace("init good succ: %d, %d", g.mRes.mWidth, g.mRes.mHeight);
-      g.mAr->addFileSystem(&fs);
+      g.mAr->addArchiveFileSystem(&fs);
     } else {
       g.trace("init good from asset %s fail", strChars);
     }

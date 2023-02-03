@@ -753,7 +753,7 @@ public:
     std::stringstream ss;
     ss.write((const char*)GOOD_LOGO_MOD, sizeof(GOOD_LOGO_MOD));
 
-    if (!mAr->addFileSystem(ss)) {
+    if (!mAr->addStreamFileSystem(ss)) {
       trace("add file system '%s' failed", name);
       return false;
     }
@@ -773,7 +773,7 @@ public:
       return true;
     }
 
-    if (!mAr->addFileSystem(name)) {
+    if (!mAr->addPathFileSystem(name)) {
       trace("add file system '%s' failed", name.c_str());
       return false;
     }
@@ -806,7 +806,7 @@ public:
       return true;
     }
 
-    if (!mAr->addFileSystem(stream)) {
+    if (!mAr->addStreamFileSystem(stream)) {
       trace("add stream file system '%s' failed!", name);
       return false;
     }
