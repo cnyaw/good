@@ -187,13 +187,13 @@ public:
 
     do
     {
-      if (!addFileSystem(path)) {
+      if (!addPathFileSystem(path)) {
         break;
       }
       std::string name = ResName.substr(ResName.find_last_of('/') + 1);
       if (isGoodArchive(name) && !name.empty() && mFileSys.end() == mFileSys.find(name)) {
         std::stringstream ss;
-        if (!loadFile(name, ss) || !addFileSystem(name, ss)) {
+        if (!loadFile(name, ss) || !addStreamFileSystem(name, ss)) {
           break;
         }
       }
@@ -218,7 +218,7 @@ public:
 
     do
     {
-      if (!addFileSystem("", stream)) {
+      if (!addStreamFileSystem("", stream)) {
         break;
       }
       std::stringstream ss;
@@ -305,7 +305,7 @@ public:
       // Add new file system.
       //
 
-      if (!addFileSystem(depname)) {
+      if (!addPathFileSystem(depname)) {
         trace("add depex file system '%s' failed", depname.c_str());
         return false;
       }
@@ -767,7 +767,7 @@ public:
   }
 #endif
 
-  bool addFileSystem(std::string const& name)
+  bool addPathFileSystem(std::string const& name)
   {
     if (name.empty() || mFileSys.end() != mFileSys.find(name)) {
       return true;
@@ -783,7 +783,7 @@ public:
     return true;
   }
 
-  bool addFileSystem(std::string const& ssname, std::istream& stream)
+  bool addStreamFileSystem(std::string const& ssname, std::istream& stream)
   {
     char name[256];
     if (ssname.empty()) {

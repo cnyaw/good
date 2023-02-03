@@ -38,7 +38,7 @@ int EMSCRIPTEN_KEEPALIVE cLoadPkg(void *pBuff, int size)
 {
   std::string stream((const char*)pBuff, size);
   std::istringstream ss(stream);
-  return app.addFileSystem(app.fs.pkgName, ss);
+  return app.addStreamFileSystem(app.fs.pkgName, ss);
 }
 
 int EMSCRIPTEN_KEEPALIVE cSetKeyStates(int keys)

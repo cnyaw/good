@@ -364,14 +364,14 @@ int genObjEx(char const *pPkgName, int idParent, int idRes, char const *script)
     path = "./";
   }
 
-  if (!addFileSystem(path)) {
+  if (!addPathFileSystem(path)) {
     return -1;
   }
 
   std::string name = ResName.substr(ResName.find_last_of('/') + 1);
   if (isGoodArchive(name) && !name.empty() && mFileSys.end() == mFileSys.find(name)) {
     std::stringstream ss;
-    if (!loadFile(name, ss) || !addFileSystem(name, ss)) {
+    if (!loadFile(name, ss) || !addStreamFileSystem(name, ss)) {
       return -1;
     }
   }
