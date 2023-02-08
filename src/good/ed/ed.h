@@ -15,6 +15,8 @@
 // General.
 //
 
+#include <fstream>
+
 #include "../good.h"
 
 #include "undo.h"
