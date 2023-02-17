@@ -131,33 +131,17 @@ public:
     } \
   }
 
-#define IMPL_GET_STRING_RESOURCE_ITEM(ResName) \
-  bool is ## ResName(int id) const \
-  { \
-    return m ## ResName.end() != m ## ResName.find(id); \
-  } \
-  std::string get ## ResName(int id) const \
-  { \
-    std::map<int, std::string>::const_iterator it = m ## ResName.find(id); \
-    if (m ## ResName.end() == it) { \
-      throw std::range_error("get" # ResName); \
-    } else { \
-      return it->second; \
-    } \
-  }
-
   IMPL_GET_RESOURCE_ITEM(Snd, SoundT)
   IMPL_GET_RESOURCE_ITEM(Tex, TextureT)
   IMPL_GET_RESOURCE_ITEM(Map, MapT)
   IMPL_GET_RESOURCE_ITEM(Sprite, SpriteT)
   IMPL_GET_RESOURCE_ITEM(Level, LevelT)
 
-  IMPL_GET_STRING_RESOURCE_ITEM(Script)
-  IMPL_GET_STRING_RESOURCE_ITEM(StgeScript)
-  IMPL_GET_STRING_RESOURCE_ITEM(Dep)
+  IMPL_GET_RESOURCE_ITEM(Script, std::string)
+  IMPL_GET_RESOURCE_ITEM(StgeScript, std::string)
+  IMPL_GET_RESOURCE_ITEM(Dep, std::string)
 
 #undef IMPL_GET_RESOURCE_ITEM
-#undef IMPL_GET_STRING_RESOURCE_ITEM
 
   //
   // Load resource.
