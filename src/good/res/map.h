@@ -46,6 +46,16 @@ public:
   }
 
   //
+  // Helper.
+  //
+
+  int getTileIndexFromPos(int x, int y) const
+  {
+    int idx = (x / mTileset.mTileWidth) + mWidth * (y / mTileset.mTileHeight);
+    return idx;
+  }
+
+  //
   // Load tile map.
   //
 

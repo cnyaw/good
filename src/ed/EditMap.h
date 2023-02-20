@@ -519,15 +519,7 @@ public:
     }
 
     PrjT::MapT const& map = PrjT::inst().getMap(mEditor.mId);
-
-    int w = (int)map.mTileset.mTileWidth;
-    int h = (int)map.mTileset.mTileHeight;
-
-    int xSel = (point.x - rc.left) / w;
-    int ySel = (point.y - rc.top) / h;
-    int xySel = xSel + ySel * map.mWidth;
-
-    return xySel;
+    return map.getTileIndexFromPos(point.x - rc.left, point.y - rc.top);
   }
 };
 
