@@ -120,7 +120,7 @@ void CommonDrawMap(GxT& gx, MapT const& map, ImgT& img, int dx, int dy, int left
 {
   for (int y = top; y <= bottom; y++) {
     for (int x = left; x <= right; x++) {
-      int tile = map.mData[x + map.mWidth * y] - 1; // Tile 0 defines as empty tile.
+      int tile = map.mData[map.getTilemapIndexFromXy(x, y)] - 1; // Tile 0 defines as empty tile.
       if (0 > tile) {
         continue;
       }

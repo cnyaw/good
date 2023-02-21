@@ -33,7 +33,7 @@ public:
   {
     TileDataT& map = PrjT::inst().getMap(mMapId);
 
-    int xySel = x + y * map.mWidth;
+    int xySel = map.getTilemapIndexFromXy(x, y);
 
     int tile = map.mData[xySel];
     if (mTile == tile) {
@@ -93,7 +93,7 @@ public:
   {
     TileDataT& map = PrjT::inst().getMap(mMapId);
 
-    int xySel = x + y * map.mWidth;
+    int xySel = map.getTilemapIndexFromXy(x, y);
 
     std::vector<int> tile;
     getPattern(xySel, tile);
@@ -144,7 +144,7 @@ public:
         int tile = pat[idx++];
         int x = cx + i, y = cy + j;
         if (0 <= x && w > x && 0 <= y && h > y) {
-          map.mData[x + y * w] = tile;
+          map.mData[map.getTilemapIndexFromXy(x, y)] = tile;
         }
       }
     }
@@ -166,7 +166,7 @@ public:
         if (0 > x || w <= x || 0 > y || h <= y) {
           pat[idx++] = 0;
         } else {
-          pat[idx++] = map.mData[x + y * w];
+          pat[idx++] = map.mData[map.getTilemapIndexFromXy(x, y)];
         }
       }
     }
@@ -196,7 +196,7 @@ public:
     mSaveData = map.mData;              // Save whole tiledata.
 
     int depth = 0;
-    fill_i(x, y, mTile, map.mData[x + map.mWidth * y], depth);
+    fill_i(x, y, mTile, map.mData[map.getTilemapIndexFromXy(x, y)], depth);
 
     return true;
   }
@@ -218,7 +218,7 @@ public:
     TileDataT const& map = PrjT::inst().getMap(mMapId);
 
     int depth = 0;
-    fill_i(mPosX, mPosY, mTile, map.mData[mPosX + map.mWidth * mPosY], depth);
+    fill_i(mPosX, mPosY, mTile, map.mData[map.getTilemapIndexFromXy(mPosX, mPosY)], depth);
 
     return true;
   }
@@ -231,11 +231,11 @@ public:
   {
     TileDataT& map = PrjT::inst().getMap(mMapId);
 
-    int xy = x + map.mWidth * y;
-
     if (0 > x || 0 > y || map.mWidth <= x || map.mHeight <= y) {
       return;
     }
+
+    int xy = map.getTilemapIndexFromXy(x, y);
 
     if (fill == map.mData[xy] || border != map.mData[xy]) {
       return;

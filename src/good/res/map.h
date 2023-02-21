@@ -55,6 +55,12 @@ public:
     return idx;
   }
 
+  int getTilemapIndexFromXy(int col, int row) const
+  {
+    int idx = col + mWidth * row;
+    return idx;
+  }
+
   //
   // Load tile map.
   //

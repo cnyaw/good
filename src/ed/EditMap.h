@@ -214,7 +214,7 @@ public:
           if (EditorT::TOOL_ERASE == mEditor.mCurTool) {
             tile = 0;
           } else {
-            tile = map.mData[i + j * map.mWidth];
+            tile = map.mData[map.getTilemapIndexFromXy(i, j)];
           }
           mEditor.mCurPattern.push_back(tile);
         }
