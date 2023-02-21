@@ -772,7 +772,7 @@ int getResTileByPos(int idMap, int x, int y) const
     if (0 <= x && 0 <= y &&
         map.mWidth * map.mTileset.mTileWidth > x &&
         map.mHeight * map.mTileset.mTileHeight > y) {
-      int idx = map.getTileIndexFromPos(x, y);
+      int idx = map.getTilemapIndexFromPos(x, y);
       return map.mData[idx];
     }
   }

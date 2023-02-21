@@ -115,7 +115,7 @@ public:
 
   void OnMouseMove(UINT nFlags, CPoint point)
   {
-    int xySel = GetTileIndexFromPoint(point);
+    int xySel = GetTilemapIndexFromPoint(point);
 
     if (mCurHot != xySel) {
       mCurHot = xySel;
@@ -497,7 +497,7 @@ public:
 
   }
 
-  int GetTileIndexFromPoint(CPoint& point) const
+  int GetTilemapIndexFromPoint(CPoint& point) const
   {
     RECT rcClient;
     GetClientRect(&rcClient);
@@ -519,7 +519,7 @@ public:
     }
 
     PrjT::MapT const& map = PrjT::inst().getMap(mEditor.mId);
-    return map.getTileIndexFromPos(point.x - rc.left, point.y - rc.top);
+    return map.getTilemapIndexFromPos(point.x - rc.left, point.y - rc.top);
   }
 };
 

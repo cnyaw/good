@@ -49,7 +49,7 @@ public:
   // Helper.
   //
 
-  int getTileIndexFromPos(int x, int y) const
+  int getTilemapIndexFromPos(int x, int y) const
   {
     int idx = (x / mTileset.mTileWidth) + mWidth * (y / mTileset.mTileHeight);
     return idx;
