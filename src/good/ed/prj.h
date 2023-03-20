@@ -107,24 +107,17 @@ public:
     return mRes.get ## ResName(id); \
   }
 
-#define IMPL_GET_STRING_RESOURCE_ITEM(ResName) \
-  std::string get ## ResName(int id) const \
-  { \
-    return mRes.get ## ResName(id); \
-  }
-
   IMPL_GET_RESOURCE_ITEM(Snd, SoundT)
   IMPL_GET_RESOURCE_ITEM(Tex, TextureT)
   IMPL_GET_RESOURCE_ITEM(Map, MapT)
   IMPL_GET_RESOURCE_ITEM(Sprite, SpriteT)
   IMPL_GET_RESOURCE_ITEM(Level, LevelT)
 
-  IMPL_GET_STRING_RESOURCE_ITEM(Script)
-  IMPL_GET_STRING_RESOURCE_ITEM(StgeScript)
-  IMPL_GET_STRING_RESOURCE_ITEM(Dep)
+  IMPL_GET_RESOURCE_ITEM(Script, std::string)
+  IMPL_GET_RESOURCE_ITEM(StgeScript, std::string)
+  IMPL_GET_RESOURCE_ITEM(Dep, std::string)
 
 #undef IMPL_GET_RESOURCE_ITEM
-#undef IMPL_GET_STRING_RESOURCE_ITEM
 
   //
   // Load override.
