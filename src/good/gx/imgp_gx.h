@@ -463,6 +463,46 @@ public:
     return true;
   }
 
+  template<class RectT>
+  void findDiffBounds(int depth, std::vector<RectT> &bb, const Imgp &img, int x, int y, int w, int h) const
+  {
+    if (0 == depth) {
+      bb.push_back(RectT(x, y, w, h));
+      return;
+    }
+
+    const int w_1 = (int)(w/2.0f), w_2 = w - w_1;
+    const int h_1 = (int)(h/2.0f), h_2 = h - h_1;
+
+    int xl = x, yl = y, wl = w_1, hl = h;
+    if (!findDiffBound(img, xl, yl, wl, hl)) {
+      return;
+    }
+    int xr = x + w_1, yr = y, wr = w_2, hr = h;
+    if (!findDiffBound(img, xr, yr, wr, hr)) {
+      return;
+    }
+
+    int xt = x, yt = y, wt = w, ht = h_1;
+    if (!findDiffBound(img, xt, yt, wt, ht)) {
+      return;
+    }
+    int xb = x, yb = y + h_1, wb = w, hb = h_2;
+    if (!findDiffBound(img, xb, yb, wb, hb)) {
+      return;
+    }
+
+    const int a1 = wl * hl + wr * hr;
+    const int a2 = wt * ht + wb * hb;
+    if (a1 <= a2) {
+      findDiffBounds(depth - 1, bb, img, xl, yl, wl, hl);
+      findDiffBounds(depth - 1, bb, img, xr, yr, wr, hr);
+    } else {
+      findDiffBounds(depth - 1, bb, img, xt, yt, wt, ht);
+      findDiffBounds(depth - 1, bb, img, xb, yb, wb, hb);
+    }
+  }
+
   //
   // Text.
   //
