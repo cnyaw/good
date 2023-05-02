@@ -15,48 +15,6 @@ namespace good {
 
 namespace ed {
 
-template<class PrjT>
-class UndoSupport
-{
-public:
-
-  UndoImpl mUndo;
-
-  UndoSupport() : mUndo(PrjT::UNDO_LEVEL)
-  {
-  }
-
-  bool canRedo()
-  {
-    return mUndo.canRedo();
-  }
-
-  bool canUndo()
-  {
-    return mUndo.canUndo();
-  }
-
-  bool redo()
-  {
-    if (mUndo.redo()) {
-      PrjT::inst().mModified = true;
-      return true;
-    }
-
-    return false;
-  }
-
-  bool undo()
-  {
-    if (mUndo.undo()) {
-      PrjT::inst().mModified = true;
-      return true;
-    }
-
-    return false;
-  }
-};
-
 struct GridLine
 {
   //
