@@ -1074,7 +1074,7 @@ public:
         for (size_t j = i; i < wndMain.logs.size() && idx == wndMain.idxLineLogs[j]; i++, j++) {
           s += wndMain.logs[j];
         }
-        SW2_TRACE_MESSAGE(s.c_str());
+        SW2_TRACE(s.c_str());
       }
     }
     ShowWindow(SW_SHOW);
