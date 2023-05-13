@@ -48,7 +48,8 @@ public:
   // Key state.
   //
 
-  int mKeys, mPrevKeys, mHandledKeys;
+  sw2::KeyStates mKeys;
+  int mHandledKeys;
   sw2::IntPoint mMousePos;
 
   //
@@ -270,7 +271,7 @@ public:
       }
 
       mExit = false;
-      mKeys = mPrevKeys = 0;
+      mKeys.reset();
 
       mCreateRoot = true;               // Later create level object.
 
@@ -415,8 +416,7 @@ public:
 
   bool trigger(int keys, sw2::IntPoint const& mousePos)
   {
-    mPrevKeys = mKeys;
-    mKeys = keys;
+    mKeys.update(keys);
     mHandledKeys = 0;
 
     mMousePos = mousePos;
@@ -716,24 +716,19 @@ public:
   // Helper.
   //
 
-  bool isKeyDown_i(int keys, int key) const
+  bool isKeyDown(int keys) const
   {
-    return 0 != (keys & key);
+    return mKeys.isKeyDown(keys);
   }
 
-  bool isKeyDown(int key) const
+  bool isKeyPressed(int keys) const
   {
-    return isKeyDown_i(mKeys, key);
+    return mKeys.isKeyPressed(keys);
   }
 
-  bool isKeyPressed(int key) const
+  bool isKeyPushed(int keys) const
   {
-    return !isKeyDown(key) && isKeyDown_i(mPrevKeys, key);
-  }
-
-  bool isKeyPushed(int key) const
-  {
-    return isKeyDown(key) && !isKeyDown_i(mPrevKeys, key);
+    return mKeys.isKeyPushed(keys);
   }
 
   void getScriptParamName(int id, char *buff) const
