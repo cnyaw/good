@@ -166,7 +166,7 @@ public:
     return name;
   }
 
-  bool init(std::string const& pathname, std::string const& txtname = "")
+  bool init(std::string const& pathname)
   {
     if (!allocAr()) {
       return false;
@@ -198,12 +198,7 @@ public:
           break;
         }
       }
-      std::string prjname;
-      if (!txtname.empty()) {
-        prjname = txtname;
-      } else {
-        prjname = decidePrjName(name);
-      }
+      std::string prjname = decidePrjName(name);
       return init_i(prjname);
     } while (0);
 
