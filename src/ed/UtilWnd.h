@@ -429,14 +429,14 @@ public:
     }
   }
 
-  virtual void OnClickItem()
+  void OnClickItem()
   {
     int id = GetResId(mCurSel);
     MainT::inst().mExpView.SetCurSel(id);
     NotifyLevelEditorSetCurSel(id);
   }
 
-  virtual void OnDblClickItem()
+  void OnDblClickItem()
   {
     MainT::inst().mExpView.OpenResItemView(GetResType(), GetResId(mCurSel));
   }
