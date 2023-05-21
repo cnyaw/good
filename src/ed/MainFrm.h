@@ -1146,16 +1146,13 @@ public:
       return;
     }
 
-    int idx = -1;
     for (int i = 0; i < mTabView.GetPageCount(); ++i) {
       if ((int)mTabView.GetPageData(i) == id) {
-        idx = i;
+        if (mTabView.GetActivePage() != i) {
+          mTabView.SetActivePage(i);
+        }
         break;
       }
-    }
-
-    if (-1 != idx && mTabView.GetActivePage() != idx) {
-      mTabView.SetActivePage(idx);
     }
   }
 
