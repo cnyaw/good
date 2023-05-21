@@ -555,10 +555,6 @@ public:
 
   int OnGoodMessage(int uMsg, WPARAM wParam, LPARAM lParam)
   {
-    if (WM_GOOD_GETRESOURCEID == uMsg) {
-      return mId;
-    }
-
     PrjT::SpriteT& spr = PrjT::inst().getSprite(mId);
 
     switch (uMsg)

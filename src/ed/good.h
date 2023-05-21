@@ -32,12 +32,6 @@ enum APP_GOOD_MESSAGE
   WM_GOOD_FIRST = WM_APP + 8,
 
   //
-  // Resource item.
-  //
-
-  WM_GOOD_GETRESOURCEID = WM_GOOD_FIRST,
-
-  //
   // Undo/redo.
   //
 

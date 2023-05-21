@@ -383,7 +383,6 @@ public:
 
   BEGIN_MSG_MAP_EX(CStgeScriptEditor)
     MSG_WM_CREATE(OnCreate)
-    MSG_WM_GOOD(OnGoodMessage)
     MSG_WM_SIZE(OnSize)
     COMMAND_ID_HANDLER_EX(ID_STGESCRIPT_SOURCE, OnSource)
     COMMAND_ID_HANDLER_EX(ID_STGESCRIPT_COMPILE, OnCompile)
@@ -416,17 +415,6 @@ public:
     Compile();
 
     SetMsgHandled(FALSE);
-    return 0;
-  }
-
-  int OnGoodMessage(int uMsg, WPARAM wParam, LPARAM lParam)
-  {
-    switch (uMsg)
-    {
-    case WM_GOOD_GETRESOURCEID:
-      return mId;
-    }
-
     return 0;
   }
 

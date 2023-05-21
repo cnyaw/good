@@ -563,9 +563,7 @@ end:
 
     MainT& m = MainT::inst();
     for (int i = 0; i < m.mTabView.GetPageCount(); ++i) {
-      HWND hwnd = m.mTabView.GetPageHWND(i);
-      int id = (int)::SendMessage(hwnd, WM_GOOD_GETRESOURCEID, 0, 0);
-      if (id == idItem) {
+      if ((int)m.mTabView.GetPageData(i) == idItem) {
         m.mTabView.SetActivePage(i);
         return 1;
       }
@@ -754,9 +752,7 @@ end:
         }
 
         for (int i = 0; i < m.mTabView.GetPageCount(); ++i) { // Delete tab item.
-          HWND hwnd = m.mTabView.GetPageHWND(i);
-          int id = (int)::SendMessage(hwnd, WM_GOOD_GETRESOURCEID, 0, 0);
-          if (id == idItem) {
+          if ((int)m.mTabView.GetPageData(i) == idItem) {
             m.mTabView.RemovePage(i);
             break;
           }

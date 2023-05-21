@@ -81,9 +81,6 @@ public:
   {
     switch (uMsg)
     {
-    case WM_GOOD_GETRESOURCEID:
-      return -1;
-
     case WM_GOOD_CANUNDO:
       return mEdit.CanUndo();
 

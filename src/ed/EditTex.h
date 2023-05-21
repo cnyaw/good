@@ -107,7 +107,6 @@ public:
 
   BEGIN_MSG_MAP_EX(CTextureEditor)
     MSG_WM_CREATE(OnCreate)
-    MSG_WM_GOOD(OnGoodMessage)
     MSG_WM_SHOWWINDOW(OnShowWindow)
     MSG_WM_SIZE(OnSize)
   END_MSG_MAP()
@@ -121,15 +120,6 @@ public:
     mEditView.Create(m_hWnd, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);
 
     SetMsgHandled(FALSE);
-    return 0;
-  }
-
-  int OnGoodMessage(int uMsg, WPARAM wParam, LPARAM lParam)
-  {
-    if (WM_GOOD_GETRESOURCEID == uMsg) {
-      return mId;
-    }
-
     return 0;
   }
 

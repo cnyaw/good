@@ -858,7 +858,7 @@ public:
       mOutput.mVisible = true;
       int idx = mTabView.PageIndexFromHwnd(mOutput);
       if (-1 == idx) {
-        mTabView.AddPage(mOutput, _T("Output"));
+        mTabView.AddPage(mOutput, _T("Output"), -1, (LPVOID)-1);
       } else {
         mTabView.SetActivePage(idx);
       }
@@ -964,7 +964,7 @@ public:
 
       mExpView.SetCurSel(-1);
     } else {
-      mExpView.SetCurSel((int)::SendMessage(mTabView.GetPageHWND(pnmh->idFrom), WM_GOOD_GETRESOURCEID, 0, 0));
+      mExpView.SetCurSel((int)mTabView.GetPageData(pnmh->idFrom));
     }
 
     return 0;
@@ -1001,7 +1001,7 @@ public:
 
   void AddResourceEditor(std::string const& resName, int resId, HWND hEditor)
   {
-    mTabView.AddPage(hEditor, resName.c_str());
+    mTabView.AddPage(hEditor, resName.c_str(), -1, (LPVOID)resId);
   }
 
   void FillTree()
@@ -1141,15 +1141,14 @@ public:
 
   void SetActivePage(int id)
   {
-    HWND hwnd = mTabView.GetPageHWND(mTabView.GetActivePage());
-    int idCurrPage = (int)::SendMessage(hwnd, WM_GOOD_GETRESOURCEID, 0, 0);
+    int idCurrPage = (int)mTabView.GetPageData(mTabView.GetActivePage());
     if (PrjT::inst().mRes.isLevel(idCurrPage)) {
       return;
     }
 
     int idx = -1;
     for (int i = 0; i < mTabView.GetPageCount(); ++i) {
-      if ((int)::SendMessage(mTabView.GetPageHWND(i), WM_GOOD_GETRESOURCEID, 0, 0) == id) {
+      if ((int)mTabView.GetPageData(i) == id) {
         idx = i;
         break;
       }
@@ -1227,7 +1226,7 @@ public:
 
     if (-1 != mTabView.GetActivePage()) {
       HWND hwnd = mTabView.GetPageHWND(mTabView.GetActivePage());
-      int id = (int)::SendMessage(hwnd, WM_GOOD_GETRESOURCEID, 0, 0);
+      int id = (int)mTabView.GetPageData(mTabView.GetActivePage());
       if (pres->mId == id) {            // Editor id, try to redraw view.
         ::SendMessage(hwnd, WM_GOOD_UPDATE, 0, 0);
       }

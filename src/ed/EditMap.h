@@ -691,10 +691,6 @@ public:
 
   int OnGoodMessage(int uMsg, WPARAM wParam, LPARAM lParam)
   {
-    if (WM_GOOD_GETRESOURCEID == uMsg) {
-      return mId;
-    }
-
     PrjT::MapT& map = PrjT::inst().getMap(mId); // This map.
 
     switch (uMsg)
