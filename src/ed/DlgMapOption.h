@@ -241,13 +241,7 @@ public:
     RECT rcClient;
     pThis->GetClientRect(&rcClient);
 
-    CDC memdc;
-    memdc.CreateCompatibleDC(dc);
-
-    CBitmap membmp;
-    membmp.CreateCompatibleBitmap(dc, rcClient.right, rcClient.bottom);
-    memdc.SelectBitmap(membmp);
-
+    CMemoryDC memdc(dc, rcClient);
     memdc.FillSolidRect(&rcClient, ::GetSysColor(COLOR_BTNFACE));
 
     memdc.DrawFocusRect(&mRcGrid);
@@ -346,12 +340,6 @@ public:
         memdc.DrawText(s, ::wsprintf(s, _T("%d"), mDragPos), &mRcNewHorzLn, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
       }
     }
-
-    //
-    // Flip.
-    //
-
-    dc.BitBlt(0, 0, rcClient.right, rcClient.bottom, memdc, 0, 0, SRCCOPY);
   }
 
   //
