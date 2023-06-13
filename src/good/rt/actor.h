@@ -233,7 +233,7 @@ public:
   }
 
   //
-  // Releationship.
+  // Relationship.
   //
 
   int getChildCount() const
@@ -432,29 +432,35 @@ public:
     return true;
   }
 
-  bool animate()
+  static bool animate(int idObj)
   {
     //
     // Return true if anything changes.
     //
 
+    AppT& app = AppT::getInst();
+
+    if (!app.mActors.isUsed(idObj)) {
+      return false;
+    }
+
     int t = 0;
 
-    if (mVisible) {
-      AppT& app = AppT::getInst();
-      if (mSpriteAnimator) {
-        t += animateSprite();
-        for (size_t i = 0; i < mChild.size(); i++) {
-          t += app.mActors[mChild[i]].animate();
-          if (app.mActorsGrowed) {
-            return 0 < t;               // Skip remaining iteration to avoid crash.
-          }
+    typename AppT::ActorT &a = app.mActors[idObj];
+
+    if (a.mVisible && a.mSpriteAnimator) {
+      t += a.animateSprite();
+      // Animate child may cause mActors grow or idObj is freed. To avoid access invalid obj, folowing code use mActors[idObj].
+      for (size_t i = 0; i < app.mActors[idObj].mChild.size(); i++) {
+        t += animate(app.mActors[idObj].mChild[i]);
+        if (!app.mActors.isUsed(idObj)) {
+          return 0 < t;
         }
       }
     }
 
-    if (mScriptAnimator) {
-      t += animateScript();
+    if (app.mActors[idObj].mScriptAnimator) {
+      t += app.mActors[idObj].animateScript();
     }
 
     return 0 < t;

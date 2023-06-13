@@ -70,8 +70,7 @@ public:
   // Actor.
   //
 
-  bool mActorsGrowed;                   // If pool growed we need to skip iterate animate of remaining child actors to avoid potential crash.
-  sw2::ObjectPool<ActorT, 128, true> mActors;
+  sw2::ObjectPool<ActorT, 32, true> mActors;
 
   int mRoot;
   int mStartLevel;                      // Starting level id, otherwise use first level.
@@ -417,7 +416,6 @@ public:
     mMousePos = mousePos;
 
     mRenderState = false;
-    mActorsGrowed = false;
 
     //
     // Later create level object.
@@ -467,7 +465,7 @@ public:
       // Update game.
       //
 
-      mDirty = mActors[mRoot].animate() || mDirty;
+      mDirty = ActorT::animate(mRoot) || mDirty;
     }
 
     //
@@ -489,7 +487,6 @@ public:
 
   int allocActor(int id = -1)
   {
-    int capacity = mActors.capacity();
     int newid = -1;
     if (-1 != id) {
       newid = mActors.alloc(id);
@@ -509,10 +506,6 @@ public:
       char buff[GOOD_MAX_PARAM_NAME_LEN];
       getScriptParamName(newid, buff);
       lua_setglobal(mLua, buff);
-    }
-
-    if (!mActorsGrowed) {
-      mActorsGrowed = capacity != mActors.capacity();
     }
 
     return newid;
