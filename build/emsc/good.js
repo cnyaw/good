@@ -2,6 +2,10 @@
 // 2017/7/12 Waync created.
 //
 
+var Module = {
+  canvas: (function() {return document.getElementById('canvas');})()
+};
+
 var strUrl = location.search;
 if (strUrl.indexOf("?") != -1) {
   var getSearch = strUrl.split("?");
