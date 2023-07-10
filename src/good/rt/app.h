@@ -198,7 +198,10 @@ public:
         }
       }
       std::string prjname = decidePrjName(name);
-      return init_i(prjname);
+      if (!init_i(prjname)) {
+        break;
+      }
+      return true;
     } while (0);
 
     uninit_i();
@@ -224,10 +227,13 @@ public:
       std::string prjname = ss.str();
 #ifndef GOOD_SUPPORT_NO_LOGO
       if (addAndPlayLogoFileSystem(prjname)) {
-        return true;
+        break;
       }
 #endif
-      return init_i(prjname);
+      if (!init_i(prjname)) {
+        break;
+      }
+      return true;
     } while (0);
 
     uninit_i();
@@ -236,49 +242,42 @@ public:
 
   bool init_i(std::string const& prjname)
   {
-    do
-    {
-      std::stringstream ss;
-      if (!loadFile(prjname, ss)) {
-        trace("load file archive [%s] failed", prjname.c_str());
-        break;
-      }
+    std::stringstream ss;
+    if (!loadFile(prjname, ss)) {
+      trace("load file archive [%s] failed", prjname.c_str());
+      return false;
+    }
 
-      if (!mRes.load(ss)) {
-        trace("load resource [%s] failed", prjname.c_str());
-        break;
-      }
+    if (!mRes.load(ss)) {
+      trace("load resource [%s] failed", prjname.c_str());
+      return false;
+    }
 
-      if (!initDepex() || !initScript()) {
-        break;
-      }
+    if (!initDepex() || !initScript()) {
+      return false;
+    }
 
 #ifdef GOOD_SUPPORT_STGE
-      initStge();
+    initStge();
 #endif
 
-      mRes.mFileName = prjname;
-      mExternalResMap.clear();
+    mRes.mFileName = prjname;
+    mExternalResMap.clear();
 
-      if (!static_cast<T*>(this)->doInit(prjname)) {
-        break;
-      }
+    if (!static_cast<T*>(this)->doInit(prjname)) {
+      return false;
+    }
 
-      mExit = false;
-      mKeys.reset();
+    mExit = false;
+    mKeys.reset();
 
-      mCreateRoot = true;               // Later create level object.
+    mCreateRoot = true;               // Later create level object.
 
-      static_cast<T*>(this)->onPackageChanged(); // Notify package has change.
-      mDirty = true;
-      mTexDirty = false;
+    static_cast<T*>(this)->onPackageChanged(); // Notify package has change.
+    mDirty = true;
+    mTexDirty = false;
 
-      return true;
-
-    } while (0);
-
-    uninit_i();
-    return false;
+    return true;
   }
 
   bool initDepex()
