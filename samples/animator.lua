@@ -3,9 +3,9 @@ Anim1 = {}
 
 Anim1.OnStep = function(param)
   if (nil == param.k) then
-    local loop1 = ArAddLoop(nil)
+    local loop1 = ArAddLoop()
     ArAddMoveBy(loop1, 'Rot', 0, 1)
-    local loop2 = ArAddLoop(nil)
+    local loop2 = ArAddLoop()
     ArAddMoveTo(loop2, 'Scale', 0.75, 0, 0).ease = ArEaseIn
     ArAddMoveTo(loop2, 'Scale', 0.75, 1, 1).ease = ArEaseOutElastic
     param.k = ArAddAnimator({loop1, loop2})
@@ -20,7 +20,7 @@ Anim2.OnCreate = function(param)
   local o = param._id
   local x,y = Good.GetPos(o)
   local ididx = o - 20 + 1
-  local lp = ArAddLoop(nil)
+  local lp = ArAddLoop()
   local Ease1 = {ArEaseIn, ArEaseOut, ArEaseInOut, ArEaseOutIn}
   ArAddMoveTo(lp, 'Pos', 2, 550, y).ease = Ease1[ididx]
   ArAddDelay(lp, 1)
@@ -61,7 +61,7 @@ Anim3 = {}
 
 Anim3.OnCreate = function(param)
   Good.SetAnchor(param._id, 0.5, 0.5)
-  local loopn = ArAddLoop(nil)
+  local loopn = ArAddLoop()
   local loop2 = ArAddLoop(loopn, 2)
   ArAddMoveTo(loop2, 'Pos', 1, 450, 350)
   ArAddMoveTo(loop2, 'Pos', 2, 50, 200)
@@ -70,10 +70,10 @@ Anim3.OnCreate = function(param)
   ArAddMoveBy(loopn, 'Pos', 1, 40, 20)
   ArAddCall(loopn, 'ToggleColorObj', 0)
 
-  local loopn2 = ArAddLoop(nil)
+  local loopn2 = ArAddLoop()
   ArAddMoveBy(loopn2, 'Rot', 1, 150)
 
-  local loopn3 = ArAddLoop(nil)
+  local loopn3 = ArAddLoop()
   ArAddMoveBy(loopn3, 'Scale', 2, 1.5, 0)
   ArAddMoveBy(loopn3, 'Scale', 2, 0, 1.5)
   ArAddDelay(loopn3, 5)
@@ -96,7 +96,7 @@ Anim4 = {}
 
 Anim4.OnStep = function(param)
   if (nil == param.k) then
-    local loop1 = ArAddLoop(nil)
+    local loop1 = ArAddLoop()
     ArAddMoveTo(loop1, 'Alpha', 1.5, 0)
     ArAddMoveTo(loop1, 'Alpha', 1.5, 0xff)
     param.k = ArAddAnimator({loop1})

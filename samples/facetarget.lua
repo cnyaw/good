@@ -13,7 +13,7 @@ AnimRot = {}
 
 AnimRot.OnStep = function(param)
   if (nil == param.k) then
-    local loop1 = ArAddLoop(nil)
+    local loop1 = ArAddLoop()
     ArAddMoveTo(loop1, 'Rot', 0.5, new_dir)
     ArAddCall(loop1, 'AcAnimDone', 0)
     param.k = ArAddAnimator({loop1})
