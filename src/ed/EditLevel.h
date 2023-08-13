@@ -295,19 +295,17 @@ public:
       int id = o.mObjIdx[i];
       PrjT::ObjectT const& inst = lvl.getObj(id);
 
-      RECT rc;
-      GetObjDim(lvl, inst, rc);
-
       int idHot = FindHotObj(inst, rcv, ptCur, rcm);
       if (-1 != idHot) {
         return idHot;
       }
 
-      if (!::IntersectRect(&rcm, &rc, &rcv) || !PtInRect(&rcm, ptCur)) {
-        continue;
-      }
+      RECT rc;
+      GetObjDim(lvl, inst, rc);
 
-      return inst.mId;
+      if (::IntersectRect(&rcm, &rc, &rcv) && PtInRect(&rcm, ptCur)) {
+        return inst.mId;
+      }
     }
 
     return -1;
