@@ -109,8 +109,8 @@ public:
     ptCur.x += m_ptOffset.x;
     ptCur.y += m_ptOffset.y;
 
-    POINT sz, ptDP;
-    PrepareDraw(rcv, sz, ptDP);
+    POINT ptDP;
+    PrepareDraw(rcv, ptDP);
 
     if (0 != ptDP.x) {
       ptCur.x -= ptDP.x;
@@ -174,8 +174,8 @@ public:
     }
 
     RECT rcv;
-    POINT sz, ptDP;
-    PrepareDraw(rcv, sz, ptDP);
+    POINT ptDP;
+    PrepareDraw(rcv, ptDP);
 
     PrjT::ObjectT const& inst = lvl.getObj(idObj);
 
@@ -680,8 +680,8 @@ public:
     //
 
     RECT rcv;
-    POINT sz, ptDP;
-    PrepareDraw(rcv, sz, ptDP);
+    POINT ptDP;
+    PrepareDraw(rcv, ptDP);
 
     //
     // Create memory dc of clip size(fit to client rect), and fill bkgnd with
@@ -691,6 +691,7 @@ public:
     CDC memdc;
     memdc.CreateCompatibleDC(hdc);
 
+    POINT sz = {rcv.right - rcv.left, rcv.bottom - rcv.top};
     CBitmap membmp;
     membmp.CreateCompatibleBitmap(hdc, sz.x, sz.y);
     memdc.SelectBitmap(membmp);
@@ -965,7 +966,7 @@ public:
     Invalidate(FALSE);
   }
 
-  void PrepareDraw(RECT& rcClip, POINT& szView, POINT& ptDPoffset) const
+  void PrepareDraw(RECT& rcClip, POINT& ptDPoffset) const
   {
     RECT rcClient;
     GetClientRect(&rcClient);
@@ -987,19 +988,17 @@ public:
     ptOffset.x = m_ptOffset.x;
     ptOffset.y = m_ptOffset.y;
 
-    szView.x = (int)w, szView.y = (int)h;
-
     if (0 == ptDPoffset.x) {
       ptOffset.x = BKGND_TILE_SIZE * (ptOffset.x / BKGND_TILE_SIZE); // Align to bkgnd tile size to avoid tear.
-      szView.x += BKGND_TILE_SIZE;
+      w += BKGND_TILE_SIZE;
     }
 
     if (0 == ptDPoffset.y) {
       ptOffset.y = BKGND_TILE_SIZE * (ptOffset.y / BKGND_TILE_SIZE);
-      szView.y += BKGND_TILE_SIZE;
+      h += BKGND_TILE_SIZE;
     }
 
-    ::SetRect(&rcClip, 0, 0, szView.x, szView.y);
+    ::SetRect(&rcClip, 0, 0, w, h);
 
     ::OffsetRect(&rcClip, 0 != ptDPoffset.x ? 0 : ptOffset.x, 0 != ptDPoffset.y ? 0 : ptOffset.y);
   }
@@ -1030,8 +1029,8 @@ public:
     //
 
     RECT rcv;
-    POINT sz, ptDP;
-    PrepareDraw(rcv, sz, ptDP);
+    POINT ptDP;
+    PrepareDraw(rcv, ptDP);
 
     if (0 != ptDP.x) {
       a.x -= ptDP.x;
