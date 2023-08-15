@@ -578,8 +578,8 @@ public:
       pen.CreatePen(PS_SOLID, 1, gl.color);
       memdc.SelectPen(pen);
       for (int j = 0; j < rcv.bottom; )  {
-        memdc.MoveTo(-rcv.left, j - rcv.top);
-        memdc.LineTo(lvl.mWidth - 1 - rcv.left, j - rcv.top);
+        memdc.MoveTo(0, j);
+        memdc.LineTo(lvl.mWidth - 1, j);
         j += gl.range;
       }
     }
@@ -594,8 +594,8 @@ public:
       pen.CreatePen(PS_SOLID, 1, gl.color);
       memdc.SelectPen(pen);
       for (int j = 0; j < rcv.right; ) {
-        memdc.MoveTo(j - rcv.left, -rcv.top);
-        memdc.LineTo(j - rcv.left, lvl.mHeight - 1 - rcv.top);
+        memdc.MoveTo(j, 0);
+        memdc.LineTo(j, lvl.mHeight - 1);
         j += gl.range;
       }
     }
