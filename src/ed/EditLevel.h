@@ -109,15 +109,15 @@ public:
     ptCur.x += m_ptOffset.x;
     ptCur.y += m_ptOffset.y;
 
-    POINT pt, sz, ptDP;
-    PrepareDraw(rcv, pt, sz, ptDP);
+    POINT sz, ptDP;
+    PrepareDraw(rcv, sz, ptDP);
 
     if (0 != ptDP.x) {
-      ptCur.x -= pt.x;
+      ptCur.x -= ptDP.x;
     }
 
     if (0 != ptDP.y) {
-      ptCur.y -= pt.y;
+      ptCur.y -= ptDP.y;
     }
 
     return ptCur;
@@ -174,8 +174,8 @@ public:
     }
 
     RECT rcv;
-    POINT pt, sz, ptDP;
-    PrepareDraw(rcv, pt, sz, ptDP);
+    POINT sz, ptDP;
+    PrepareDraw(rcv, sz, ptDP);
 
     PrjT::ObjectT const& inst = lvl.getObj(idObj);
 
@@ -680,8 +680,8 @@ public:
     //
 
     RECT rcv;
-    POINT pt, sz, ptDP;
-    PrepareDraw(rcv, pt, sz, ptDP);
+    POINT sz, ptDP;
+    PrepareDraw(rcv, sz, ptDP);
 
     //
     // Create memory dc of clip size(fit to client rect), and fill bkgnd with
@@ -735,7 +735,7 @@ public:
     // Blit.
     //
 
-    ::BitBlt(hdc, pt.x, pt.y, sz.x, sz.y, memdc, 0, 0, SRCCOPY);
+    ::BitBlt(hdc, 0 != ptDP.x ? ptDP.x : rcv.left, 0 != ptDP.y ? ptDP.y : rcv.top, sz.x, sz.y, memdc, 0, 0, SRCCOPY);
   }
 
   //
@@ -965,7 +965,7 @@ public:
     Invalidate(FALSE);
   }
 
-  void PrepareDraw(RECT& rcClip, POINT& ptOffset, POINT& szView, POINT& ptDPoffset) const
+  void PrepareDraw(RECT& rcClip, POINT& szView, POINT& ptDPoffset) const
   {
     RECT rcClient;
     GetClientRect(&rcClient);
@@ -983,9 +983,9 @@ public:
       h = m_sizeAll.cy;
     }
 
-    ptOffset.x = ptDPoffset.x, ptOffset.y = ptDPoffset.y;
-    ptOffset.x += m_ptOffset.x;
-    ptOffset.y += m_ptOffset.y;
+    POINT ptOffset;
+    ptOffset.x = m_ptOffset.x;
+    ptOffset.y = m_ptOffset.y;
 
     szView.x = (int)w, szView.y = (int)h;
 
@@ -1030,17 +1030,17 @@ public:
     //
 
     RECT rcv;
-    POINT pt, sz, ptDP;
-    PrepareDraw(rcv, pt, sz, ptDP);
+    POINT sz, ptDP;
+    PrepareDraw(rcv, sz, ptDP);
 
     if (0 != ptDP.x) {
-      a.x -= pt.x;
-      b.x -= pt.x;
+      a.x -= ptDP.x;
+      b.x -= ptDP.x;
     }
 
     if (0 != ptDP.y) {
-      a.y -= pt.y;
-      b.y -= pt.y;
+      a.y -= ptDP.y;
+      b.y -= ptDP.y;
     }
 
     if (a.x > b.x) {
