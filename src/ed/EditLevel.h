@@ -510,9 +510,12 @@ public:
         break;
 
       case PrjT::ObjectT::TYPE_DUMMY:
-        for (int i = 0; i < 3; i++) {
-          memdc.Draw3dRect(&rc, RGB(255, 0, 0), RGB(0, 0, 255));
-          ::InflateRect(&rc, -1, -1);
+        {
+          RECT r = rc;
+          for (int i = 0; i < 3; i++) {
+            memdc.Draw3dRect(&r, RGB(255, 0, 0), RGB(0, 0, 255));
+            ::InflateRect(&r, -1, -1);
+          }
         }
         break;
 
