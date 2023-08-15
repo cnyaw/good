@@ -456,12 +456,8 @@ public:
         continue;
       }
 
-      {
-        RECT rcBaseFrame = rc;
-        OffsetRect(&rcBaseFrame, -rcv.left, -rcv.top);
-        memdc.SelectPen(grayPen);
-        memdc.Rectangle(&rcBaseFrame);
-      }
+      memdc.SelectPen(grayPen);
+      memdc.Rectangle(&rc);
 
       GxT gx = GxT(memdc);
       bool IsImgValid = true;
@@ -476,8 +472,7 @@ public:
             IsImgValid = false;
             break;
           }
-          sw2::IntRect rcv2(rcv.left, rcv.top, rcv.right, rcv.bottom);
-          sw2::IntRect rcm2(rcm.left, rcm.top, rcm.right, rcm.bottom);
+          sw2::IntRect rcv2, rcm2(rcm.left, rcm.top, rcm.right, rcm.bottom);
           sw2::IntRect rc2(rc.left, rc.top, rc.right, rc.bottom);
           CommonDrawMap(gx, map, img, rc.left, rc.top, rcv2, rcm2, rc2, 0xffffffff);
         }
@@ -494,16 +489,12 @@ public:
           int offsety = rcm.top - rc.top;
           int w = min(rcm.right - rcm.left, img.getWidth() - abs(inst.mDim.left) - offsetx);
           int h = min(rcm.bottom - rcm.top, img.getHeight() - abs(inst.mDim.top) - offsety);
-          gx.drawImage(rcm.left - rcv.left, rcm.top - rcv.top, img, inst.mDim.left + offsetx, inst.mDim.top + offsety, w, h);
+          gx.drawImage(rcm.left, rcm.top, img, inst.mDim.left + offsetx, inst.mDim.top + offsety, w, h);
         }
         break;
 
       case PrjT::ObjectT::TYPE_COLBG:
-        {
-          RECT r = rc;
-          ::OffsetRect(&r, -rcv.left, -rcv.top);
-          memdc.FillSolidRect(&r, inst.mBgColor & 0xffffff);
-        }
+        memdc.FillSolidRect(&rc, inst.mBgColor & 0xffffff);
         break;
 
       case PrjT::ObjectT::TYPE_SPRITE:
@@ -514,35 +505,25 @@ public:
             IsImgValid = false;
             break;
           }
-          CommonDrawSprite(gx, spr, img, rcm.left - rcv.left + spr.mOffsetX, rcm.top - rcv.top + spr.mOffsetY, 0);
+          CommonDrawSprite(gx, spr, img, rcm.left + spr.mOffsetX, rcm.top + spr.mOffsetY, 0);
         }
         break;
 
       case PrjT::ObjectT::TYPE_DUMMY:
-        {
-          RECT r = rc;
-          ::OffsetRect(&r, -rcv.left, -rcv.top);
-          for (int i = 0; i < 3; i++) {
-            memdc.Draw3dRect(&r, RGB(255, 0, 0), RGB(0, 0, 255));
-            ::InflateRect(&r, -1, -1);
-          }
+        for (int i = 0; i < 3; i++) {
+          memdc.Draw3dRect(&rc, RGB(255, 0, 0), RGB(0, 0, 255));
+          ::InflateRect(&rc, -1, -1);
         }
         break;
 
       case PrjT::ObjectT::TYPE_LVLOBJ:
-        mEditor.mImages.Draw(memdc, 6, rc.left - rcv.left, rc.top - rcv.top, ILS_NORMAL);
+        mEditor.mImages.Draw(memdc, 6, rc.left, rc.top, ILS_NORMAL);
         break;
 
       case PrjT::ObjectT::TYPE_TEXT:
-        {
-          RECT r = rc;
-          ::OffsetRect(&r, -rcv.left, -rcv.top);
-          DoPaintTextObj(memdc, r.left, r.top, inst.mText, inst.mTextSize, inst.mBgColor & 0xffffff);
-        }
+        DoPaintTextObj(memdc, rc.left, rc.top, inst.mText, inst.mTextSize, inst.mBgColor & 0xffffff);
         break;
       }
-
-      ::OffsetRect(&rc, -rcv.left, -rcv.top);
 
       if (!mCurSel.empty()) {
         for (size_t j = 0; j < mCurSel.size(); ++j) {
@@ -695,6 +676,7 @@ public:
     CBitmap membmp;
     membmp.CreateCompatibleBitmap(hdc, sz.x, sz.y);
     memdc.SelectBitmap(membmp);
+    memdc.SetViewportOrg(-rcv.left, -rcv.top);
 
     CBitmap pat;
     pat.LoadBitmap(IDB_BKBRUSH);
@@ -702,8 +684,7 @@ public:
     CBrush br;
     br.CreatePatternBrush(pat);
 
-    RECT rcb = {0, 0, sz.x, sz.y};
-    memdc.FillRect(&rcb, br);
+    memdc.FillRect(&rcv, br);
 
     //
     // Grid lines.
@@ -736,7 +717,7 @@ public:
     // Blit.
     //
 
-    ::BitBlt(hdc, 0 != ptDP.x ? ptDP.x : rcv.left, 0 != ptDP.y ? ptDP.y : rcv.top, sz.x, sz.y, memdc, 0, 0, SRCCOPY);
+    ::BitBlt(hdc, 0 != ptDP.x ? ptDP.x : rcv.left, 0 != ptDP.y ? ptDP.y : rcv.top, sz.x, sz.y, memdc, rcv.left, rcv.top, SRCCOPY);
   }
 
   //

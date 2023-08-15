@@ -876,8 +876,7 @@ public:
           if (!imgTex.isValid()) {
             break;
           }
-          sw2::IntRect rcv2(rcv.left, rcv.top, rcv.right, rcv.bottom);
-          sw2::IntRect rcm2(rcm.left, rcm.top, rcm.right, rcm.bottom);
+          sw2::IntRect rcv2, rcm2(rcm.left, rcm.top, rcm.right, rcm.bottom);
           sw2::IntRect rc2(rc.left, rc.top, rc.right, rc.bottom);
           CommonDrawMap(good::gx::ImgpGraphics(gx), map, imgTex, rc.left, rc.top, rcv2, rcm2, rc2, 0xffffffff);
         }
@@ -893,16 +892,12 @@ public:
           int offsety = rcm.top - rc.top;
           int w = min(rcm.right - rcm.left, imgTex.getWidth() - abs(inst.mDim.left) - offsetx);
           int h = min(rcm.bottom - rcm.top, imgTex.getHeight() - abs(inst.mDim.top) - offsety);
-          imgTex.drawToCanvas(rcm.left - rcv.left, rcm.top - rcv.top, gx, inst.mDim.left + offsetx, inst.mDim.top + offsety, w, h);
+          imgTex.drawToCanvas(rcm.left, rcm.top, gx, inst.mDim.left + offsetx, inst.mDim.top + offsety, w, h);
         }
         break;
 
       case PrjT::ObjectT::TYPE_COLBG:
-        {
-          RECT r = rc;
-          ::OffsetRect(&r, -rcv.left, -rcv.top);
-          gx.fill(ConvertColor(inst.mBgColor), r.left, r.top, r.right - r.left, r.bottom - r.top);
-        }
+        gx.fill(ConvertColor(inst.mBgColor), rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top);
         break;
 
       case PrjT::ObjectT::TYPE_SPRITE:
@@ -912,18 +907,14 @@ public:
           if (!imgTex.isValid()) {
             break;
           }
-          CommonDrawSprite(good::gx::ImgpGraphics(gx), spr, imgTex, rcm.left - rcv.left + spr.mOffsetX, rcm.top - rcv.top + spr.mOffsetY, 0);
+          CommonDrawSprite(good::gx::ImgpGraphics(gx), spr, imgTex, rcm.left + spr.mOffsetX, rcm.top + spr.mOffsetY, 0);
         }
         break;
 
       case PrjT::ObjectT::TYPE_DUMMY:
       case PrjT::ObjectT::TYPE_LVLOBJ:
       case PrjT::ObjectT::TYPE_TEXT:
-        {
-          RECT r = rc;
-          ::OffsetRect(&r, -rcv.left, -rcv.top);
-          gx.rect(ConvertColor(inst.mBgColor), r.left, r.top, r.right - r.left, r.bottom - r.top);
-        }
+        gx.rect(ConvertColor(inst.mBgColor), rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top);
         break;
       }
 
