@@ -371,7 +371,7 @@ public:
 
     memdc.SelectPen(pen);
     memdc.SelectBrush((HBRUSH)::GetStockObject(NULL_BRUSH));
-    memdc.Rectangle(rc.left, rc.top, rc.right, rc.bottom);
+    memdc.Rectangle(&rc);
 
     RECT rcClient;
     GetClientRect(&rcClient);
