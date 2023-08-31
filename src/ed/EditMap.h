@@ -428,9 +428,9 @@ public:
       OffsetRect(&rcd, map.mTileset.mTileWidth * (cx - left), map.mTileset.mTileHeight * (cy - top));
 
       unsigned int clr = RGB(0, 255, 0); // Draw tool.
-      if (1 == mEditor.mCurTool) {      // Erase tool.
+      if (EditorT::TOOL_ERASE == mEditor.mCurTool) {
         clr = RGB(255, 0, 0);
-      } else if (2 == mEditor.mCurTool) { // Fill tool
+      } else if (EditorT::TOOL_FILL == mEditor.mCurTool) {
         clr = RGB(255, 255, 0);
       }
 
