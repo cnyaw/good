@@ -9,28 +9,14 @@ function FillImage(canvas, x, y, tex, w, h)
 end
 
 function GenColorObj(parent, w, h, color, script)
-  local _parent = parent
-  if (nil == parent) then
-    _parent = -1
-  end
-  local _script = script
-  if (nil == script) then
-    _script = ''
-  end
+  local _parent = parent or -1
+  local _script = script or ''
   local o = Good.GenObj(_parent, -1, _script)
   if (-1 ~= o) then
-    local _w, _h = w, h
-    local _color = color
-    if (nil == w) then
-      _w = 16
-    end
-    if (nil == h) then
-      _h = 16
-    end
-    if (nil == color) then
-      _color = 0xffff0000
-    end
+    local _w = w or 16
+    local _h = h or 16
     Good.SetDim(o, 0, 0, _w, _h)
+    local _color = color or 0xffff0000
     Good.SetBgColor(o, _color)
   end
   return o
@@ -54,37 +40,18 @@ function GenStrObj(parent, x, y, str, texture, charw, charh, color)
   if (nil == str) then
     return -1
   end
-  local _parent = parent
-  if (nil == parent) then
-    _parent = -1
-  end
+  local _parent = parent or -1
   local dummy = Good.GenDummy(_parent)
   if (-1 == dummy) then
     return -1
   end
-  local _x, _y = x, y
-  if (nil == x) then
-    _x = 0
-  end
-  if (nil == y) then
-    _y = 0
-  end
+  local _x = x or 0
+  local _y = y or 0
   Good.SetPos(dummy, _x, _y)
-  local _tex = texture
-  if (nil == _tex) then
-    _tex = Resource.GetTexId('font')
-  end
-  local _cw, _ch = charw, charh
-  if (nil == _cw) then
-    _cw = 16
-  end
-  if (nil == _ch) then
-    _ch = 32
-  end
-  local _color = color
-  if (nil == _color) then
-    _color = 0xffffffff
-  end
+  local _tex = texture or Resource.GetTexId('font')
+  local _cw = charw or 16
+  local _ch = charh or 32
+  local _color = color or 0xffffffff
   for i = 1, string.len(str) do
     local ch = string.byte(str, i) - 32
     local charx = _cw * math.floor(ch % 15)
@@ -97,34 +64,15 @@ function GenStrObj(parent, x, y, str, texture, charw, charh, color)
 end
 
 function GenTexObj(parent, texture, w, h, srcx, srcy, script)
-  local _parent = parent
-  if (nil == parent) then
-    _parent = -1
-  end
-  local _tex = texture
-  if (nil == texture) then
-    _tex = -1
-  end
-  local _script = script
-  if (nil == script) then
-    _script = ''
-  end
+  local _parent = parent or -1
+  local _tex = texture or -1
+  local _script = script or ''
   local o = Good.GenObj(_parent, _tex, _script)
   if (-1 ~= o) then
-    local _w, _h = w, h
-    if (nil == w) then
-      _w = 16
-    end
-    if (nil == h) then
-      _h = 16
-    end
-    local _srcx, _srcy = srcx, srcy
-    if (nil == srcx) then
-      _srcx = 0
-    end
-    if (nil == srcx) then
-      _srcy = 0
-    end
+    local _w = w or 16
+    local _h = h or 16
+    local _srcx = srcx or 0
+    local _srcy = srcy or 0
     Good.SetDim(o, _srcx, _srcy, _w, _h)
   end
   return o
