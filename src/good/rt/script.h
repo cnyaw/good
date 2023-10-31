@@ -35,7 +35,7 @@ public:
   static void regAPI(lua_State* L, RegApiType const *apis)
   {
     for (int i = 0; apis[i].name; ++i) {
-      lua_pushlstring(L, apis[i].name, ::strlen(apis[i].name));
+      lua_pushstring(L, apis[i].name);
       lua_pushcfunction(L, apis[i].api);
       lua_rawset(L, -3);
     }
@@ -44,7 +44,7 @@ public:
   static void regCONST(lua_State* L, RegConstType const *consts)
   {
     for (int i = 0; consts[i].name; ++i) {
-      lua_pushlstring(L, consts[i].name, ::strlen(consts[i].name));
+      lua_pushstring(L, consts[i].name);
       lua_pushinteger(L, consts[i].value);
       lua_rawset(L, -3);
     }
