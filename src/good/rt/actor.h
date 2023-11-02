@@ -30,7 +30,6 @@ public:
   };
 
   int mId;                              // Actor ID.
-  char mScriptParamName[GOOD_MAX_PARAM_NAME_LEN];
 
   int mParent;
   std::vector<int> mChild;
@@ -99,8 +98,6 @@ public:
 
     AppT const& app = AppT::getInst();
 
-    app.getScriptParamName(mId, mScriptParamName);
-
     if (TYPES_SPRITE == resType && app.mRes.isSprite(resId)) {
       mResId = -1;                      // Force apply.
       if (setSpriteId(resId)) {
@@ -130,8 +127,10 @@ public:
     }
 
     if (app.mLua) {
+      char buff[GOOD_MAX_PARAM_NAME_LEN];
+      app.getScriptParamName(mId, buff);
       lua_pushnil(app.mLua);
-      lua_setglobal(app.mLua, mScriptParamName);
+      lua_setglobal(app.mLua, buff);
     }
 
     app.mActors.free(mId);
@@ -492,7 +491,9 @@ public:
 
     lua_remove(app.mLua, -2);           // Remove mScript.
 
-    lua_getglobal(app.mLua, mScriptParamName);
+    char buff[GOOD_MAX_PARAM_NAME_LEN];
+    app.getScriptParamName(mId, buff);
+    lua_getglobal(app.mLua, buff);
 
     va_list list;
     va_start(list, nArg);
