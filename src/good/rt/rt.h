@@ -78,6 +78,8 @@ extern "C" {
 
 #include "../good.h"
 
+#define GOOD_RT_OBJ "_rtobj"
+
 enum GOOD_CREATE_OBJ
 {
   GOOD_CREATE_OBJ_RES_ID = 0,

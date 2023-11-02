@@ -74,6 +74,9 @@ public:
       }
     }
 
+    lua_newtable(L);
+    lua_setglobal(L, GOOD_RT_OBJ);
+
     return true;
   }
 
@@ -628,9 +631,10 @@ public:
       return 1;
     }
 
-    char buff[GOOD_MAX_PARAM_NAME_LEN];
-    app.getScriptParamName(id, buff);
-    lua_getglobal(L, buff);
+    lua_getglobal(L, GOOD_RT_OBJ);
+    lua_pushinteger(L, id);
+    lua_rawget(L, -2);
+    lua_remove(app.mLua, -2);           // GOOD_RT_OBJ
 
     return 1;
   }

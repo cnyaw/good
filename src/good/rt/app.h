@@ -498,13 +498,16 @@ public:
     }
 
     if (mLua) {
+      lua_getglobal(mLua, GOOD_RT_OBJ);
+      lua_pushinteger(mLua, newid);
+      // Create obj param.
       lua_newtable(mLua);
       lua_pushliteral(mLua, "_id");
       lua_pushinteger(mLua, newid);
       lua_rawset(mLua, -3);
-      char buff[GOOD_MAX_PARAM_NAME_LEN];
-      getScriptParamName(newid, buff);
-      lua_setglobal(mLua, buff);
+      // Save obj param to rt obj.
+      lua_rawset(mLua, -3);
+      lua_pop(mLua, 1);                 // GOOD_RT_OBJ
     }
 
     return newid;
@@ -716,11 +719,6 @@ public:
   bool isKeyPushed(int keys) const
   {
     return mKeys.isKeyPushed(keys);
-  }
-
-  void getScriptParamName(int id, char *buff) const
-  {
-    sprintf(buff, "_rtobjp%d", id);
   }
 
 #ifndef GOOD_SUPPORT_NO_LOGO

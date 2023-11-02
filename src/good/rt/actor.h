@@ -127,10 +127,11 @@ public:
     }
 
     if (app.mLua) {
-      char buff[GOOD_MAX_PARAM_NAME_LEN];
-      app.getScriptParamName(mId, buff);
+      lua_getglobal(app.mLua, GOOD_RT_OBJ);
+      lua_pushinteger(app.mLua, mId);
       lua_pushnil(app.mLua);
-      lua_setglobal(app.mLua, buff);
+      lua_rawset(app.mLua, -3);
+      lua_pop(app.mLua, 1);             // GOOD_RT_OBJ.
     }
 
     app.mActors.free(mId);
@@ -491,9 +492,10 @@ public:
 
     lua_remove(app.mLua, -2);           // Remove mScript.
 
-    char buff[GOOD_MAX_PARAM_NAME_LEN];
-    app.getScriptParamName(mId, buff);
-    lua_getglobal(app.mLua, buff);
+    lua_getglobal(app.mLua, GOOD_RT_OBJ);
+    lua_pushinteger(app.mLua, mId);
+    lua_rawget(app.mLua, -2);
+    lua_remove(app.mLua, -2);           // GOOD_RT_OBJ
 
     va_list list;
     va_start(list, nArg);
