@@ -2,7 +2,7 @@
 
 local TICK_PER_SECOND = 60
 
-function ArSetValue(o, n, v1, v2)
+local function ArSetValue(o, n, v1, v2)
   if (nil == v2) then
     assert(loadstring('Good.Set' .. n .. '(' .. o .. ',' .. v1 .. ')'))()
   else
@@ -10,7 +10,7 @@ function ArSetValue(o, n, v1, v2)
   end
 end
 
-function ArGetValue(o, n)
+local function ArGetValue(o, n)
   return assert(loadstring('return Good.Get' .. n .. '(' .. o .. ')'))()
 end
 
@@ -18,7 +18,13 @@ function ArLerp(v0, v1, t)
   return (1 - t) * v0 + t * v1
 end
 
-ArAddAr = function(Parent, n, dt, v1, v2, OnStep, fn)
+local ArAppendAr = function(Parent, ar)
+  if (nil ~= Parent) then
+    table.insert(Parent.Alist, ar)
+  end
+end
+
+local ArAddAr = function(Parent, n, dt, v1, v2, OnStep, fn)
   local ar = {}
   ar.v1 = v1
   ar.v2 = v2
@@ -32,7 +38,7 @@ ArAddAr = function(Parent, n, dt, v1, v2, OnStep, fn)
   return ar
 end
 
-ArOnStep = function(param, f1, f2)
+local ArOnStep = function(param, f1, f2)
   if (nil == param.ar) then
     return
   end
@@ -76,7 +82,7 @@ ArAddMoveBy = function(Parent, n, dt, v1, v2)
   return ArAddAr(Parent, n, dt, v1, v2, f)
 end
 
-ArOnStepDelay = function(param)
+local ArOnStepDelay = function(param)
   if (nil == param.ar) then
     return
   end
@@ -101,7 +107,7 @@ ArAddCall = function(Parent, fn, dt)
   return ArAddAr(Parent, nil, dt, nil, nil, ArOnStepDelay, fn)
 end
 
-ArOnStepLoop = function(param)
+local ArOnStepLoop = function(param)
   if (nil == param.ar) then
     return
   end
@@ -138,12 +144,6 @@ ArAddLoop = function(Parent, Cnt)
   ar.OnStep = ArOnStepLoop
   ArAppendAr(Parent, ar)
   return ar
-end
-
-ArAppendAr = function(Parent, ar)
-  if (nil ~= Parent) then
-    table.insert(Parent.Alist, ar)
-  end
 end
 
 ArAddAnimator = function(t)
