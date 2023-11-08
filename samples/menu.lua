@@ -12,9 +12,11 @@ local ENTERX = ICONW
 local ENTERTIME = 15
 
 local Packages = {'mmc', 'mario', 'stge', 'puzzle', 'weeder', 'breakout', 'zelda', 'life', 'mine', 'link', 'animator'}
+local Path_packages = {'game/', '', '', 'game/', 'game/', 'game/', 'game/', 'game/', 'game/', 'game/', ''}
 
 function PlayGame(sel)
-  Good.CallPackage(Packages[1 + sel] .. '.txt')
+  local i = 1 + sel
+  Good.CallPackage(Path_packages[i] .. Packages[i] .. '.txt')
 end
 
 Icon = {}

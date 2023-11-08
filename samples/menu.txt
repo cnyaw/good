@@ -10,16 +10,16 @@ levels=3
 5=./menu.lua
 
 [deps]
-6=./mmc.txt
+6=./game/mmc.txt
 7=./mario.txt
 8=./stge.txt
-9=./puzzle.txt
-10=./weeder.txt
-11=./breakout.txt
-12=./zelda.txt
-13=./life.txt
-0=./mine.txt
-14=./link.txt
+9=./game/puzzle.txt
+10=./game/weeder.txt
+11=./game/breakout.txt
+12=./game/zelda.txt
+13=./game/life.txt
+0=./game/mine.txt
+14=./game/link.txt
 15=./animator.txt
 
 [tex1]
