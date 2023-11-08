@@ -184,6 +184,10 @@ function SetTextObjColor(msg, color)
   end
 end
 
+function SetTopmost(o)
+  Good.AddChild(-1, o)                  -- Change zorder to topmost.
+end
+
 Good.GetAlpha = function(id)
   return Rshift(Good.GetBgColor(id), 24)
 end
