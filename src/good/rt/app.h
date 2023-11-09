@@ -738,9 +738,8 @@ public:
     mFileSys[name] = 1;
 
     mPkgCallStack.push_back(prjname);
-    mNextPlayPkg = "logo.txt";
 
-    return true;
+    return init_i("logo.txt");
   }
 #endif
 
