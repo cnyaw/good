@@ -359,23 +359,24 @@ int genObjEx(char const *pPkgName, int idParent, int idRes, char const *script)
   std::string ResName(pPkgName);
   std::replace(ResName.begin(), ResName.end(), '\\', '/');
 
-  std::string path = ResName.substr(0, ResName.find_last_of('/') + 1);
-  if (path.empty()) {
-    path = "./";
-  }
-
-  if (!addPathFileSystem(path)) {
-    return -1;
-  }
-
-  std::string name = ResName.substr(ResName.find_last_of('/') + 1);
-  if (isGoodArchive(name) && !addPathFileSystem(name)) {
-    return -1;
-  }
-
   std::stringstream ss;
-  if (!loadFile(decidePrjName(name), ss)) {
-    return -1;
+  if (isGoodArchive(ResName)) {
+    if (!addPathFileSystem(ResName)) {
+      return false;
+    }
+    std::string prjname = getPrjName(ResName);
+    if (!loadFile(prjname, ss)) {
+      return -1;
+    }
+  } else {
+    std::string path = getPathName(ResName);
+    if (!addPathFileSystem(path)) {
+      return false;
+    }
+    std::string name = getFileName(ResName);
+    if (!loadFile(name, ss)) {
+      return -1;
+    }
   }
 
   ResT Res;

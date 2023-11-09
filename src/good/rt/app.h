@@ -94,6 +94,7 @@ public:
   //
 
   sw2::Archive *mAr;
+  std::string mLocalPath;
   std::map<std::string, int> mFileSys;  // Loaded file system name.
   std::map<std::string, std::string> mPkgPrjMap; // <PkgName, PrjName>, proj name of package mapping.
 
@@ -140,7 +141,7 @@ public:
   // Init.
   //
 
-  std::string decidePrjName(const std::string &name)
+  std::string getPrjName(const std::string &name)
   {
     if (isGoodArchive(name)) {
       std::map<std::string, std::string>::const_iterator it = mPkgPrjMap.find(name);
@@ -149,7 +150,7 @@ public:
       } else if (mAr->isFileExist(GOOD_PACKAGE_ENTRY)) {
         std::stringstream ss;
         if (!loadFile(GOOD_PACKAGE_ENTRY, ss)) {
-          trace("get entry point failed");
+          trace("get entry point of %s failed", name.c_str());
           return "";
         } else {
           std::string PrjName = ss.str();
@@ -180,29 +181,23 @@ public:
     std::string ResName(pathname);
     std::replace(ResName.begin(), ResName.end(), '\\', '/');
 
-    std::string path = ResName.substr(0, ResName.find_last_of('/') + 1);
-    if (path.empty()) {
-      path = "./";
-    }
-
-    do
-    {
+    if (isGoodArchive(ResName)) {
+      if (!addPathFileSystem(ResName)) {
+        return false;
+      }
+      std::string prjname = getPrjName(ResName);
+      return init_i(prjname);
+    } else {
+      std::string path = getPathName(ResName);
       if (!addPathFileSystem(path)) {
-        break;
+        return false;
       }
-      std::string name = ResName.substr(ResName.find_last_of('/') + 1);
-      if (isGoodArchive(name) && !addPathFileSystem(name)) {
-        break;
+      std::string name = getFileName(ResName);
+      if (!mAr->isFileExist(name)) {
+        name = ResName;
       }
-      std::string prjname = decidePrjName(name);
-      if (!init_i(prjname)) {
-        break;
-      }
-      return true;
-    } while (0);
-
-    uninit_i();
-    return false;
+      return init_i(name);
+    }
   }
 
   bool initFromStream(std::istream& stream)
@@ -218,7 +213,7 @@ public:
       }
       std::stringstream ss;
       if (!loadFile(GOOD_PACKAGE_ENTRY, ss)) {
-        trace("entry point not found");
+        trace("entry point of stream not found");
         break;
       }
       std::string prjname = ss.str();
@@ -239,8 +234,10 @@ public:
 
   bool init_i(std::string const& prjname)
   {
+    mLocalPath = getPathName(prjname);
+
     std::stringstream ss;
-    if (!loadFile(prjname, ss)) {
+    if (!loadFile(getFileName(prjname), ss)) {
       trace("load file archive [%s] failed", prjname.c_str());
       return false;
     }
@@ -817,7 +814,11 @@ public:
 
   bool loadFile(std::string const& name, std::stringstream& ss) const
   {
-    return mAr->loadFile(name, ss, GOOD_PACKAGE_PASSWORD);
+    std::string n(name);
+    if (!mLocalPath.empty()) {
+      n = normalizePath(mLocalPath + n);
+    }
+    return mAr->loadFile(n, ss, GOOD_PACKAGE_PASSWORD);
   }
 
   bool loadLuaScript(const std::string &name)

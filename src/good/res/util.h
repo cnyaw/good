@@ -118,15 +118,13 @@ std::string getPathName(std::string const& pathname)
   std::replace(name.begin(), name.end(), '\\', '/');
 
   std::string path = name.substr(0, name.find_last_of('/') + 1);
-  if (path.empty()) {
-    path = pathname;
-  }
 
   return path;
 }
 
-std::string& normalizePath(std::string &path)
+std::string normalizePath(const std::string &orgPath)
 {
+  std::string path(orgPath);
   size_t pos;
 
   //
