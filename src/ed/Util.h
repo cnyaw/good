@@ -88,26 +88,20 @@ void NormalizePath(std::string& path)
 template<class T>
 void UpdateRelativePath(T& cont, std::string const& org, std::string const& path)
 {
-  TCHAR buff[MAX_PATH];
   for (typename T::iterator it = cont.begin(); cont.end() != it; ++it) {
     std::string p = org + it->second.mFileName;
     NormalizePath(p);
-    ::PathRelativePathTo(buff, path.c_str(), 0, p.c_str(), 0);
-    std::replace(buff, buff + path.length(), '\\', '/');
-    it->second.mFileName = buff;
+    it->second.mFileName = GetRelativePath(p, path);
   }
 }
 
 template<class T>
 void UpdateRelativePath2(T& cont, std::string const& org, std::string const& path)
 {
-  TCHAR buff[MAX_PATH];
   for (typename T::iterator it = cont.begin(); cont.end() != it; ++it) {
     std::string p = org + it->second;
     NormalizePath(p);
-    ::PathRelativePathTo(buff, path.c_str(), 0, p.c_str(), 0);
-    std::replace(buff, buff + path.length(), '\\', '/');
-    it->second = buff;
+    it->second = GetRelativePath(p, path);
   }
 }
 
