@@ -997,43 +997,41 @@ public:
     }
   }
 
-  bool createPackageCheckDependency(std::map<std::string, int>& addedprj, std::string const& path, std::string const& prjname, std::map<std::string, int>& additems) const
+  bool createPackageCheckDependency(std::string const& path, std::string const& prjname, std::map<std::string, int>& additems) const
   {
-    if (addedprj.end() != addedprj.find(prjname)) {
+    std::string resname = normalizePath(path + prjname);
+
+    if (additems.end() != additems.find(resname)) {
       return true;
     }
 
     ResT res;
-    if (!res.load(path + prjname)) {
+    if (!res.load(resname)) {
       return false;
     }
 
-    //
-    // Add project.
-    //
-
-    createPackageAddItems(additems, prjname);
-
-    addedprj[prjname] = 1;              // Save as added prj.
+    createPackageAddItems(additems, resname);
 
     //
     // Gather general resource items.
     //
 
+    std::string currpath = getPathName(resname);
+
     for (typename std::map<int, SoundT>::const_iterator it = res.mSnd.begin(); res.mSnd.end() != it; ++it) {
-      createPackageAddItems(additems, it->second.mFileName);
+      createPackageAddItems(additems, normalizePath(currpath + it->second.mFileName));
     }
 
     for (typename std::map<int, TextureT>::const_iterator it = res.mTex.begin(); res.mTex.end() != it; ++it) {
-      createPackageAddItems(additems, it->second.mFileName);
+      createPackageAddItems(additems, normalizePath(currpath + it->second.mFileName));
     }
 
     for (std::map<int, std::string>::const_iterator it = res.mStgeScript.begin(); res.mStgeScript.end() != it; ++it) {
-      createPackageAddItems(additems, it->second);
+      createPackageAddItems(additems, normalizePath(currpath + it->second));
     }
 
     for (std::map<int, std::string>::const_iterator it = res.mScript.begin(); res.mScript.end() != it; ++it) {
-      createPackageAddItems(additems, it->second);
+      createPackageAddItems(additems, normalizePath(currpath + it->second));
     }
 
     //
@@ -1046,7 +1044,7 @@ public:
       if (isGoodArchive(tmp) || '/' == *tmp.rbegin()) { // Skip package files and search path.
         continue;
       }
-      if (!createPackageCheckDependency(addedprj, path, it->second, additems)) {
+      if (!createPackageCheckDependency(currpath, it->second, additems)) {
         return false;
       }
     }
@@ -1057,19 +1055,18 @@ public:
   bool createPackage(std::ostream& os, bool encrypt) const
   {
     std::map<std::string, int> additems;
-    std::map<std::string, int> addedprj;
 
     //
     // Add project item.
     //
 
-    std::string path(mRes.mFileName);
-    sw2::Util::trim(path);
-    std::replace(path.begin(), path.end(), '\\', '/');
+    std::string fname(mRes.mFileName);
+    sw2::Util::trim(fname);
+    std::replace(fname.begin(), fname.end(), '\\', '/');
 
-    std::string prjname = path.substr(path.find_last_of('/') + 1);
+    std::string prjname = fname.substr(fname.find_last_of('/') + 1);
 
-    path = path.substr(0, path.find_last_of('/') + 1);
+    std::string path = getPathName(fname);
 
     if ('/' != path[path.length() - 1]) {
       path.push_back('/');
@@ -1091,26 +1088,28 @@ public:
     ofs << prjname;
     ofs.close();
 
-    additems[GOOD_PACKAGE_ENTRY] = 1;
+    additems[path + GOOD_PACKAGE_ENTRY] = 1;
 
     //
     // Gather items.
     //
 
-    if (!createPackageCheckDependency(addedprj, path, prjname, additems)) {
+    if (!createPackageCheckDependency(path, prjname, additems)) {
       return false;
     }
 
     std::vector<std::string> resitems;
 
     for (std::map<std::string, int>::const_iterator it = additems.begin(); additems.end() != it; ++it) {
-      std::string fname = path + it->first;
-      FILE *fItem = fopen(fname.c_str(), "r");
+      FILE *fItem = fopen(it->first.c_str(), "r");
       if (fItem) {
-        resitems.push_back(it->first);
+        std::string n = getFileName(it->first);
+        std::string p = getPathName(it->first);
+        p = getRelativePath(path, p);
+        resitems.push_back(p + n);
         fclose(fItem);
       } else {
-        SW2_TRACE_WARNING("Resource item '%s' not found!", fname.c_str());
+        SW2_TRACE_WARNING("Resource item '%s' not found!", it->first.c_str());
       }
     }
 

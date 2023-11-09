@@ -102,6 +102,16 @@ int loadRGB(std::string const& rgb)
   return (v[0] & 0xff) | ((v[1] & 0xff) << 8) | ((v[2] & 0xff) << 16);
 }
 
+std::string getFileName(const std::string &path)
+{
+  std::string::size_type pos = path.find_last_of('/');
+  if (std::string::npos != pos) {
+    return path.substr(pos + 1);
+  } else {
+    return path;
+  }
+}
+
 std::string getPathName(std::string const& pathname)
 {
   std::string name(pathname);
@@ -113,6 +123,83 @@ std::string getPathName(std::string const& pathname)
   }
 
   return path;
+}
+
+std::string& normalizePath(std::string &path)
+{
+  size_t pos;
+
+  //
+  // remove ../
+  //
+
+  while (true) {
+    pos = path.find("../");
+    if (path.npos == pos) {
+      break;
+    }
+    std::string r = path.substr(pos + 3);
+    path = path.substr(0, path.find_last_of('/', pos - 2) + 1) + r;
+  }
+
+  //
+  // remove ./
+  //
+
+  while (true) {
+    pos = path.find("./");
+    if (path.npos == pos) {
+      break;
+    }
+    std::string r = path.substr(pos + 2);
+    path = path.substr(0, pos) + r;
+  }
+
+  return path;
+}
+
+void splitPath(const std::string &path, std::vector<std::string> &v)
+{
+  std::string s(path);
+  std::replace(s.begin(), s.end(), '/', ' ');
+  std::replace(s.begin(), s.end(), '\\', ' ');
+  std::stringstream ss(s);
+  std::copy(std::istream_iterator<std::string>(ss), std::istream_iterator<std::string>(), std::back_inserter(v));
+}
+
+std::string getRelativePath(const std::string &pathFrom, const std::string &pathTo)
+{
+  std::vector<std::string> vfrom, vto;
+
+  splitPath(pathFrom, vfrom);
+  splitPath(pathTo, vto);
+
+  while (true) {
+    if (!vfrom.empty() && !vto.empty() && vfrom[0] == vto[0]) {
+      vfrom.erase(vfrom.begin());
+      vto.erase(vto.begin());
+    } else {
+      break;
+    }
+  }
+
+  std::string p;
+  for (size_t i = 0; i < vfrom.size(); i++) {
+    p += "../";
+  }
+
+  for (size_t i = 0; i < vto.size(); i++) {
+    if (!p.empty() && '/' != p[p.length() - 1]) {
+      p += '/';
+    }
+    p += vto[i];
+  }
+
+  if (!p.empty() && '/' != p[p.length() - 1]) {
+    p += '/';
+  }
+
+  return p;
 }
 
 template<class GxT, class MapT, class ImgT>
