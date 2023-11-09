@@ -369,11 +369,8 @@ int genObjEx(char const *pPkgName, int idParent, int idRes, char const *script)
   }
 
   std::string name = ResName.substr(ResName.find_last_of('/') + 1);
-  if (isGoodArchive(name) && !name.empty() && mFileSys.end() == mFileSys.find(name)) {
-    std::stringstream ss;
-    if (!loadFile(name, ss) || !addStreamFileSystem(name, ss)) {
-      return -1;
-    }
+  if (isGoodArchive(name) && !addPathFileSystem(name)) {
+    return -1;
   }
 
   std::stringstream ss;

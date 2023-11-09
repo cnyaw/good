@@ -191,11 +191,8 @@ public:
         break;
       }
       std::string name = ResName.substr(ResName.find_last_of('/') + 1);
-      if (isGoodArchive(name) && !name.empty() && mFileSys.end() == mFileSys.find(name)) {
-        std::stringstream ss;
-        if (!loadFile(name, ss) || !addStreamFileSystem(name, ss)) {
-          break;
-        }
+      if (isGoodArchive(name) && !addPathFileSystem(name)) {
+        break;
       }
       std::string prjname = decidePrjName(name);
       if (!init_i(prjname)) {
@@ -752,6 +749,16 @@ public:
     if (name.empty() || mFileSys.end() != mFileSys.find(name)) {
       return true;
     }
+
+#ifdef __EMSCRIPTEN__
+    if (isGoodArchive(name)) {
+      std::stringstream ss;
+      if (!loadFile(name, ss)) {
+        return false;
+      }
+      return addStreamFileSystem(name, ss);
+    }
+#endif
 
     if (!mAr->addPathFileSystem(name)) {
       trace("add file system '%s' failed", name.c_str());
