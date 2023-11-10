@@ -74,7 +74,7 @@ void UpdateRelativePath2(T& cont, std::string const& org, std::string const& pat
 
 std::string GetRelativePath(std::string const& path, std::string const& relPath)
 {
-  return good::getRelativePath(good::getPathName(relPath), good::getPathName(path)) + good::getFileName(path);
+  return good::ed::getRelativePath(good::getPathName(relPath), good::getPathName(path)) + good::getFileName(path);
 }
 
 std::string ExtractFileName(std::string const& path)

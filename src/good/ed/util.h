@@ -137,6 +137,50 @@ std::string storeRGB(unsigned int clr)
   return intVecToStr(v);
 }
 
+void splitPath(const std::string &path, std::vector<std::string> &v)
+{
+  std::string s(path);
+  std::replace(s.begin(), s.end(), '/', ' ');
+  std::replace(s.begin(), s.end(), '\\', ' ');
+  std::stringstream ss(s);
+  std::copy(std::istream_iterator<std::string>(ss), std::istream_iterator<std::string>(), std::back_inserter(v));
+}
+
+std::string getRelativePath(const std::string &pathFrom, const std::string &pathTo)
+{
+  std::vector<std::string> vfrom, vto;
+
+  splitPath(pathFrom, vfrom);
+  splitPath(pathTo, vto);
+
+  while (true) {
+    if (!vfrom.empty() && !vto.empty() && vfrom[0] == vto[0]) {
+      vfrom.erase(vfrom.begin());
+      vto.erase(vto.begin());
+    } else {
+      break;
+    }
+  }
+
+  std::string p;
+  for (size_t i = 0; i < vfrom.size(); i++) {
+    p += "../";
+  }
+
+  for (size_t i = 0; i < vto.size(); i++) {
+    if (!p.empty() && '/' != p[p.length() - 1]) {
+      p += '/';
+    }
+    p += vto[i];
+  }
+
+  if (!p.empty() && '/' != p[p.length() - 1]) {
+    p += '/';
+  }
+
+  return p;
+}
+
 } // namespace ed
 
 } // namespace good
