@@ -223,7 +223,7 @@ public:
 
 #ifndef GOOD_SUPPORT_NO_LOGO
     if (addAndPlayLogoFileSystem(prjname)) {
-      break;
+      return true;
     }
 #endif
 
