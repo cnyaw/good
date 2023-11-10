@@ -58,8 +58,7 @@ template<class T>
 void UpdateRelativePath(T& cont, std::string const& org, std::string const& path)
 {
   for (typename T::iterator it = cont.begin(); cont.end() != it; ++it) {
-    std::string p = org + it->second.mFileName;
-    good::normalizePath(p);
+    std::string p = good::compactPath(org + it->second.mFileName);
     it->second.mFileName = GetRelativePath(p, path);
   }
 }
@@ -68,8 +67,7 @@ template<class T>
 void UpdateRelativePath2(T& cont, std::string const& org, std::string const& path)
 {
   for (typename T::iterator it = cont.begin(); cont.end() != it; ++it) {
-    std::string p = org + it->second;
-    good::normalizePath(p);
+    std::string p = good::compactPath(org + it->second);
     it->second = GetRelativePath(p, path);
   }
 }

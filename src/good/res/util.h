@@ -122,7 +122,7 @@ std::string getPathName(std::string const& pathname)
   return path;
 }
 
-std::string normalizePath(const std::string &orgPath)
+std::string compactPath(const std::string &orgPath)
 {
   std::string path(orgPath);
   size_t pos;

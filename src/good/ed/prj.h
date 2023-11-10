@@ -999,7 +999,7 @@ public:
 
   bool createPackageCheckDependency(std::string const& path, std::string const& prjname, std::map<std::string, int>& additems) const
   {
-    std::string resname = normalizePath(path + prjname);
+    std::string resname = compactPath(path + prjname);
 
     if (additems.end() != additems.find(resname)) {
       return true;
@@ -1019,19 +1019,19 @@ public:
     std::string currpath = getPathName(resname);
 
     for (typename std::map<int, SoundT>::const_iterator it = res.mSnd.begin(); res.mSnd.end() != it; ++it) {
-      createPackageAddItems(additems, normalizePath(currpath + it->second.mFileName));
+      createPackageAddItems(additems, compactPath(currpath + it->second.mFileName));
     }
 
     for (typename std::map<int, TextureT>::const_iterator it = res.mTex.begin(); res.mTex.end() != it; ++it) {
-      createPackageAddItems(additems, normalizePath(currpath + it->second.mFileName));
+      createPackageAddItems(additems, compactPath(currpath + it->second.mFileName));
     }
 
     for (std::map<int, std::string>::const_iterator it = res.mStgeScript.begin(); res.mStgeScript.end() != it; ++it) {
-      createPackageAddItems(additems, normalizePath(currpath + it->second));
+      createPackageAddItems(additems, compactPath(currpath + it->second));
     }
 
     for (std::map<int, std::string>::const_iterator it = res.mScript.begin(); res.mScript.end() != it; ++it) {
-      createPackageAddItems(additems, normalizePath(currpath + it->second));
+      createPackageAddItems(additems, compactPath(currpath + it->second));
     }
 
     //

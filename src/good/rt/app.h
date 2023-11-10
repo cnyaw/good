@@ -820,7 +820,7 @@ public:
   {
     std::string n(name);
     if (!mLocalPath.empty()) {
-      n = normalizePath(mLocalPath + n);
+      n = compactPath(mLocalPath + n);
     }
     return mAr->loadFile(n, ss, GOOD_PACKAGE_PASSWORD);
   }
