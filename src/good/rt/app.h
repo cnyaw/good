@@ -141,29 +141,26 @@ public:
   // Init.
   //
 
-  std::string getPrjName_i(const std::string &name)
+  std::string getArchivePrjName(const std::string &name)
   {
-    if (isGoodArchive(name)) {
-      std::map<std::string, std::string>::const_iterator it = mPkgPrjMap.find(name);
-      if (mPkgPrjMap.end() != it) {
-        return it->second;
-      } else if (mAr->isFileExist(GOOD_PACKAGE_ENTRY)) {
-        std::stringstream ss;
-        if (!loadFile(GOOD_PACKAGE_ENTRY, ss)) {
-          trace("get entry point of %s failed", name.c_str());
-          return "";
-        } else {
-          std::string PrjName = ss.str();
-          mPkgPrjMap[name] = PrjName;
-          return PrjName;
-        }
+    std::map<std::string, std::string>::const_iterator it = mPkgPrjMap.find(name);
+    if (mPkgPrjMap.end() != it) {
+      return it->second;
+    } else if (mAr->isFileExist(GOOD_PACKAGE_ENTRY)) {
+      std::stringstream ss;
+      if (!loadFile(GOOD_PACKAGE_ENTRY, ss)) {
+        trace("get entry point of %s failed", name.c_str());
+        return "";
       } else {
-        std::string PrjName = name.substr(0, name.find_last_of('.') + 1) + "txt";
+        std::string PrjName = ss.str();
         mPkgPrjMap[name] = PrjName;
         return PrjName;
       }
+    } else {
+      std::string PrjName = name.substr(0, name.find_last_of('.') + 1) + "txt";
+      mPkgPrjMap[name] = PrjName;
+      return PrjName;
     }
-    return name;
   }
 
   bool getPrjName(const std::string &pathname, std::string &prjname)
@@ -172,7 +169,7 @@ public:
       if (!addPathFileSystem(pathname)) {
         return false;
       }
-      prjname = getPrjName_i(pathname);
+      prjname = getArchivePrjName(pathname);
       return true;
     } else {
       std::string path = getPathName(pathname);
