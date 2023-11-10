@@ -141,7 +141,7 @@ public:
   // Init.
   //
 
-  std::string getPrjName(const std::string &name)
+  std::string getPrjName_i(const std::string &name)
   {
     if (isGoodArchive(name)) {
       std::map<std::string, std::string>::const_iterator it = mPkgPrjMap.find(name);
@@ -166,6 +166,28 @@ public:
     return name;
   }
 
+  bool getPrjName(const std::string &pathname, std::string &prjname)
+  {
+    if (isGoodArchive(pathname)) {
+      if (!addPathFileSystem(pathname)) {
+        return false;
+      }
+      prjname = getPrjName_i(pathname);
+      return true;
+    } else {
+      std::string path = getPathName(pathname);
+      if (!addPathFileSystem(path)) {
+        return false;
+      }
+      std::string name = getFileName(pathname);
+      if (!mAr->isFileExist(name)) {
+        name = pathname;
+      }
+      prjname = name;
+      return true;
+    }
+  }
+
   bool init(std::string const& pathname)
   {
     if (!allocAr()) {
@@ -181,23 +203,8 @@ public:
     std::string ResName(pathname);
     std::replace(ResName.begin(), ResName.end(), '\\', '/');
 
-    if (isGoodArchive(ResName)) {
-      if (!addPathFileSystem(ResName)) {
-        return false;
-      }
-      std::string prjname = getPrjName(ResName);
-      return init_i(prjname);
-    } else {
-      std::string path = getPathName(ResName);
-      if (!addPathFileSystem(path)) {
-        return false;
-      }
-      std::string name = getFileName(ResName);
-      if (!mAr->isFileExist(name)) {
-        name = ResName;
-      }
-      return init_i(name);
-    }
+    std::string prjname;
+    return getPrjName(ResName, prjname) && init_i(prjname);
   }
 
   bool initFromStream(std::istream& stream)
