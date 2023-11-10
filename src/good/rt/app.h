@@ -210,30 +210,24 @@ public:
       return false;
     }
 
-    do
-    {
-      if (!addStreamFileSystem("", stream)) {
-        break;
-      }
-      std::stringstream ss;
-      if (!loadFile(GOOD_PACKAGE_ENTRY, ss)) {
-        trace("entry point of stream not found");
-        break;
-      }
-      std::string prjname = ss.str();
-#ifndef GOOD_SUPPORT_NO_LOGO
-      if (addAndPlayLogoFileSystem(prjname)) {
-        break;
-      }
-#endif
-      if (!init_i(prjname)) {
-        break;
-      }
-      return true;
-    } while (0);
+    if (!addStreamFileSystem("", stream)) {
+      return false;
+    }
 
-    uninit_i();
-    return false;
+    std::stringstream ss;
+    if (!loadFile(GOOD_PACKAGE_ENTRY, ss)) {
+      trace("entry point of stream not found");
+      return false;
+    }
+    std::string prjname = ss.str();
+
+#ifndef GOOD_SUPPORT_NO_LOGO
+    if (addAndPlayLogoFileSystem(prjname)) {
+      break;
+    }
+#endif
+
+    return init_i(prjname);
   }
 
   bool init_i(std::string const& prjname)
