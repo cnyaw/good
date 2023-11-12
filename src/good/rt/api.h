@@ -293,7 +293,7 @@ int genObj(int idParent, int idRes, char const *script)
   return newid;
 }
 
-int dupRes_i(char const *pPkgName, ResT &Res, int idRes)
+int findExternalRes_i(char const *pPkgName, int idRes) const
 {
   std::map<std::string, std::map<int, int> >::const_iterator itExtPkg = mExternalResMap.find(pPkgName);
   if (mExternalResMap.end() != itExtPkg) {
@@ -302,6 +302,15 @@ int dupRes_i(char const *pPkgName, ResT &Res, int idRes)
     if (ResMap.end() != itExtResId) {
       return itExtResId->second;
     }
+  }
+  return -1;
+}
+
+int dupRes_i(char const *pPkgName, ResT &Res, int idRes)
+{
+  int extId = findExternalRes_i(pPkgName, idRes);
+  if (-1 != extId) {
+    return extId;
   }
 
   int idTmpRes = -1;
@@ -347,13 +356,9 @@ int genObjEx(char const *pPkgName, int idParent, int idRes, char const *script)
     return -1;
   }
 
-  std::map<std::string, std::map<int, int> >::const_iterator itExtPkg = mExternalResMap.find(pPkgName);
-  if (mExternalResMap.end() != itExtPkg) {
-    const std::map<int, int> &ResMap = itExtPkg->second;
-    std::map<int, int>::const_iterator itExtResId = ResMap.find(idRes);
-    if (ResMap.end() != itExtResId) {
-      return genObj(idParent, itExtResId->second, script);
-    }
+  int extId = findExternalRes_i(pPkgName, idRes);
+  if (-1 != extId) {
+    return genObj(idParent, extId, script);
   }
 
   std::string ResName(pPkgName);
