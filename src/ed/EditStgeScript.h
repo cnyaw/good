@@ -359,14 +359,15 @@ public:
     std::string path = good::getPathName(prj.mRes.mFileName);
     path += prj.getStgeScript(mId);
 
-    std::ifstream ifs(path.c_str());
-    if (!ifs) {
+    FILE *f = fopen(path.c_str(), "rb");
+    if (!f) {
       MessageBox(_T("Load file failed\n"), _T("Error"), MB_OK | MB_ICONERROR);
       return;
     }
+    fclose(f);
 
     stge::ScriptManager scm;
-    if (!stge::Parser::parse(ifs, scm)) {
+    if (!stge::Parser::parse(path, scm)) {
       CString s = stge::Parser::getLastError().c_str();
       MessageBox(s, _T("Error"), MB_OK|MB_ICONERROR);
       return;

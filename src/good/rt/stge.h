@@ -45,7 +45,7 @@ void initStge()
     if (!loadFile(name, ss)) {
       continue;
     }
-    if (!stge::Parser::parse(ss, mScriptMgr)) {
+    if (!stge::Parser::parseFromStream(ss.str(), mScriptMgr)) {
       trace("[%s] %s\n", name.c_str(), stge::Parser::getLastError().c_str());
     }
   }
