@@ -1048,7 +1048,7 @@ public:
     return true;
   }
 
-  bool createPackage(std::ostream& os, bool encrypt) const
+  bool createPackage(const std::string &filename, bool encrypt) const
   {
     std::map<std::string, int> additems;
 
@@ -1109,14 +1109,14 @@ public:
     // Create zip archive.
     //
 
-    std::stringstream ss;
+    std::stringstream ss, os;
     if (!sw2::Util::zipStream(path, ss, os, resitems, encrypt ? GOOD_PACKAGE_PASSWORD : "")) {
       return false;
     }
 
     remove(GOOD_PACKAGE_ENTRY);
 
-    return true;
+    return sw2::Util::storeFileContent(filename.c_str(), os.str());
   }
 };
 

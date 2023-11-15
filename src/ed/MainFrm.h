@@ -521,10 +521,7 @@ public:
 
     std::string name = CompleteFileExt(dlg.m_szFileName, ext);
 
-    std::ofstream ofs(name.c_str(), std::ios_base::binary);
-    if (!PrjT::inst().createPackage(ofs, encrypt)) {
-      ofs.close();
-      remove(name.c_str());
+    if (!PrjT::inst().createPackage(name, encrypt)) {
       MessageBox(title, CString((LPCTSTR)IDR_MAINFRAME), MB_OK | MB_ICONERROR);
     }
   }
