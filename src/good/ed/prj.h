@@ -1076,13 +1076,9 @@ public:
     // Add entry point.
     //
 
-    std::ofstream ofs(GOOD_PACKAGE_ENTRY);
-    if (!ofs) {
+    if (!sw2::Util::storeFileContent(GOOD_PACKAGE_ENTRY, prjname)) {
       return false;
     }
-
-    ofs << prjname;
-    ofs.close();
 
     additems[path + GOOD_PACKAGE_ENTRY] = 1;
 
