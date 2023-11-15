@@ -240,7 +240,7 @@ public:
       return false;
     }
 
-    if (!mRes.load(ss)) {
+    if (!mRes.loadFromStream(ss.str())) {
       trace("load resource [%s] failed", prjname.c_str());
       return false;
     }

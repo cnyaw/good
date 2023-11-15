@@ -125,12 +125,12 @@ public:
 
   bool load(std::string const& name)
   {
-    std::ifstream ifs(name.c_str());
-    if (!ifs) {
+    std::string s;
+    if (!sw2::Util::loadFileContent(name.c_str(), s)) {
       return false;
     }
 
-    if (!load(ifs)) {
+    if (!loadFromStream(s)) {
       return false;
     }
 
@@ -139,10 +139,10 @@ public:
     return true;
   }
 
-  bool load(std::istream& ins)
+  bool loadFromStream(const std::string &ins)
   {
     ResT res;
-    if (!res.load(ins)) {
+    if (!res.loadFromStream(ins)) {
       return false;
     }
 
@@ -819,17 +819,24 @@ public:
     return mModified;
   }
 
-  bool store(std::string const& name) const
+  bool store(const std::string &name) const
   {
-    std::ofstream ofs(name.c_str());
-    if (ofs) {
-      return store(ofs);
+    std::string s;
+    if (!storeToStream(s)) {
+      return false;
     }
 
-    return false;
+    FILE *f = fopen(name.c_str(), "wt");
+    if (f) {
+      fwrite(s.data(), s.size(), 1, f);
+      fclose(f);
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  bool store(std::ostream& outs) const
+  bool storeToStream(std::string &outs) const
   {
     sw2::Ini ini;
     sw2::Ini& secPrj = ini["good"];     // Insert.
@@ -923,7 +930,7 @@ public:
       return false;
     }
 
-    if (!ini.store(outs)) {
+    if (!ini.storeToStream(outs)) {
       return false;
     }
 

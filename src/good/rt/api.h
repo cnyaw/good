@@ -375,7 +375,7 @@ int genObjEx(char const *pPkgName, int idParent, int idRes, char const *script)
   }
 
   ResT Res;
-  if (!Res.load(ss)) {
+  if (!Res.loadFromStream(ss.str())) {
     return -1;
   }
 

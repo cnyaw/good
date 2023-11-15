@@ -147,14 +147,14 @@ public:
   // Load resource.
   //
 
-  bool load(std::string const& name)
+  bool load(const std::string &name)
   {
-    std::ifstream ifs(name.c_str());
-    if (!ifs) {
+    std::string s;
+    if (!sw2::Util::loadFileContent(name.c_str(), s)) {
       return false;
     }
 
-    if (!load(ifs)) {
+    if (!loadFromStream(s)) {
       return false;
     }
 
@@ -163,14 +163,14 @@ public:
     return true;
   }
 
-  bool load(std::istream& ins)
+  bool loadFromStream(const std::string &ins)
   {
     //
     // File.
     //
 
     sw2::Ini ini;
-    if (!ini.load(ins)) {
+    if (!ini.loadFromStream(ins)) {
       SW2_TRACE_ERROR("bad ini file format");
       return false;
     }
