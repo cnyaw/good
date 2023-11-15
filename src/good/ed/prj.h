@@ -822,18 +822,7 @@ public:
   bool store(const std::string &name) const
   {
     std::string s;
-    if (!storeToStream(s)) {
-      return false;
-    }
-
-    FILE *f = fopen(name.c_str(), "wt");
-    if (f) {
-      fwrite(s.data(), s.size(), 1, f);
-      fclose(f);
-      return true;
-    } else {
-      return false;
-    }
+    return storeToStream(s) && sw2::Util::storeFileContent(name.c_str(), s);
   }
 
   bool storeToStream(std::string &outs) const
