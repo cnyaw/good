@@ -496,19 +496,12 @@ public:
       return;
     }
 
-    std::ifstream ifs(temp);
-    if (!ifs) {
+    std::string s;
+    if (!sw2::Util::loadFileContent(temp, s)) {
       MessageBox(_T("Check update failed!"), _T("Error"), MB_OK | MB_ICONERROR);
       return;
     }
-
-    std::stringstream ss;
-    ss << ifs.rdbuf();
-
-    ifs.close();
     ::remove(temp);
-
-    std::string s = ss.str();
 
     if (CURRENT_GOOD_EDITOR_VERSION != s) {
       CString str;
