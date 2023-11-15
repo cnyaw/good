@@ -77,21 +77,6 @@ std::string getName(T const& t, std::string const& tag)
   }
 }
 
-bool loadFileBinaryContent(const char *pFileName, std::string &outs)
-{
-  FILE *f = fopen(pFileName, "rb");
-  if (!f) {
-    return false;
-  }
-  fseek(f, 0, SEEK_END);
-  long len = ftell(f);
-  fseek(f, 0, SEEK_SET);
-  outs.resize(len);
-  fread((void*)outs.data(), 1, len, f);
-  fclose(f);
-  return true;
-}
-
 int loadRGB(std::string const& rgb)
 {
   std::vector<int> v;

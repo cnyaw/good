@@ -163,7 +163,7 @@ public:
     }
 
     std::string str;
-    if (!loadFileBinaryContent(name.c_str(), str)) {
+    if (!sw2::Util::loadFileContent(name.c_str(), str)) {
       SW2_TRACE_ERROR("open sound file %s failed", name.c_str());
       return -1;
     }

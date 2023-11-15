@@ -215,23 +215,6 @@ public:
     return mImg.end() != mImg.find(name);
   }
 
-#ifndef loadFileBinaryContent
-  bool loadFileBinaryContent(const char *pFileName, std::string &outs)
-  {
-    FILE *f = fopen(pFileName, "rb");
-    if (!f) {
-      return false;
-    }
-    fseek(f, 0, SEEK_END);
-    long len = ftell(f);
-    fseek(f, 0, SEEK_SET);
-    outs.resize(len);
-    fread((void*)outs.data(), 1, len, f);
-    fclose(f);
-    return true;
-  }
-#endif
-
   RectT const* getImage(std::string const& name)
   {
     typename std::map<std::string, RectT>::const_iterator it = mImg.find(name);
@@ -240,7 +223,7 @@ public:
     }
 
     std::string s;
-    if (!loadFileBinaryContent(name.c_str(), s)) {
+    if (!sw2::Util::loadFileContent(name.c_str(), s)) {
       SW2_TRACE_ERROR("open image resource %s failed", name.c_str());
       mImg[name] = RectT();
       return 0;

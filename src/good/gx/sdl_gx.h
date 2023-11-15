@@ -62,7 +62,7 @@ public:
     }
 
     std::string s;
-    if (!loadFileBinaryContent(name.c_str(), s)) {
+    if (!sw2::Util::loadFileContent(name.c_str(), s)) {
       SW2_TRACE_ERROR("open image file %s failed", name.c_str());
       mImg[name] = 0;
       return 0;
