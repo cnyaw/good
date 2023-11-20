@@ -213,12 +213,11 @@ public:
       return false;
     }
 
-    std::stringstream ss;
-    if (!loadFile(GOOD_PACKAGE_ENTRY, ss)) {
+    std::string prjname;
+    if (!loadFile(GOOD_PACKAGE_ENTRY, prjname)) {
       trace("entry point of stream not found");
       return false;
     }
-    std::string prjname = ss.str();
 
 #ifndef GOOD_SUPPORT_NO_LOGO
     if (addAndPlayLogoFileSystem(prjname)) {
