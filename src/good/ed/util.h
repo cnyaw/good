@@ -118,7 +118,7 @@ bool storeStringTableResource(const std::map<int, std::string> &t, const std::ve
   char buff[128];
   for (size_t i = 0; i < v.size(); ++i) {
     sprintf(buff, "%d", v[i]);
-    sec[buff] = t.find(v[i])->second;   // Insert back.
+    sec[std::string(buff)] = t.find(v[i])->second; // Insert back.
   }
 
   return true;
