@@ -139,8 +139,7 @@ void splitPath(const std::string &path, std::vector<std::string> &v)
   std::string s(path);
   std::replace(s.begin(), s.end(), '/', ' ');
   std::replace(s.begin(), s.end(), '\\', ' ');
-  std::stringstream ss(s);
-  std::copy(std::istream_iterator<std::string>(ss), std::istream_iterator<std::string>(), std::back_inserter(v));
+  assignListFromString(s, v);
 }
 
 std::string getRelativePath(const std::string &pathFrom, const std::string &pathTo)
