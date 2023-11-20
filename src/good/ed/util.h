@@ -91,8 +91,8 @@ bool storeGrid(sw2::Ini& ini, std::string const& secName, std::string const& sgr
   return true;
 }
 
-template<class VecT, class MapT>
-bool storeResources(MapT const& t, VecT const& v, std::string const& name, sw2::Ini& sec, sw2::Ini& ini)
+template<class MapT>
+bool storeResources(MapT const& t, const std::vector<int> &v, std::string const& name, sw2::Ini& sec, sw2::Ini& ini)
 {
   if (!v.empty()) {
     sec[name] = intVecToStr(v);
@@ -107,21 +107,18 @@ bool storeResources(MapT const& t, VecT const& v, std::string const& name, sw2::
   return true;
 }
 
-template<class VecT, class MapT>
-bool storeStringTableResource(MapT const& t, VecT const& v, std::string const& name, sw2::Ini& ini)
+bool storeStringTableResource(const std::map<int, std::string> &t, const std::vector<int> &v, std::string const& name, sw2::Ini& ini)
 {
   if (v.empty()) {
     return true;
   }
 
-  std::stringstream ss;
-
   sw2::Ini& sec = ini[name];
 
+  char buff[128];
   for (size_t i = 0; i < v.size(); ++i) {
-    ss.str("");
-    ss << v[i];
-    sec[ss.str()] = t.find(v[i])->second; // Insert back.
+    sprintf(buff, "%d", v[i]);
+    sec[buff] = t.find(v[i])->second;   // Insert back.
   }
 
   return true;
