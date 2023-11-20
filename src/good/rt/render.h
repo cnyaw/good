@@ -317,10 +317,10 @@ ImgT getImage(std::string const& name) const
     return ImgT::getImage(name);
   }
 
-  std::stringstream ss;
-  loadFile(name, ss);
+  std::string s;
+  loadFile(name, s);
 
-  ImgT img = ImgT::getImage(name, ss.str());
+  ImgT img = ImgT::getImage(name, s);
   if (img.isValid()) {
     mDirty = true;
   }

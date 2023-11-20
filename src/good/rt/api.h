@@ -369,13 +369,13 @@ int genObjEx(char const *pPkgName, int idParent, int idRes, char const *script)
     return -1;
   }
 
-  std::stringstream ss;
-  if (!loadFile(prjname, ss)) {
+  std::string s;
+  if (!loadFile(prjname, s)) {
     return -1;
   }
 
   ResT Res;
-  if (!Res.loadFromStream(ss.str())) {
+  if (!Res.loadFromStream(s)) {
     return -1;
   }
 
@@ -822,9 +822,9 @@ int getSound(int idRes)
   if (mRes.isSnd(idRes)) {
     SoundT const& s = mRes.getSnd(idRes);
     if (s.mStream) {
-      std::stringstream ss;
+      std::string ss;
       if (loadFile(s.mFileName, ss)) {
-        idSnd = SndT::getSound(s.mFileName, s.mStream, ss.str()).s;
+        idSnd = SndT::getSound(s.mFileName, s.mStream, ss).s;
         if (s.mLoop && s.mStream && -1 != idSnd) {
           SndT((int)idSnd).setLoop(true);
         }
@@ -983,9 +983,9 @@ int playSound(int idRes)
       std::string dummy;
       idSnd = SndT::getSound(s.mFileName, s.mStream, dummy).s;
     } else {
-      std::stringstream ss;
+      std::string ss;
       if (loadFile(s.mFileName, ss)) {
-        idSnd = SndT::getSound(s.mFileName, s.mStream, ss.str()).s;
+        idSnd = SndT::getSound(s.mFileName, s.mStream, ss).s;
       }
     }
     if (-1 != idSnd) {

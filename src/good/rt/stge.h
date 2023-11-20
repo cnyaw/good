@@ -41,11 +41,11 @@ void initStge()
 
   for (size_t i = 0; i < mRes.mStgeScriptIdx.size(); ++i) {
     std::string name = mRes.mStgeScript[mRes.mStgeScriptIdx[i]];
-    std::stringstream ss;
-    if (!loadFile(name, ss)) {
+    std::string s;
+    if (!loadFile(name, s)) {
       continue;
     }
-    if (!stge::Parser::parseFromStream(ss.str(), mScriptMgr)) {
+    if (!stge::Parser::parseFromStream(s, mScriptMgr)) {
       trace("[%s] %s\n", name.c_str(), stge::Parser::getLastError().c_str());
     }
   }

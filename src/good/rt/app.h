@@ -147,12 +147,11 @@ public:
     if (mPkgPrjMap.end() != it) {
       return it->second;
     } else if (mAr->isFileExist(GOOD_PACKAGE_ENTRY)) {
-      std::stringstream ss;
-      if (!loadFile(GOOD_PACKAGE_ENTRY, ss)) {
+      std::string PrjName;
+      if (!loadFile(GOOD_PACKAGE_ENTRY, PrjName)) {
         trace("get entry point of %s failed", name.c_str());
         return "";
       } else {
-        std::string PrjName = ss.str();
         mPkgPrjMap[name] = PrjName;
         return PrjName;
       }
@@ -234,13 +233,13 @@ public:
   {
     mLocalPath = getPathName(prjname);
 
-    std::stringstream ss;
-    if (!loadFile(getFileName(prjname), ss)) {
+    std::string s;
+    if (!loadFile(getFileName(prjname), s)) {
       trace("load file archive [%s] failed", prjname.c_str());
       return false;
     }
 
-    if (!mRes.loadFromStream(ss.str())) {
+    if (!mRes.loadFromStream(s)) {
       trace("load resource [%s] failed", prjname.c_str());
       return false;
     }
@@ -819,15 +818,24 @@ public:
     return mAr->loadFile(n, ss, GOOD_PACKAGE_PASSWORD);
   }
 
-  bool loadLuaScript(const std::string &name)
+  bool loadFile(const std::string &name, std::string& s) const
   {
     std::stringstream ss;
     if (!loadFile(name, ss)) {
+      return false;
+    }
+    s = ss.str();
+    return true;
+  }
+
+  bool loadLuaScript(const std::string &name)
+  {
+    std::string sdat;
+    if (!loadFile(name, sdat)) {
       trace("Script '%s' not found.\n", name.c_str());
       return false;
     }
 
-    std::string sdat = ss.str();
     int s = luaL_loadbuffer(mLua, sdat.data(), sdat.length(), name.c_str());
     if (0 == s) {
       s = lua_pcall(mLua, 0, LUA_MULTRET, 0);
