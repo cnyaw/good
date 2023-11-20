@@ -214,9 +214,9 @@ public:
     RECT rc;
     GetClientRect(&rc);
 
-    std::stringstream ss;
-    ss << "a" << mOm.actions.size() << " o" << mOm.objects.size();
-    DrawString(-rc.right/2.0f, rc.bottom/2.0f, ss.str());
+    char buff[128];
+    sprintf(buff, "a%u o%u", mOm.actions.size(), mOm.objects.size());
+    DrawString(-rc.right/2.0f, rc.bottom/2.0f, buff);
 
     //
     // Trigger next draw.
