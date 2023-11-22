@@ -203,7 +203,7 @@ public:
     return getPrjName(ResName, prjname) && init_i(prjname);
   }
 
-  bool initFromStream(std::istream& stream)
+  bool initFromStream(const std::string &stream)
   {
     if (!allocAr()) {
       return false;
@@ -720,8 +720,7 @@ public:
       return false;
     }
 
-    std::stringstream ss;
-    ss.write((const char*)GOOD_LOGO_MOD, sizeof(GOOD_LOGO_MOD));
+    std::string ss((const char*)GOOD_LOGO_MOD, sizeof(GOOD_LOGO_MOD));
 
     if (!mAr->addStreamFileSystem(ss)) {
       trace("add file system '%s' failed", name);
@@ -744,7 +743,7 @@ public:
 
 #ifdef __EMSCRIPTEN__
     if (isGoodArchive(name)) {
-      std::stringstream ss;
+      std::string ss;
       if (!loadFile(name, ss)) {
         return false;
       }
@@ -762,20 +761,17 @@ public:
     return true;
   }
 
-  bool addStreamFileSystem(std::string const& ssname, std::istream& stream)
+  bool addStreamFileSystem(const std::string &ssname, const std::string &stream)
   {
     char name[256];
     if (ssname.empty()) {
-      int curPos = (int)stream.tellg();
-      stream.seekg(0, std::ios_base::end);
-      int lenStream = (int)stream.tellg() - curPos;
-      stream.seekg(curPos, std::ios_base::beg);
+      std::stringstream ss(stream);
+      int lenStream = (int)stream.size();
       unsigned int crc32 = 0;
-      if (!sw2::Util::crc32(crc32, stream, lenStream)) {
+      if (!sw2::Util::crc32(crc32, ss, lenStream)) {
         trace("calc stream file system crc32 failed!");
         return false;
       }
-      stream.seekg(curPos, std::ios_base::beg);
       sprintf(name, "stream;%x;%x", lenStream, crc32);
     } else {
       strcpy(name, ssname.c_str());

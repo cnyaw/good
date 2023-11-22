@@ -37,8 +37,7 @@ int EMSCRIPTEN_KEEPALIVE cLoadImageFromChar(int w, int h, void *pBuff, int size)
 int EMSCRIPTEN_KEEPALIVE cLoadPkg(void *pBuff, int size)
 {
   std::string stream((const char*)pBuff, size);
-  std::istringstream ss(stream);
-  return app.addStreamFileSystem(app.fs.pkgName, ss);
+  return app.addStreamFileSystem(app.fs.pkgName, stream);
 }
 
 int EMSCRIPTEN_KEEPALIVE cSetKeyStates(int keys)
@@ -51,8 +50,7 @@ int EMSCRIPTEN_KEEPALIVE cRunPkg(void *pBuff, int size)
 {
   printf("init good, data len=%d\n", size);
   std::string stream((const char*)pBuff, size);
-  std::istringstream ss(stream);
-  if (!app.initFromStream(ss)) {
+  if (!app.initFromStream(stream)) {
     return 1;
   }
   printf("init good done\n");
