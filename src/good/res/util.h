@@ -16,8 +16,7 @@ namespace good {
 template<class T>
 void assignListFromString(const std::string &s, std::vector<T> &v)
 {
-  std::stringstream ss(s);
-  v.assign(std::istream_iterator<T>(ss), std::istream_iterator<T>());
+  sw2::Util::split(s, v);
 }
 
 template<class PoolT, class VecT, class MapT>

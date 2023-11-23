@@ -136,10 +136,7 @@ std::string storeRGB(unsigned int clr)
 
 void splitPath(const std::string &path, std::vector<std::string> &v)
 {
-  std::string s(path);
-  std::replace(s.begin(), s.end(), '/', ' ');
-  std::replace(s.begin(), s.end(), '\\', ' ');
-  assignListFromString(s, v);
+  sw2::Util::split(path, v, "/\\");
 }
 
 std::string getRelativePath(const std::string &pathFrom, const std::string &pathTo)
