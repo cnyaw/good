@@ -88,11 +88,13 @@ int loadRGB(std::string const& rgb)
 
 std::string getFileName(const std::string &path)
 {
-  std::string::size_type pos = path.find_last_of('/');
+  std::string name(path);
+  std::replace(name.begin(), name.end(), '\\', '/');
+  std::string::size_type pos = name.find_last_of('/');
   if (std::string::npos != pos) {
-    return path.substr(pos + 1);
+    return name.substr(pos + 1);
   } else {
-    return path;
+    return name;
   }
 }
 
