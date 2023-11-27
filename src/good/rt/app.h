@@ -34,7 +34,7 @@ public:
 
   typedef Actor<T, ImgT> ActorT;
 
-  Application() : mRoot(-1), mStartLevel(-1), mAntiAlias(true), mSelFont(GOOD_DRAW_TEXT_SYSTEM_FONT)
+  Application() : mRoot(-1), mStartLevel(-1)
   {
   }
 
@@ -260,6 +260,8 @@ public:
 
     mExit = false;
     mKeys.reset();
+    mAntiAlias = true;
+    mSelFont = GOOD_DRAW_TEXT_SYSTEM_FONT;
 
     mCreateRoot = true;               // Later create level object.
 
