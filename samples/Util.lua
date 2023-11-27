@@ -206,3 +206,11 @@ Good.SetAlpha = function(id, a)
   clr = clr - x + y
   Good.SetBgColor(id, clr)
 end
+
+function AutoIncrementor(initVal, initInc)
+  local v = (initVal or 0)
+  return function(inc)
+    v = v + (inc or initInc or 1)
+    return v
+  end
+end
