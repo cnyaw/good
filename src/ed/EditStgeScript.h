@@ -322,7 +322,7 @@ public:
     for (size_t i = 0; i < str.size(); ++i) {
       glLoadIdentity();
       glTranslatef(x + 10 * i, y, -mDepth);
-      glScalef(5, 6, 1);
+      glScalef(5, 8, 1);
       glColor3ub(255, 255, 255);
       DrawChar(str[i]);
     }
