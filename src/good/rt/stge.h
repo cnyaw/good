@@ -149,6 +149,15 @@ void bindTask(int idTask, int idObj, int iObjMgr)
   }
 }
 
+bool doStgeScript(const std::string &script, const std::string &name = "")
+{
+  if (!stge::Parser::parseFromStream(script, mScriptMgr)) {
+    trace("[%s] %s\n", name.c_str(), stge::Parser::getLastError().c_str());
+    return false;
+  }
+  return true;
+}
+
 int getFirstParticle(int iObjMgr) const
 {
   if (!iObjMgrValid(iObjMgr)) {

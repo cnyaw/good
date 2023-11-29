@@ -3732,6 +3732,29 @@ public:
 
   //
   // [API]
+  // "name":"LoadScript",
+  // "desc":"Parse and load particle script.",
+  // "proto":"bool LoadScript(script)",
+  // "param":[{
+  //   "name":"script",
+  //   "desc":"STGE script string."
+  // }],
+  // "ret":"Return true if parse successful else return false.",
+  // "ex":"Stge.LoadScript(\'script a speed(100) fire() end\')"
+  // [/API]
+  //
+
+  static int LoadScript(lua_State* L)
+  {
+    const char* script = luaL_checkstring(L, 1);
+
+    lua_pushboolean(L, AppT::getInst().doStgeScript(script, "Stge.LoadScript"));
+
+    return 1;
+  }
+
+  //
+  // [API]
   // "name":"RunScript",
   // "desc":"Start to run a particle script.",
   // "proto":"int RunScript(script[, x, y, iObjMgr])",
@@ -4001,6 +4024,7 @@ public:
       {"KillAllTask", &KillAllTask},
       {"KillParticle", &KillParticle},
       {"KillTask", &KillTask},
+      {"LoadScript", &LoadScript},
       {"RunScript", &RunScript},
       {"SetActive", &SetActive},
       {"SetDirection", &SetParticleDirection},
