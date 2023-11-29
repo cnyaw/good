@@ -506,10 +506,10 @@ public:
 
     va_end(list);
 
+    std::string script(mScript);        // In OnCreate may cause mScript invalid because of app.mActors grow. So make a copy to avoid crash.
     int s = lua_pcall(app.mLua, 1 + nArg, LUA_MULTRET, 0);
-
     if (0 != s) {
-      app.trace("[%s.%s] %s\n", mScript.c_str(), name, lua_tostring(app.mLua, -1));
+      app.trace("[%s.%s] %s\n", script.c_str(), name, lua_tostring(app.mLua, -1));
     }
 
     return 0;
