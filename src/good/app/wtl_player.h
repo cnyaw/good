@@ -273,8 +273,27 @@ public:
     maxDrawCalls = max(maxDrawCalls, gx.nLastDrawCalls);
     maxActors = max(maxActors, mActors.size());
 
-    char buff[512];
-    sprintf(buff, "%d,d%d/%d,o%d/%d,c%d", FPS, gx.nLastDrawCalls, maxDrawCalls, mActors.size(), maxActors, mCanvas.size());
+    char buff[512], buff2[128];;
+    sprintf(buff, "%d,d%d/%d,o%d/%d", FPS, gx.nLastDrawCalls, maxDrawCalls, mActors.size(), maxActors);
+    if (mCanvas.size()) {
+      sprintf(buff2, ",c%d", mCanvas.size());
+      strcat(buff, buff2);
+    }
+#ifdef GOOD_SUPPORT_STGE
+    int nActions = 0, nParticles = 0;
+    for (int i = 0; i < GOOD_MAX_STGE_OBJ_MGR; i++) {
+      nActions += mObjMgr[i].actions.size();
+      nParticles += mObjMgr[i].objects.size();
+    }
+    if (nActions) {
+      sprintf(buff2, ",a%d", nActions);
+      strcat(buff, buff2);
+    }
+    if (nParticles) {
+      sprintf(buff2, ",b%d", nParticles);
+      strcat(buff, buff2);
+    }
+#endif
     SimpleDrawText(mRes.mWidth - CX_FONT2 * (int)strlen(buff), 0, buff, COLOR_TRACE);
   }
 
