@@ -18,7 +18,6 @@ namespace good {
 
 namespace gx {
 
-template<class ImgMgr>
 class GL_Surface : public ImageSurface
 {
 public:
@@ -73,8 +72,6 @@ public:
 
   void restoreSur()
   {
-    ImgMgr::inst().lastTex = 0;
-
     glBindTexture(GL_TEXTURE_2D, tex);
 
     glTexImage2D(
@@ -104,11 +101,11 @@ public:
   }
 };
 
-class GLImageResource : public ImageManager<GLImageResource, GL_Surface<GLImageResource> >
+class GLImageResource : public ImageManager<GLImageResource, GL_Surface>
 {
 public:
 
-  GL_Surface<GLImageResource> const* lastTex;
+  const GL_Surface *lastTex;
 
   static GLImageResource& inst()
   {
@@ -118,18 +115,17 @@ public:
 
   void restoreSur()
   {
-    std::vector<GL_Surface<GLImageResource>*>::iterator it = mSur.begin();
+    std::vector<GL_Surface*>::iterator it = mSur.begin();
     for (; it != mSur.end(); ++it) {
       (*it)->restoreSur();
     }
+    lastTex = 0;
   }
 };
 
 class GLImage : public Image<GLImage>
 {
 public:
-
-  typedef GL_Surface<GLImageResource> SurT;
 
   const ImageRect *mSur;
 
@@ -143,7 +139,7 @@ public:
 
   bool isValid() const
   {
-    return 0 != mSur && 0 != mSur->sur && 0 != ((SurT*)mSur->sur)->tex && 0 != ((SurT*)mSur->sur)->img.dat;
+    return 0 != mSur && 0 != mSur->sur && 0 != ((GL_Surface*)mSur->sur)->tex && 0 != ((GL_Surface*)mSur->sur)->img.dat;
   }
 
   int getWidth() const
@@ -180,7 +176,7 @@ public:
   void draw(int x, int y, const CanvasT &c, int sx, int sy, int sw, int sh)
   {
     if (isValid()) {
-      ((SurT*)mSur->sur)->img.draw(mSur->left + x, mSur->top + y, c, sx, sy, sw, sh);
+      ((GL_Surface*)mSur->sur)->img.draw(mSur->left + x, mSur->top + y, c, sx, sy, sw, sh);
     }
   }
 
@@ -188,7 +184,7 @@ public:
   void drawToCanvas(int x, int y, CanvasT &c, int sx, int sy, int sw, int sh) const
   {
     if (isValid()) {
-      c.draw((*(const CanvasT*)&(((SurT*)mSur->sur)->img)), x, y, sw, sh, mSur->left + sx, mSur->top + sy);
+      c.draw((*(const CanvasT*)&(((GL_Surface*)mSur->sur)->img)), x, y, sw, sh, mSur->left + sx, mSur->top + sy);
     }
   }
 };
@@ -200,8 +196,6 @@ public:
     NUM_VERT_PER_OBJ = 4,
     MAX_OBJ = 1024
   };
-
-  typedef GL_Surface<GLImageResource> SurT;
 
   int SCREEN_W, SCREEN_H;
 
@@ -294,14 +288,14 @@ public:
     flush();
   }
 
-  void checkFlush(const SurT *tex)
+  void checkFlush(const GL_Surface *tex)
   {
     if (tex != GLImageResource::inst().lastTex || MAX_OBJ == obj_index) {
       flush();
     }
   }
 
-  void checkTexChange(SurT *pSur)
+  void checkTexChange(GL_Surface *pSur)
   {
     if (pSur != GLImageResource::inst().lastTex) {
       glBindTexture(GL_TEXTURE_2D, pSur->tex);
@@ -421,12 +415,12 @@ public:
       }
     }
 
-    checkFlush((SurT*)img.mSur->sur);
+    checkFlush((GL_Surface*)img.mSur->sur);
 
     applyObjTransform(x, y, srcw, srch, xscale, yscale, rot);
 
-    float imgw = SurT::GL_PACK_TEX_WIDTH;
-    float imgh = SurT::GL_PACK_TEX_HEIGHT;
+    float imgw = GL_Surface::GL_PACK_TEX_WIDTH;
+    float imgh = GL_Surface::GL_PACK_TEX_HEIGHT;
     srcx += img.mSur->left;
     srcy += img.mSur->top;
     float x0 = (.5f + srcx) / (float)imgw, y0 = (.5f + srcy) / (float)imgh; // Apply half pixel correction to avoid texture edge color problem.
@@ -437,7 +431,7 @@ public:
 
     obj_index += 1;
 
-    checkTexChange((SurT*)img.mSur->sur);
+    checkTexChange((GL_Surface*)img.mSur->sur);
 
     return true;
   }
@@ -457,12 +451,12 @@ public:
       return false;
     }
 
-    checkFlush((SurT*)imgWhitePixel.mSur->sur);
+    checkFlush((GL_Surface*)imgWhitePixel.mSur->sur);
 
     applyObjTransform(x, y, w, h, xscale, yscale, rot);
 
-    float imgw = SurT::GL_PACK_TEX_WIDTH;
-    float imgh = SurT::GL_PACK_TEX_HEIGHT;
+    float imgw = GL_Surface::GL_PACK_TEX_WIDTH;
+    float imgh = GL_Surface::GL_PACK_TEX_HEIGHT;
     int srcx = imgWhitePixel.mSur->left;
     int srcy = imgWhitePixel.mSur->top;
     float x0 = (.5f + srcx) / (float)imgw, y0 = (.5f + srcy) / (float)imgh; // Apply half pixel correction to avoid texture edge color problem.
@@ -473,7 +467,7 @@ public:
 
     obj_index += 1;
 
-    checkTexChange((SurT*)imgWhitePixel.mSur->sur);
+    checkTexChange((GL_Surface*)imgWhitePixel.mSur->sur);
 
     return true;
   }
@@ -483,7 +477,7 @@ public:
     GLImageResource::inst().restoreSur();
   }
 
-  bool drawTex(int x, int y, SurT *pSur, int w, int h, unsigned int color)
+  bool drawTex(int x, int y, GL_Surface *pSur, int w, int h, unsigned int color)
   {
     checkFlush(pSur);
 

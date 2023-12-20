@@ -241,7 +241,7 @@ public:
     if (0 >= nMaxTexs) {
       return;
     }
-    gx::GL_Surface<gx::GLImageResource> *sur = ir.GetTex(iTexs);
+    gx::GL_Surface *sur = ir.GetTex(iTexs);
     int size = mRes.mWidth;
     if (mRes.mWidth > mRes.mHeight) {
       size = mRes.mHeight;
