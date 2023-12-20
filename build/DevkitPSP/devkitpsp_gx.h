@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "imgm.h"
+#include "gx/imgm.h"
 
 namespace good {
 
@@ -32,11 +32,7 @@ struct DevkitPSPSurface : public ImageSurface
   }
 };
 
-struct DevkitPSPImageRect : public ImageRect<DevkitPSPSurface>
-{
-};
-
-class DevkitPSPImageManager : public ImageManager<DevkitPSPImageManager, DevkitPSPSurface, DevkitPSPImageRect>
+class DevkitPSPImageManager : public ImageManager<DevkitPSPImageManager, DevkitPSPSurface>
 {
 public:
 
@@ -48,11 +44,11 @@ public:
     return i;
   }
 
-  bool LoadSurface(GxImage &img, DevkitPSPImageRect& sur)
+  bool LoadSurface(GxImage &img, ImageRect& sur)
   {
     LastTex = 0;
     img.resize(img.w * TEX_SCALE, img.h * TEX_SCALE);
-    return ImageManager<DevkitPSPImageManager, DevkitPSPSurface, DevkitPSPImageRect>::LoadSurface(img, sur);
+    return ImageManager<DevkitPSPImageManager, DevkitPSPSurface>::LoadSurface(img, sur);
   }
 };
 
@@ -60,19 +56,19 @@ class DevkitPSPImage : public Image<DevkitPSPImage>
 {
 public:
 
-  DevkitPSPImageRect const* mSur;
+  const ImageRect *mSur;
 
   DevkitPSPImage() : mSur(0)
   {
   }
 
-  DevkitPSPImage(DevkitPSPImageRect const* sur) : mSur(sur)
+  DevkitPSPImage(const ImageRect *sur) : mSur(sur)
   {
   }
 
   bool isValid() const
   {
-    return 0 != mSur && 0 != mSur->tex && 0 != mSur->tex->img.dat;
+    return 0 != mSur && 0 != mSur->sur && 0 != ((DevkitPSPSurface*)mSur->sur)->img.dat;
   }
 
   int getWidth() const
@@ -108,14 +104,14 @@ public:
   void draw(int x, int y, const GxImage &c, int sx, int sy, int sw, int sh)
   {
     if (isValid()) {
-      mSur->tex->img.draw(mSur->left + x, mSur->top + y, c, sx, sy, sw, sh);
+      ((DevkitPSPSurface*)mSur->sur)->img.draw(mSur->left + x, mSur->top + y, c, sx, sy, sw, sh);
     }
   }
 
   void drawToCanvas(int x, int y, GxImage &c, int sx, int sy, int sw, int sh) const
   {
     if (isValid()) {
-      c.draw(x, y, (*(const GxImage*)&(mSur->tex->img)), sw, sh, mSur->left + sx, mSur->top + sy);
+      c.draw(x, y, (*(const GxImage*)&(((DevkitPSPSurface*)mSur->sur)->img)), sw, sh, mSur->left + sx, mSur->top + sy);
     }
   }
 };
@@ -276,7 +272,7 @@ public:
     sceGuColor((a << 24) | (b << 16) | (g << 8) | r);
   }
 
-  bool drawImage(int x, int y, DevkitPSPImage const& img, int srcx, int srcy, int srcw, int srch, unsigned int color, float rot, float xscale, float yscale)
+  bool drawImage(int x, int y, DevkitPSPImage const& img, int srcx, int srcy, int srcw, int srch, unsigned int color, float rot = .0f, float xscale = 1.0f, float yscale = 1.0f)
   {
     if (!img.isValid()) {
       return false;
@@ -339,8 +335,8 @@ public:
 
     sceGuEnable(GU_TEXTURE_2D);
 
-    if (DevkitPSPImageManager::inst().LastTex != img.mSur->tex) {
-      sceGuTexImage(0, DevkitPSPSurface::PACK_TEX_WIDTH, DevkitPSPSurface::PACK_TEX_HEIGHT, DevkitPSPSurface::PACK_TEX_WIDTH, img.mSur->tex->img.dat);
+    if (DevkitPSPImageManager::inst().LastTex != img.mSur->sur) {
+      sceGuTexImage(0, DevkitPSPSurface::PACK_TEX_WIDTH, DevkitPSPSurface::PACK_TEX_HEIGHT, DevkitPSPSurface::PACK_TEX_WIDTH, ((DevkitPSPSurface*)img.mSur->sur)->img.dat);
     }
 
     sceGumDrawArray(GU_SPRITES, GU_TEXTURE_32BITF | GU_VERTEX_32BITF | GU_TRANSFORM_3D, 2, 0, v);

@@ -86,25 +86,24 @@ public:
   }
 };
 
-template<class SurT>
 class ImageRect
 {
 public:
 
-  ImageRect() : tex(0), left(0), top(0), w(0), h(0)
+  ImageRect() : sur(0), left(0), top(0), w(0), h(0)
   {
   }
 
-  SurT *tex;
+  void *sur;
   int left, top, w, h;
 };
 
-template<class T, class SurT, class RectT>
+template<class T, class SurT>
 class ImageManager
 {
 protected:
   std::vector<SurT*> mSur;
-  std::map<std::string, RectT> mImg;
+  std::map<std::string, ImageRect> mImg;
 
   ImageManager()
   {
@@ -139,17 +138,17 @@ public:
     mSur.clear();
   }
 
-  void UpdateSurface(SurT *psur, sw2::IntRect const &rc, GxImage const &img, RectT &sur)
+  void UpdateSurface(SurT *psur, sw2::IntRect const &rc, GxImage const &img, ImageRect &sur)
   {
     psur->draw(rc, img);
     sur.left = rc.left;
     sur.top = rc.top;
     sur.w = img.w;
     sur.h = img.h;
-    sur.tex = psur;
+    sur.sur = (void*)psur;
   }
 
-  bool LoadSurface(GxImage &img, RectT& sur)
+  bool LoadSurface(GxImage &img, ImageRect& sur)
   {
     //
     // Add the image to existing texture pack.
@@ -215,9 +214,9 @@ public:
     return mImg.end() != mImg.find(name);
   }
 
-  RectT const* getImage(std::string const& name)
+  ImageRect const* getImage(std::string const& name)
   {
-    typename std::map<std::string, RectT>::const_iterator it = mImg.find(name);
+    typename std::map<std::string, ImageRect>::const_iterator it = mImg.find(name);
     if (mImg.end() != it) {
       return &it->second;
     }
@@ -225,36 +224,36 @@ public:
     std::string s;
     if (!sw2::Util::loadFileContent(name.c_str(), s)) {
       SW2_TRACE_ERROR("open image resource %s failed", name.c_str());
-      mImg[name] = RectT();
+      mImg[name] = ImageRect();
       return 0;
     }
 
     return getImage_i(name, s);
   }
 
-  RectT const* getImage_i(std::string const& name, std::string const& stream)
+  ImageRect const* getImage_i(std::string const& name, std::string const& stream)
   {
     GxImage img;
     if (!img.loadFromStream(stream)) {
       SW2_TRACE_ERROR("load image stream %s failed", name.c_str());
-      mImg[name] = RectT();
+      mImg[name] = ImageRect();
       return 0;
     }
     return getImage_i(name, img);
   }
 
-  RectT const* getImage(std::string const& name, std::string const& stream)
+  ImageRect const* getImage(std::string const& name, std::string const& stream)
   {
-    typename std::map<std::string, RectT>::const_iterator it = mImg.find(name);
+    typename std::map<std::string, ImageRect>::const_iterator it = mImg.find(name);
     if (mImg.end() != it) {
       return &it->second;
     }
     return getImage_i(name, stream);
   }
 
-  RectT const* getImage_i(std::string const& name, GxImage &img)
+  ImageRect const* getImage_i(std::string const& name, GxImage &img)
   {
-    RectT sur;
+    ImageRect sur;
     if (((T*)this)->LoadSurface(img, sur)) {
       mImg[name] = sur;
       return &mImg[name];
@@ -265,9 +264,9 @@ public:
     }
   }
 
-  RectT const* getImage(std::string const& name, GxImage &img)
+  ImageRect const* getImage(std::string const& name, GxImage &img)
   {
-    typename std::map<std::string, RectT>::const_iterator it = mImg.find(name);
+    typename std::map<std::string, ImageRect>::const_iterator it = mImg.find(name);
     if (mImg.end() != it) {
       return &it->second;
     }

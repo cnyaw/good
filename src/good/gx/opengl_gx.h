@@ -104,12 +104,7 @@ public:
   }
 };
 
-template<class ImgMgr>
-class GLImageRect : public ImageRect<GL_Surface<ImgMgr> >
-{
-};
-
-class GLImageResource : public ImageManager<GLImageResource, GL_Surface<GLImageResource>, GLImageRect<GLImageResource> >
+class GLImageResource : public ImageManager<GLImageResource, GL_Surface<GLImageResource> >
 {
 public:
 
@@ -134,19 +129,21 @@ class GLImage : public Image<GLImage>
 {
 public:
 
-  GLImageRect<GLImageResource> const* mSur;
+  typedef GL_Surface<GLImageResource> SurT;
+
+  const ImageRect *mSur;
 
   GLImage() : mSur(0)
   {
   }
 
-  GLImage(GLImageRect<GLImageResource> const* sur) : mSur(sur)
+  GLImage(const ImageRect *sur) : mSur(sur)
   {
   }
 
   bool isValid() const
   {
-    return 0 != mSur && 0 != mSur->tex && 0 != mSur->tex->tex && 0 != mSur->tex->img.dat;
+    return 0 != mSur && 0 != mSur->sur && 0 != ((SurT*)mSur->sur)->tex && 0 != ((SurT*)mSur->sur)->img.dat;
   }
 
   int getWidth() const
@@ -183,7 +180,7 @@ public:
   void draw(int x, int y, const CanvasT &c, int sx, int sy, int sw, int sh)
   {
     if (isValid()) {
-      mSur->tex->img.draw(mSur->left + x, mSur->top + y, c, sx, sy, sw, sh);
+      ((SurT*)mSur->sur)->img.draw(mSur->left + x, mSur->top + y, c, sx, sy, sw, sh);
     }
   }
 
@@ -191,7 +188,7 @@ public:
   void drawToCanvas(int x, int y, CanvasT &c, int sx, int sy, int sw, int sh) const
   {
     if (isValid()) {
-      c.draw((*(const CanvasT*)&(mSur->tex->img)), x, y, sw, sh, mSur->left + sx, mSur->top + sy);
+      c.draw((*(const CanvasT*)&(((SurT*)mSur->sur)->img)), x, y, sw, sh, mSur->left + sx, mSur->top + sy);
     }
   }
 };
@@ -424,7 +421,7 @@ public:
       }
     }
 
-    checkFlush(img.mSur->tex);
+    checkFlush((SurT*)img.mSur->sur);
 
     applyObjTransform(x, y, srcw, srch, xscale, yscale, rot);
 
@@ -440,7 +437,7 @@ public:
 
     obj_index += 1;
 
-    checkTexChange(img.mSur->tex);
+    checkTexChange((SurT*)img.mSur->sur);
 
     return true;
   }
@@ -460,7 +457,7 @@ public:
       return false;
     }
 
-    checkFlush(imgWhitePixel.mSur->tex);
+    checkFlush((SurT*)imgWhitePixel.mSur->sur);
 
     applyObjTransform(x, y, w, h, xscale, yscale, rot);
 
@@ -476,7 +473,7 @@ public:
 
     obj_index += 1;
 
-    checkTexChange(imgWhitePixel.mSur->tex);
+    checkTexChange((SurT*)imgWhitePixel.mSur->sur);
 
     return true;
   }

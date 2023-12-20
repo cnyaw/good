@@ -693,11 +693,7 @@ public:
   }
 };
 
-class ImgpImageRect : public ImageRect<ImgpImageSurface>
-{
-};
-
-class ImgpImageResource : public ImageManager<ImgpImageResource, ImgpImageSurface, ImgpImageRect>
+class ImgpImageResource : public ImageManager<ImgpImageResource, ImgpImageSurface>
 {
 public:
   static ImgpImageResource& inst()
@@ -711,19 +707,19 @@ class ImgpImage : public Image<ImgpImage>
 {
 public:
 
-  const ImgpImageRect *mSur;
+  const ImageRect *mSur;
 
   ImgpImage() : mSur(0)
   {
   }
 
-  ImgpImage(const ImgpImageRect *sur) : mSur(sur)
+  ImgpImage(const ImageRect *sur) : mSur(sur)
   {
   }
 
   bool isValid() const
   {
-    return 0 != mSur && 0 != mSur->tex && 0 != mSur->tex->img.dat;
+    return 0 != mSur && 0 != mSur->sur && 0 != ((ImgpImageSurface*)mSur->sur)->img.dat;
   }
 
   int getWidth() const
@@ -760,7 +756,7 @@ public:
   void draw(int x, int y, const CanvasT &c, int sx, int sy, int sw, int sh)
   {
     if (isValid()) {
-      mSur->tex->img.draw(mSur->left + x, mSur->top + y, c, sx, sy, sw, sh);
+      ((ImgpImageSurface*)mSur->sur)->img.draw(mSur->left + x, mSur->top + y, c, sx, sy, sw, sh);
     }
   }
 
@@ -768,14 +764,14 @@ public:
   void drawToCanvas(int x, int y, CanvasT &c, int sx, int sy, int sw, int sh) const
   {
     if (isValid()) {
-      c.draw((*(const CanvasT*)&(mSur->tex->img)), x, y, sw, sh, mSur->left + sx, mSur->top + sy);
+      c.draw((*(const CanvasT*)&(((ImgpImageSurface*)mSur->sur)->img)), x, y, sw, sh, mSur->left + sx, mSur->top + sy);
     }
   }
 
   unsigned int getPixel(int x, int y) const
   {
     if (isValid()) {
-      return mSur->tex->img.getPixel(mSur->left + x, mSur->top + y);
+      return ((ImgpImageSurface*)mSur->sur)->img.getPixel(mSur->left + x, mSur->top + y);
     } else {
       return 0;
     }
@@ -812,7 +808,7 @@ public:
   {
     srcw = (std::min)(srcw, img.getWidth());
     srch = (std::min)(srch, img.getHeight());
-    mSur.blend(*((const Imgp*)&img.mSur->tex->img), color, x, y, srcw, srch, img.mSur->left + srcx, img.mSur->top + srcy);
+    mSur.blend(*((const Imgp*)&((ImgpImageSurface*)img.mSur->sur)->img), color, x, y, srcw, srch, img.mSur->left + srcx, img.mSur->top + srcy);
     return true;
   }
 
