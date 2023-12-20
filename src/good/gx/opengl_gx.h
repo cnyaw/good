@@ -56,13 +56,13 @@ public:
     }
   }
 
-  void update(sw2::IntRect const &rc, GxImage const &aimg)
+  void draw(sw2::IntRect const &rc, GxImage const &aimg)
   {
     //
     // Blt the img to the pack texture.
     //
 
-    BaseT::update(rc, aimg);
+    BaseT::draw(rc, aimg);
 
     //
     // Transfer pack texture data to GL.

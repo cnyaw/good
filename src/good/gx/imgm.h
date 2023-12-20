@@ -71,7 +71,7 @@ public:
     return root->add(r);
   }
 
-  void update(sw2::IntRect const &rc, GxImage const &aimg)
+  void draw(sw2::IntRect const &rc, GxImage const &aimg)
   {
     img.draw(rc.left, rc.top, aimg);
   }
@@ -141,7 +141,7 @@ public:
 
   void UpdateSurface(SurT *psur, sw2::IntRect const &rc, GxImage const &img, RectT &sur)
   {
-    psur->update(rc, img);
+    psur->draw(rc, img);
     sur.left = rc.left;
     sur.top = rc.top;
     sur.w = img.w;
