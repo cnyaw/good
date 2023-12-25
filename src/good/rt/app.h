@@ -642,7 +642,10 @@ public:
 
   void createTextObj_i(int idItem, ObjectT const& o, ResT *pRes)
   {
+    int savFont = getFont();
+    setFont(GOOD_DRAW_TEXT_SYSTEM_FONT);
     genTextObj_i(idItem, o.mText.c_str(), o.mTextSize, GOOD_CREATE_OBJ_EXCLUDE_RES_ID, pRes);
+    setFont(savFont);
     unsigned int c = getBgColor(idItem);
     for (int i = 0; i < getChildCount(idItem); i++) {
       int id = getChild(idItem, i);
