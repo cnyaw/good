@@ -117,7 +117,7 @@ HWND GoodCreateSimpleToolbar(HWND hParent, UINT idRes, int nBtn = -1)
 void GetObjDim(const PrjT::LevelT &lvl, const PrjT::ObjectT &obj, RECT &rc)
 {
   sw2::IntRect irc;
-  good::getObjDim<PrjT>(lvl, obj, irc);
+  good::ed::getObjDim<PrjT>(lvl, obj, irc);
   rc.left = irc.left;
   rc.right = irc.right;
   rc.top = irc.top;
