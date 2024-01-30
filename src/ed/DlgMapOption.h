@@ -12,7 +12,7 @@
 #pragma once
 
 template<class T>
-class CDlgPageMapGridImpl : public COwnerDraw<T>
+class CDlgPageMapGridImpl : public COwnerDraw<T>, public CDoubleBufferImpl<T>
 {
 public:
   enum DRAG_TYPE {
@@ -70,24 +70,18 @@ public:
   }
 
   BEGIN_MSG_MAP_EX(CDlgPageMapGridImpl)
-    MSG_WM_ERASEBKGND(OnEraseBkgnd)
     MSG_WM_INITDIALOG(OnInitDialog)
     MSG_WM_LBUTTONDOWN(OnLButtonDown)
     MSG_WM_LBUTTONUP(OnLButtonUp)
     MSG_WM_MOUSEMOVE(OnMouseMove)
-    MSG_WM_PAINT(OnPaint)
     COMMAND_ID_HANDLER_EX(IDC_COLOR, OnColor)
     CHAIN_MSG_MAP(COwnerDraw<T>)
+    CHAIN_MSG_MAP(CDoubleBufferImpl<T>)
   END_MSG_MAP()
 
   //
   // Message handler.
   //
-
-  BOOL OnEraseBkgnd(CDCHandle dc)
-  {
-    return TRUE;                        // Skip.
-  }
 
   BOOL OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
   {
@@ -232,16 +226,13 @@ public:
     }
   }
 
-  void OnPaint(CDCHandle)
+  void DoPaint(CDCHandle memdc)
   {
     T* pThis = static_cast<T*>(this);
-
-    CPaintDC dc(pThis->m_hWnd);
 
     RECT rcClient;
     pThis->GetClientRect(&rcClient);
 
-    CMemoryDC memdc(dc, rcClient);
     memdc.FillSolidRect(&rcClient, ::GetSysColor(COLOR_BTNFACE));
 
     memdc.DrawFocusRect(&mRcGrid);
