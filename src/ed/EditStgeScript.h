@@ -355,6 +355,7 @@ public:
 
     stge::ScriptManager scm;
     if (!stge::Parser::parse(path, scm)) {
+      SW2_TRACE_ERROR("%s", stge::Parser::getLastError().c_str());
       CString s = stge::Parser::getLastError().c_str();
       MessageBox(s, _T("Error"), MB_OK|MB_ICONERROR);
       return;
