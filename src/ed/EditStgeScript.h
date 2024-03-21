@@ -122,14 +122,8 @@ public:
   }
 
   BEGIN_MSG_MAP(CStgeView)
-    MSG_WM_ERASEBKGND(OnEraseBkgnd)
     CHAIN_MSG_MAP(COpenGL<CStgeView>)
   END_MSG_MAP()
-
-  BOOL OnEraseBkgnd(CDCHandle dc)
-  {
-    return TRUE;
-  }
 
   //
   // COpenGL<>
@@ -358,13 +352,6 @@ public:
     PrjT const& prj = PrjT::inst();
     std::string path = good::getPathName(prj.mRes.mFileName);
     path += prj.getStgeScript(mId);
-
-    FILE *f = fopen(path.c_str(), "rb");
-    if (!f) {
-      MessageBox(_T("Load file failed\n"), _T("Error"), MB_OK | MB_ICONERROR);
-      return;
-    }
-    fclose(f);
 
     stge::ScriptManager scm;
     if (!stge::Parser::parse(path, scm)) {

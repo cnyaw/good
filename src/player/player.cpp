@@ -48,7 +48,7 @@ CAppModule _Module;
 #include "../good/snd/openal_snd.h"
 
 class CPlayerWindow :
-  public CFrameWindowImpl<CPlayerWindow>,
+  public CFrameWindowImpl<CPlayerWindow>, public CDoubleBufferImpl<CPlayerWindow>,
   public CMessageFilter,
   public good::rt::Application<CPlayerWindow, good::gx::ImgpImage, good::snd::ALSound, good::gx::Imgp>
 {
@@ -115,11 +115,10 @@ public:
   BEGIN_MSG_MAP_EX(CPlayerWindow)
     MSG_WM_CREATE(OnCreate)
     MSG_WM_DESTROY(OnDestroy)
-    MSG_WM_ERASEBKGND(OnEraseBkgnd)
     MSG_WM_KEYDOWN(OnKeyDown)
-    MSG_WM_PAINT(OnPaint)
     MSG_WM_TIMER(OnTimer)
     CHAIN_MSG_MAP(CFrameWindowImpl<CPlayerWindow>)
+    CHAIN_MSG_MAP(CDoubleBufferImpl<CPlayerWindow>)
   END_MSG_MAP()
 
   int OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -147,11 +146,6 @@ public:
     SetMsgHandled(false);
   }
 
-  BOOL OnEraseBkgnd(CDCHandle dc)
-  {
-    return TRUE;
-  }
-
   void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
   {
     if (VK_ESCAPE == nChar && 0 == (mHandledKeys & GOOD_KEYS_ESCAPE)) {
@@ -159,11 +153,10 @@ public:
     }
   }
 
-  void OnPaint(CDCHandle)
+  void DoPaint(CDCHandle memdc)
   {
     renderAll();
-    CPaintDC dc(m_hWnd);
-    scr.blt(dc, 0, 0);
+    scr.blt(memdc, 0, 0);
   }
 
   void OnTimer(UINT_PTR nIDEvent)
