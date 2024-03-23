@@ -171,8 +171,8 @@
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../../smallworld2/lib;../../../../open/zlib-1.2.8/lib;../../../../open/lua-5.1.4/src;../../../../open/audiere-1.9.4/lib"
 				IgnoreDefaultLibraryNames=""
-				GenerateDebugInformation="true"
-				GenerateMapFile="true"
+				GenerateDebugInformation="false"
+				GenerateMapFile="false"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -938,10 +938,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\stge\stge\par.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\stge\stge\par_yard.h"
 				>
 			</File>
@@ -954,10 +950,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath="..\..\src\ed\res\player.zip"
-			>
-		</File>
 	</Files>
 	<Globals>
 		<Global
