@@ -49,14 +49,6 @@ public:
 
   virtual BOOL PreTranslateMessage(MSG* pMsg)
   {
-    if (WM_MOUSEWHEEL == pMsg->message) { // Mouse wheel on view.
-      POINT pt;
-      ::GetCursorPos(&pt);
-      HWND hwnd = ::WindowFromPoint(pt);
-      ::SendMessage(hwnd, WM_MOUSEWHEEL, pMsg->wParam, pMsg->lParam);
-      return TRUE;
-    }
-
     if (WM_LBUTTONDBLCLK == pMsg->message && pMsg->hwnd == mTabView.m_tab) {
 
       //
