@@ -512,7 +512,7 @@ public:
 
   BOOL OnEraseBkgnd(CDCHandle dc)
   {
-    return FALSE;
+    return TRUE;
   }
 
   void OnLButtonDblClk(UINT nFlags, CPoint point)
