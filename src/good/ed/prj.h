@@ -539,8 +539,9 @@ public:
         // Background is an image.
         //
 
-        assert(!obj.mDim.empty());
-        rc = sw2::IntRect(0, 0, obj.mDim.width(), obj.mDim.height());
+        if (!obj.mDim.empty()) {
+          rc = sw2::IntRect(0, 0, obj.mDim.width(), obj.mDim.height());
+        }
       }
       break;
 

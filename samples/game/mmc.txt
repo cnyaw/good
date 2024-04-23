@@ -12,7 +12,7 @@ levels=18
 
 [tex1]
 name=tileset
-fileName=./res/mmc_blk.png
+fileName=../res/mmc_blk.png
 
 [map2]
 width=11

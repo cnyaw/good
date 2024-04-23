@@ -1123,7 +1123,11 @@ public:
 
   void SetActivePage(int id)
   {
-    int idCurrPage = (int)mTabView.GetPageData(mTabView.GetActivePage());
+    int actPage = mTabView.GetActivePage();
+    if (-1 == actPage) {
+      return;
+    }
+    int idCurrPage = (int)mTabView.GetPageData(actPage);
     if (PrjT::inst().mRes.isLevel(idCurrPage)) {
       return;
     }

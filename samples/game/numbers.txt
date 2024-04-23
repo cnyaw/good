@@ -7,11 +7,11 @@ levels=2
 
 [scripts]
 3=./numbers.lua
-4=./Util.lua
+4=../Util.lua
 
 [tex1]
 name=font
-fileName=./res/font.png
+fileName=../res/font.png
 
 [level2]
 bgColor=0 128 0

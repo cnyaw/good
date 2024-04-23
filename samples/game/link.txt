@@ -5,23 +5,22 @@ window=600 440
 texs=1 2 21
 maps=9 3 12 17
 levels=10 14 4 18
-groups=
 
 [scripts]
 6=./link.lua
-8=./Util.lua
+8=../Util.lua
 
 [tex1]
 name=mjcard
-fileName=./res/mjcard.png
+fileName=../res/mjcard.png
 
 [tex2]
 name=bkgnd
-fileName=./res/green.bmp
+fileName=../res/green.bmp
 
 [tex21]
 name=font
-fileName=./res/font.png
+fileName=../res/font.png
 
 [map9]
 width=20

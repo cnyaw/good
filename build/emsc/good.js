@@ -13,18 +13,9 @@ if (strUrl.indexOf("?") != -1) {
   for (var i = 0; i < getPara.length; i++) {
     var param = getPara[i].split("=");
     if ("pkg" == param[0]) {
-      arguments = [param[1]];
+      Module['arguments'] = [param[1]];
     }
   }
-}
-
-function stringToArrayBuffer(str) {
-  var arrbuf = new ArrayBuffer(str.length);
-  var bufView = new Uint8Array(arrbuf);
-  for (var i = 0; i < str.length; i++) {
-    bufView[i] = str.charCodeAt(i);
-  }
-  return arrbuf;
 }
 
 function loadPkg(file, ccallName) {
@@ -33,14 +24,11 @@ function loadPkg(file, ccallName) {
   xhr.open('GET', "uploads/" + file, false);
   xhr.send(null);
   if (200 === xhr.status) {
-    var arrayBuffer = stringToArrayBuffer(xhr.response);
-    if (arrayBuffer) {
-      var bytes = new Uint8Array(arrayBuffer);
-      var buf = Module._malloc(bytes.length);
-      Module.HEAPU8.set(bytes, buf);
-      Module.ccall(ccallName, 'number', ['number', 'number'], [buf, bytes.length]);
-      Module._free(buf);
-    }
+    var bytes = Uint8Array.from(xhr.response.split("").map(x => x.charCodeAt()));
+    var buf = _malloc(bytes.length);
+    Module.HEAPU8.set(bytes, buf);
+    Module.ccall(ccallName, 'number', ['number', 'number'], [buf, bytes.length]);
+    _free(buf);
   } else {
     Module.print("loadpkg " + file + " fail");
   }
@@ -74,10 +62,10 @@ function loadImageFromChar(size, ch, bAntiAlias) {
   var imgd = ctx.getImageData(0, 0, w, h);
   var pix = imgd.data;
   var bytes = new Uint8Array(pix);
-  var buf = Module._malloc(bytes.length);
+  var buf = _malloc(bytes.length);
   Module.HEAPU8.set(bytes, buf);
   Module.ccall('cLoadImageFromChar', 'number', ['number', 'number', 'number', 'number'], [w, h, buf, bytes.length]);
-  Module._free(buf);
+  _free(buf);
 }
 
 var keyStates = [0,0,0,0,0,0,0,0]; // up/down/left/right/enter/esc/z/x.

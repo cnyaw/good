@@ -11,7 +11,7 @@ levels=14 36 56 90 125 171 213 270 337 412 496 559
 
 [tex2]
 name=tex
-fileName=./res/weeder.png
+fileName=../res/weeder.png
 
 [map16]
 name=map_1

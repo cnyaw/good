@@ -6,15 +6,15 @@ levels=2
 
 [scripts]
 1=./breakout.lua
-5=./Util.lua
+5=../Util.lua
 
 [snd3]
 name=hit
-fileName=./res/sfx_hit.ogg
+fileName=../res/sfx_hit.ogg
 
 [snd4]
 name=bgm
-fileName=./res/sora_018.ogg
+fileName=../res/sora_018.ogg
 stream=1
 loop=1
 

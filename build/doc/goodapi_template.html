@@ -4,44 +4,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Good Game Engine API</title>
 <style>
-button.accordion {
-  background-color:#eee;
-  color:#444;
-  cursor:pointer;
-  padding:8px;
-  width:100%;
-  border:none;
-  text-align:left;
-  outline:none;
-  font-size:16px;
-  font-weight:bold;
-  transition:0.4s;
+#navbar {
+  overflow: hidden;
+  margin-left:160px; /* Same as the width of the sidenav */
+  padding-bottom:16px;
+  border-bottom:dotted black 1px;
 }
 
-button.active, button.accordion:hover {
-  background-color:#ccc;
+#navbar a {
+  float:left;
+  display:block;
+  text-align:center;
+  padding:0 8px;
+  text-decoration:none;
 }
 
-button.accordion:after {
-  content:'\002B';
-  color:#777;
-  font-weight:bold;
-  float:right;
-  margin-left:5px;
-}
-
-button.accordion.active:after {
-  content:'\2212';
-}
-
-div.panel {
-  padding:0 18px;
-  display:none;
-  background-color:white;
-  overflow:hidden;
-}
-
-.sidenav {
+#sidenav {
   height:100%;
   width:160px;
   position:fixed;
@@ -50,29 +28,33 @@ div.panel {
   left:0;
   background-color:#eee;
   overflow-x:hidden;
+  padding:2px;
 }
 
-.sidenav a {
+#sidenav a {
   padding:1px;
   font-size:16px;
   color:black;
   display:block;
 }
 
-.main {
+#sidenav a:hover {
+  color:red;
+}
+
+#main {
   margin-left:160px; /* Same as the width of the sidenav */
   padding:0px 10px;
 }
 
 .footer {
   margin-left:160px; /* Same as the width of the sidenav */
-  padding:10px;
-  background-color:#eee;
+  border-top:dotted black 1px;
 }
 
 @media screen and (max-height:450px) {
-  .sidenav {padding-top:2px;}
-  .sidenav a {font-size:16px;}
+  #sidenav {padding-top:2px;}
+  #sidenav a {font-size:16px;}
 }
 
 a {
@@ -86,10 +68,13 @@ a:hover {
 </head>
 <body>
 
-<div class="sidenav" id="sidenav">
+<div id="navbar">
 </div>
 
-<div class="main" id="main">
+<div id="sidenav">
+</div>
+
+<div id="main">
 </div>
 
 <div class="footer">
@@ -107,19 +92,10 @@ function buildMenu() {
   var s = '';
   for (var i = 0; i < obj.modules.length; i++) {
     var mod = obj.modules[i];
-    s = s + '<button class="accordion">' + mod.name + '</button>';
-    s = s + '<div class="panel">';
-    for (var j = 0; j < mod.api.length; j++) {
-      var api = mod.api[j];
-      s = s + '<a href="javascript:showApi(\'' + mod.name + '\',\'' + api.name + '\')">' + api.name + '</a>';
-    }
-    s = s + '</div>';
+    s += '<a href="javascript:showApiMenu(\'' + mod.name + '\')">' + mod.name + '</a>';
   }
-  document.getElementById("sidenav").innerHTML = s;
-}
-
-function expandFirstMod() {
-  document.getElementsByClassName("accordion")[0].click();
+  document.getElementById("navbar").innerHTML += s;
+  showApiMenu(obj.modules[0].name);
 }
 
 function findApi(mod, name) {
@@ -155,21 +131,6 @@ function parseExam(s) {
   return s;
 }
 
-function setupModAccordion() {
-  var acc = document.getElementsByClassName("accordion");
-  for (var i = 0; i < acc.length; i++) {
-    acc[i].addEventListener("click", function() {
-      this.classList.toggle("active");
-      var panel = this.nextElementSibling;
-      if (panel.style.display === "block") {
-        panel.style.display = "none";
-      } else {
-        panel.style.display = "block";
-      }
-    });
-  }
-}
-
 function showApi(modname, name) {
   var mod = findModule(modname);
   var api = findApi(mod, name);
@@ -199,6 +160,16 @@ function showApi(modname, name) {
   document.getElementById("main").innerHTML = s;
 }
 
+function showApiMenu(modname) {
+  var mod = findModule(modname);
+  var s = '';
+  for (var j = 0; j < mod.api.length; j++) {
+    var api = mod.api[j];
+    s = s + '<a href="javascript:showApi(\'' + mod.name + '\',\'' + api.name + '\')">' + api.name + '</a>';
+  }
+  document.getElementById("sidenav").innerHTML = s;
+}
+
 function sortApiByName() {
   for (var i = 0; i < obj.modules.length; i++) {
     var mod = obj.modules[i];
@@ -216,8 +187,6 @@ function sortApiByName() {
 
 sortApiByName();
 buildMenu();
-setupModAccordion();
-expandFirstMod();
 showApi(obj.modules[0].name, obj.modules[0].api[0].name);
 </script>
 

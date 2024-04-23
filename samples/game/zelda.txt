@@ -12,11 +12,11 @@ levels=5
 
 [tex2]
 name=tileset
-fileName=./res/ladx_tilese.png
+fileName=../res/ladx_tilese.png
 
 [tex4]
 name=sprite
-fileName=./res/ladx_spr.png
+fileName=../res/ladx_spr.png
 
 [map1]
 name=zelda link's awakening

@@ -12,9 +12,9 @@ if ($_FILES["fileToUpload"]["size"] > 2000000) {
 }
 
 // Allow certain file formats
-$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-if($imageFileType != "good") {
-  echo "Sorry, only good package (*.good) files are allowed.";
+$fileExt = pathinfo($target_file, PATHINFO_EXTENSION);
+if ("good" != $fileExt && "zip" != $fileExt) {
+  echo "Sorry, only good package (*.good,*.zip) files are allowed.";
   $uploadOk = 0;
 }
 
@@ -30,10 +30,5 @@ if ($uploadOk == 0) {
   }
 }
 
-if (headers_sent()) {
-  die("Redirect failed. Please click on this link: <a href='./index.php'>Home</a>");
-}
-else{
-  exit(header("refresh:2;Location: index.php"));
-}
+echo "<meta http-equiv='refresh' content='2;index.php'>";
 ?>

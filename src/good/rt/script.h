@@ -1937,7 +1937,7 @@ public:
   {
     int idMap = luaL_checkint(L, 1);
 
-    lua_Integer cx = 0, cy = 0;
+    int cx = 0, cy = 0;
     AppT::getInst().getResMapSize(idMap, cx, cy);
 
     lua_pushinteger(L, cx);
@@ -2105,7 +2105,7 @@ public:
   {
     int idTex = luaL_checkint(L, 1);
 
-    lua_Integer w = 0, h = 0;
+    int w = 0, h = 0;
     AppT::getInst().getResTexSize(idTex, w, h);
 
     lua_pushinteger(L, w);
@@ -2164,7 +2164,7 @@ public:
   {
     int idRes = luaL_checkint(L, 1);
 
-    lua_Integer w = 0, h = 0;
+    int w = 0, h = 0;
     AppT::getInst().getResTileSize(idRes, w, h);
 
     lua_pushinteger(L, w);

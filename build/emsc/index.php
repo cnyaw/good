@@ -23,8 +23,8 @@ foreach($files as $file) {
     echo '<td>' . "<a href='$dir/$file'>" . $file . '</a></td>';
     echo '<td>' . date("Y-m-d H:i", filemtime("$dir/$file")) . '</td>';
     echo '<td>' . filesize_formatted(filesize("$dir/$file")) . '</td>';
-    echo "<td><a href='good.html?pkg=$file'>Play</a></td>";
-    echo "<td><a href='gooded.html?pkg=$file'>Edit</a></td>";
+    echo "<td><a href='play.html?pkg=$file'>Play</a></td>";
+    echo "<td><a href='edit.html?pkg=$file'>Edit</a></td>";
     echo '</tr>';
   }
 }

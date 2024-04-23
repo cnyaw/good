@@ -7,23 +7,23 @@ levels=2
 
 [scripts]
 8=./montecarlo.lua
-4=./Util.lua
+4=../Util.lua
 
 [tex1]
 name=bkgnd
-fileName=./res/green.bmp
+fileName=../res/green.bmp
 
 [tex5]
 name=cards
-fileName=./res/card1.png
+fileName=../res/card1.png
 
 [tex7]
 name=empty
-fileName=./res/empty.bmp
+fileName=../res/empty.bmp
 
 [tex6]
 name=font
-fileName=./res/font.png
+fileName=../res/font.png
 
 [level2]
 script=Game

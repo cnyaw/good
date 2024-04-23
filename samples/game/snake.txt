@@ -11,7 +11,7 @@ levels=3
 7=./snake.lua
 
 [tex1]
-fileName=./res/weeder.png
+fileName=../res/weeder.png
 
 [map2]
 width=10

@@ -23,6 +23,7 @@
 #include "SDL/SDL_opengl.h"
 
 #include <emscripten.h>
+#include <emscripten/html5.h>
 
 #define GOOD_SUPPORT_ONLY_ONE_TEXTURE
 #define GOOD_SUPPORT_NO_LOGO
@@ -102,7 +103,7 @@ public:
     gx.resize(BaseT::mRes.mWidth, BaseT::mRes.mHeight);
 
     BaseT::trace("package loaded %s %dx%d", name.c_str(), BaseT::mRes.mWidth, BaseT::mRes.mHeight);
-    emscripten_set_canvas_size(BaseT::mRes.mWidth, BaseT::mRes.mHeight);
+    emscripten_set_canvas_element_size("canvas", BaseT::mRes.mWidth, BaseT::mRes.mHeight);
 
     BaseT::mAr->addArchiveFileSystem(&fs);
     app_keys = 0;
