@@ -68,18 +68,8 @@ public:
   typedef CPaneContainerImpl<CGoodPane> BaseT;
 
   BEGIN_MSG_MAP_EX(CGoodPane)
-    MSG_WM_ERASEBKGND(OnEraseBkgnd)
     CHAIN_MSG_MAP(CPaneContainerImpl<CGoodPane>)
   END_MSG_MAP()
-
-  //
-  // Message handler.
-  //
-
-  BOOL OnEraseBkgnd(CDCHandle dc)
-  {
-    return FALSE;                       // Force erase bkgnd.
-  }
 
   //
   // Override.
