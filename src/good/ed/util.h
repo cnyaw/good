@@ -190,6 +190,24 @@ void getObjDim(const LevelT &lvl, const ObjectT &obj, sw2::IntRect &rc)
   }
 }
 
+template<class T>
+void updateRelativePath(T& cont, const std::string &pathFrom, const std::string &pathTo)
+{
+  for (typename T::iterator it = cont.begin(); cont.end() != it; ++it) {
+    std::string p = compactPath(pathFrom + it->second.mFileName);
+    it->second.mFileName = getRelativePath(pathTo, getPathName(p)) + getFileName(it->second.mFileName);
+  }
+}
+
+template<class T>
+void updateRelativePath2(T& cont, const std::string &pathFrom, const std::string &pathTo)
+{
+  for (typename T::iterator it = cont.begin(); cont.end() != it; ++it) {
+    std::string p = compactPath(pathFrom + it->second);
+    it->second = getRelativePath(pathTo, getPathName(p)) + getFileName(it->second);
+  }
+}
+
 } // namespace ed
 
 } // namespace good

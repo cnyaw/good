@@ -826,6 +826,33 @@ public:
     return storeToStream(s) && sw2::Util::storeFileContent(name.c_str(), s);
   }
 
+  bool storeAs(const std::string &name)
+  {
+    if (!store(name)) {
+      return false;
+    }
+
+    //
+    // Update resource relative paths and save again.
+    //
+
+    if (!mRes.mFileName.empty()) {
+      std::string orgpath = getPathName(mRes.mFileName);
+      std::string newpath = getPathName(name);
+      if (orgpath != newpath) {
+        updateRelativePath(mRes.mSnd, orgpath, newpath);
+        updateRelativePath(mRes.mTex, orgpath, newpath);
+        updateRelativePath2(mRes.mScript, orgpath, newpath);
+        updateRelativePath2(mRes.mStgeScript, orgpath, newpath);
+        updateRelativePath2(mRes.mDep, orgpath, newpath);
+        (void)store(name);              // Save again.
+      }
+    }
+
+    mRes.mFileName = name;
+    return true;
+  }
+
   bool storeToStream(std::string &outs) const
   {
     sw2::Ini ini;

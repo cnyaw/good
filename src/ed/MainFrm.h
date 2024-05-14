@@ -698,38 +698,10 @@ public:
     std::string name = CompleteFileExt(dlg.m_szFileName, ".txt");
 
     PrjT& prj = PrjT::inst();
-    if (!prj.store(name)) {
+    if (!prj.storeAs(name)) {
       MessageBox(_T("Store File Failed!"), CString((LPCTSTR)IDR_MAINFRAME), MB_OK | MB_ICONERROR);
       return;
     }
-
-    //
-    // Update resource relative paths.
-    //
-
-    if (!mFileName.empty()) {
-      std::string orgpath = good::getPathName(prj.mRes.mFileName);
-      std::string newpath = good::getPathName(name);
-      if (orgpath != newpath) {
-
-        newpath = name;
-
-        UpdateRelativePath(prj.mRes.mSnd, orgpath, newpath);
-        UpdateRelativePath(prj.mRes.mTex, orgpath, newpath);
-
-        UpdateRelativePath2(prj.mRes.mScript, orgpath, newpath);
-        UpdateRelativePath2(prj.mRes.mStgeScript, orgpath, newpath);
-        UpdateRelativePath2(prj.mRes.mDep, orgpath, newpath);
-
-        //
-        // Save again.
-        //
-
-        (void)prj.store(name);
-      }
-    }
-
-    prj.mRes.mFileName = name;
 
     mFileName = name;
     SetCaption();
