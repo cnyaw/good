@@ -578,8 +578,8 @@ public:
       pen.CreatePen(PS_SOLID, 1, gl.color);
       memdc.SelectPen(pen);
       for (int j = 0; j < rcv.bottom; )  {
-        memdc.MoveTo(0, j);
-        memdc.LineTo(lvl.mWidth - 1, j);
+        memdc.MoveTo(rcv.left, j);
+        memdc.LineTo(rcv.right, j);
         j += gl.range;
       }
     }
@@ -594,21 +594,21 @@ public:
       pen.CreatePen(PS_SOLID, 1, gl.color);
       memdc.SelectPen(pen);
       for (int j = 0; j < rcv.right; ) {
-        memdc.MoveTo(j, 0);
-        memdc.LineTo(j, lvl.mHeight - 1);
+        memdc.MoveTo(j, rcv.top);
+        memdc.LineTo(j, rcv.bottom);
         j += gl.range;
       }
     }
   }
 
-  void DoPaintGridDots(CDC &memdc, const RECT &rcv, const POINT &sz) const
+  void DoPaintGridDots(CDC &memdc, const RECT &rcv) const
   {
     PrjT::LevelT const& lvl = PrjT::inst().getLevel(mEditor.mId);
     if (lvl.isShowSnap()) {
       int sw = lvl.getSnapWidth(), sh = lvl.getSnapHeight();
       int offsetx = rcv.left % sw, offsety = rcv.top % sh;
-      for (int i = 0; i <= sz.x / sw; i++) {
-        for (int j = 0; j <= sz.y / sh; j++) {
+      for (int i = rcv.left / sw; i <= rcv.right / sw; i++) {
+        for (int j = rcv.top / sh; j <= rcv.bottom / sh; j++) {
           memdc.SetPixel(sw * i + offsetx, sh * j + offsety, RGB(0,0,0));
         }
       }
@@ -714,7 +714,7 @@ public:
     // Grid dots.
     //
 
-    DoPaintGridDots(memdc, rcv, sz);
+    DoPaintGridDots(memdc, rcv);
 
     //
     // Blit.
