@@ -613,11 +613,6 @@ public:
     return removeResource(mRes.mLevel, mRes.mLevelIdx, id);
   }
 
-  bool removeLevelObj(int idLvl, const std::vector<int> &ids)
-  {
-    return getLevel(idLvl).removeObj(ids);
-  }
-
   //
   // Script opt.
   //
