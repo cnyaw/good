@@ -18,7 +18,6 @@ public:
   enum { IDD = IDD_PROPVIEW };
 
   CPropertyListCtrl mProp;
-  CFont mBoldFont;
 
   int mResId;
 
@@ -95,10 +94,6 @@ public:
   {
     mProp.SubclassWindow(GetDlgItem(IDC_LIST1));
     mProp.SetExtendedListStyle(PLS_EX_CATEGORIZED | PLS_EX_SINGLECLICKEDIT | PLS_EX_XPLOOK);
-
-    CLogFont lf = AtlGetDefaultGuiFont();
-    lf.MakeBolder();
-    mBoldFont.CreateFontIndirect(&lf);
 
     return TRUE;
   }
