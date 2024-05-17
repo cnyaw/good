@@ -12,12 +12,10 @@
 #pragma once
 
 template<class MainT>
-class CExplorerPropView : public CDialogImpl<CExplorerPropView<MainT> >
+class CExplorerPropView : public CPropertyListCtrl
 {
 public:
-  enum { IDD = IDD_PROPVIEW };
-
-  CPropertyListCtrl mProp;
+  typedef CPropertyListCtrl BaseT;
 
   int mResId;
 
@@ -50,14 +48,9 @@ public:
     }
   }
 
-  void Reset()
-  {
-    mProp.ResetContent();
-  }
-
   void SetProperty(int idItem)
   {
-    Reset();
+    ResetContent();
 
     if (-1 == idItem) {
       return;
@@ -66,17 +59,16 @@ public:
     mResId = idItem;
 
     IResourceProperty* prop = GetProperty(idItem);
-    prop->FillProperty(mProp);
+    prop->FillProperty((BaseT&)*this);
   }
 
   BEGIN_MSG_MAP_EX(CExplorerPropView)
     MSG_WM_CLOSE(OnClose)
-    MSG_WM_INITDIALOG(OnInitDialog)
-    MSG_WM_SIZE(OnSize)
+    MESSAGE_HANDLER(WM_CREATE, OnCreate)
     NOTIFY_HANDLER_EX(IDC_LIST1, PIN_BROWSE, OnBrowse)
     NOTIFY_HANDLER_EX(IDC_LIST1, PIN_ITEMCHANGING, OnPropChanging)
     NOTIFY_HANDLER_EX(IDC_LIST1, PIN_ITEMCHANGED, OnPropChanged)
-    REFLECT_NOTIFICATIONS()             // CPropertyListCtrl needs this.
+    CHAIN_MSG_MAP(BaseT)
   END_MSG_MAP()
 
   //
@@ -85,30 +77,17 @@ public:
 
   void OnClose()
   {
-    Reset();
+    ResetContent();
 
     SetMsgHandled(FALSE);
   }
 
-  BOOL OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
-  {
-    mProp.SubclassWindow(GetDlgItem(IDC_LIST1));
-    mProp.SetExtendedListStyle(PLS_EX_CATEGORIZED | PLS_EX_SINGLECLICKEDIT | PLS_EX_XPLOOK);
-
-    return TRUE;
-  }
-
-  void OnSize(UINT nType, CSize size)
-  {
-    if (!mProp.IsWindow()) {
-      return;
-    }
-
-    RECT rcClient;
-    GetClientRect(&rcClient);
-    mProp.MoveWindow(&rcClient);
-    mProp.Invalidate(FALSE);
-  }
+   LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+   {
+      LRESULT lRes = BaseT::OnCreate(uMsg, wParam, lParam, bHandled);
+      SetExtendedListStyle(PLS_EX_CATEGORIZED | PLS_EX_SINGLECLICKEDIT | PLS_EX_XPLOOK);
+      return lRes;
+   }
 
   //
   // Notification.
@@ -116,14 +95,14 @@ public:
 
   LRESULT OnBrowse(LPNMHDR pnmh)
   {
-    GetProperty(mResId)->UpdateProperty(mProp);
+    GetProperty(mResId)->UpdateProperty((BaseT&)*this);
     return 0;
   }
 
   LRESULT OnPropChanging(LPNMHDR pnmh)
   {
     IResourceProperty *prop = GetProperty(mResId);
-    return prop->OnPropChanging(mProp, (LPNMPROPERTYITEM)pnmh);
+    return prop->OnPropChanging((BaseT&)*this, (LPNMPROPERTYITEM)pnmh);
   }
 
   LRESULT OnPropChanged(LPNMHDR pnmh)
@@ -131,7 +110,7 @@ public:
     IResourceProperty* pres;
     pres = GetProperty(mResId);
 
-    pres->OnPropChanged(mProp, (LPNMPROPERTYITEM)pnmh); // Item changed
+    pres->OnPropChanged((BaseT&)*this, (LPNMPROPERTYITEM)pnmh); // Item changed
 
     //
     // (Redraw view, change treeitem name, tab name) if necessary.
@@ -291,7 +270,7 @@ public:
     if (-1 != id) {
       mProp.mResId = id;
     }
-    mProp.GetProperty(mProp.mResId)->UpdateProperty(mProp.mProp);
+    mProp.GetProperty(mProp.mResId)->UpdateProperty((CPropertyListCtrl&)*this);
   }
 
   BEGIN_MSG_MAP_EX(CExplorerView)
@@ -302,6 +281,7 @@ public:
     NOTIFY_CODE_HANDLER_EX(TVN_KEYDOWN, OnTreeKeyDown)
     NOTIFY_CODE_HANDLER_EX(TVN_SELCHANGED, OnTreeSelChanged)
     COMMAND_ID_HANDLER_EX(ID_PANE_CLOSE, OnCloseProjView)
+    REFLECT_NOTIFICATIONS()             // CPropertyListCtrl needs this.
   END_MSG_MAP()
 
   //
@@ -769,7 +749,7 @@ end:
 
     HTREEITEM sel = mTree.GetSelectedItem();
     if (NULL == sel) {
-      mProp.Reset();
+      mProp.ResetContent();
       return 0;
     }
 
@@ -778,7 +758,7 @@ end:
       if (GOOD_RESOURCE_PROJECT == (int)mTree.GetItemData(sel)) {
         mProp.SetProperty(-2);          // -2 for dummy.
       } else {
-        mProp.Reset();
+        mProp.ResetContent();
       }
       return 0;
     }

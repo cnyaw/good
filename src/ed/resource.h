@@ -16,7 +16,6 @@
 #define IDR_TB_SPRITEEDIT               222
 #define IDR_TB_LEVELEDIT                227
 #define IDD_ADDNEWLEVELITEM             229
-#define IDD_PROPVIEW                    234
 #define IDB_BITMAP1                     235
 #define IDR_MENU_SNAP                   240
 #define IDI_ICON1                       241
@@ -138,7 +137,7 @@
 #define ID_LEVELEDIT_ADDTEXT            32952
 
 // Next default values for new objects
-// 
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        266

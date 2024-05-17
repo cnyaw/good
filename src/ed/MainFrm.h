@@ -558,7 +558,7 @@ public:
 
     mFileName.clear();                  // Set un-titiled.
     mExpView.mTree.DeleteAllItems();
-    mExpView.mProp.Reset();
+    mExpView.mProp.ResetContent();
     OnWindowCloseAll(0, 0, 0);
 
     CString cap;
@@ -584,7 +584,7 @@ public:
     //
 
     InitTree();
-    mExpView.mProp.Reset();
+    mExpView.mProp.ResetContent();
     OnWindowCloseAll(0, 0, 0);
 
     PrjT& prj = PrjT::inst();
@@ -647,7 +647,7 @@ public:
     SaveConfig();
 
     InitTree();
-    mExpView.mProp.Reset();
+    mExpView.mProp.ResetContent();
     OnWindowCloseAll(0, 0, 0);
 
     mFileName = dlg.m_szFileName;
@@ -742,7 +742,7 @@ public:
     SaveConfig();
 
     InitTree();
-    mExpView.mProp.Reset();
+    mExpView.mProp.ResetContent();
     OnWindowCloseAll(0, 0, 0);
 
     mFileName = sFile;

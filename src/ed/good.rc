@@ -27,18 +27,18 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
     "#include ""atlres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
     "CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST ""res\\\\good.exe.manifest""\r\n"
     "\0"
@@ -166,7 +166,7 @@ IDB_LVLOBJ              BITMAP                  "res\\lvlobj.bmp"
 // Menu
 //
 
-IDR_MAINFRAME MENU 
+IDR_MAINFRAME MENU
 BEGIN
     POPUP "&File"
     BEGIN
@@ -217,7 +217,7 @@ BEGIN
     END
 END
 
-IDR_MENU_SNAP MENU 
+IDR_MENU_SNAP MENU
 BEGIN
     POPUP "0"
     BEGIN
@@ -233,7 +233,7 @@ BEGIN
     END
 END
 
-IDR_MENU_LINE MENU 
+IDR_MENU_LINE MENU
 BEGIN
     POPUP "0"
     BEGIN
@@ -308,13 +308,6 @@ BEGIN
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,41,10,246,1
     LTEXT           "Tileset",IDC_STATIC,7,90,31,8
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,34,93,252,1
-END
-
-IDD_PROPVIEW DIALOGEX 0, 0, 186, 90
-STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_SYSMENU
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
-BEGIN
-    LISTBOX         IDC_LIST1,7,43,48,40,LBS_OWNERDRAWVARIABLE | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
 END
 
 IDD_CHOICETEXTURE DIALOGEX 0, 0, 288, 166
@@ -399,7 +392,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_NEWMAP, DIALOG
     BEGIN
@@ -489,7 +482,7 @@ END
 // Accelerator
 //
 
-IDR_MAINFRAME ACCELERATORS 
+IDR_MAINFRAME ACCELERATORS
 BEGIN
     "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
     VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
@@ -531,13 +524,13 @@ IDC_POINTER             CURSOR                  "res\\arrow.cur"
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDR_MAINFRAME           "Good Game Editor"
     IDS_HELP_ADDGRIDLINE    "Drag from here to add new grid line"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_FILE_NEW             "Create a new project\nNew Project"
     ID_FILE_OPEN            "Open an existing document\nOpen"
@@ -550,19 +543,19 @@ BEGIN
     ID_FILE_PRINT_PREVIEW   "Display full pages\nPrint Preview"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
     ID_APP_EXIT             "Quit the application; prompts to save documents\nExit"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
     ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_WINDOW_NEW           "Open another window for the active document\nNew Window"
     ID_WINDOW_ARRANGE       "Arrange icons at the bottom of the window\nArrange Icons"
@@ -572,7 +565,7 @@ BEGIN
     ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_EDIT_CLEAR           "Erase the selection\nErase"
     ID_EDIT_CLEAR_ALL       "Erase everything\nErase All"
@@ -587,7 +580,7 @@ BEGIN
     ID_EDIT_REDO            "Redo the previously undone action\nRedo"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ATL_IDS_SCSIZE          "Change the window size"
     ATL_IDS_SCMOVE          "Change the window position"
@@ -598,24 +591,24 @@ BEGIN
     ATL_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ATL_IDS_SCRESTORE       "Restore the window to normal size"
     ATL_IDS_SCTASKLIST      "Activate Task List"
     ATL_IDS_MDICHILD        "Activate this window"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ATL_IDS_IDLEMESSAGE     "Ready"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ATL_IDS_MRU_FILE        "Open this document"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_WINDOW_CLOSE         "Close the active document\nClose"
     ID_WINDOW_CLOSE_ALL     "Close the all document\nClose All"
@@ -627,7 +620,7 @@ BEGIN
     ID_MAPLAYER_MERGE       "Merge Layer Down\nMerge Layer Down"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_MAPEDIT_DRAW         "Draw\nDraw Tool"
     ID_MAPEDIT_ERASE        "Erase\nErase Tool"
@@ -635,14 +628,14 @@ BEGIN
     ID_MAPEDIT_GRID         "Grid\nToggle Grid"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_VIEW_PROJVIEW        "Show or hide project view\nProject View"
     ID_FILE_ADDNEWITEM      "Add new resource item\nAdd New Item"
     ID_MAPTILESET_ADD       "Add Tileset\nAdd Tileset"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_SPRITETILESET_INSERT "Insert Frame\nInsert Frame"
     ID_MAPTILESET_REMOVE    "Remove Tileset\nRemove Tileset"
@@ -651,7 +644,7 @@ BEGIN
     ID_SPRITEPREVIEW_PLAY   "Play\nPlay"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_LEVELEDIT_REMOVE     "Remove Tool\nRemove"
     ID_LEVELEDIT_SELITEM    "Select tool\nSelect"
@@ -667,7 +660,7 @@ BEGIN
     ID_LEVELEDIT_MOVEUP     "Move up\nMove Up"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_LEVELEDIT_MOVEDOWN   "Move down\nMove Down"
     ID_LEVELEDIT_TOPMOST    "Move topmost\nMove Topmost"
@@ -678,7 +671,7 @@ BEGIN
     ID_LEVELEDIT_GRID       "Snap\nToggle Snap"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_PROJECT_NEWSEARCHPATH "Add new search path\nNew Search Path"
     ID_HELP_CHECKFORUPDATE  "Check for Update\nCheckUpdate"
@@ -690,12 +683,12 @@ BEGIN
     ID_LEVELEDIT_ALIGNRIGHT "Align Right\nAlign Right"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_SPRITEEDIT_INSERT    "Insert Frame\nInsert Frame"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_LEVELEDIT_ADDTEXBG   "New Texture Object\nNew Texture Obj"
     ID_LEVELEDIT_ADDMAPBG   "New Map Object\nNew Map Obj"
@@ -707,7 +700,7 @@ BEGIN
     ID_LEVELEDIT_ADDCOLBG   "New Color Object\nNew Color Obj"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_FILE_ADDNEWSTGE      "Add new particle script resource\nNew Particle Script"
     ID_VIEW_SHOWFPS         "Show or hide FPS"
@@ -715,7 +708,7 @@ BEGIN
     ID_HELP_GOODAPIREFERENCE "API Help\nGoto API Ref Page"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_LEVELEDIT_ALIGNTOP   "Align Top\nAlign Top"
     ID_LEVELEDIT_ALIGNBOTTOM "Align Bottom\nAlign Bottom"
@@ -726,7 +719,7 @@ BEGIN
     ID_LEVELEDIT_ADDLVLOBJ  "New Level Object\nNew Level Obj"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_LEVELEDIT_VERTICLE   "Verticle\nVerticle"
     ID_LEVELEDIT_HORIZONTAL "Horizontal\nHorizontal"
