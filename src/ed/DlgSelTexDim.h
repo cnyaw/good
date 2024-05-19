@@ -187,11 +187,9 @@ public:
   }
 };
 
-class CDlgSelTextureDim : public CDialogImpl<CDlgSelTextureDim>
+class CDlgSelTextureDim : public CSimpleDialog<IDD_SELTEXDIM>
 {
 public:
-  enum { IDD = IDD_SELTEXDIM };
-
   CSelTextureDimView mView;
 
   CDlgSelTextureDim(int id, int x, int y, int w, int h) : mView(id, x, y, w, h)
@@ -200,9 +198,8 @@ public:
 
   BEGIN_MSG_MAP_EX(CDlgSelTextureDim)
     MSG_WM_INITDIALOG(OnInitDialog)
-    COMMAND_ID_HANDLER_EX(IDOK, OnCloseCmd)
-    COMMAND_ID_HANDLER_EX(IDCANCEL, OnCloseCmd)
     COMMAND_ID_HANDLER_EX(IDC_BUTTON1, OnSelectAll)
+    CHAIN_MSG_MAP(CSimpleDialog)
   END_MSG_MAP()
 
   BOOL OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
@@ -220,11 +217,6 @@ public:
     mView.SetFocus();
 
     return FALSE;                       // I want to control which is focus window.
-  }
-
-  void OnCloseCmd(UINT uNotifyCode, int nID, CWindow wndCtl)
-  {
-    EndDialog(nID);
   }
 
   void OnSelectAll(UINT uNotifyCode, int nID, CWindow wndCtl)

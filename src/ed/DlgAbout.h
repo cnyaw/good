@@ -20,23 +20,14 @@ void ShellOpen(const char *path)
   ShellExecuteExA(&si);
 }
 
-class CDlgAbout : public CDialogImpl<CDlgAbout>
+class CDlgAbout : public CSimpleDialog<IDD_ABOUTBOX>
 {
 public:
-  enum { IDD = IDD_ABOUTBOX };
 
   BEGIN_MSG_MAP_EX(CDlgAbout)
-    MSG_WM_INITDIALOG(OnInitDialog)
     COMMAND_RANGE_HANDLER_EX(IDC_BUTTON1, IDC_BUTTON2, OnUrl)
-    COMMAND_ID_HANDLER_EX(IDOK, OnCloseCmd)
-    COMMAND_ID_HANDLER_EX(IDCANCEL, OnCloseCmd)
+    CHAIN_MSG_MAP(CSimpleDialog)
   END_MSG_MAP()
-
-  BOOL OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
-  {
-    CenterWindow(GetParent());
-    return TRUE;
-  }
 
   void OnUrl(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
@@ -45,11 +36,6 @@ public:
       "https://github.com/cnyaw/good"
     };
     ShellOpen(URL[nID - IDC_BUTTON1]);
-  }
-
-  void OnCloseCmd(UINT uNotifyCode, int nID, CWindow wndCtl)
-  {
-    EndDialog(nID);
   }
 };
 

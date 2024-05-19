@@ -61,11 +61,9 @@ public:
   }
 };
 
-class CDlgLevelObjPicker : public CDialogImpl<CDlgLevelObjPicker>
+class CDlgLevelObjPicker : public CSimpleDialog<IDD_CHOICELVLOBJ>
 {
 public:
-  enum { IDD = IDD_CHOICELVLOBJ };
-
   int mId;
   CImageListManaged mImages;
   CTreeViewCtrlEx mTree;
@@ -104,9 +102,8 @@ public:
 
   BEGIN_MSG_MAP_EX(CDlgLevelObjPicker)
     MSG_WM_INITDIALOG(OnInitDialog)
-    COMMAND_ID_HANDLER_EX(IDOK, OnCloseCmd)
-    COMMAND_ID_HANDLER_EX(IDCANCEL, OnCloseCmd)
     NOTIFY_CODE_HANDLER_EX(TVN_SELCHANGED, OnTreeSelChanged)
+    CHAIN_MSG_MAP(CSimpleDialog)
   END_MSG_MAP()
 
   BOOL OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
@@ -115,11 +112,6 @@ public:
     ::EnableWindow(GetDlgItem(IDOK), FALSE);
     InitTreeView();
     return TRUE;
-  }
-
-  void OnCloseCmd(UINT uNotifyCode, int nID, CWindow wndCtl)
-  {
-    EndDialog(nID);
   }
 
   LRESULT OnTreeSelChanged(LPNMHDR pnmh)
