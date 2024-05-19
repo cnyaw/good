@@ -25,8 +25,7 @@ public:
 
   BEGIN_MSG_MAP_EX(CDlgGotoView)
     MSG_WM_INITDIALOG(OnInitDialog)
-    COMMAND_ID_HANDLER_EX(IDOK, OnCloseCmd)
-    COMMAND_ID_HANDLER_EX(IDCANCEL, OnCloseCmd)
+    COMMAND_RANGE_HANDLER_EX(IDOK, IDCANCEL, OnCloseCmd)
   END_MSG_MAP()
 
   BOOL OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
