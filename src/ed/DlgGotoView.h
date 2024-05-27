@@ -34,16 +34,11 @@ public:
     s.Format(_T("Offset X (0 - %d)"), mViewCx - 1);
     ::SetWindowText(GetDlgItem(IDC_STATIC1), s);
 
-    CEdit edx = GetDlgItem(IDC_EDIT1);
-    s.Format(_T("%d"), mOffsetX);
-    edx.SetWindowText(s);
-
     s.Format(_T("Offset Y (0 - %d)"), mViewCy - 1);
     ::SetWindowText(GetDlgItem(IDC_STATIC2), s);
 
-    CEdit edy = GetDlgItem(IDC_EDIT2);
-    s.Format(_T("%d"), mOffsetY);
-    edy.SetWindowText(s);
+    ::SetDlgItemInt(m_hWnd, IDC_EDIT1, mOffsetX, TRUE);
+    ::SetDlgItemInt(m_hWnd, IDC_EDIT2, mOffsetY, TRUE);
 
     CenterWindow(GetParent());
     return TRUE;
