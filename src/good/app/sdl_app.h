@@ -36,6 +36,8 @@ class SDLApplication : public Application<SDLApplication, gx::SDLImage, snd::Aud
   }
 public:
 
+  sw2::FpsHelper mFps;
+
   //
   // Display.
   //
@@ -66,7 +68,7 @@ public:
     // Main loop.
     //
 
-    Uint32 nextTime = SDL_GetTicks() + TICK;
+    mFps.start(mRes.mFps);
     Uint32 keys = 0;
 
     while (true) {
@@ -101,14 +103,14 @@ public:
       if (trigger(keys, ptMouse)) {
         renderAll();
         SDL_Flip(mScreen);
+        mFps.tick();
       }
 
       //
       // FPS control.
       //
 
-      SDL_Delay(timeLeft(nextTime));
-      nextTime += TICK;
+      mFps.wait();
     }
   }
 
@@ -188,19 +190,6 @@ public:
     }
 
     return false;
-  }
-
-  Uint32 timeLeft(Uint32 nextTime) const
-  {
-    Uint32 now = SDL_GetTicks();
-    if(nextTime <= now) {
-      return 0;
-    } else {
-      if ((int)(nextTime - now) > 3 * TICK) {
-        nextTime = now + TICK;
-      }
-      return nextTime - now;
-    }
   }
 };
 

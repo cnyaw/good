@@ -254,18 +254,6 @@ public:
 
   void DrawFpsInfo_i()
   {
-    static int FPS = 0;
-    static int framesPerSecond = 0;     // This will store our FPS.
-    static DWORD LastTime = 0;          // This will hold the time from the last frame.
-    DWORD CurrentTime = GetTickCount();
-    framesPerSecond += 1;
-
-    if (CurrentTime - LastTime >= 1000) {
-      LastTime = CurrentTime;
-      FPS = framesPerSecond;
-      framesPerSecond = 0;
-    }
-
     //
     // Draw FPS info.
     //
@@ -274,7 +262,7 @@ public:
     maxActors = max(maxActors, mActors.size());
 
     char buff[512], buff2[128];;
-    sprintf(buff, "%d,d%d/%d,o%d/%d", FPS, gx.nLastDrawCalls, maxDrawCalls, mActors.size(), maxActors);
+    sprintf(buff, "%d,d%d/%d,o%d/%d", BaseT::fps.getFps(), gx.nLastDrawCalls, maxDrawCalls, mActors.size(), maxActors);
     if (mCanvas.size()) {
       sprintf(buff2, ",c%d", mCanvas.size());
       strcat(buff, buff2);

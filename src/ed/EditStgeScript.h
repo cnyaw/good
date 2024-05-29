@@ -65,40 +65,20 @@ public:
   stge::ScriptManager mScm;
   MyObjectManager mOm;
   stge::Object mPlayer;
+  sw2::FpsHelper mFps;
 
   float mDepth;
 
   CStgeView()
   {
     mOm.init(&mScm);
+    mFps.start(FPS);
 
     int w = PrjT::inst().mRes.mWidth/2, h = PrjT::inst().mRes.mHeight/2;
     mBounding = sw2::IntRect(-w, -h, w, h);
 
     mOutterBounding = mBounding;
     mOutterBounding.inflate(mBounding.width()/10, mBounding.height()/10);
-  }
-
-  DWORD TimeLeft()
-  {
-    int const TICK = (int)(1000/(float)FPS);
-    static DWORD nextTime = ::GetTickCount() + TICK;
-
-    DWORD now = ::GetTickCount();
-
-    DWORD left = 0;
-    if (nextTime > now) {
-      left = nextTime - now;
-    }
-
-    nextTime += (int)(1000/(float)FPS);
-
-    if ((int)(nextTime - now) > 3 * TICK) {
-      nextTime = now + TICK;
-      left = 0;
-    }
-
-    return left;
   }
 
   bool IsMainWndActive() const
@@ -217,7 +197,7 @@ public:
     //
 
     if (IsWindowVisible() && IsMainWndActive()) {
-      ::Sleep(TimeLeft());
+      mFps.wait();
 
       //
       // Update.

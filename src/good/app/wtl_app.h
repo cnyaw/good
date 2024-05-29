@@ -35,11 +35,11 @@ public:
   DECLARE_FRAME_WND_CLASS(NULL, IDR_MAINFRAME)
 
   CGLMessageLoop theLoop;
+  sw2::FpsHelper fps;
 
   GxT gx;
   sw2::IntPoint lastMousePt;
 
-  DWORD nextTime;
   bool bAlwaysUpdate;
 
   WtlApplicationImpl() : bAlwaysUpdate(false)
@@ -79,7 +79,7 @@ public:
       }
     }
 
-    ::Sleep(TimeLeft());
+    fps.wait();
 
     return FALSE;
   }
@@ -94,27 +94,6 @@ public:
     if (mExit) {
       DestroyWindow();
     }
-  }
-
-  DWORD TimeLeft()
-  {
-    int const TICK = (int)(1000/(float)mRes.mFps);
-
-    DWORD now = ::GetTickCount();
-
-    DWORD left = 0;
-    if(nextTime > now) {
-      left = nextTime - now;
-    }
-
-    nextTime += TICK;
-
-    if ((int)(nextTime - now) > 3 * TICK) {
-      nextTime = now + TICK;
-      left = 0;
-    }
-
-    return left;
   }
 
   int GetKeyState() const
@@ -134,6 +113,7 @@ public:
   void OnRender(void)
   {
     renderAll();
+    fps.tick();
   }
 
   void OnResize(int width, int height)
@@ -151,6 +131,7 @@ public:
     gx.SCREEN_H = mRes.mHeight;
 
     ResizeClient(mRes.mWidth, mRes.mHeight);
+    fps.start(mRes.mFps);
 
     return true;
   }
@@ -192,9 +173,6 @@ public:
       SndT::setMusicVolume(volMus);
       SndT::setSoundVolume(volSnd);
     }
-
-    int const TICK = (int)(1000/(float)mRes.mFps);
-    nextTime = ::GetTickCount() + TICK;
   }
 
   int OnCreate(LPCREATESTRUCT lpCreateStruct)
