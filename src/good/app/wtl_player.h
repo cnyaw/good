@@ -345,6 +345,19 @@ public:
 
   void OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
   {
+#ifndef ID_VIEW_OUTPUTWINDOW
+    if (('o' == nChar || 'O' == nChar) && (::GetKeyState(VK_LCONTROL) & 0x8000) && (::GetKeyState(VK_LMENU) & 0x8000)) {
+      OnViewOutputWindow(0, 0, 0);
+      return;
+    }
+#endif
+#ifndef ID_VIEW_TEXTURE
+    if (('t' == nChar || 'T' == nChar) && (::GetKeyState(VK_LCONTROL) & 0x8000) && (::GetKeyState(VK_LMENU) & 0x8000)) {
+      OnViewTextureInfo(0, 0, 0);
+      return;
+    }
+#endif
+
     if (showOutput) {
       const int nPage = getNumLogsPerPage();
       switch (nChar)
