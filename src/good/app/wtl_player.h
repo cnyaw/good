@@ -56,7 +56,7 @@ public:
   int iTexs;
   int maxDrawCalls, maxActors;
 
-  CPlayerWindowImpl() : showFPS(false), showOutput(false), showTexInfo(false), maxDrawCalls(0), maxActors(0), caretTimer(0), iCmdHist(0)
+  CPlayerWindowImpl() : showFPS(true), showOutput(false), showTexInfo(false), maxDrawCalls(0), maxActors(0), caretTimer(0), iCmdHist(0)
   {
     tip = "Press Ctrl+Alt+O to toggle trace messages";
   }
