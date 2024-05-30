@@ -47,12 +47,12 @@ CAppModule _Module;
 #include "../good/gx/imgp_gx.h"
 #include "../good/snd/openal_snd.h"
 
-class CPlayerWindow :
-  public CFrameWindowImpl<CPlayerWindow>, public CDoubleBufferImpl<CPlayerWindow>,
+class CPlayer :
+  public CFrameWindowImpl<CPlayer>, public CDoubleBufferImpl<CPlayer>,
   public CMessageFilter,
-  public good::rt::Application<CPlayerWindow, good::gx::ImgpImage, good::snd::ALSound, good::gx::Imgp>
+  public good::rt::Application<CPlayer, good::gx::ImgpImage, good::snd::ALSound, good::gx::Imgp>
 {
-  CPlayerWindow() : gx(scr)
+  CPlayer() : gx(scr)
   {
   }
 public:
@@ -63,15 +63,15 @@ public:
 
   sw2::IntPoint lastMousePt;
 
-  static CPlayerWindow& getInst()
+  static CPlayer& getInst()
   {
-    static CPlayerWindow i;
+    static CPlayer i;
     return i;
   }
 
   virtual BOOL PreTranslateMessage(MSG* pMsg)
   {
-    return CFrameWindowImpl<CPlayerWindow>::PreTranslateMessage(pMsg);
+    return CFrameWindowImpl<CPlayer>::PreTranslateMessage(pMsg);
   }
 
   void Exit()
@@ -112,22 +112,22 @@ public:
     }
   }
 
-  BEGIN_MSG_MAP_EX(CPlayerWindow)
+  BEGIN_MSG_MAP_EX(CPlayer)
     MSG_WM_CREATE(OnCreate)
     MSG_WM_DESTROY(OnDestroy)
     MSG_WM_KEYDOWN(OnKeyDown)
     MSG_WM_TIMER(OnTimer)
-    CHAIN_MSG_MAP(CFrameWindowImpl<CPlayerWindow>)
-    CHAIN_MSG_MAP(CDoubleBufferImpl<CPlayerWindow>)
+    CHAIN_MSG_MAP(CFrameWindowImpl<CPlayer>)
+    CHAIN_MSG_MAP(CDoubleBufferImpl<CPlayer>)
   END_MSG_MAP()
 
   int OnCreate(LPCREATESTRUCT lpCreateStruct)
   {
     SetMenu(NULL);
 
-    //
-    // Register object for message filtering and idle updates.
-    //
+    CMessageLoop* pLoop = _Module.GetMessageLoop();
+    ATLASSERT(pLoop != NULL);
+    pLoop->AddMessageFilter(this);
 
     ResizeClient(320, 240);
 
@@ -140,6 +140,10 @@ public:
 
   void OnDestroy()
   {
+    CMessageLoop* pLoop = _Module.GetMessageLoop();
+    ATLASSERT(pLoop != NULL);
+    pLoop->RemoveMessageFilter(this);
+
     uninit();
 
     onAppDestroy();
@@ -176,51 +180,26 @@ public:
   }
 };
 
-int Run(LPTSTR lpstrCmdLine, int nCmdShow = SW_SHOWDEFAULT)
+int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpstrCmdLine, int nCmdShow)
 {
-  //
-  // Start the app.
-  //
-
   CMessageLoop theLoop;
-  _Module.AddMessageLoop(&theLoop);
-
-  CPlayerWindow& wndMain = CPlayerWindow::getInst();
-
-  if (wndMain.CreateEx() == NULL) {
-    ATLTRACE(_T("Main gl window creation failed!\n"));
-    return 0;
-  }
-
-  if (!wndMain.init(lpstrCmdLine)) {
-    ATLTRACE(_T("Init good failed!\n"));
-    return 0;
-  }
-
-  wndMain.ShowWindow(SW_SHOW);
-
-  timeBeginPeriod(1);
-  int nRet = theLoop.Run();
-  timeEndPeriod(1);
-
-  _Module.RemoveMessageLoop();
-  return nRet;
+  return good::rt::WinMainPlay<CPlayer>(hInstance, lpstrCmdLine, nCmdShow, lpstrCmdLine, &theLoop);
 }
 #else
 #include "../good/app/wtl_app.h"
 
-class CPlayerWindow : public good::rt::WtlApplicationImpl<CPlayerWindow>
+class CPlayer : public good::rt::WtlApplicationImpl<CPlayer>
 {
 public:
-  typedef good::rt::WtlApplicationImpl<CPlayerWindow> BaseT;
+  typedef good::rt::WtlApplicationImpl<CPlayer> BaseT;
 
-  static CPlayerWindow& getInst()
+  static CPlayer& getInst()
   {
-    static CPlayerWindow inst;
+    static CPlayer inst;
     return inst;
   } // getInst
 
-  BEGIN_MSG_MAP_EX(CPlayerWindow)
+  BEGIN_MSG_MAP_EX(CPlayer)
     MSG_WM_SYSCOMMAND(OnSysCommand)
     CHAIN_MSG_MAP(BaseT)
   END_MSG_MAP()
@@ -245,59 +224,9 @@ public:
   }
 };
 
-int Run(LPTSTR lpstrCmdLine, int nCmdShow)
-{
-  if (0 >= strlen(lpstrCmdLine)) {
-    CDlgAbout().DoModal();
-    return 0;
-  }
-
-  CPlayerWindow& wndMain = CPlayerWindow::getInst();
-
-  if (wndMain.CreateEx() == NULL) {
-    ATLTRACE(_T("Main gl window creation failed!\n"));
-    return 0;
-  }
-
-  if (!wndMain.init(lpstrCmdLine)) {
-    ATLTRACE(_T("Init good failed!\n"));
-    return 0;
-  }
-
-  wndMain.ShowWindow(SW_SHOW);
-
-  wndMain.theLoop.AddMessageFilter(&wndMain);
-  timeBeginPeriod(1);
-  int nRet = wndMain.theLoop.Run();
-  timeEndPeriod(1);
-  wndMain.theLoop.RemoveMessageFilter(&wndMain);
-
-  _Module.RemoveMessageLoop();
-  return nRet;
-}
-#endif // GOOD_SUPPORT_IMGP_GX
-
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpstrCmdLine, int nCmdShow)
 {
-    HRESULT hRes = ::CoInitialize(NULL);
-// If you are running on NT 4.0 or higher you can use the following call instead to
-// make the EXE free threaded. This means that calls come in on a random RPC thread.
-//    HRESULT hRes = ::CoInitializeEx(NULL, COINIT_MULTITHREADED);
-    ATLASSERT(SUCCEEDED(hRes));
-
-    // this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used
-    ::DefWindowProc(NULL, 0, 0, 0L);
-
-    AtlInitCommonControls(ICC_BAR_CLASSES);    // add flags to support other controls
-
-    hRes = _Module.Init(NULL, hInstance);
-    ATLASSERT(SUCCEEDED(hRes));
-
-    int nRet = Run(lpstrCmdLine, nCmdShow);
-
-    _Module.Term();
-    ::CoUninitialize();
-
-    return nRet;
+  return good::rt::WinMainPlay<CPlayer>(hInstance, lpstrCmdLine, nCmdShow, lpstrCmdLine, &CPlayer::getInst().theLoop);
 }
+#endif // GOOD_SUPPORT_IMGP_GX
 #endif // GOOD_SUPPORT_SDL

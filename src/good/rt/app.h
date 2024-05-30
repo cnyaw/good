@@ -859,6 +859,53 @@ public:
 #endif
 };
 
+#ifdef WIN32
+template<class AppT>
+int WinMainPlay(HINSTANCE hInstance, LPTSTR lpstrCmdLine, int nCmdShow, const char *prjName, CMessageLoop *lpLoop)
+{
+  HRESULT hRes = ::CoInitialize(NULL);
+  // If you are running on NT 4.0 or higher you can use the following call instead to
+  // make the EXE free threaded. This means that calls come in on a random RPC thread.
+  //    HRESULT hRes = ::CoInitializeEx(NULL, COINIT_MULTITHREADED);
+  ATLASSERT(SUCCEEDED(hRes));
+
+  // this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used
+  ::DefWindowProc(NULL, 0, 0, 0L);
+
+  AtlInitCommonControls(ICC_COOL_CLASSES | ICC_BAR_CLASSES);    // add flags to support other controls
+
+  hRes = _Module.Init(NULL, hInstance);
+  ATLASSERT(SUCCEEDED(hRes));
+
+  AppT& wndMain = AppT::getInst();
+
+  _Module.AddMessageLoop(lpLoop);
+
+  if(wndMain.CreateEx() == NULL) {
+    ATLTRACE(_T("Main window creation failed!\n"));
+    return 0;
+  }
+
+  if (!wndMain.init(prjName)) {
+    ATLTRACE(_T("Init good failed!\n"));
+    return 0;
+  }
+
+  wndMain.ShowWindow(nCmdShow);
+
+  timeBeginPeriod(1);
+  int nRet = lpLoop->Run();
+  timeEndPeriod(1);
+
+  _Module.RemoveMessageLoop();
+
+  _Module.Term();
+  ::CoUninitialize();
+
+  return nRet;
+}
+#endif
+
 } // namespace rt
 
 } // namespace good
