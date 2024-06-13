@@ -312,6 +312,7 @@ public:
     mPaneProp.Create(mSplit, _T("Property"));
     mPaneProp.SetPaneContainerExtendedStyle(PANECNT_NOBORDER | PANECNT_NOCLOSEBUTTON);
     mProp.Create(mPaneProp);
+    mProp.ModifyStyle(0, WS_VSCROLL | LBS_NOINTEGRALHEIGHT);
     mPaneProp.SetClient(mProp);
 
     mSplit.SetSplitterPanes(mTabView, mPaneProp);
