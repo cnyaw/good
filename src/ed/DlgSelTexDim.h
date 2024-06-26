@@ -11,7 +11,7 @@
 
 #pragma once
 
-class CSelTextureDimView : public CTextureViewImpl<CSelTextureDimView>
+class CSelTextureDimView : public CTextureViewImpl<CSelTextureDimView>, public CDoubleBufferImpl<CSelTextureDimView>
 {
 public:
   DECLARE_WND_CLASS(NULL)
@@ -31,11 +31,11 @@ public:
 
   BEGIN_MSG_MAP_EX(CSelTextureDimView)
     MSG_WM_CREATE(OnCreate)
-    MSG_WM_ERASEBKGND(OnEraseBkgnd)
     MSG_WM_LBUTTONDOWN(OnLButtonDown)
     MSG_WM_LBUTTONUP(OnLButtonUp)
     MSG_WM_MOUSEMOVE(OnMouseMove)
     CHAIN_MSG_MAP(BaseT)
+    CHAIN_MSG_MAP(CDoubleBufferImpl<CSelTextureDimView>)
   END_MSG_MAP()
 
   //
@@ -58,11 +58,6 @@ public:
     }
 
     return 0;
-  }
-
-  BOOL OnEraseBkgnd(CDCHandle dc)
-  {
-    return TRUE;
   }
 
   void OnLButtonDown(UINT nFlags, CPoint point)
