@@ -24,7 +24,6 @@ public:
   }
 
   BEGIN_MSG_MAP_EX(CTextureEditView)
-    MSG_WM_CREATE(OnCreate)
     MSG_WM_MOUSEMOVE(OnMouseMove)
     CHAIN_MSG_MAP(BaseT)
   END_MSG_MAP()
@@ -32,14 +31,6 @@ public:
   //
   // Message handler.
   //
-
-  LRESULT OnCreate(LPCREATESTRUCT)
-  {
-    SelectTexture(mId);
-
-    SetMsgHandled(FALSE);
-    return 0;
-  }
 
   void OnMouseMove(UINT nFlags, CPoint point)
   {
@@ -118,6 +109,7 @@ public:
   LRESULT OnCreate(LPCREATESTRUCT)
   {
     mEditView.Create(m_hWnd, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, WS_EX_CLIENTEDGE);
+    mEditView.SelectTexture(mId);
 
     SetMsgHandled(FALSE);
     return 0;
