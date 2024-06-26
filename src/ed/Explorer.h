@@ -63,23 +63,11 @@ public:
   }
 
   BEGIN_MSG_MAP_EX(CExplorerPropView)
-    MSG_WM_CLOSE(OnClose)
     NOTIFY_HANDLER_EX(IDC_LIST1, PIN_BROWSE, OnBrowse)
     NOTIFY_HANDLER_EX(IDC_LIST1, PIN_ITEMCHANGING, OnPropChanging)
     NOTIFY_HANDLER_EX(IDC_LIST1, PIN_ITEMCHANGED, OnPropChanged)
     CHAIN_MSG_MAP(BaseT)
   END_MSG_MAP()
-
-  //
-  // Message handler.
-  //
-
-  void OnClose()
-  {
-    ResetContent();
-
-    SetMsgHandled(FALSE);
-  }
 
   //
   // Notification.
