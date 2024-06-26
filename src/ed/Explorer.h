@@ -64,7 +64,6 @@ public:
 
   BEGIN_MSG_MAP_EX(CExplorerPropView)
     MSG_WM_CLOSE(OnClose)
-    MESSAGE_HANDLER(WM_CREATE, OnCreate)
     NOTIFY_HANDLER_EX(IDC_LIST1, PIN_BROWSE, OnBrowse)
     NOTIFY_HANDLER_EX(IDC_LIST1, PIN_ITEMCHANGING, OnPropChanging)
     NOTIFY_HANDLER_EX(IDC_LIST1, PIN_ITEMCHANGED, OnPropChanged)
@@ -81,13 +80,6 @@ public:
 
     SetMsgHandled(FALSE);
   }
-
-   LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-   {
-      LRESULT lRes = BaseT::OnCreate(uMsg, wParam, lParam, bHandled);
-      SetExtendedListStyle(PLS_EX_CATEGORIZED | PLS_EX_SINGLECLICKEDIT | PLS_EX_XPLOOK);
-      return lRes;
-   }
 
   //
   // Notification.
@@ -312,6 +304,7 @@ public:
     mPaneProp.Create(mSplit, _T("Property"));
     mPaneProp.SetPaneContainerExtendedStyle(PANECNT_NOBORDER | PANECNT_NOCLOSEBUTTON);
     mProp.Create(mPaneProp);
+    mProp.SetExtendedListStyle(PLS_EX_CATEGORIZED | PLS_EX_SINGLECLICKEDIT | PLS_EX_XPLOOK);
     mProp.ModifyStyle(0, WS_VSCROLL | LBS_NOINTEGRALHEIGHT);
     mPaneProp.SetClient(mProp);
 
