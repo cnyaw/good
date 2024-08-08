@@ -797,10 +797,6 @@
 				RelativePath="..\..\src\good\gx\rcpack.h"
 				>
 			</File>
-			<File
-				RelativePath="..\..\src\good\gx\sdl_gx.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="good.app"

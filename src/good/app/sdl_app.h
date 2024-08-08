@@ -12,6 +12,7 @@
 #pragma once
 
 #include "SDL.h"
+#include "SDL_opengl.h"
 
 #ifdef WIN32
 # define GOOD_SUPPORT_GDIPLUS_IMG
@@ -19,7 +20,7 @@
 # define GOOD_SUPPORT_STB_IMG
 #endif
 
-#include "../gx/sdl_gx.h"
+#include "../gx/opengl_gx.h"
 #include "../gx/imgp_gx.h"
 #include "../snd/audiere_snd.h"
 
@@ -29,9 +30,9 @@ namespace rt {
 
 #define TICK (int)(1000 / GOOD_DEFAULT_TICK_PER_SECOND)
 
-class SDLApplication : public Application<SDLApplication, gx::SDLImage, snd::AudiereSound, gx::Imgp>
+class SDLApplication : public Application<SDLApplication, gx::GLImage, snd::AudiereSound, gx::Imgp>
 {
-  SDLApplication() : gx(mScreen)
+  SDLApplication()// : gx(mScreen)
   {
   }
 public:
@@ -42,7 +43,7 @@ public:
   // Display.
   //
 
-  gx::SDLGraphics gx;
+  gx::GLGraphics gx;
   SDL_Surface* mScreen;
 
   static SDLApplication& getInst()
@@ -53,8 +54,6 @@ public:
 
   void go(std::string const& name)
   {
-    SDL_Init(SDL_INIT_EVERYTHING);
-
     if (init(name)) {
       mainLoop();
     }
@@ -102,7 +101,7 @@ public:
 
       if (trigger(keys, ptMouse)) {
         renderAll();
-        SDL_Flip(mScreen);
+        SDL_GL_SwapBuffers();
         mFps.tick();
       }
 
@@ -125,7 +124,9 @@ public:
       return false;
     }
 
-    int flag = SDL_DOUBLEBUF | SDL_HWSURFACE;
+    SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+
+    int flag = SDL_OPENGL | SDL_DOUBLEBUF;
     mScreen = SDL_SetVideoMode(mRes.mWidth, mRes.mHeight, 16, flag);
     if (!mScreen) {
       SW2_TRACE_ERROR("set video mode(%dx%dx%d) failed", mRes.mWidth, mRes.mHeight, 16);
@@ -137,14 +138,17 @@ public:
       SDL_WM_SetCaption(mRes.mName.c_str(), NULL);
     }
 
-    gx.mSur = mScreen;
+    gx.init();
+    gx.SCREEN_W = mRes.mWidth;
+    gx.SCREEN_H = mRes.mHeight;
+    gx.resize(mRes.mWidth, mRes.mHeight);
 
     return true;
   }
 
   void doUninit()
   {
-    gx::SDLImageResource::inst().clear();
+    gx::GLImageResource::inst().clear();
     snd::AudiereSoundResource::inst().free();
     SDL_Quit();
   }
