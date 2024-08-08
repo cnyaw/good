@@ -37,8 +37,6 @@ class SDLApplication : public Application<SDLApplication, gx::GLImage, snd::Audi
   }
 public:
 
-  sw2::FpsHelper mFps;
-
   //
   // Display.
   //
@@ -63,54 +61,51 @@ public:
 
   void mainLoop()
   {
-    //
-    // Main loop.
-    //
+    sw2::FpsHelper fps;
+    fps.start(mRes.mFps);
 
-    mFps.start(mRes.mFps);
-    Uint32 keys = 0;
-
-    while (true) {
-
-      //
-      // Poll event.
-      //
-
-      if (poll(keys)) {
-        break;
-      }
-
-      sw2::IntPoint ptMouse;
-      Uint8 btnMouse = SDL_GetMouseState(&ptMouse.x, &ptMouse.y);
-
-      if (btnMouse & SDL_BUTTON_LMASK) {
-        keys |= GOOD_KEYS_LBUTTON;
-      } else {
-        keys &= ~GOOD_KEYS_LBUTTON;
-      }
-
-      if (btnMouse & SDL_BUTTON_RMASK) {
-        keys |= GOOD_KEYS_RBUTTON;
-      } else {
-        keys &= ~GOOD_KEYS_RBUTTON;
-      }
-
-      //
-      // Update.
-      //
-
-      if (trigger(keys, ptMouse)) {
-        renderAll();
-        SDL_GL_SwapBuffers();
-        mFps.tick();
-      }
-
-      //
-      // FPS control.
-      //
-
-      mFps.wait();
+    while (step()) {
+      fps.tick();
+      fps.wait();
     }
+  }
+
+  bool step()
+  {
+    //
+    // Poll event.
+    //
+
+    Uint32 keys = 0;
+    if (poll(keys)) {
+      return false;
+    }
+
+    sw2::IntPoint ptMouse;
+    Uint8 btnMouse = SDL_GetMouseState(&ptMouse.x, &ptMouse.y);
+
+    if (btnMouse & SDL_BUTTON_LMASK) {
+      keys |= GOOD_KEYS_LBUTTON;
+    } else {
+      keys &= ~GOOD_KEYS_LBUTTON;
+    }
+
+    if (btnMouse & SDL_BUTTON_RMASK) {
+      keys |= GOOD_KEYS_RBUTTON;
+    } else {
+      keys &= ~GOOD_KEYS_RBUTTON;
+    }
+
+    //
+    // Update.
+    //
+
+    if (trigger(keys, ptMouse)) {
+      renderAll();
+      SDL_GL_SwapBuffers();
+    }
+
+    return true;
   }
 
   //
