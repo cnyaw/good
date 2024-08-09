@@ -19,9 +19,6 @@
 #include <cctype>
 #include <math.h>
 
-#include "SDL/SDL.h"
-#include "SDL/SDL_opengl.h"
-
 #include <emscripten.h>
 #include <emscripten/html5.h>
 
@@ -29,11 +26,8 @@
 #define GOOD_SUPPORT_NO_LOGO
 #include "rt/rt.h"
 
-#define GOOD_SUPPORT_STB_IMG
 #define GOOD_SUPPORT_EMSC_IMG
-#include "gx/opengl_gx.h"
-#include "gx/imgp_gx.h"
-#include "snd/openal_snd.h"
+#include "sdl_app.h"
 
 namespace good {
 
@@ -67,92 +61,31 @@ public:
 };
 
 template<class AppT>
-class EmscApplication : public Application<AppT, gx::GLImage, snd::ALSound, gx::Imgp>
+class EmscApplication : public SDLApplicationBase<AppT>
 {
 public:
 
-  typedef Application<AppT, gx::GLImage, snd::ALSound, gx::Imgp> BaseT;
+  typedef SDLApplicationBase<AppT> BaseT;
   EmscFileSystem fs;
-  gx::GLGraphics gx;
-  SDL_Surface* mScreen;
-  int app_keys;
 
   bool doInit(std::string const& name)
   {
-    if (0 > SDL_Init(SDL_INIT_VIDEO)) {
-      SW2_TRACE_ERROR("init SDL failed");
+    if (!BaseT::doInit(name)) {
+      SW2_TRACE_ERROR("BaseT::init failed");
       return false;
     }
-
-    SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-
-    mScreen = SDL_SetVideoMode(BaseT::mRes.mWidth, BaseT::mRes.mHeight, 16, SDL_OPENGL);
-    if (!mScreen) {
-      SW2_TRACE_ERROR("set video mode(%dx%d) failed", BaseT::mRes.mWidth, BaseT::mRes.mHeight);
-      SDL_Quit();
-      return false;
-    }
-
-    if (!BaseT::mRes.mName.empty()) {
-      SDL_WM_SetCaption(BaseT::mRes.mName.c_str(), NULL);
-    }
-
-    gx.init();
-    gx.SCREEN_W = BaseT::mRes.mWidth;
-    gx.SCREEN_H = BaseT::mRes.mHeight;
-    gx.resize(BaseT::mRes.mWidth, BaseT::mRes.mHeight);
 
     BaseT::trace("package loaded %s %dx%d", name.c_str(), BaseT::mRes.mWidth, BaseT::mRes.mHeight);
     emscripten_set_canvas_element_size("canvas", BaseT::mRes.mWidth, BaseT::mRes.mHeight);
 
     BaseT::mAr->addArchiveFileSystem(&fs);
-    app_keys = 0;
 
     return true;
-  }
-
-  void doUninit()
-  {
-    gx::GLImageResource::inst().clear();
-    SDL_Quit();
   }
 
   void doTrace(const char *s)
   {
     printf("%s\n", s);
-  }
-
-  void step()
-  {
-    SDL_Event e;
-    while (SDL_PollEvent(&e)) {
-      // NOP.
-    }
-
-    Uint32 keys = app_keys;
-
-    sw2::IntPoint ptMouse;
-    Uint8 btnMouse = SDL_GetMouseState(&ptMouse.x, &ptMouse.y);
-
-    if (btnMouse & SDL_BUTTON_LMASK) {
-      keys |= GOOD_KEYS_LBUTTON;
-    } else {
-      keys &= ~GOOD_KEYS_LBUTTON;
-    }
-
-    if (btnMouse & SDL_BUTTON_RMASK) {
-      keys |= GOOD_KEYS_RBUTTON;
-    } else {
-      keys &= ~GOOD_KEYS_RBUTTON;
-    }
-
-    if (BaseT::trigger(keys, ptMouse)) {
-      BaseT::renderAll();
-    }
-
-    if (BaseT::mExit) {
-      ::exit(0);
-    }
   }
 };
 

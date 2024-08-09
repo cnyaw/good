@@ -40,12 +40,6 @@ int EMSCRIPTEN_KEEPALIVE cLoadPkg(void *pBuff, int size)
   return app.addStreamFileSystem(app.fs.pkgName, stream);
 }
 
-int EMSCRIPTEN_KEEPALIVE cSetKeyStates(int keys)
-{
-  app.app_keys = keys;
-  return 1;
-}
-
 int EMSCRIPTEN_KEEPALIVE cRunPkg(void *pBuff, int size)
 {
   printf("init good, data len=%d\n", size);

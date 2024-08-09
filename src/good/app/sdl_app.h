@@ -11,8 +11,17 @@
 
 #pragma once
 
+#ifdef __EMSCRIPTEN__
+#include "SDL/SDL.h"
+#include "SDL/SDL_opengl.h"
+#include "../snd/openal_snd.h"
+#define SndT snd::ALSound
+#else
 #include "SDL.h"
 #include "SDL_opengl.h"
+#include "../snd/audiere_snd.h"
+#define SndT snd::AudiereSound
+#endif
 
 #ifdef WIN32
 # define GOOD_SUPPORT_GDIPLUS_IMG
@@ -22,7 +31,6 @@
 
 #include "../gx/opengl_gx.h"
 #include "../gx/imgp_gx.h"
-#include "../snd/audiere_snd.h"
 
 namespace good {
 
@@ -30,45 +38,14 @@ namespace rt {
 
 #define TICK (int)(1000 / GOOD_DEFAULT_TICK_PER_SECOND)
 
-class SDLApplication : public Application<SDLApplication, gx::GLImage, snd::AudiereSound, gx::Imgp>
+template<class AppT>
+class SDLApplicationBase : public Application<AppT, gx::GLImage, SndT, gx::Imgp>
 {
-  SDLApplication()// : gx(mScreen)
-  {
-  }
 public:
-
-  //
-  // Display.
-  //
+  typedef Application<AppT, gx::GLImage, SndT, gx::Imgp> BaseT;
 
   gx::GLGraphics gx;
   SDL_Surface* mScreen;
-
-  static SDLApplication& getInst()
-  {
-    static SDLApplication inst;
-    return inst;
-  }
-
-  void go(std::string const& name)
-  {
-    if (init(name)) {
-      mainLoop();
-    }
-
-    uninit();
-  }
-
-  void mainLoop()
-  {
-    sw2::FpsHelper fps;
-    fps.start(mRes.mFps);
-
-    while (step()) {
-      fps.tick();
-      fps.wait();
-    }
-  }
 
   bool step()
   {
@@ -100,9 +77,11 @@ public:
     // Update.
     //
 
-    if (trigger(keys, ptMouse)) {
-      renderAll();
+    if (BaseT::trigger(keys, ptMouse)) {
+      BaseT::renderAll();
+#ifndef __EMSCRIPTEN__
       SDL_GL_SwapBuffers();
+#endif
     }
 
     return true;
@@ -119,24 +98,28 @@ public:
       return false;
     }
 
-    SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+    SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1);
 
+#ifdef __EMSCRIPTEN__
+    int flag = SDL_OPENGL;
+#else
     int flag = SDL_OPENGL | SDL_DOUBLEBUF;
-    mScreen = SDL_SetVideoMode(mRes.mWidth, mRes.mHeight, 16, flag);
+#endif
+    mScreen = SDL_SetVideoMode(BaseT::mRes.mWidth, BaseT::mRes.mHeight, 16, flag);
     if (!mScreen) {
-      SW2_TRACE_ERROR("set video mode(%dx%dx%d) failed", mRes.mWidth, mRes.mHeight, 16);
+      SW2_TRACE_ERROR("set video mode(%dx%dx%d) failed", BaseT::mRes.mWidth, BaseT::mRes.mHeight, 16);
       SDL_Quit();
       return false;
     }
 
-    if (!mRes.mName.empty()) {
-      SDL_WM_SetCaption(mRes.mName.c_str(), NULL);
+    if (!BaseT::mRes.mName.empty()) {
+      SDL_WM_SetCaption(BaseT::mRes.mName.c_str(), NULL);
     }
 
     gx.init();
-    gx.SCREEN_W = mRes.mWidth;
-    gx.SCREEN_H = mRes.mHeight;
-    gx.resize(mRes.mWidth, mRes.mHeight);
+    gx.SCREEN_W = BaseT::mRes.mWidth;
+    gx.SCREEN_H = BaseT::mRes.mHeight;
+    gx.resize(BaseT::mRes.mWidth, BaseT::mRes.mHeight);
 
     return true;
   }
@@ -144,7 +127,9 @@ public:
   void doUninit()
   {
     gx::GLImageResource::inst().clear();
+#ifndef __EMSCRIPTEN__
     snd::AudiereSoundResource::inst().free();
+#endif
     SDL_Quit();
   }
 
@@ -189,6 +174,39 @@ public:
     }
 
     return false;
+  }
+};
+
+class SDLApplication : public SDLApplicationBase<SDLApplication>
+{
+  SDLApplication()
+  {
+  }
+public:
+  static SDLApplication& getInst()
+  {
+    static SDLApplication inst;
+    return inst;
+  }
+
+  void go(std::string const& name)
+  {
+    if (init(name)) {
+      mainLoop();
+    }
+
+    uninit();
+  }
+
+  void mainLoop()
+  {
+    sw2::FpsHelper fps;
+    fps.start(mRes.mFps);
+
+    while (step()) {
+      fps.tick();
+      fps.wait();
+    }
   }
 };
 
