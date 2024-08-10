@@ -79,9 +79,7 @@ public:
 
     if (BaseT::trigger(keys, ptMouse)) {
       BaseT::renderAll();
-#ifndef __EMSCRIPTEN__
       SDL_GL_SwapBuffers();
-#endif
     }
 
     return true;
@@ -100,11 +98,7 @@ public:
 
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1);
 
-#ifdef __EMSCRIPTEN__
-    int flag = SDL_OPENGL;
-#else
     int flag = SDL_OPENGL | SDL_DOUBLEBUF;
-#endif
     mScreen = SDL_SetVideoMode(BaseT::mRes.mWidth, BaseT::mRes.mHeight, 16, flag);
     if (!mScreen) {
       SW2_TRACE_ERROR("set video mode(%dx%dx%d) failed", BaseT::mRes.mWidth, BaseT::mRes.mHeight, 16);
