@@ -52,7 +52,7 @@ public:
   }
 };
 
-class DevkitPSPImage : public Image<DevkitPSPImage>
+class DevkitPSPImage : public Image<DevkitPSPImage, DevkitPSPImageManager>
 {
 public:
 
@@ -79,26 +79,6 @@ public:
   int getHeight() const
   {
     return mSur->h / TEX_SCALE;
-  }
-
-  static bool existImage(std::string const& name)
-  {
-    return DevkitPSPImageManager::inst().existImage(name);
-  }
-
-  static DevkitPSPImage getImage(std::string const& name)
-  {
-    return DevkitPSPImage(DevkitPSPImageManager::inst().getImage(name));
-  }
-
-  static DevkitPSPImage getImage(std::string const& name, std::string const& stream)
-  {
-    return DevkitPSPImage(DevkitPSPImageManager::inst().getImage(name, stream));
-  }
-
-  static DevkitPSPImage getImage(std::string const& name, GxImage &img)
-  {
-    return DevkitPSPImage(DevkitPSPImageManager::inst().getImage(name, img));
   }
 
   void draw(int x, int y, const GxImage &c, int sx, int sy, int sw, int sh)

@@ -57,7 +57,7 @@ public:
 
   void doUninit()
   {
-    gx::DevkitPSPImageManager::inst().clear();
+    gx::DevkitPSPImage::clear();
   }
 
   void doTrigger()

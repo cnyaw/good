@@ -732,7 +732,6 @@ public:
     return mSur->h;
   }
 
-
   template<class CanvasT>
   void draw(int x, int y, const CanvasT &c, int sx, int sy, int sw, int sh)
   {
