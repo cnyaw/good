@@ -42,9 +42,11 @@
 
 JNIEnv *tmpEnv;
 
+#define GOOD_SUPPORT_ANDROID_IMG
+#include "gx/gx.h"
+
 #include "rt/rt.h"
 
-#define GOOD_SUPPORT_ANDROID_IMG
 #include "../gx/opengl_gx.h"
 #include "../gx/imgp_gx.h"
 #include "../snd/android_snd.h"
@@ -64,7 +66,7 @@ public:
 
   void doUninit()
   {
-    gx::GLImageResource::inst().clear();
+    gx::GLImage::clear();
 
     jclass cls = tmpEnv->FindClass(JNI_ACTIVITY);
     jmethodID mid = tmpEnv->GetStaticMethodID(cls, "sndStopAll", "()V");

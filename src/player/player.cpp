@@ -4,18 +4,8 @@
 #include "stdafx.h"
 
 #include <atlframe.h>
-#include <atlctrls.h>
-#include <atlctrlx.h>
-#include <atldlgs.h>
 #include <atlcrack.h>
 #include <atlmisc.h>
-
-#include <cmath>
-
-#include <algorithm>
-#include <map>
-#include <sstream>
-#include <vector>
 
 #ifndef _DEBUG
 # define GOOD_SUPPORT_STGE
@@ -102,7 +92,7 @@ public:
 
   void doUninit()
   {
-    good::gx::ImgpImageResource::inst().clear();
+    good::gx::ImgpImage::clear();
   }
 
   void onPackageChanged()

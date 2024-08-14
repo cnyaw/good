@@ -22,11 +22,14 @@
 #include <emscripten.h>
 #include <emscripten/html5.h>
 
+#define GOOD_SUPPORT_STB_IMG
+#define GOOD_SUPPORT_EMSC_IMG
+#include "gx/gx.h"
+
 #define GOOD_SUPPORT_ONLY_ONE_TEXTURE
 #define GOOD_SUPPORT_NO_LOGO
 #include "rt/rt.h"
 
-#define GOOD_SUPPORT_EMSC_IMG
 #include "sdl_app.h"
 
 namespace good {

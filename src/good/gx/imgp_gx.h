@@ -703,7 +703,7 @@ public:
   }
 };
 
-class ImgpImage : public Image<ImgpImage>
+class ImgpImage : public Image<ImgpImage, ImgpImageResource>
 {
 public:
 
@@ -732,25 +732,6 @@ public:
     return mSur->h;
   }
 
-  static bool existImage(std::string const& name)
-  {
-    return ImgpImageResource::inst().existImage(name);
-  }
-
-  static ImgpImage getImage(std::string const& name)
-  {
-    return ImgpImage(ImgpImageResource::inst().getImage(name));
-  }
-
-  static ImgpImage getImage(std::string const& name, std::string const& stream)
-  {
-    return ImgpImage(ImgpImageResource::inst().getImage(name, stream));
-  }
-
-  static ImgpImage getImage(std::string const& name, GxImage &img)
-  {
-    return ImgpImage(ImgpImageResource::inst().getImage(name, img));
-  }
 
   template<class CanvasT>
   void draw(int x, int y, const CanvasT &c, int sx, int sy, int sw, int sh)

@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "img.h"
+#include "gx.h"
 #include "rcpack.h"
 
 #ifdef GOOD_SUPPORT_ONLY_ONE_TEXTURE

@@ -553,7 +553,7 @@ public:
     }
 
     PrjT::inst().closeAll();
-    good::gx::ImgpImageResource::inst().clear();
+    good::gx::ImgpImage::clear();
     good::snd::AudiereSoundResource::inst().free();
 
     mFileName.clear();                  // Set un-titiled.
@@ -590,7 +590,7 @@ public:
     PrjT& prj = PrjT::inst();
 
     prj.closeAll();
-    good::gx::ImgpImageResource::inst().clear();
+    good::gx::ImgpImage::clear();
 
     //
     // Store new proj.

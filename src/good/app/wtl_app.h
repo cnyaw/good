@@ -138,7 +138,7 @@ public:
 
   void doUninit()
   {
-    gx::GLImageResource::inst().clear();
+    gx::GLImage::clear();
     snd::AudiereSoundResource::inst().free();
   }
 

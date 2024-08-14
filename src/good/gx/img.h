@@ -18,8 +18,6 @@
 # pragma comment(lib, "Gdiplus.lib")
 #endif
 
-#include "gx.h"
-
 #ifdef GOOD_SUPPORT_STB_IMG
 #define STBI_NO_LINEAR
 #define STBI_NO_PSD

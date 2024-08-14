@@ -42,8 +42,6 @@
 #define GOOD_DEFAULT_TICK_PER_SECOND 60
 #define GOOD_DEFAULT_TEXT_SIZE 16
 
-#include "gx/gx.h"
-
 #include "res/util.h"
 
 #include "res/base.h"

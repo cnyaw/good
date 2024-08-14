@@ -123,7 +123,7 @@ public:
   }
 };
 
-class GLImage : public Image<GLImage>
+class GLImage : public Image<GLImage, GLImageResource>
 {
 public:
 
@@ -150,26 +150,6 @@ public:
   int getHeight() const
   {
     return mSur->h;
-  }
-
-  static bool existImage(std::string const& name)
-  {
-    return GLImageResource::inst().existImage(name);
-  }
-
-  static GLImage getImage(std::string const& name)
-  {
-    return GLImage(GLImageResource::inst().getImage(name));
-  }
-
-  static GLImage getImage(std::string const& name, std::string const& stream)
-  {
-    return GLImage(GLImageResource::inst().getImage(name, stream));
-  }
-
-  static GLImage getImage(std::string const& name, GxImage &img)
-  {
-    return GLImage(GLImageResource::inst().getImage(name, img));
   }
 
   template<class CanvasT>

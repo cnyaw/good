@@ -120,7 +120,7 @@ public:
 
   void doUninit()
   {
-    gx::GLImageResource::inst().clear();
+    gx::GLImage::clear();
 #ifndef __EMSCRIPTEN__
     snd::AudiereSoundResource::inst().free();
 #endif
