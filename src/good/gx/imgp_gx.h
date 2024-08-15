@@ -758,13 +758,11 @@ public:
   }
 };
 
-class ImgpGraphics : public Graphics<ImgpImage>
+class ImgpGraphics : public Imgp, public Graphics<ImgpImage>
 {
 public:
 
-  Imgp& mSur;
-
-  ImgpGraphics(Imgp& sur) : mSur(sur)
+  ImgpGraphics()
   {
   }
 
@@ -788,13 +786,13 @@ public:
   {
     srcw = (std::min)(srcw, img.getWidth());
     srch = (std::min)(srch, img.getHeight());
-    mSur.blend(*((const Imgp*)&((ImgpImageSurface*)img.mSur->sur)->img), color, x, y, srcw, srch, img.mSur->left + srcx, img.mSur->top + srcy);
+    Imgp::blend(*((const Imgp*)&((ImgpImageSurface*)img.mSur->sur)->img), color, x, y, srcw, srch, img.mSur->left + srcx, img.mSur->top + srcy);
     return true;
   }
 
   bool fillSolidColor(int left, int top, int width, int height, unsigned int color = 0xffffffff, float rot = .0f, float xscale = 1.0f, float yscale = 1.0f)
   {
-    mSur.fill(color, left, top, width, height);
+    Imgp::fill(color, left, top, width, height);
     return true;
   }
 };

@@ -729,8 +729,7 @@ public:
       if (!imgTex.isValid()) {
         return false;
       }
-      good::gx::ImgpGraphics gx(img);
-      CommonDrawSprite(gx, spr, imgTex, 0, 0, 0);
+      CommonDrawSprite((good::gx::ImgpGraphics&)img, spr, imgTex, 0, 0, 0);
     }
     return true;
   }
@@ -781,8 +780,7 @@ public:
       return false;
     }
     int left = 0, top = 0, right = map.mWidth - 1, bottom = map.mHeight - 1;
-    good::gx::ImgpGraphics gx(img);
-    CommonDrawMap(gx, map, imgTex, 0, 0, left, top, right, bottom, 0xffffffff);
+    CommonDrawMap((good::gx::ImgpGraphics&)img, map, imgTex, 0, 0, left, top, right, bottom, 0xffffffff);
     return true;
   }
 };
@@ -868,7 +866,7 @@ public:
           }
           sw2::IntRect rcv2, rcm2(rcm.left, rcm.top, rcm.right, rcm.bottom);
           sw2::IntRect rc2(rc.left, rc.top, rc.right, rc.bottom);
-          CommonDrawMap(good::gx::ImgpGraphics(gx), map, imgTex, rc.left, rc.top, rcv2, rcm2, rc2, 0xffffffff);
+          CommonDrawMap((good::gx::ImgpGraphics&)gx, map, imgTex, rc.left, rc.top, rcv2, rcm2, rc2, 0xffffffff);
         }
         break;
 
@@ -897,7 +895,7 @@ public:
           if (!imgTex.isValid()) {
             break;
           }
-          CommonDrawSprite(good::gx::ImgpGraphics(gx), spr, imgTex, rcm.left + spr.mOffsetX, rcm.top + spr.mOffsetY, 0);
+          CommonDrawSprite((good::gx::ImgpGraphics&)gx, spr, imgTex, rcm.left + spr.mOffsetX, rcm.top + spr.mOffsetY, 0);
         }
         break;
 

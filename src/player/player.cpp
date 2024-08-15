@@ -42,13 +42,12 @@ class CPlayer :
   public CMessageFilter,
   public good::rt::Application<CPlayer, good::gx::ImgpImage, good::snd::ALSound, good::gx::Imgp>
 {
-  CPlayer() : gx(scr)
+  CPlayer()
   {
   }
 public:
   DECLARE_FRAME_WND_CLASS(NULL, IDR_MAINFRAME)
 
-  good::gx::Imgp scr;
   good::gx::ImgpGraphics gx;
 
   sw2::IntPoint lastMousePt;
@@ -82,8 +81,8 @@ public:
 
   bool doInit(std::string const& name)
   {
-    scr.release();
-    scr.create(mRes.mWidth, mRes.mHeight, 4);
+    gx.release();
+    gx.create(mRes.mWidth, mRes.mHeight, 4);
 
     ResizeClient(mRes.mWidth, mRes.mHeight);
 
@@ -150,7 +149,7 @@ public:
   void DoPaint(CDCHandle memdc)
   {
     renderAll();
-    scr.blt(memdc, 0, 0);
+    gx.blt(memdc, 0, 0);
   }
 
   void OnTimer(UINT_PTR nIDEvent)

@@ -67,7 +67,7 @@ public:
       return false;
     }
 
-    ImgpGraphics(tmpImg).drawImage(0, 0, img, srcx, srcy, srcw, srch, color, rot, xscale, yscale);
+    ((ImgpGraphics&)tmpImg).drawImage(0, 0, img, srcx, srcy, srcw, srch, color, rot, xscale, yscale);
 
     return drawImage(x, y, tmpImg, srcx, srcy, srcw, srch, color, rot, xscale, yscale);
   }
