@@ -26,6 +26,9 @@
 #define GOOD_SUPPORT_EMSC_IMG
 #include "gx/gx.h"
 
+#include "swUtil.h"
+#include "../gx/imgp_gx.h"
+
 #define GOOD_SUPPORT_ONLY_ONE_TEXTURE
 #define GOOD_SUPPORT_NO_LOGO
 #include "rt/rt.h"

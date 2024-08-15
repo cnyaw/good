@@ -45,10 +45,12 @@ JNIEnv *tmpEnv;
 #define GOOD_SUPPORT_ANDROID_IMG
 #include "gx/gx.h"
 
+#include "swUtil.h"
+#include "../gx/imgp_gx.h"
+
 #include "rt/rt.h"
 
 #include "../gx/opengl_gx.h"
-#include "../gx/imgp_gx.h"
 #include "../snd/android_snd.h"
 
 namespace good {
