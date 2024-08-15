@@ -23,13 +23,13 @@ namespace good {
 
 namespace rt {
 
-template<class AppT, class GxT = gx::GLGraphics, class ImgT = gx::GLImage, class SndT = snd::AudiereSound>
+template<class AppT, class SndT = snd::AudiereSound>
 class WtlApplicationImpl :
   public CFrameWindowImpl<AppT>,
   public CIdleHandler,
   public CMessageFilter,
   public COpenGL<AppT>,
-  public Application<AppT, ImgT, SndT, gx::Imgp>
+  public Application<AppT, gx::GLImage, SndT>
 {
 public:
   DECLARE_FRAME_WND_CLASS(NULL, IDR_MAINFRAME)
@@ -37,7 +37,7 @@ public:
   CGLMessageLoop theLoop;
   sw2::FpsHelper fps;
 
-  GxT gx;
+  gx::GLGraphics gx;
   sw2::IntPoint lastMousePt;
 
   bool bAlwaysUpdate;

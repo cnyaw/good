@@ -40,7 +40,7 @@ CAppModule _Module;
 class CPlayer :
   public CFrameWindowImpl<CPlayer>, public CDoubleBufferImpl<CPlayer>,
   public CMessageFilter,
-  public good::rt::Application<CPlayer, good::gx::ImgpImage, good::snd::ALSound, good::gx::Imgp>
+  public good::rt::Application<CPlayer, good::gx::ImgpImage, good::snd::ALSound>
 {
   CPlayer()
   {

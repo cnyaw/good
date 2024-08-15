@@ -56,7 +56,7 @@ namespace good {
 namespace rt {
 
 template<class AppT>
-class AndroidApplication : public Application<AppT, gx::GLImage, snd::AndroidSound, gx::Imgp>
+class AndroidApplication : public Application<AppT, gx::GLImage, snd::AndroidSound>
 {
 public:
 

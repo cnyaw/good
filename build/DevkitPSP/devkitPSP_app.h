@@ -19,7 +19,7 @@ namespace good {
 
 namespace rt {
 
-class DevkitPspApplication : public Application<DevkitPspApplication, gx::DevkitPSPImage, snd::ALSound, gx::Imgp>
+class DevkitPspApplication : public Application<DevkitPspApplication, gx::DevkitPSPImage, snd::ALSound>
 {
   DevkitPspApplication()
   {

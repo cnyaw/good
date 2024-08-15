@@ -19,7 +19,7 @@ namespace good {
 
 namespace rt {
 
-template<class T, class ImgT, class SndT, class CanvasT>
+template<class T, class ImgT, class SndT, class CanvasT = gx::Imgp>
 class Application
 {
 public:

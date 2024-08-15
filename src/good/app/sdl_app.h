@@ -39,10 +39,10 @@ namespace rt {
 #define TICK (int)(1000 / GOOD_DEFAULT_TICK_PER_SECOND)
 
 template<class AppT>
-class SDLApplicationBase : public Application<AppT, gx::GLImage, SndT, gx::Imgp>
+class SDLApplicationBase : public Application<AppT, gx::GLImage, SndT>
 {
 public:
-  typedef Application<AppT, gx::GLImage, SndT, gx::Imgp> BaseT;
+  typedef Application<AppT, gx::GLImage, SndT> BaseT;
 
   gx::GLGraphics gx;
   SDL_Surface* mScreen;

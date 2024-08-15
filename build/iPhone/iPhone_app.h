@@ -22,7 +22,7 @@ namespace good {
 
 namespace rt {
 
-class IPhoneApplication : public Application<IPhoneApplication, gx::GLImage, snd::ALSound, gx::Imgp>
+class IPhoneApplication : public Application<IPhoneApplication, gx::GLImage, snd::ALSound>
 {
   enum {
     TIME_HANDLE_VIRTUAL_MOVE = 8,
