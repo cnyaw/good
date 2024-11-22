@@ -12,7 +12,7 @@
 #pragma once
 
 #include "wtl_app.h"
-#include "font2.h"
+#include "font2.h"                      // Generate font2.h from font2.bmp as uchar array FONT2_MOD by bin2c tool.
 
 namespace good {
 

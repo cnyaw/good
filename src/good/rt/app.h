@@ -12,7 +12,7 @@
 #pragma once
 
 #ifndef GOOD_SUPPORT_NO_LOGO
-#include "../logo/logo.c"
+#include "../logo/logo.c"               // Generate logo.c from logo.good as uchar array GOOD_LOGO_MOD by bin2c tool.
 #endif
 
 namespace good {
