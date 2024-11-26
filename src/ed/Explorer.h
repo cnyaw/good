@@ -11,6 +11,8 @@
 
 #pragma once
 
+#define ID_PROJECT_DUMMY -2
+
 template<class MainT>
 class CExplorerPropView : public CPropertyListCtrl
 {
@@ -21,7 +23,7 @@ public:
 
   IResourceProperty* GetProperty(int id) const
   {
-    if (-2 == id) {
+    if (ID_PROJECT_DUMMY == id) {
       return &CResProjectProperty::inst();
     }
 
@@ -738,7 +740,7 @@ end:
     HTREEITEM group = mTree.GetParentItem(sel);
     if (NULL == group) {
       if (GOOD_RESOURCE_PROJECT == (int)mTree.GetItemData(sel)) {
-        mProp.SetProperty(-2);          // -2 for dummy.
+        mProp.SetProperty(ID_PROJECT_DUMMY);
       } else {
         mProp.ResetContent();
       }
