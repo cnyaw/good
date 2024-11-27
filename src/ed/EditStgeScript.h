@@ -55,7 +55,7 @@ public:
 };
 
 template<class MainT>
-class CStgeView : public CWindowImpl<CStgeView<MainT> >, public COpenGL<CStgeView<MainT> >
+class CStgeView : public CWindowImpl<CStgeView<MainT> >, public CDoubleBufferImpl<CStgeView<MainT> >
 {
 public:
   DECLARE_WND_CLASS_EX(NULL, 0, COLOR_BTNTEXT)
@@ -66,8 +66,7 @@ public:
   MyObjectManager mOm;
   stge::Object mPlayer;
   sw2::FpsHelper mFps;
-
-  float mDepth;
+  good::gx::Imgp mScr;
 
   CStgeView()
   {
@@ -81,225 +80,57 @@ public:
     mOutterBounding.inflate(mBounding.width()/10, mBounding.height()/10);
   }
 
-  bool IsMainWndActive() const
+  void updateAndDraw(CDCHandle dc)
   {
-    TCHAR ClassName[256];
-    UINT cch;
-    HWND hWnd = GetActiveWindow();
-    while (hWnd) {
-      cch = 256;
-      ClassName[RealGetWindowClass(hWnd, ClassName, cch)] = TCHAR('\0');
-      if (!lstrcmp(ClassName, _T("#32770"))) { // A dialog?
-        return false;
-      }
-      if (MainT::inst() == hWnd) {
-        return true;
-      }
-      hWnd = ::GetParent(hWnd);
-    }
+    RECT rc;
+    GetClientRect(&rc);
 
-    return false;
-  }
+    POINT p;
+    GetCursorPos(&p);
+    ScreenToClient(&p);
 
-  BEGIN_MSG_MAP(CStgeView)
-    CHAIN_MSG_MAP(COpenGL<CStgeView>)
-  END_MSG_MAP()
+    // Update STGE.
+    mPlayer.x = (float)(p.x - rc.right/2);
+    mPlayer.y = (float)(p.y - rc.bottom/2);
+    mOm.update(1/(float)FPS, mPlayer);
 
-  //
-  // COpenGL<>
-  //
+    // Draw.
+    char buff[128];
+    sprintf(buff, "%d a%u o%u", mFps.getFps(), mOm.actions.size(), mOm.objects.size());
+    mScr.fill(0).drawText(buff, -1, 0, 0, 0xffffffff, 2);
 
-  void OnInit(void)
-  {
-    glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
-    glClearDepth(1.0f);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-
-    //
-    // Load font.
-    //
-
-    std::string datFont = std::string((char*)FONT2_MOD, sizeof(FONT2_MOD));
-
-    good::gx::GxImage img;
-    if (img.loadFromStream(datFont)) {
-      img.expand(256, 256);
-      img.flip();
-      GLuint texture = 0;
-      glGenTextures(1, &texture);
-      glBindTexture(GL_TEXTURE_2D, texture);
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.w, img.h, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, img.dat);
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-    }
-  }
-
-  void OnRender(void)
-  {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    //
-    // Bounding.
-    //
-
-    glLoadIdentity();
-    glTranslatef(0, 0, -mDepth);
-    glScalef(mBounding.width()/2.0f, mBounding.height()/2.0f, 1);
-    glColor3ub(255, 255, 255);
-    DrawRect();
-
-    glLoadIdentity();
-    glTranslatef(0, 0, -mDepth);
-    glScalef(mOutterBounding.width()/2.0f, mOutterBounding.height()/2.0f, 1);
-    glColor3ub(128, 128, 128);
-    DrawRect();
-
-    //
-    // Draw bullet.
-    //
+    mScr.rect(0xffffffff, mBounding.left + rc.right/2, mBounding.top + rc.bottom/2, mBounding.width(), mBounding.height());
+    mScr.rect(0xff808080, mOutterBounding.left + rc.right/2, mOutterBounding.top + rc.bottom/2, mOutterBounding.width(), mOutterBounding.height());
 
     for (int i = mOm.objects.first(); -1 != i; i = mOm.objects.next(i)) {
       stge::Object const& o = mOm.objects[i];
       sw2::POINT_t<int> pt((int)o.x, (int)o.y);
-
-      if (!mOutterBounding.ptInRect(pt)) {
-        continue;
+      if (mOutterBounding.ptInRect(pt)) {
+        mScr.rect(mBounding.ptInRect(pt) ? 0xffffffff : 0xff808080, rc.right / 2 + pt.x - 3, rc.bottom / 2 + pt.y - 3, 6, 6);
       }
-
-      glLoadIdentity();
-      glTranslatef(o.x, -o.y, -mDepth);
-      glScalef(3, 3, 3);
-
-      if (mBounding.ptInRect(pt)) {
-        glColor3ub(255, 255, 255);
-      } else {
-        glColor3ub(128, 128, 128);
-      }
-
-      DrawRect();
     }
 
-    //
-    // Draw stats.
-    //
-
-    RECT rc;
-    GetClientRect(&rc);
-
-    char buff[128];
-    sprintf(buff, "a%u o%u", mOm.actions.size(), mOm.objects.size());
-    DrawString(-rc.right/2.0f, rc.bottom/2.0f, buff);
-
-    //
-    // Trigger next draw.
-    //
-
-    if (IsWindowVisible() && IsMainWndActive()) {
-      mFps.wait();
-
-      //
-      // Update.
-      //
-
-      RECT rc;
-      GetClientRect(&rc);
-
-      POINT p;
-      GetCursorPos(&p);
-      ScreenToClient(&p);
-
-      mPlayer.x = (float)(p.x - rc.right/2);
-      mPlayer.y = (float)(p.y - rc.bottom/2);
-
-      mOm.update(1/(float)FPS, mPlayer);
-
-      //
-      // Trigger redraw.
-      //
-
-      Invalidate();
-    }
+    // Draw to screen.
+    mScr.blt(dc, 0, 0);
   }
 
-  void OnResize(int width, int height)
+  BEGIN_MSG_MAP(CStgeView)
+    MSG_WM_SIZE(OnSize)
+    CHAIN_MSG_MAP(CDoubleBufferImpl<CStgeView>)
+  END_MSG_MAP()
+
+  void OnSize(UINT nType, CSize size)
   {
-    if (height == 0) {
-      height = 1;
-    }
-
-    glViewport(0, 0, width, height);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-
-    //
-    // Calculate The Aspect Ratio Of The Window.
-    //
-
-    gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 1.0f, 1000.0f);
-
-    float deg2pi = 3.1415926f / 180.0f;
-    mDepth = (height / 2.0f) / tanf((45.0f/2.0f) * deg2pi);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+    mScr.release();
+    mScr.create(size.cx, size.cy, 4);
   }
 
-  //
-  // Helper.
-  //
-
-  void DrawChar(int c)
+  void DoPaint(CDCHandle dc)
   {
-    int idx = c - ' ';
-
-    int cw = 8, ch = 16;
-    int cch = 15;
-
-    int x = cw * (idx % cch);
-    int y = ch * (idx / cch);
-
-    float x0 = x / 256.0f, y0 = (256 - y) / 256.0f;
-    float x1 = (x + cw) / 256.0f, y1 = (256 - y - ch) / 256.0f;
-
-    glEnable(GL_TEXTURE_2D);
-    glDisable(GL_DEPTH_TEST);
-    glBegin(GL_QUADS);
-      glTexCoord2f(x0,y1);
-      glVertex3f(-1,-1,0);
-      glTexCoord2f(x1,y1);
-      glVertex3f(1,-1,0);
-      glTexCoord2f(x1,y0);
-      glVertex3f(1,1,0);
-      glTexCoord2f(x0,y0);
-      glVertex3f(-1,1,0);
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
-    glEnable(GL_DEPTH_TEST);
-  }
-
-  void DrawRect()
-  {
-    glBegin(GL_LINE_LOOP);
-      glVertex2f(-1, 1);
-      glVertex2f(1, 1);
-      glVertex2f(1, -1);
-      glVertex2f(-1, -1);
-    glEnd();
-  }
-
-  void DrawString(float x, float y, std::string const& str)
-  {
-    x += 8, y -= 8;
-    for (size_t i = 0; i < str.size(); ++i) {
-      glLoadIdentity();
-      glTranslatef(x + 10 * i, y, -mDepth);
-      glScalef(5, 8, 1);
-      glColor3ub(255, 255, 255);
-      DrawChar(str[i]);
-    }
+    mFps.tick();
+    updateAndDraw(dc);
+    mFps.wait();
+    Invalidate(FALSE);
   }
 };
 
