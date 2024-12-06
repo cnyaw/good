@@ -770,14 +770,12 @@ public:
   {
     char name[256];
     if (ssname.empty()) {
-      std::stringstream ss(stream);
-      int lenStream = (int)stream.size();
       unsigned int crc32 = 0;
-      if (!sw2::Util::crc32(crc32, ss, lenStream)) {
+      if (!sw2::Util::crc32(crc32, stream, stream.size())) {
         trace("calc stream file system crc32 failed!");
         return false;
       }
-      sprintf(name, "stream;%x;%x", lenStream, crc32);
+      sprintf(name, "stream;%x;%x", stream.size(), crc32);
     } else {
       strcpy(name, ssname.c_str());
     }
