@@ -775,7 +775,7 @@ public:
         trace("calc stream file system crc32 failed!");
         return false;
       }
-      sprintf(name, "stream;%x;%x", stream.size(), crc32);
+      sprintf(name, "stream;%x;%x", (int)stream.size(), crc32);
     } else {
       strcpy(name, ssname.c_str());
     }
