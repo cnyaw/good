@@ -11,50 +11,13 @@
 
 #pragma once
 
-template<class MainT>
-class CTextureEditView : public CTextureViewImpl<CTextureEditView<MainT> >
+class CTextureEditView : public CTextureViewImpl<CTextureEditView>
 {
 public:
   DECLARE_WND_CLASS(NULL)
 
-  typedef CTextureViewImpl<CTextureEditView> BaseT;
-
-  CTextureEditView(int id) : BaseT(id)
+  CTextureEditView(int id) : CTextureViewImpl<CTextureEditView>(id)
   {
-  }
-
-  BEGIN_MSG_MAP_EX(CTextureEditView)
-    MSG_WM_MOUSEMOVE(OnMouseMove)
-    CHAIN_MSG_MAP(BaseT)
-  END_MSG_MAP()
-
-  //
-  // Message handler.
-  //
-
-  void OnMouseMove(UINT nFlags, CPoint point)
-  {
-    MainT &m = MainT::inst();
-
-    POINT pt = {point.x, point.y};
-    if (pt.x > m_sizeAll.cx || pt.y > m_sizeAll.cy) {
-      m.mStatus.SetPaneText(2, TEXT(""));
-      return;
-    }
-
-    PrjT::TextureT& tex = PrjT::inst().getTex(mId);
-
-    ImgT img = ImgT::getImage(tex.mFileName);
-    if (!img.isValid()) {
-      return;
-    }
-
-    unsigned int clr = img.getPixel(pt.x, pt.y);
-
-    CString str;
-    str.Format(_T("R:%d G:%d B:%d (#%06X)"), GetBValue(clr), GetGValue(clr), GetRValue(clr), clr);
-
-    m.mStatus.SetPaneText(2, str);
   }
 };
 
@@ -65,7 +28,7 @@ public:
 
   int mId;                              // Texture ID.
 
-  CTextureEditView<MainT> mEditView;
+  CTextureEditView mEditView;
 
   CTextureEditor(int id) : mId(id), mEditView(id)
   {
