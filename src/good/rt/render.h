@@ -169,9 +169,12 @@ void renderSprite(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, 
   pThis->gx.drawImage(rcm.left - rcv.left, rcm.top - rcv.top, img, srcx + offsetx, srcy + offsety, rcm.width(), rcm.height(), color, rot, xscale, yscale);
 }
 
+#define GET_COLOR_ALPHA(c) ((((c) >> 24) & 0xff) / (float)0xff)
+#define SET_COLOR_ALPHA(c,a) (((c) & 0xffffff) | (((unsigned int)((a) * 0xff) & 0xff) << 24))
+
 bool renderChilds(ActorT const& a, sw2::IntRect const& rcv, float rot, float xscale, float yscale) const
 {
-  float alpha = ((a.mBgColor >> 24) & 0xff) / (float)0xff;
+  float alpha = GET_COLOR_ALPHA(a.mBgColor);
 
   for (int i = 0; i < a.getChildCount(); ++i) {
 
@@ -195,8 +198,8 @@ bool renderChilds(ActorT const& a, sw2::IntRect const& rcv, float rot, float xsc
     float cx, cy;
     child.getPos(cx, cy);
 
-    float childAlpha = alpha * (((child.mBgColor >> 24) & 0xff) / (float)0xff);
-    unsigned int childBgColor = (child.mBgColor & 0xffffff) | (((unsigned int)(childAlpha * 0xff) & 0xff) << 24);
+    float childAlpha = alpha * GET_COLOR_ALPHA(child.mBgColor);
+    unsigned int childBgColor = SET_COLOR_ALPHA(child.mBgColor, childAlpha);
 
     switch (child.getType())
     {
@@ -222,6 +225,9 @@ bool renderChilds(ActorT const& a, sw2::IntRect const& rcv, float rot, float xsc
 
   return true;
 }
+
+#undef GET_COLOR_ALPHA
+#undef SET_COLOR_ALPHA
 
 bool render() const
 {
