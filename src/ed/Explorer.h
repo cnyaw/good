@@ -232,7 +232,7 @@ public:
     CTreeItem hItem = FindTreeItem(id);
 
     //
-    // Should check this, to avoid infinte setsel/selchange loop.
+    // Should check this, to avoid infinite setsel/selchange loop.
     //
 
     if (mTree.GetSelectedItem() != hItem) {

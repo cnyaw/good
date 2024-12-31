@@ -11,23 +11,23 @@
 
 #pragma once
 
-template<class T, class TBase>
-class CPropertyDotDotDotWindow :
-  public CWindowImpl<CPropertyDotDotDotWindow<T, TBase>, TBase>
+class CPropertyColorPickerWindow : public CWindowImpl<CPropertyColorPickerWindow, CStatic>
 {
 public:
 
   CButton m_wndButton;
   IProperty* m_prop;
+  COLORREF m_clrBack;
 
   virtual void OnFinalMessage(HWND /*hWnd*/)
   {
     delete this;
   }
 
-  BEGIN_MSG_MAP(CPropertyDotDotDotWindow)
+  BEGIN_MSG_MAP(CPropertyColorPickerWindow)
     MESSAGE_HANDLER(WM_CREATE, OnCreate)
     MESSAGE_HANDLER(WM_DRAWITEM, OnDrawItem)
+    MESSAGE_HANDLER(WM_PAINT, OnPaint)
     COMMAND_CODE_HANDLER(BN_CLICKED, OnButtonClicked)
   END_MSG_MAP()
 
@@ -50,6 +50,21 @@ public:
     m_wndButton.SetFont(GetFont());
 
     return lRes;
+  }
+
+  LRESULT OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
+  {
+    CPaintDC dc(m_hWnd);
+    RECT rc;
+    GetClientRect(&rc);
+    rc.right -= rc.bottom - rc.top;
+    dc.FillRect(&rc, (HBRUSH)(COLOR_WINDOW+1));
+    ::InflateRect(&rc, -2, 0);
+    rc.top ++;
+    dc.DrawFocusRect(&rc);
+    ::InflateRect(&rc, -1, -1);
+    dc.FillSolidRect(&rc, m_clrBack & 0xFFFFFF);
+    return 0;
   }
 
   //
@@ -85,40 +100,10 @@ public:
     // Call Property class' implementation of BROWSE action.
     //
 
-    if (m_prop->Activate(PACT_BROWSE, (LPARAM)((T*)this))) {
+    if (m_prop->Activate(PACT_BROWSE, (LPARAM)this)) {
       Invalidate();
     }
 
-    return 0;
-  }
-};
-
-class CPropertyColorPickerWindow :
-  public CPropertyDotDotDotWindow<CPropertyColorPickerWindow, CStatic>
-{
-public:
-
-  COLORREF m_clrBack;
-
-  typedef CPropertyDotDotDotWindow<CPropertyColorPickerWindow,CStatic> BaseClass;
-
-  BEGIN_MSG_MAP(CPropertyColorPickerWindow)
-    MESSAGE_HANDLER(WM_PAINT, OnPaint)
-    CHAIN_MSG_MAP(BaseClass)
-  END_MSG_MAP()
-
-  LRESULT OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
-  {
-    CPaintDC dc(m_hWnd);
-    RECT rc;
-    GetClientRect(&rc);
-    rc.right -= rc.bottom - rc.top;
-    dc.FillRect(&rc, (HBRUSH)(COLOR_WINDOW+1));
-    ::InflateRect(&rc, -2, 0);
-    rc.top ++;
-    dc.DrawFocusRect(&rc);
-    ::InflateRect(&rc, -1, -1);
-    dc.FillSolidRect(&rc, m_clrBack & 0xFFFFFF);
     return 0;
   }
 };
