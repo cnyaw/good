@@ -3,7 +3,6 @@
 // Used by good.rc
 //
 #define ID_SPRITEEDIT_FRAMETIME         104
-#define IDC_POINTER                     104
 #define ID_SPRITEEDIT_FRAMETIMEADD      105
 #define IDR_MAINFRAME                   128
 #define IDS_HELP_ADDGRIDLINE            129
