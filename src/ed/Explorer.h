@@ -293,9 +293,8 @@ public:
 
     mPaneProp.Create(mSplit, _T("Property"));
     mPaneProp.SetPaneContainerExtendedStyle(PANECNT_NOBORDER | PANECNT_NOCLOSEBUTTON);
-    mProp.Create(mPaneProp);
+    mProp.Create(mPaneProp, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_VSCROLL | WS_BORDER | LBS_NOINTEGRALHEIGHT);
     mProp.SetExtendedListStyle(PLS_EX_CATEGORIZED | PLS_EX_SINGLECLICKEDIT | PLS_EX_XPLOOK);
-    mProp.ModifyStyle(0, WS_VSCROLL | WS_BORDER | LBS_NOINTEGRALHEIGHT);
     mPaneProp.SetClient(mProp);
 
     mSplit.SetSplitterPanes(mTabView, mPaneProp);
