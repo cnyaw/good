@@ -262,7 +262,6 @@ public:
     NOTIFY_CODE_HANDLER_EX(TVN_BEGINDRAG, OnTreeBeginDrag)
     NOTIFY_CODE_HANDLER_EX(TVN_KEYDOWN, OnTreeKeyDown)
     NOTIFY_CODE_HANDLER_EX(TVN_SELCHANGED, OnTreeSelChanged)
-    COMMAND_ID_HANDLER_EX(ID_PANE_CLOSE, OnCloseProjView)
     REFLECT_NOTIFICATIONS()             // CPropertyListCtrl needs this.
   END_MSG_MAP()
 
@@ -760,18 +759,6 @@ end:
     ResPageSetCurSel(idItem);
 
     return 0;
-  }
-
-  //
-  // Command handler.
-  //
-
-  void OnCloseProjView(UINT uNotifyCode, int nID, CWindow wndCtl)
-  {
-    MainT& m = MainT::inst();
-
-    m.mSplit.SetSinglePaneMode(SPLIT_PANE_RIGHT);
-    m.UISetCheck(ID_VIEW_PROJVIEW, FALSE);
   }
 
   //
