@@ -546,28 +546,6 @@ public:
     OnEdit(WM_GOOD_CANUNDO, WM_GOOD_UNDO);
   }
 
-  void OnFileClose(UINT uNotifyCode, int nID, CWindow wndCtl)
-  {
-    if (!OnQueryEndSession(0, 0)) {      // Save changes if necessary.
-      return;
-    }
-
-    PrjT::inst().closeAll();
-    good::gx::ImgpImage::clear();
-    good::snd::AudiereSoundResource::inst().free();
-
-    mFileName.clear();                  // Set un-titiled.
-    mExpView.mTree.DeleteAllItems();
-    mExpView.mProp.ResetContent();
-    OnWindowCloseAll(0, 0, 0);
-
-    CString cap;
-    cap.Format(_T("%s - Untitled"), CString((LPCTSTR)IDR_MAINFRAME));
-    SetWindowText(cap);
-
-    mTabView.SetTitleBarWindow(m_hWnd);
-  }
-
   void OnFileNew(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
     if (!OnQueryEndSession(0, 0)) {     // Save changes if necessary.
