@@ -214,6 +214,7 @@ public:
 
     HWND hWndCmdBar = mCmdBar.Create(m_hWnd, rcDefault, NULL, ATL_SIMPLE_CMDBAR_PANE_STYLE);
     mCmdBar.AttachMenu(GetMenu());
+    mCmdBar.LoadImages(IDR_MAINFRAME);
     SetMenu(NULL);
 
     //
