@@ -523,7 +523,6 @@ public:
     //
 
     mFrameTime.Create(mEditPane, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | TBS_HORZ | TBS_AUTOTICKS);
-    mFrameTime.SetFont(AtlGetDefaultGuiFont());
     mFrameTime.SetWindowPos(NULL, mEditPane.m_cxyBorder + mEditPane.m_cxyBtnOffset + (1 + mTBEdit.GetButtonCount()) * mEditPane.mCxButton, mEditPane.m_cxyBorder + mEditPane.m_cxyBtnOffset, 128, mEditPane.mCyButton, SWP_NOZORDER | SWP_NOACTIVATE);
     mFrameTime.SetRange(1,180);
     mFrameTime.EnableWindow(FALSE);
@@ -533,7 +532,6 @@ public:
     mFrameTimeTxt.SetWindowPos(NULL, mEditPane.m_cxyBorder + mEditPane.m_cxyBtnOffset + (1 + mTBEdit.GetButtonCount()) * mEditPane.mCxButton + 130, mEditPane.m_cxyBorder + mEditPane.m_cxyBtnOffset, 128, mEditPane.mCyButton, SWP_NOZORDER | SWP_NOACTIVATE);
 
     mFrameTimeAdd.Create(mTilesetPane, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | TBS_HORZ | TBS_AUTOTICKS);
-    mFrameTimeAdd.SetFont(AtlGetDefaultGuiFont());
     mFrameTimeAdd.SetWindowPos(NULL, mTilesetPane.m_cxyBorder + 2 * mTilesetPane.m_cxyBtnOffset + mEditPane.mCxButton, mTilesetPane.m_cxyBorder + mTilesetPane.m_cxyBtnOffset, 128, mTilesetPane.mCyButton, SWP_NOZORDER | SWP_NOACTIVATE);
     mFrameTimeAdd.SetRange(1,180);
     mFrameTimeAdd.SetPos(60);
