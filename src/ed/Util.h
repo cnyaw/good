@@ -108,33 +108,24 @@ void GetObjDim(const PrjT::LevelT &lvl, const PrjT::ObjectT &obj, RECT &rc)
 
 bool SelMultiFile(LPCTSTR lpszDefExt, LPCTSTR lpszFilter, std::vector<std::string> &paths)
 {
-  CFileDialog dlg(TRUE, lpszDefExt, NULL, OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_ALLOWMULTISELECT, lpszFilter);
-
-  const int LenBuff = 4096;
-  TCHAR Buff[LenBuff] = {0};
-  dlg.m_ofn.lpstrFile = Buff;
-  dlg.m_ofn.nMaxFile = LenBuff;
-
+  CMultiFileDialog dlg(lpszDefExt, NULL, OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, lpszFilter);
   if (IDOK != dlg.DoModal()) {
     return false;
   }
 
-  if (0 != Buff[dlg.m_ofn.nFileOffset - 1]) {
-    Buff[dlg.m_ofn.nFileOffset - 1] = 0;
+  CString path;
+  int nLength = dlg.GetDirectory(NULL, 0);
+  if (0 < nLength && 0 < dlg.GetDirectory(path.GetBuffer(nLength), nLength)) {
+    path.ReleaseBuffer(nLength - 1);
+  } else {
+    return false;
   }
 
-  CString path = Buff;
-  for (int i = path.GetLength() + 1, s = i; i < LenBuff; i++) {
-    if (0 != Buff[i]) {
-      continue;
-    }
-    CString n(Buff + s, i - s);
-    n = path + _T("\\") + n;
+  LPCTSTR pFile = dlg.GetFirstFileName();
+  while (pFile) {
+    CString n = path + _T("\\") + pFile;
     paths.push_back(std::string(n));
-    if (0 == Buff[i + 1]) {
-      break;
-    }
-    s = i + 1;
+    pFile = dlg.GetNextFileName();
   }
 
   return true;
