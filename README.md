@@ -57,7 +57,7 @@ Some Games Made By GoodEd
 # Platforms
 * Microsoft Windows (https://github.com/cnyaw/goodbin/tree/master/latest-build-win32-editor)
 * iOS
-* Android (https://github.com/cnyaw/goodbin/tree/master/latest-build-android-apk)
+* Android
 * PSP
 * MOD
 * HTML5
