@@ -174,7 +174,6 @@ public:
     COMMAND_ID_HANDLER_EX(ID_VIEW_SHOWFPS, OnViewShowFps)
     COMMAND_ID_HANDLER_EX(ID_HELP_GOODAPIREFERENCE, OnShowApiRef)
     COMMAND_ID_HANDLER_EX(ID_APP_ABOUT, OnAppAbout)
-    COMMAND_ID_HANDLER_EX(ID_HELP_CHECKFORUPDATE, OnCheckUpdate)
     COMMAND_ID_HANDLER_EX(ID_WINDOW_CLOSE, OnWindowClose)
     COMMAND_ID_HANDLER_EX(ID_WINDOW_CLOSE_ALL, OnWindowCloseAll)
     COMMAND_RANGE_HANDLER_EX(ID_FILE_ADDNEWMAP, ID_FILE_ADDNEWLEVEL, OnAddNewItem)
@@ -476,33 +475,6 @@ public:
   void OnAppAbout(UINT uNotifyCode, int nID, CWindow wndCtl)
   {
     CDlgAbout().DoModal();
-  }
-
-  void OnCheckUpdate(UINT uNotifyCode, int nID, CWindow wndCtl)
-  {
-    char temp[MAX_PATH];
-    ::tmpnam(temp);
-
-    HRESULT hr = URLDownloadToFile(NULL, GOOD_CHECK_UPDATE_URL, temp, 0, NULL);
-    if (FAILED(hr)) {
-      MessageBox(_T("Connection error!"), _T("Error"), MB_OK | MB_ICONERROR);
-      return;
-    }
-
-    std::string s;
-    if (!sw2::Util::loadFileContent(temp, s)) {
-      MessageBox(_T("Check update failed!"), _T("Error"), MB_OK | MB_ICONERROR);
-      return;
-    }
-    ::remove(temp);
-
-    if (CURRENT_GOOD_EDITOR_VERSION != s) {
-      CString str;
-      str.Format(_T("New version '%s' is available on good-ed forum."), s.c_str());
-      MessageBox(str, CString((LPCTSTR)IDR_MAINFRAME), MB_OK);
-    } else {
-      MessageBox(_T("You are using the latest version."), CString((LPCTSTR)IDR_MAINFRAME), MB_OK);
-    }
   }
 
   void OnCreatePackage(LPCTSTR msg, std::string const &ext, LPCTSTR title, bool encrypt)

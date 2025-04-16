@@ -11,16 +11,6 @@
 
 #pragma once
 
-//
-// Check update feature: CURRENT_GOOD_EDITOR_VERSION should match with the
-// content of http://good-ed.smallworld.idv.tw/GoodLatestVersion.txt. Otherwise
-// it will be treated as not the latest version.
-// For compatibility GoodLastestVersion.txt should also been created.
-//
-
-#define GOOD_CHECK_UPDATE_URL "http://good-ed.smallworld.idv.tw/GoodLatestVersion.txt"
-#define CURRENT_GOOD_EDITOR_VERSION "Good-1.6.4"
-
 #define CONFIG_FILE_NAME "Config"
 
 #define EDITOR_SNAP_SCALE 8

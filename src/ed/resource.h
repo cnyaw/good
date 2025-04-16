@@ -114,7 +114,6 @@
 #define ID_EDIT_GOTO                    32908
 #define ID_HELP_GOODAPIREFERENCE        32910
 #define ID_PROJECT_NEWSEARCHPATH        32912
-#define ID_HELP_CHECKFORUPDATE          32913
 #define ID_STGESCRIPT_SOURCE            32916
 #define ID_STGESCRIPT_COMPILE           32919
 #define ID_MAPEDIT_OPTION               32921

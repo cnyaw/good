@@ -211,8 +211,6 @@ BEGIN
     POPUP "&Help"
     BEGIN
         MENUITEM "API Reference",               ID_HELP_GOODAPIREFERENCE
-        MENUITEM "Check For Updates",           ID_HELP_CHECKFORUPDATE
-        MENUITEM SEPARATOR
         MENUITEM "&About",                      ID_APP_ABOUT
     END
 END
@@ -667,7 +665,6 @@ END
 STRINGTABLE
 BEGIN
     ID_PROJECT_NEWSEARCHPATH "Add new search path\nNew Search Path"
-    ID_HELP_CHECKFORUPDATE  "Check for Update\nCheckUpdate"
     ID_STGESCRIPT_SOURCE    "Source View\nSource"
     ID_STGESCRIPT_COMPILE   "Compile\nCompile"
     ID_MAPEDIT_OPTION       "Option\nOption"
