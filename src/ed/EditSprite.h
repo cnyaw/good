@@ -88,7 +88,8 @@ public:
 
     case EditorT::TOOL_ERASE:
       if (-1 != mCurHot && PrjT::inst().getSprite(mEditor.mId).removeFrame(mCurHot)) {
-        mCurSel = -1;
+        mCurHot = mCurSel = -1;
+        mCurFrame = mCurCnt = 0;
         Invalidate(FALSE);
       }
       break;
@@ -107,16 +108,11 @@ public:
     Invalidate(FALSE);
   }
 
-  void OnMouseMove(UINT nFlags, CPoint point)
+  void UpdateCurHot(const CPoint &point, bool bBtnDown, PrjT::SpriteT &spr)
   {
-    bool bBtnDown = GetCapture() == m_hWnd;
-
     RECT rcClient;
     GetClientRect(&rcClient);
 
-    PrjT::SpriteT &spr = PrjT::inst().getSprite(mEditor.mId);
-
-    int lastHot = mCurHot;
     size_t cxMaxTile = max(1, rcClient.right / spr.mTileset.mTileWidth);
 
     int cx = cxMaxTile;
@@ -140,11 +136,24 @@ public:
         mCurHot = -1;
       }
     }
+  }
+
+  void OnMouseMove(UINT nFlags, CPoint point)
+  {
+    bool bBtnDown = GetCapture() == m_hWnd;
+
+    PrjT::SpriteT &spr = PrjT::inst().getSprite(mEditor.mId);
+
+    int lastHot = mCurHot;
+
+    UpdateCurHot(point, bBtnDown, spr);
 
     int lastSelCnt = mSelCnt;
     if (bBtnDown) {
       if (EditorT::TOOL_ERASE == mEditor.mCurTool) {
         if (lastHot != mCurHot && -1 != mCurHot && spr.removeFrame(mCurHot)) {
+          mCurFrame = mCurCnt = 0;
+          UpdateCurHot(point, bBtnDown, spr);
           Invalidate(FALSE);
         }
       } else {
