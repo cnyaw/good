@@ -529,12 +529,17 @@ public:
   int allocActorIdExcludeResId_i(ResT *pRes)
   {
     const sw2::ObjectPool<int,32,true> &pool = pRes ? pRes->mId : mRes.mId;
-    for (int i = mActors.firstFree(); -1 != i; i = mActors.nextFree(i)) {
-      if (!pool.isUsed(i)) {
-        return allocActor(i);
+    for (int try_n = 0; try_n < 3; try_n++) {
+      for (int i = mActors.firstFree(); -1 != i; i = mActors.nextFree(i)) {
+        if (!pool.isUsed(i)) {
+          return allocActor(i);
+        }
       }
+      // Try to grow mActors.
+      int dummy = mActors.alloc(mActors.capacity());
+      mActors.free(dummy);
     }
-    return allocActor();
+    return -1;
   }
 
   int createObj_i(int idItem, LevelT const& lvl, ObjectT const& o, int idType, char const *pPkgName, ResT *pRes)
