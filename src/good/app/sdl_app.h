@@ -14,6 +14,7 @@
 #ifdef __EMSCRIPTEN__
 #include "SDL/SDL.h"
 #include "SDL/SDL_opengl.h"
+#define SDL_GetKeyState SDL_GetKeyboardState
 #include "../snd/openal_snd.h"
 #define SndT snd::ALSound
 #else
@@ -130,41 +131,55 @@ public:
   bool poll(Uint32& keys) const
   {
     SDL_Event event;
-
     while (SDL_PollEvent(&event)) {
-      switch(event.type)
-      {
-      case SDL_KEYDOWN:
-        switch (event.key.keysym.sym)
-        {
-        case SDLK_UP: keys |= GOOD_KEYS_UP; break;
-        case SDLK_DOWN: keys |= GOOD_KEYS_DOWN; break;
-        case SDLK_LEFT: keys |= GOOD_KEYS_LEFT; break;
-        case SDLK_RIGHT: keys |= GOOD_KEYS_RIGHT; break;
-        case SDLK_ESCAPE: keys |= GOOD_KEYS_ESCAPE; break;
-        case SDLK_RETURN: keys |= GOOD_KEYS_RETURN; break;
-        case SDLK_z: keys |= GOOD_KEYS_BTN_A; break;
-        case SDLK_x: keys |= GOOD_KEYS_BTN_B; break;
-        }
-        return false;
-
-      case SDL_KEYUP:
-        switch (event.key.keysym.sym)
-        {
-        case SDLK_UP: keys &= ~GOOD_KEYS_UP; break;
-        case SDLK_DOWN: keys &= ~GOOD_KEYS_DOWN; break;
-        case SDLK_LEFT: keys &= ~GOOD_KEYS_LEFT; break;
-        case SDLK_RIGHT: keys &= ~GOOD_KEYS_RIGHT; break;
-        case SDLK_ESCAPE: keys &= ~GOOD_KEYS_ESCAPE; break;
-        case SDLK_RETURN: keys &= ~GOOD_KEYS_RETURN; break;
-        case SDLK_z: keys &= ~GOOD_KEYS_BTN_A; break;
-        case SDLK_x: keys &= ~GOOD_KEYS_BTN_B; break;
-        }
-        return false;
-
-      case SDL_QUIT:
+      if (event.type == SDL_QUIT) {
         return true;
       }
+    }
+
+    Uint8* keyboard_state = SDL_GetKeyState(NULL);
+
+    if (keyboard_state[SDLK_UP]) {
+      keys |= GOOD_KEYS_UP;
+    } else {
+      keys &= ~GOOD_KEYS_UP;
+    }
+    if (keyboard_state[SDLK_DOWN]) {
+      keys |= GOOD_KEYS_DOWN;
+    } else {
+      keys &= ~GOOD_KEYS_DOWN;
+    }
+    if (keyboard_state[SDLK_LEFT]) {
+      keys |= GOOD_KEYS_LEFT;
+    } else {
+      keys &= ~GOOD_KEYS_LEFT;
+    }
+    if (keyboard_state[SDLK_RIGHT]) {
+      keys |= GOOD_KEYS_RIGHT;
+    } else {
+      keys &= ~GOOD_KEYS_RIGHT;
+    }
+
+    if (keyboard_state[SDLK_ESCAPE]) {
+      keys |= GOOD_KEYS_ESCAPE;
+    } else {
+      keys &= ~GOOD_KEYS_ESCAPE;
+    }
+    if (keyboard_state[SDLK_RETURN]) {
+      keys |= GOOD_KEYS_RETURN;
+    } else {
+      keys &= ~GOOD_KEYS_RETURN;
+    }
+
+    if (keyboard_state[SDLK_z]) {
+      keys |= GOOD_KEYS_BTN_A;
+    } else {
+      keys &= ~GOOD_KEYS_BTN_A;
+    }
+    if (keyboard_state[SDLK_x]) {
+      keys |= GOOD_KEYS_BTN_B;
+    } else {
+      keys &= ~GOOD_KEYS_BTN_B;
     }
 
     return false;
