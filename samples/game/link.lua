@@ -35,8 +35,6 @@ Game.OnCreate = function(param)
   param.p1 = -1
   param.p2 = -1
 
-  param.level = Good.GetLevelId(param._id)
-
   local MaxCard = 0
 
   local i = 0
@@ -254,7 +252,7 @@ Game.OnStep = function(param)
 
   if (0 == param.c) then
     if (Input.IsKeyPushed(Input.BTN_A + Input.LBUTTON)) then
-      local level = Resource.GetNextLevelId(param.level)
+      local level = Resource.GetNextLevelId(param._id)
       if (0 < level) then
         Good.GenObj(-1, level)
       end
@@ -285,7 +283,7 @@ Game.OnStep = function(param)
       -- Level clear?
 
       if (0 == param.c) then
-        local level = Resource.GetNextLevelId(param.level)
+        local level = Resource.GetNextLevelId(param._id)
         if (0 < level) then
           GenStrObj(-1, 100, 100, 'Click to start next level')
         else
