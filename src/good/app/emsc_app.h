@@ -76,7 +76,6 @@ public:
 
   Uint8 getMouseState(sw2::IntPoint &ptMouse)
   {
-    static int x=0;
     Uint8 state = BaseT::getMouseState(ptMouse);
     EM_ASM({
       const canvas = document.getElementById('canvas');
