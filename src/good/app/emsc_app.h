@@ -78,26 +78,25 @@ public:
   {
     static int x=0;
     Uint8 state = BaseT::getMouseState(ptMouse);
-    int fullscreen, offsetX, offsetY;
     EM_ASM({
       const canvas = document.getElementById('canvas');
       const rect = canvas.getBoundingClientRect();
-      const cssW = rect.width;
+      const cssW = rect.width;          // Screen size.
       const cssH = rect.height;
-      const bufferW = canvas.width;
+      const bufferW = canvas.width;     // Canvas size.
       const bufferH = canvas.height;
-      // Only offset the mouse pos in fullscreen mmode.
+      // Only offset the mouse pos in fullscreen mode.
       if (document.fullscreenElement) {
         const sx = cssW / bufferW;
         const sy = cssH / bufferH;
         const scale = Math.min(sx, sy);
         const sw = scale * bufferW;
         const sh = scale * bufferH;
-        const ox = (cssW - sw) / 2;
+        const ox = (cssW - sw) / 2;     // Offset in screen space.
         const oy = (cssH - sh) / 2;
-        const sox = ox / sx;
+        const sox = ox / sx;            // Offset in canvas space.
         const soy = oy / sy;
-        const finalsx = bufferW / (bufferW - 2 * sox);
+        const finalsx = bufferW / (bufferW - 2 * sox); // Scale to canvas size.
         const finalsy = bufferH / (bufferH - 2 * soy);
         const mouseX = HEAP32[$0 >> 2];
         const mouseY = HEAP32[$1 >> 2];
