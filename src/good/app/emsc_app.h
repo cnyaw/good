@@ -74,6 +74,42 @@ public:
   typedef SDLApplicationBase<AppT> BaseT;
   EmscFileSystem fs;
 
+  Uint8 getMouseState(sw2::IntPoint &ptMouse)
+  {
+    static int x=0;
+    Uint8 state = BaseT::getMouseState(ptMouse);
+    int fullscreen, offsetX, offsetY;
+    EM_ASM({
+      const canvas = document.getElementById('canvas');
+      const rect = canvas.getBoundingClientRect();
+      const cssW = rect.width;
+      const cssH = rect.height;
+      const bufferW = canvas.width;
+      const bufferH = canvas.height;
+      // Only offset the mouse pos in fullscreen mmode.
+      if (document.fullscreenElement) {
+        const sx = cssW / bufferW;
+        const sy = cssH / bufferH;
+        const scale = Math.min(sx, sy);
+        const sw = scale * bufferW;
+        const sh = scale * bufferH;
+        const ox = (cssW - sw) / 2;
+        const oy = (cssH - sh) / 2;
+        const sox = ox / sx;
+        const soy = oy / sy;
+        const finalsx = bufferW / (bufferW - 2 * sox);
+        const finalsy = bufferH / (bufferH - 2 * soy);
+        const mouseX = HEAP32[$0 >> 2];
+        const mouseY = HEAP32[$1 >> 2];
+        const newMouseX = (mouseX - sox) * finalsx;
+        const newMouseY = (mouseY - soy) * finalsy;
+        HEAP32[$0 >> 2] = Math.floor(newMouseX);
+        HEAP32[$1 >> 2] = Math.floor(newMouseY);
+      }
+    }, &ptMouse.x, &ptMouse.y);
+    return state;
+  }
+
   bool doInit(std::string const& name)
   {
     if (!BaseT::doInit(name)) {

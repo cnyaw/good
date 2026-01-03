@@ -48,6 +48,11 @@ public:
   gx::GLGraphics gx;
   SDL_Surface* mScreen;
 
+  Uint8 getMouseState(sw2::IntPoint &ptMouse)
+  {
+    return SDL_GetMouseState(&ptMouse.x, &ptMouse.y);
+  }
+
   bool step()
   {
     //
@@ -60,7 +65,7 @@ public:
     }
 
     sw2::IntPoint ptMouse;
-    Uint8 btnMouse = SDL_GetMouseState(&ptMouse.x, &ptMouse.y);
+    Uint8 btnMouse = AppT::getInst().getMouseState(ptMouse);
 
     if (btnMouse & SDL_BUTTON_LMASK) {
       keys |= GOOD_KEYS_LBUTTON;
