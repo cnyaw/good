@@ -27,9 +27,10 @@
 #include "gx/gx.h"
 
 #include "swUtil.h"
-#include "../gx/imgp_gx.h"
 
 #define GOOD_SUPPORT_ONLY_ONE_TEXTURE
+#include "../gx/imgp_gx.h"
+
 #define GOOD_SUPPORT_NO_LOGO
 #include "rt/rt.h"
 
