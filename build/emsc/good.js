@@ -68,17 +68,21 @@ function loadImageFromChar(size, ch, bAntiAlias) {
   _free(buf);
 }
 
+function toggleFullscreen() {
+  // Check if we're in fullscreen mode
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+    return;
+  }
+  // Otherwise enter fullscreen mode
+  var canvas = document.getElementById('canvas');
+  canvas.requestFullscreen().catch((err) => {
+    console.error(`Error enabling fullscreen: ${err.message}`);
+  });
+}
+
 document.addEventListener("keydown", (event) => {
   if (event.altKey && event.key === "Enter") {
-    // Check if we're in fullscreen mode
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-      return;
-    }
-    // Otherwise enter fullscreen mode
-    var canvas = document.getElementById('canvas');
-    canvas.requestFullscreen().catch((err) => {
-      console.error(`Error enabling fullscreen: ${err.message}`);
-    });
+    toggleFullscreen();
   }
 });
