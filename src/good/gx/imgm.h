@@ -15,7 +15,7 @@
 #include "rcpack.h"
 
 #ifdef GOOD_SUPPORT_ONLY_ONE_TEXTURE
-void NotifyImageManagerSurfaceChanged();
+void NotifyImageManagerSurfaceReset();
 #endif
 
 namespace good {
@@ -176,10 +176,10 @@ public:
         psur->reset(psur->img.w, psur->img.h);
         if (psur->add(rc)) {
           UpdateSurface(psur, rc, img, sur);
-          NotifyImageManagerSurfaceChanged();
+          NotifyImageManagerSurfaceReset();
           return true;
         }
-        NotifyImageManagerSurfaceChanged();
+        NotifyImageManagerSurfaceReset();
       }
       return false;
     }

@@ -10,9 +10,9 @@
 
 #pragma once
 
-void NotifyImageManagerSurfaceChanged()
+void NotifyImageManagerSurfaceReset()
 {
-  app.handleImageManagerSurfaceChanged();
+  app.handleImageManagerSurfaceReset();
 }
 
 void trigger()

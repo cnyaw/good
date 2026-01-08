@@ -853,7 +853,7 @@ public:
   }
 
 #ifdef GOOD_SUPPORT_ONLY_ONE_TEXTURE
-  void handleImageManagerSurfaceChanged()
+  void handleImageManagerSurfaceReset()
   {
     for (int i = mActors.first(); -1 != i; i = mActors.next(i)) {
       mActors[i].mImg = ImgT();
