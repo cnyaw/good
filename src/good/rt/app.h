@@ -858,11 +858,7 @@ public:
     for (int i = mActors.first(); -1 != i; i = mActors.next(i)) {
       mActors[i].mImg = ImgT();
     }
-    if (mRenderState) {
-      ((T*)this)->gx.restoreSur();
-    } else {
-      mTexDirty = true;
-    }
+    checkAndRestoreSur();
     mDirty = true;
   }
 #endif
