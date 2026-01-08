@@ -37,8 +37,10 @@ public:
   int mResType, mResId;
   std::string mResName;
 
-  int mCurrFrame, mCurrFrameTime;       // Support sprite.
+  int mFont, mUnicode, mCharSize;       // Support char obj.
+  bool mCharAA;
 
+  int mCurrFrame, mCurrFrameTime;       // Support sprite.
   bool mSpriteAnimator, mScriptAnimator;
 
   bool mVisible;
@@ -76,6 +78,9 @@ public:
     mPosX = mPosY = .0f;
 
     mScript[0] = '\0';
+
+    mFont = mUnicode = mCharSize = -1;
+    mCharAA = false;
 
     mCurrFrame = 0;
     mCurrFrameTime = 0;

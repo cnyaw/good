@@ -79,9 +79,12 @@ ImgT getTexBgImg_i(ActorT const& a) const
   if (-1 != a.mResId) {
     TextureT const& tex = mRes.getTex(a.mResId);
     return getImage(a, tex.mFileName);
-  } else {
-    return a.mImg;                      // This is a char map obj, use cache immediately.
+  } else if (a.mImg.isValid()) {
+    return a.mImg;
+  } else if (-1 != a.mCharSize) {
+    a.mImg = getImage(a.mFont, a.mCharSize, a.mUnicode, a.mCharAA); // This is a char map obj.
   }
+  return a.mImg;
 }
 
 void calcRenderTexBgParam(ActorT const& a, float cx, float cy, sw2::IntRect const& rcv, float xscale, float yscale, int w, int h, int &sw, int &sh, int &nx, int &ny, int &xbound, int &ybound) const
@@ -334,28 +337,28 @@ ImgT getImage(std::string const& name) const
   return img;
 }
 
-ImgT getImage(int size, int ch) const
+ImgT getImage(int font, int size, int ch, bool antiAlias) const
 {
-  if (GOOD_DRAW_TEXT_FIXED_FONT == getFont()) {
+  if (GOOD_DRAW_TEXT_FIXED_FONT == font) {
     return getFixFontImage(size, ch);
   } else {
-    return getSysFontImage(size, ch);
+    return getSysFontImage(size, ch, antiAlias);
   }
 }
 
-ImgT getSysFontImage(int size, int ch) const
+ImgT getSysFontImage(int size, int ch, bool antiAlias) const
 {
   char chrmap[128];
-  sprintf(chrmap, "chrmap;%d;%d;%d", size, ch, mAntiAlias);
+  sprintf(chrmap, "chrmap;%d;%d;%d", size, ch, antiAlias);
 
   if (ImgT::existImage(chrmap)) {
     return ImgT::getImage(chrmap);
   }
 
   CanvasT img;
-  if (!img.loadFromChar(size, ch, mAntiAlias)) {
+  if (!img.loadFromChar(size, ch, antiAlias)) {
     img.create(size, size, 4);
-    img.fill(0).rect(0xffffffff, 0, 0, img.w, img.h);;
+    img.fill(0).rect(0xffffffff, 0, 0, img.w, img.h);
   }
 
   ImgT i = ImgT::getImage(chrmap, img);

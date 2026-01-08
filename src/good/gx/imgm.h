@@ -64,6 +64,7 @@ public:
   {
     free();
     root = new RectPackNode(0, 0, TEX_WIDTH, TEX_HEIGHT);
+    memset(img.dat, 0, img.w * img.h * img.bpp);
   }
 
   bool add(sw2::IntRect &r)
@@ -173,12 +174,12 @@ public:
       if (psur) {
         mImg.clear();
         psur->reset(psur->img.w, psur->img.h);
-        memset(psur->img.dat, 0, psur->img.w * psur->img.h * psur->img.bpp);
-        NotifyImageManagerSurfaceChanged();
         if (psur->add(rc)) {
           UpdateSurface(psur, rc, img, sur);
+          NotifyImageManagerSurfaceChanged();
           return true;
         }
+        NotifyImageManagerSurfaceChanged();
       }
       return false;
     }

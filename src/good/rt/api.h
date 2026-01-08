@@ -147,7 +147,7 @@ void drawText(int canvas, int x, int y, char const *utf8text, int size, unsigned
   sw2::Util::utf8ToU32(utf8text, unicode);
   int xoffset = 0;
   for (size_t i = 0; i < unicode.size(); i++) {
-    ImgT img = getImage(size, unicode[i]);
+    ImgT img = getImage(getFont(), size, unicode[i], mAntiAlias);
     if (img.isValid()) {
       drawImage_i(canvas, x + xoffset, y, img, 0, 0, img.getWidth(), img.getHeight(), color, .0f, 1.0f, 1.0f);
       xoffset += img.getWidth();
@@ -469,7 +469,11 @@ void genTextObj_i(int idDummy, char const *utf8text, int size, int idType, ResT 
     ActorT& a = mActors[chid];
     a.create(chid, ActorT::TYPES_TEXBG, -1);
     a.mPosX = xoffset;
-    a.mImg = getImage(size, unicode[i]);
+    a.mFont = getFont();
+    a.mCharSize = size;
+    a.mUnicode = unicode[i];
+    a.mCharAA = mAntiAlias;
+    a.mImg = getImage(getFont(), size, unicode[i], mAntiAlias);
     if (a.mImg.isValid()) {
       xoffset += a.mImg.getWidth();
     } else {
@@ -862,7 +866,7 @@ void getTextDim(const char* utf8text, int size, int &w, int &h, std::vector<int>
   std::vector<int> unicode;
   sw2::Util::utf8ToU32(utf8text, unicode);
   for (size_t i = 0; i < unicode.size(); i++) {
-    ImgT img = getImage(size, unicode[i]);
+    ImgT img = getImage(getFont(), size, unicode[i], mAntiAlias);
     if (img.isValid()) {
       w += img.getWidth();
       h = (std::max)(h, img.getHeight());
