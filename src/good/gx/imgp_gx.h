@@ -392,6 +392,74 @@ public:
     return *this;
   }
 
+  bool findNonEmptyPix_i(int x, int y) const
+  {
+    int i = x + y * w;
+    return 0 != ((const int*)dat)[i];
+  }
+
+  bool findBound(int &x, int &y, int &w, int &h) const
+  {
+    bool dp = false;
+    int maxy = y + h - 1, maxx = x + w - 1, minx = x, miny = y;
+    for (int y0 = y + h - 1; y0 >= y; y0--) {
+      for (int x0 = x + w - 1; x0 >= x; x0--) {
+        dp = findNonEmptyPix_i(x0, y0);
+        if (dp) {
+          maxy = y0;
+          break;
+        }
+      }
+      if (dp) {
+        break;
+      }
+    }
+    if (!dp) {
+      return false;
+    }
+    for (int x0 = x + w - 1; x0 >= x; x0--) {
+      for (int y0 = maxy; y0 >= y; y0--) {
+        dp = findNonEmptyPix_i(x0, y0);
+        if (dp) {
+          maxx = x0;
+          break;
+        }
+      }
+      if (dp) {
+        break;
+      }
+    }
+    for (int x0 = x; x0 < maxx; x0++) {
+      for (int y0 = maxy; y0 >= y; y0--) {
+        dp = findNonEmptyPix_i(x0, y0);
+        if (dp) {
+          minx = x0;
+          break;
+        }
+      }
+      if (dp) {
+        break;
+      }
+    }
+    for (int y0 = y; y0 <= maxy; y0++) {
+      for (int x0 = x; x0 <= maxx; x0++) {
+        dp = findNonEmptyPix_i(x0, y0);
+        if (dp) {
+          miny = y0;
+          break;
+        }
+      }
+      if (dp) {
+        break;
+      }
+    }
+    x = minx;
+    y = miny;
+    w = (std::min)(w, maxx - minx + 1);
+    h = (std::min)(h, maxy - miny + 1);
+    return true;
+  }
+
   bool findDiffPix_i(const Imgp &img, int x, int y) const
   {
     int i = x + y * w;
