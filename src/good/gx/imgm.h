@@ -22,6 +22,8 @@ namespace good {
 
 namespace gx {
 
+bool findBound(const GxImage &img, int &x, int &y, int &w, int &h);
+
 class ImageSurface
 {
 public:
@@ -72,9 +74,9 @@ public:
     return root->add(r);
   }
 
-  void draw(sw2::IntRect const &rc, GxImage const &aimg)
+  void draw(sw2::IntRect const &rc, GxImage const &aimg, int ox, int oy)
   {
-    img.draw(rc.left, rc.top, aimg);
+    img.draw(rc.left, rc.top, aimg, ox, oy, rc.width(), rc.height());
   }
 
   int size() const
@@ -96,7 +98,7 @@ public:
   }
 
   void *sur;
-  int left, top, w, h;
+  int left, top, w, h, ox, oy, ow, oh;
 };
 
 template<class T, class SurT>
@@ -139,13 +141,17 @@ public:
     mSur.clear();
   }
 
-  void UpdateSurface(SurT *psur, sw2::IntRect const &rc, GxImage const &img, ImageRect &sur)
+  void UpdateSurface(SurT *psur, sw2::IntRect const &rc, GxImage const &img, ImageRect &sur, int ox, int oy)
   {
-    psur->draw(rc, img);
+    psur->draw(rc, img, ox, oy);
     sur.left = rc.left;
     sur.top = rc.top;
-    sur.w = img.w;
-    sur.h = img.h;
+    sur.w = rc.width();
+    sur.h = rc.height();
+    sur.ox = ox;
+    sur.oy = oy;
+    sur.ow = img.w;
+    sur.oh = img.h;
     sur.sur = (void*)psur;
   }
 
@@ -157,13 +163,16 @@ public:
 
     img.convert32();                    // Make sure img is 32-bits.
 
-    sw2::IntRect rc(0, 0, img.w, img.h);
+    int x = 0, y = 0, w = img.w, h = img.h;
+    findBound(img, x, y, w, h);
+
+    sw2::IntRect rc(0, 0, w, h);
 
     typename std::vector<SurT*>::iterator it;
     for (it = mSur.begin(); it != mSur.end(); ++it) {
       SurT *psur = *it;
       if (psur->add(rc)) {
-        UpdateSurface(psur, rc, img, sur);
+        UpdateSurface(psur, rc, img, sur, x, y);
         return true;
       }
     }
@@ -175,7 +184,7 @@ public:
         mImg.clear();
         psur->reset(psur->img.w, psur->img.h);
         if (psur->add(rc)) {
-          UpdateSurface(psur, rc, img, sur);
+          UpdateSurface(psur, rc, img, sur, x, y);
           NotifyImageManagerSurfaceReset();
           return true;
         }
@@ -203,7 +212,7 @@ public:
     mSur.push_back(psur);
 
     if (psur->add(rc)) {
-      UpdateSurface(psur, rc, img, sur);
+      UpdateSurface(psur, rc, img, sur, x, y);
       return true;
     }
 

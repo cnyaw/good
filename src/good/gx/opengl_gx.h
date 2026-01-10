@@ -55,13 +55,13 @@ public:
     }
   }
 
-  void draw(sw2::IntRect const &rc, GxImage const &aimg)
+  void draw(sw2::IntRect const &rc, GxImage const &aimg, int ox, int oy)
   {
     //
     // Blt the img to the pack texture.
     //
 
-    BaseT::draw(rc, aimg);
+    BaseT::draw(rc, aimg, ox, oy);
 
     //
     // Transfer pack texture data to GL.
@@ -144,19 +144,19 @@ public:
 
   int getWidth() const
   {
-    return mSur->w;
+    return mSur->ow;
   }
 
   int getHeight() const
   {
-    return mSur->h;
+    return mSur->oh;
   }
 
   template<class CanvasT>
   void draw(int x, int y, const CanvasT &c, int sx, int sy, int sw, int sh)
   {
     if (isValid()) {
-      ((GL_Surface*)mSur->sur)->img.draw(mSur->left + x, mSur->top + y, c, sx, sy, sw, sh);
+      ((GL_Surface*)mSur->sur)->img.draw(mSur->left + x + mSur->ox, mSur->top + y + mSur->oy, c, sx, sy, sw, sh);
     }
   }
 
@@ -164,7 +164,7 @@ public:
   void drawToCanvas(int x, int y, CanvasT &c, int sx, int sy, int sw, int sh) const
   {
     if (isValid()) {
-      c.draw((*(const CanvasT*)&(((GL_Surface*)mSur->sur)->img)), x, y, sw, sh, mSur->left + sx, mSur->top + sy);
+      c.draw((*(const CanvasT*)&(((GL_Surface*)mSur->sur)->img)), x + mSur->ox, y + mSur->oy, sw, sh, mSur->left + sx, mSur->top + sy);
     }
   }
 };
@@ -372,29 +372,23 @@ public:
       return false;
     }
 
-    {
-      int imgw = img.getWidth(), imgh = img.getHeight();
-
-      srcw = (std::min)(srcw, imgw), srch = (std::min)(srch, imgh);
-
-      if (srcx + srcw > imgw) {
-        srcw = imgw - srcx;
-        if (0 >= srcw) {
-          return false;
-        }
-      }
-
-      if (srcy + srch > imgh) {
-        srch = imgh - srcy;
-        if (0 >= srch) {
-          return false;
-        }
-      }
+    sw2::IntRect rcSrc(srcx, srcy, srcx + srcw, srcy + srch);
+    sw2::IntRect rcTex(img.mSur->ox, img.mSur->oy, img.mSur->ox + img.mSur->w, img.mSur->oy + img.mSur->h);
+    sw2::IntRect rcInt;
+    if (!rcSrc.intersect(rcTex, rcInt)) {
+      return false;
     }
 
     checkFlush((GL_Surface*)img.mSur->sur);
 
-    applyObjTransform(x, y, srcw, srch, xscale, yscale, rot);
+    srcx = rcInt.left - img.mSur->ox;
+    srcy = rcInt.top - img.mSur->oy;
+    srcw = rcInt.width();
+    srch = rcInt.height();
+    int ox = rcInt.left <= img.mSur->ox ? img.mSur->ox : 0;
+    int oy = rcInt.top <= img.mSur->oy ? img.mSur->oy : 0;
+
+    applyObjTransform(x + ox, y + oy, srcw, srch, xscale, yscale, rot);
 
     float imgw = GL_Surface::GL_PACK_TEX_WIDTH;
     float imgh = GL_Surface::GL_PACK_TEX_HEIGHT;

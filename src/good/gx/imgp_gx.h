@@ -792,19 +792,19 @@ public:
 
   int getWidth() const
   {
-    return mSur->w;
+    return mSur->ow;
   }
 
   int getHeight() const
   {
-    return mSur->h;
+    return mSur->oh;
   }
 
   template<class CanvasT>
   void draw(int x, int y, const CanvasT &c, int sx, int sy, int sw, int sh)
   {
     if (isValid()) {
-      ((ImgpImageSurface*)mSur->sur)->img.draw(mSur->left + x, mSur->top + y, c, sx, sy, sw, sh);
+      ((ImgpImageSurface*)mSur->sur)->img.draw(mSur->left + x + mSur->ox, mSur->top + y + mSur->oy, c, sx, sy, sw, sh);
     }
   }
 
@@ -812,14 +812,14 @@ public:
   void drawToCanvas(int x, int y, CanvasT &c, int sx, int sy, int sw, int sh) const
   {
     if (isValid()) {
-      c.draw((*(const CanvasT*)&(((ImgpImageSurface*)mSur->sur)->img)), x, y, sw, sh, mSur->left + sx, mSur->top + sy);
+      c.draw((*(const CanvasT*)&(((ImgpImageSurface*)mSur->sur)->img)), x + mSur->ox, y + mSur->oy, sw, sh, mSur->left + sx, mSur->top + sy);
     }
   }
 
   unsigned int getPixel(int x, int y) const
   {
     if (isValid()) {
-      return ((ImgpImageSurface*)mSur->sur)->img.getPixel(mSur->left + x, mSur->top + y);
+      return ((ImgpImageSurface*)mSur->sur)->img.getPixel(mSur->left + x + mSur->ox, mSur->top + y + mSur->oy);
     } else {
       return 0;
     }
@@ -852,9 +852,19 @@ public:
 
   bool drawImage(int x, int y, ImgpImage const& img, int srcx, int srcy, int srcw, int srch, unsigned int color = 0xffffffff, float rot = .0f, float xscale = 1.0f, float yscale = 1.0f)
   {
-    srcw = (std::min)(srcw, img.getWidth());
-    srch = (std::min)(srch, img.getHeight());
-    Imgp::blend(*((const Imgp*)&((ImgpImageSurface*)img.mSur->sur)->img), color, x, y, srcw, srch, img.mSur->left + srcx, img.mSur->top + srcy);
+    sw2::IntRect rcSrc(srcx, srcy, srcx + srcw, srcy + srch);
+    sw2::IntRect rcTex(img.mSur->ox, img.mSur->oy, img.mSur->ox + img.mSur->w, img.mSur->oy + img.mSur->h);
+    sw2::IntRect rcInt;
+    if (!rcSrc.intersect(rcTex, rcInt)) {
+      return false;
+    }
+    srcx = rcInt.left - img.mSur->ox;
+    srcy = rcInt.top - img.mSur->oy;
+    srcw = rcInt.width();
+    srch = rcInt.height();
+    int ox = rcInt.left <= img.mSur->ox ? img.mSur->ox : 0;
+    int oy = rcInt.top <= img.mSur->oy ? img.mSur->oy : 0;
+    Imgp::blend(*((const Imgp*)&((ImgpImageSurface*)img.mSur->sur)->img), color, x + ox, y + oy, srcw, srch, img.mSur->left + srcx, img.mSur->top + srcy);
     return true;
   }
 
@@ -864,6 +874,11 @@ public:
     return true;
   }
 };
+
+bool findBound(const GxImage &img, int &x, int &y, int &w, int &h)
+{
+  return ((Imgp&)img).findBound(x, y, w, h);
+}
 
 } // namespace gx
 
