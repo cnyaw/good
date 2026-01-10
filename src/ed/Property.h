@@ -20,7 +20,7 @@ class IResourceProperty
 public:
 
   int mId;                              // Res ID, editor ID.
-  std::map<LPCTSTR, HPROPERTY> propmap;
+  std::map<std::string, HPROPERTY> propmap;
 
   virtual ~IResourceProperty()
   {
@@ -241,10 +241,10 @@ public:
   {
     PrjT::TextureT const& o = PrjT::inst().getTex(mId);
 
-    AddProp(prop, PropCreateCategory(_T("Texture")));
-    AddProp(prop, PropCreateSimple(_T("Id"), o.mId))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("Name"), o.getName().c_str()));
-    AddProp(prop, PropCreateSimple(_T("File"), o.mFileName.c_str()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateCategory("Texture"));
+    AddProp(prop, PropCreateSimple("Id", o.mId))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("Name", o.getName().c_str()));
+    AddProp(prop, PropCreateSimple("File", o.mFileName.c_str()))->SetEnabled(FALSE);
   }
 
   virtual LRESULT OnPropChanging(CPropertyListCtrl& prop, LPNMPROPERTYITEM ppi)
@@ -307,14 +307,14 @@ public:
     PrjT::MapT const& o = PrjT::inst().getMap(mId);
     std::string tex = PrjT::inst().getTex(o.mTileset.mTextureId).getName();
 
-    AddProp(prop, PropCreateCategory(_T("Map")));
-    AddProp(prop, PropCreateSimple(_T("Id"), o.mId))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("Name"), o.getName().c_str()));
-    AddProp(prop, PropCreateSimple(_T("Width"), o.mWidth))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("Height"), o.mHeight))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("Tile Width"), o.mTileset.mTileWidth))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("Tile Height"), o.mTileset.mTileHeight))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("Texture"), tex.c_str()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateCategory("Map"));
+    AddProp(prop, PropCreateSimple("Id", o.mId))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("Name", o.getName().c_str()));
+    AddProp(prop, PropCreateSimple("Width", o.mWidth))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("Height", o.mHeight))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("Tile Width", o.mTileset.mTileWidth))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("Tile Height", o.mTileset.mTileHeight))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("Texture", tex.c_str()))->SetEnabled(FALSE);
   }
 
   virtual LRESULT OnPropChanging(CPropertyListCtrl& prop, LPNMPROPERTYITEM ppi)
@@ -378,22 +378,22 @@ public:
     PrjT::SpriteT const& o = prj.getSprite(mId);
     std::string tex = prj.getTex(o.mTileset.mTextureId).getName();
 
-    AddProp(prop, PropCreateCategory(_T("Sprite")));
-    AddProp(prop, PropCreateSimple(_T("Id"), o.mId))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("Name"), o.getName().c_str()));
-    AddProp(prop, PropCreateSimple(_T("Tile Width"), o.mTileset.mTileWidth))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("Tile Height"), o.mTileset.mTileHeight))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("Texture"), tex.c_str()))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("Loop"), o.mLoop));
-    AddProp(prop, PropCreateSimple(_T("OffsetX"), o.mOffsetX));
-    AddProp(prop, PropCreateSimple(_T("OffsetY"), o.mOffsetY));
+    AddProp(prop, PropCreateCategory("Sprite"));
+    AddProp(prop, PropCreateSimple("Id", o.mId))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("Name", o.getName().c_str()));
+    AddProp(prop, PropCreateSimple("Tile Width", o.mTileset.mTileWidth))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("Tile Height", o.mTileset.mTileHeight))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("Texture", tex.c_str()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("Loop", o.mLoop));
+    AddProp(prop, PropCreateSimple("OffsetX", o.mOffsetX));
+    AddProp(prop, PropCreateSimple("OffsetY", o.mOffsetY));
   }
 
   virtual void UpdateProperty(CPropertyListCtrl& prop)
   {
     PrjT::SpriteT const& o = PrjT::inst().getSprite(mId);
 
-    prop.SetItemValue(propmap[_T("Loop")], &CComVariant((int)o.mLoop));
+    prop.SetItemValue(propmap["Loop"], &CComVariant((int)o.mLoop));
   }
 
   virtual LRESULT OnPropChanging(CPropertyListCtrl& prop, LPNMPROPERTYITEM ppi)
@@ -526,117 +526,117 @@ public:
     PrjT const& prj = PrjT::inst();
     PrjT::ObjectT const& o = prj.getLevel(mId).getObj(mObjId);
 
-    AddProp(prop, PropCreateCategory((_T("Level Object - ") + o.getTypeStr()).c_str()));
-    AddProp(prop, PropCreateSimple(_T("Id"), o.mId))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("Name"), o.getName().c_str()));
+    AddProp(prop, PropCreateCategory(("Level Object - " + o.getTypeStr()).c_str()));
+    AddProp(prop, PropCreateSimple("Id", o.mId))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("Name", o.getName().c_str()));
 
     if (PrjT::ObjectT::TYPE_MAPBG == o.mType) {
       std::string name = prj.getMap(o.mMapId).getName();
-      AddProp(prop, PropCreateSimple(_T("Map"), name.c_str()))->SetEnabled(FALSE);
+      AddProp(prop, PropCreateSimple("Map", name.c_str()))->SetEnabled(FALSE);
     } else if (PrjT::ObjectT::TYPE_TEXBG == o.mType) {
       std::string name = prj.getTex(o.mTextureId).getName();
-      AddProp(prop, PropCreateSimple(_T("Texture"), name.c_str()))->SetEnabled(FALSE);
+      AddProp(prop, PropCreateSimple("Texture", name.c_str()))->SetEnabled(FALSE);
     } else if (PrjT::ObjectT::TYPE_SPRITE == o.mType) {
       std::string name = prj.getSprite(o.mSpriteId).getName();
-      AddProp(prop, PropCreateSimple(_T("Sprite"), name.c_str()))->SetEnabled(FALSE);
+      AddProp(prop, PropCreateSimple("Sprite", name.c_str()))->SetEnabled(FALSE);
     }
 
-    AddProp(prop, PropCreateSimple(_T("Visible"), o.mVisible));
-    AddProp(prop, PropCreateSimple(_T("PosX"), o.mPosX));
-    AddProp(prop, PropCreateSimple(_T("PosY"), o.mPosY));
+    AddProp(prop, PropCreateSimple("Visible", o.mVisible));
+    AddProp(prop, PropCreateSimple("PosX", o.mPosX));
+    AddProp(prop, PropCreateSimple("PosY", o.mPosY));
 
     if (PrjT::ObjectT::TYPE_LVLOBJ == o.mType) {
       std::string oi = GetLevelObjInfo(o.getLevelObjId());
-      AddProp(prop, PropCreateSimple(_T("Object"), oi.c_str()))->SetEnabled(FALSE);
+      AddProp(prop, PropCreateSimple("Object", oi.c_str()))->SetEnabled(FALSE);
       return;
     } else if (PrjT::ObjectT::TYPE_TEXT == o.mType) {
-      AddProp(prop, PropCreateSimple(_T("Text"), o.mText.c_str()));
-      AddProp(prop, PropCreateSimple(_T("TextSize"), o.mTextSize));
+      AddProp(prop, PropCreateSimple("Text", o.mText.c_str()));
+      AddProp(prop, PropCreateSimple("TextSize", o.mTextSize));
     } else if (PrjT::ObjectT::TYPE_MAPBG == o.mType) {
-      AddProp(prop, PropCreateSimple(_T("RepeatX"), o.mRepX));
-      AddProp(prop, PropCreateSimple(_T("RepeatY"), o.mRepY));
+      AddProp(prop, PropCreateSimple("RepeatX", o.mRepX));
+      AddProp(prop, PropCreateSimple("RepeatY", o.mRepY));
     } else if (PrjT::ObjectT::TYPE_TEXBG == o.mType) {
-      AddProp(prop, PropCreateSimple(_T("OffsetX"), o.mDim.left));
-      AddProp(prop, PropCreateSimple(_T("OffsetY"), o.mDim.top));
+      AddProp(prop, PropCreateSimple("OffsetX", o.mDim.left));
+      AddProp(prop, PropCreateSimple("OffsetY", o.mDim.top));
       if (o.mDim.empty()) {
         ImgT img = LoadTileset(prj.getTex(o.mTextureId).mFileName);
         if (img.isValid()) {
-          AddProp(prop, PropCreateSimple(_T("Width"), img.getWidth()));
-          AddProp(prop, PropCreateSimple(_T("Height"), img.getHeight()));
+          AddProp(prop, PropCreateSimple("Width", img.getWidth()));
+          AddProp(prop, PropCreateSimple("Height", img.getHeight()));
         }
       } else {
-        AddProp(prop, PropCreateSimple(_T("Width"), o.mDim.width()));
-        AddProp(prop, PropCreateSimple(_T("Height"), o.mDim.height()));
+        AddProp(prop, PropCreateSimple("Width", o.mDim.width()));
+        AddProp(prop, PropCreateSimple("Height", o.mDim.height()));
       }
-      AddProp(prop, PropCreateSimple(_T("RepeatX"), o.mRepX));
-      AddProp(prop, PropCreateSimple(_T("RepeatY"), o.mRepY));
+      AddProp(prop, PropCreateSimple("RepeatX", o.mRepX));
+      AddProp(prop, PropCreateSimple("RepeatY", o.mRepY));
     } else if (PrjT::ObjectT::TYPE_COLBG == o.mType) {
-      AddProp(prop, PropCreateSimple(_T("Width"), o.mDim.empty() ? 32 : o.mDim.width()));
-      AddProp(prop, PropCreateSimple(_T("Height"), o.mDim.empty() ? 32 : o.mDim.height()));
+      AddProp(prop, PropCreateSimple("Width", o.mDim.empty() ? 32 : o.mDim.width()));
+      AddProp(prop, PropCreateSimple("Height", o.mDim.empty() ? 32 : o.mDim.height()));
     }
 
     if (PrjT::ObjectT::TYPE_MAPBG != o.mType && PrjT::ObjectT::TYPE_TEXT != o.mType) {
-      AddProp(prop, PropCreateSimple(_T("Rot"), FloatToStr(o.mRot)));
-      AddProp(prop, PropCreateSimple(_T("ScaleX"), FloatToStr(o.mScaleX)));
-      AddProp(prop, PropCreateSimple(_T("ScaleY"), FloatToStr(o.mScaleY)));
-      AddProp(prop, PropCreateSimple(_T("AnchorX"), FloatToStr(o.mAnchorX)));
-      AddProp(prop, PropCreateSimple(_T("AnchorY"), FloatToStr(o.mAnchorY)));
+      AddProp(prop, PropCreateSimple("Rot", FloatToStr(o.mRot)));
+      AddProp(prop, PropCreateSimple("ScaleX", FloatToStr(o.mScaleX)));
+      AddProp(prop, PropCreateSimple("ScaleY", FloatToStr(o.mScaleY)));
+      AddProp(prop, PropCreateSimple("AnchorX", FloatToStr(o.mAnchorX)));
+      AddProp(prop, PropCreateSimple("AnchorY", FloatToStr(o.mAnchorY)));
     }
-    AddProp(prop, PropCreateColorPicker(_T("Color"), o.mBgColor, this));
-    AddProp(prop, PropCreateSimple(_T("Script"), o.mScript.c_str()));
+    AddProp(prop, PropCreateColorPicker("Color", o.mBgColor, this));
+    AddProp(prop, PropCreateSimple("Script", o.mScript.c_str()));
   }
 
   virtual void UpdateProperty(CPropertyListCtrl& prop)
   {
     PrjT::ObjectT const& o = PrjT::inst().getLevel(mId).getObj(mObjId);
 
-    prop.SetItemValue(propmap[_T("Name")], &CComVariant(o.getName().c_str()));
-    prop.SetItemValue(propmap[_T("Visible")], &CComVariant((int)o.mVisible));
-    prop.SetItemValue(propmap[_T("PosX")], &CComVariant(o.mPosX));
-    prop.SetItemValue(propmap[_T("PosY")], &CComVariant(o.mPosY));
+    prop.SetItemValue(propmap["Name"], &CComVariant(o.getName().c_str()));
+    prop.SetItemValue(propmap["Visible"], &CComVariant((int)o.mVisible));
+    prop.SetItemValue(propmap["PosX"], &CComVariant(o.mPosX));
+    prop.SetItemValue(propmap["PosY"], &CComVariant(o.mPosY));
 
     if (PrjT::ObjectT::TYPE_LVLOBJ == o.mType) {
       return;
     } if (PrjT::ObjectT::TYPE_COLBG == o.mType) {
-      prop.SetItemValue(propmap[_T("Width")], &CComVariant(o.mDim.empty() ? 32 : o.mDim.width()));
-      prop.SetItemValue(propmap[_T("Height")], &CComVariant(o.mDim.empty() ? 32 : o.mDim.height()));
-      prop.SetItemValue(propmap[_T("Rot")], &CComVariant(o.mRot));
-      prop.SetItemValue(propmap[_T("ScaleX")], &CComVariant(o.mScaleX));
-      prop.SetItemValue(propmap[_T("ScaleY")], &CComVariant(o.mScaleY));
-      prop.SetItemValue(propmap[_T("AnchorX")], &CComVariant(o.mAnchorX));
-      prop.SetItemValue(propmap[_T("AnchorY")], &CComVariant(o.mAnchorY));
+      prop.SetItemValue(propmap["Width"], &CComVariant(o.mDim.empty() ? 32 : o.mDim.width()));
+      prop.SetItemValue(propmap["Height"], &CComVariant(o.mDim.empty() ? 32 : o.mDim.height()));
+      prop.SetItemValue(propmap["Rot"], &CComVariant(o.mRot));
+      prop.SetItemValue(propmap["ScaleX"], &CComVariant(o.mScaleX));
+      prop.SetItemValue(propmap["ScaleY"], &CComVariant(o.mScaleY));
+      prop.SetItemValue(propmap["AnchorX"], &CComVariant(o.mAnchorX));
+      prop.SetItemValue(propmap["AnchorY"], &CComVariant(o.mAnchorY));
     } else {
       if (PrjT::ObjectT::TYPE_TEXBG == o.mType) {
-        prop.SetItemValue(propmap[_T("OffsetX")], &CComVariant(o.mDim.left));
-        prop.SetItemValue(propmap[_T("OffsetY")], &CComVariant(o.mDim.top));
+        prop.SetItemValue(propmap["OffsetX"], &CComVariant(o.mDim.left));
+        prop.SetItemValue(propmap["OffsetY"], &CComVariant(o.mDim.top));
         if (!o.mDim.empty()) {
-          prop.SetItemValue(propmap[_T("Width")], &CComVariant(o.mDim.width()));
-          prop.SetItemValue(propmap[_T("Height")], &CComVariant(o.mDim.height()));
+          prop.SetItemValue(propmap["Width"], &CComVariant(o.mDim.width()));
+          prop.SetItemValue(propmap["Height"], &CComVariant(o.mDim.height()));
         }
-        prop.SetItemValue(propmap[_T("RepeatX")], &CComVariant((int)o.mRepX));
-        prop.SetItemValue(propmap[_T("RepeatY")], &CComVariant((int)o.mRepY));
-        prop.SetItemValue(propmap[_T("Rot")], &CComVariant(o.mRot));
-        prop.SetItemValue(propmap[_T("ScaleX")], &CComVariant(o.mScaleX));
-        prop.SetItemValue(propmap[_T("ScaleY")], &CComVariant(o.mScaleY));
-        prop.SetItemValue(propmap[_T("AnchorX")], &CComVariant(o.mAnchorX));
-        prop.SetItemValue(propmap[_T("AnchorY")], &CComVariant(o.mAnchorY));
+        prop.SetItemValue(propmap["RepeatX"], &CComVariant((int)o.mRepX));
+        prop.SetItemValue(propmap["RepeatY"], &CComVariant((int)o.mRepY));
+        prop.SetItemValue(propmap["Rot"], &CComVariant(o.mRot));
+        prop.SetItemValue(propmap["ScaleX"], &CComVariant(o.mScaleX));
+        prop.SetItemValue(propmap["ScaleY"], &CComVariant(o.mScaleY));
+        prop.SetItemValue(propmap["AnchorX"], &CComVariant(o.mAnchorX));
+        prop.SetItemValue(propmap["AnchorY"], &CComVariant(o.mAnchorY));
       } else if (PrjT::ObjectT::TYPE_SPRITE == o.mType) {
-        prop.SetItemValue(propmap[_T("Rot")], &CComVariant(o.mRot));
-        prop.SetItemValue(propmap[_T("ScaleX")], &CComVariant(o.mScaleX));
-        prop.SetItemValue(propmap[_T("ScaleY")], &CComVariant(o.mScaleY));
-        prop.SetItemValue(propmap[_T("AnchorX")], &CComVariant(o.mAnchorX));
-        prop.SetItemValue(propmap[_T("AnchorY")], &CComVariant(o.mAnchorY));
+        prop.SetItemValue(propmap["Rot"], &CComVariant(o.mRot));
+        prop.SetItemValue(propmap["ScaleX"], &CComVariant(o.mScaleX));
+        prop.SetItemValue(propmap["ScaleY"], &CComVariant(o.mScaleY));
+        prop.SetItemValue(propmap["AnchorX"], &CComVariant(o.mAnchorX));
+        prop.SetItemValue(propmap["AnchorY"], &CComVariant(o.mAnchorY));
       } else if (PrjT::ObjectT::TYPE_TEXT == o.mType) {
-        prop.SetItemValue(propmap[_T("TextSize")], &CComVariant(o.mTextSize));
-        prop.SetItemValue(propmap[_T("Text")], &CComVariant(o.mText.c_str()));
+        prop.SetItemValue(propmap["TextSize"], &CComVariant(o.mTextSize));
+        prop.SetItemValue(propmap["Text"], &CComVariant(o.mText.c_str()));
       } else if (PrjT::ObjectT::TYPE_MAPBG == o.mType) {
-        prop.SetItemValue(propmap[_T("RepeatX")], &CComVariant((int)o.mRepX));
-        prop.SetItemValue(propmap[_T("RepeatY")], &CComVariant((int)o.mRepY));
+        prop.SetItemValue(propmap["RepeatX"], &CComVariant((int)o.mRepX));
+        prop.SetItemValue(propmap["RepeatY"], &CComVariant((int)o.mRepY));
       }
     }
 
-    prop.SetItemValue(propmap[_T("Color")], &CComVariant(o.mBgColor));
-    prop.SetItemValue(propmap[_T("Script")], &CComVariant(o.mScript.c_str()));
+    prop.SetItemValue(propmap["Color"], &CComVariant(o.mBgColor));
+    prop.SetItemValue(propmap["Script"], &CComVariant(o.mScript.c_str()));
   }
 
   virtual LRESULT OnPropChanging(CPropertyListCtrl& prop, LPNMPROPERTYITEM ppi)
@@ -788,27 +788,27 @@ public:
   virtual void UpdateProperty(CPropertyListCtrl& prop)
   {
     PrjT::LevelT const& o = PrjT::inst().getLevel(mId);
-    prop.SetItemValue(propmap[_T("PosX")], &CComVariant(o.mPosX));
-    prop.SetItemValue(propmap[_T("PosY")], &CComVariant(o.mPosY));
-    prop.SetItemValue(propmap[_T("Width")], &CComVariant(o.mWidth));
-    prop.SetItemValue(propmap[_T("Height")], &CComVariant(o.mHeight));
-    prop.SetItemValue(propmap[_T("Color")], &CComVariant(o.mBgColor));
-    prop.SetItemValue(propmap[_T("Script")], &CComVariant(o.mScript.c_str()));
+    prop.SetItemValue(propmap["PosX"], &CComVariant(o.mPosX));
+    prop.SetItemValue(propmap["PosY"], &CComVariant(o.mPosY));
+    prop.SetItemValue(propmap["Width"], &CComVariant(o.mWidth));
+    prop.SetItemValue(propmap["Height"], &CComVariant(o.mHeight));
+    prop.SetItemValue(propmap["Color"], &CComVariant(o.mBgColor));
+    prop.SetItemValue(propmap["Script"], &CComVariant(o.mScript.c_str()));
   }
 
   virtual void FillProperty(CPropertyListCtrl& prop)
   {
     PrjT::LevelT const& o = PrjT::inst().getLevel(mId);
 
-    AddProp(prop, PropCreateCategory(_T("Level")));
-    AddProp(prop, PropCreateSimple(_T("Id"), o.mId))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("Name"), o.getName().c_str()));
-    AddProp(prop, PropCreateSimple(_T("PosX"), o.mPosX));
-    AddProp(prop, PropCreateSimple(_T("PosY"), o.mPosY));
-    AddProp(prop, PropCreateSimple(_T("Width"), o.mWidth));
-    AddProp(prop, PropCreateSimple(_T("Height"), o.mHeight));
-    AddProp(prop, PropCreateColorPicker(_T("Color"), o.mBgColor, this));
-    AddProp(prop, PropCreateSimple(_T("Script"), o.mScript.c_str()));
+    AddProp(prop, PropCreateCategory("Level"));
+    AddProp(prop, PropCreateSimple("Id", o.mId))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("Name", o.getName().c_str()));
+    AddProp(prop, PropCreateSimple("PosX", o.mPosX));
+    AddProp(prop, PropCreateSimple("PosY", o.mPosY));
+    AddProp(prop, PropCreateSimple("Width", o.mWidth));
+    AddProp(prop, PropCreateSimple("Height", o.mHeight));
+    AddProp(prop, PropCreateColorPicker("Color", o.mBgColor, this));
+    AddProp(prop, PropCreateSimple("Script", o.mScript.c_str()));
   }
 
   virtual LRESULT OnPropChanging(CPropertyListCtrl& prop, LPNMPROPERTYITEM ppi)
@@ -882,31 +882,31 @@ public:
   {
     PrjT::ResT const& res = PrjT::inst().mRes;
 
-    AddProp(prop, PropCreateCategory(_T("Project")));
-    AddProp(prop, PropCreateSimple(_T("Name"), res.mName.c_str()));
-    AddProp(prop, PropCreateSimple(_T("File"), res.mFileName.c_str()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateCategory("Project"));
+    AddProp(prop, PropCreateSimple("Name", res.mName.c_str()));
+    AddProp(prop, PropCreateSimple("File", res.mFileName.c_str()))->SetEnabled(FALSE);
 
-    AddProp(prop, PropCreateCategory(_T("Window")));
-    AddProp(prop, PropCreateSimple(_T("Frame Rate"), res.mFps))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("Width"), res.mWidth));
-    AddProp(prop, PropCreateSimple(_T("Height"), res.mHeight));
+    AddProp(prop, PropCreateCategory("Window"));
+    AddProp(prop, PropCreateSimple("Frame Rate", res.mFps))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("Width", res.mWidth));
+    AddProp(prop, PropCreateSimple("Height", res.mHeight));
 
-    AddProp(prop, PropCreateCategory(_T("Summary")));
-    AddProp(prop, PropCreateSimple(_T("#Audio"), (int)res.mSnd.size()))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("#Texture"), (int)res.mTex.size()))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("#Map"), (int)res.mMap.size()))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("#Sprite"), (int)res.mSprite.size()))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("#Level"), (int)res.mLevel.size()))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("#Script"), (int)res.mScript.size()))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("#Particle"), (int)res.mStgeScript.size()))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("#Dependency"), (int)res.mDep.size()))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("#ID"), res.mId.size()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateCategory("Summary"));
+    AddProp(prop, PropCreateSimple("#Audio", (int)res.mSnd.size()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("#Texture", (int)res.mTex.size()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("#Map", (int)res.mMap.size()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("#Sprite", (int)res.mSprite.size()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("#Level", (int)res.mLevel.size()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("#Script", (int)res.mScript.size()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("#Particle", (int)res.mStgeScript.size()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("#Dependency", (int)res.mDep.size()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("#ID", res.mId.size()))->SetEnabled(FALSE);
   }
 
   virtual void UpdateProperty(CPropertyListCtrl& prop)
   {
     std::string file = PrjT::inst().mRes.mFileName;
-    prop.SetItemValue(propmap[_T("File")], &CComVariant(file.c_str()));
+    prop.SetItemValue(propmap["File"], &CComVariant(file.c_str()));
   }
 
   virtual LRESULT OnPropChanging(CPropertyListCtrl& prop, LPNMPROPERTYITEM ppi)
@@ -973,9 +973,9 @@ public:
   {
     std::string script = PrjT::inst().getScript(mId);
 
-    AddProp(prop, PropCreateCategory(_T("Script")));
-    AddProp(prop, PropCreateSimple(_T("Id"), mId))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("File"), script.c_str()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateCategory("Script"));
+    AddProp(prop, PropCreateSimple("Id", mId))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("File", script.c_str()))->SetEnabled(FALSE);
   }
 };
 
@@ -1012,9 +1012,9 @@ public:
   {
     std::string script = PrjT::inst().getStgeScript(mId);
 
-    AddProp(prop, PropCreateCategory(_T("Particle")));
-    AddProp(prop, PropCreateSimple(_T("Id"), mId))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("File"), script.c_str()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateCategory("Particle"));
+    AddProp(prop, PropCreateSimple("Id", mId))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("File", script.c_str()))->SetEnabled(FALSE);
   }
 };
 
@@ -1051,12 +1051,12 @@ public:
   {
     PrjT::SoundT const& snd = PrjT::inst().getSnd(mId);
 
-    AddProp(prop, PropCreateCategory(_T("Sound")));
-    AddProp(prop, PropCreateSimple(_T("Id"), snd.mId))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("Name"), snd.getName().c_str()));
-    AddProp(prop, PropCreateSimple(_T("File"), snd.mFileName.c_str()))->SetEnabled(FALSE);
-    AddProp(prop, PropCreateSimple(_T("Stream"), snd.mStream));
-    AddProp(prop, PropCreateSimple(_T("Loop"), snd.mLoop));
+    AddProp(prop, PropCreateCategory("Sound"));
+    AddProp(prop, PropCreateSimple("Id", snd.mId))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("Name", snd.getName().c_str()));
+    AddProp(prop, PropCreateSimple("File", snd.mFileName.c_str()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("Stream", snd.mStream));
+    AddProp(prop, PropCreateSimple("Loop", snd.mLoop));
   }
 
   virtual LRESULT OnPropChanging(CPropertyListCtrl& prop, LPNMPROPERTYITEM ppi)
@@ -1124,14 +1124,14 @@ public:
 
   virtual void FillProperty(CPropertyListCtrl& prop)
   {
-    AddProp(prop, PropCreateCategory(_T("Dependency")));
-    AddProp(prop, PropCreateSimple(_T("Id"), mId))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateCategory("Dependency"));
+    AddProp(prop, PropCreateSimple("Id", mId))->SetEnabled(FALSE);
 
     std::string name = PrjT::inst().getDep(mId);
     if ('/' == name[name.length() - 1]) {
-      AddProp(prop, PropCreateSimple(_T("Path"), name.c_str()))->SetEnabled(FALSE);
+      AddProp(prop, PropCreateSimple("Path", name.c_str()))->SetEnabled(FALSE);
     } else {
-      AddProp(prop, PropCreateSimple(_T("File"), name.c_str()))->SetEnabled(FALSE);
+      AddProp(prop, PropCreateSimple("File", name.c_str()))->SetEnabled(FALSE);
     }
   }
 };
