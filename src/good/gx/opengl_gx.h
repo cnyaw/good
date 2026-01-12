@@ -101,7 +101,7 @@ public:
   }
 };
 
-class GLImageResource : public ImageManager<GLImageResource, GL_Surface>
+class GLImageResource : public ImageManager<GL_Surface>
 {
 public:
 

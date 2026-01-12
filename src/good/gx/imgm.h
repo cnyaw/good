@@ -115,7 +115,7 @@ public:
   }
 };
 
-template<class T, class SurT>
+template<class SurT>
 class ImageManager
 {
 protected:
@@ -280,7 +280,7 @@ public:
   ImageRect const* getImage_i(std::string const& name, GxImage &img)
   {
     ImageRect sur;
-    if (((T*)this)->LoadSurface(img, sur)) {
+    if (LoadSurface(img, sur)) {
       mImg[name] = sur;
       return &mImg[name];
     } else {

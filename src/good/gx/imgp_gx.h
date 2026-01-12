@@ -761,7 +761,7 @@ public:
   }
 };
 
-class ImgpImageResource : public ImageManager<ImgpImageResource, ImgpImageSurface>
+class ImgpImageResource : public ImageManager<ImgpImageSurface>
 {
 public:
   static ImgpImageResource& inst()
