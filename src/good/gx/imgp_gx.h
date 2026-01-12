@@ -855,10 +855,9 @@ public:
   bool drawImage(int x, int y, ImgpImage const& img, int srcx, int srcy, int srcw, int srch, unsigned int color = 0xffffffff, float rot = .0f, float xscale = 1.0f, float yscale = 1.0f)
   {
     int ox, oy;
-    if (!img.mSur->calcBound(ox, oy, srcx, srcy, srcw, srch)) {
-      return false;
+    if (img.isValid() && img.mSur->calcBound(ox, oy, srcx, srcy, srcw, srch)) {
+      Imgp::blend(*((const Imgp*)&((ImgpImageSurface*)img.mSur->sur)->img), color, x + ox, y + oy, srcw, srch, img.mSur->left + srcx, img.mSur->top + srcy);
     }
-    Imgp::blend(*((const Imgp*)&((ImgpImageSurface*)img.mSur->sur)->img), color, x + ox, y + oy, srcw, srch, img.mSur->left + srcx, img.mSur->top + srcy);
     return true;
   }
 
