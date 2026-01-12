@@ -803,16 +803,18 @@ public:
   template<class CanvasT>
   void draw(int x, int y, const CanvasT &c, int sx, int sy, int sw, int sh)
   {
-    if (isValid()) {
-      ((ImgpImageSurface*)mSur->sur)->img.draw(mSur->left + x + mSur->ox, mSur->top + y + mSur->oy, c, sx, sy, sw, sh);
+    int ox, oy;
+    if (isValid() && mSur->calcBound(ox, oy, sx, sy, sw, sh)) {
+      ((ImgpImageSurface*)mSur->sur)->img.draw(mSur->left + x + ox, mSur->top + y +oy, c, sx, sy, sw, sh);
     }
   }
 
   template<class CanvasT>
   void drawToCanvas(int x, int y, CanvasT &c, int sx, int sy, int sw, int sh) const
   {
-    if (isValid()) {
-      c.draw((*(const CanvasT*)&(((ImgpImageSurface*)mSur->sur)->img)), x + mSur->ox, y + mSur->oy, sw, sh, mSur->left + sx, mSur->top + sy);
+    int ox, oy;
+    if (isValid() && mSur->calcBound(ox, oy, sx, sy, sw, sh)) {
+      c.draw((*(const CanvasT*)&(((ImgpImageSurface*)mSur->sur)->img)), x + ox, y + oy, sw, sh, mSur->left + sx, mSur->top + sy);
     }
   }
 
@@ -852,18 +854,10 @@ public:
 
   bool drawImage(int x, int y, ImgpImage const& img, int srcx, int srcy, int srcw, int srch, unsigned int color = 0xffffffff, float rot = .0f, float xscale = 1.0f, float yscale = 1.0f)
   {
-    sw2::IntRect rcSrc(srcx, srcy, srcx + srcw, srcy + srch);
-    sw2::IntRect rcTex(img.mSur->ox, img.mSur->oy, img.mSur->ox + img.mSur->w, img.mSur->oy + img.mSur->h);
-    sw2::IntRect rcInt;
-    if (!rcSrc.intersect(rcTex, rcInt)) {
+    int ox, oy;
+    if (!img.mSur->calcBound(ox, oy, srcx, srcy, srcw, srch)) {
       return false;
     }
-    srcx = rcInt.left - img.mSur->ox;
-    srcy = rcInt.top - img.mSur->oy;
-    srcw = rcInt.width();
-    srch = rcInt.height();
-    int ox = rcInt.left <= img.mSur->ox ? img.mSur->ox : 0;
-    int oy = rcInt.top <= img.mSur->oy ? img.mSur->oy : 0;
     Imgp::blend(*((const Imgp*)&((ImgpImageSurface*)img.mSur->sur)->img), color, x + ox, y + oy, srcw, srch, img.mSur->left + srcx, img.mSur->top + srcy);
     return true;
   }

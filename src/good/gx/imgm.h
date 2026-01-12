@@ -92,13 +92,29 @@ public:
 class ImageRect
 {
 public:
+  void *sur;
+  int left, top, w, h, ox, oy, ow, oh;
 
   ImageRect() : sur(0), left(0), top(0), w(0), h(0)
   {
   }
 
-  void *sur;
-  int left, top, w, h, ox, oy, ow, oh;
+  bool calcBound(int &offsetx, int &offsety, int &srcx, int &srcy, int &srcw, int &srch) const
+  {
+    sw2::IntRect rcSrc(srcx, srcy, srcx + srcw, srcy + srch);
+    sw2::IntRect rcTex(ox, oy, ox + w, oy + h);
+    sw2::IntRect rcInt;
+    if (!rcSrc.intersect(rcTex, rcInt)) {
+      return false;
+    }
+    srcx = rcInt.left - ox;
+    srcy = rcInt.top - oy;
+    srcw = rcInt.width();
+    srch = rcInt.height();
+    offsetx = rcInt.left <= ox ? ox : 0;
+    offsety = rcInt.top <= oy ? oy : 0;
+    return true;
+  }
 };
 
 template<class T, class SurT>
