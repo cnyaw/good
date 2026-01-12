@@ -70,11 +70,6 @@ public:
 
 } // good
 
-void NotifyImageManagerSurfaceUpdate()
-{
-  g.handleImageManagerSurfaceUpdate();
-}
-
 void NotifyImageManagerSurfaceReset()
 {
   g.handleImageManagerSurfaceReset();

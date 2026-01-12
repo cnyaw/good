@@ -369,13 +369,4 @@ ImgT getSysFontImage(int size, int ch, bool antiAlias) const
   return i;
 }
 
-void checkAndRestoreSur()
-{
-  if (mRenderState) {
-    ((T*)this)->gx.restoreSur();
-  } else {
-    mTexDirty = true;
-  }
-}
-
 // end of render.h

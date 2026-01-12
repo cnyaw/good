@@ -14,7 +14,6 @@
 #include "gx.h"
 #include "rcpack.h"
 
-void NotifyImageManagerSurfaceUpdate();
 void NotifyImageManagerSurfaceReset();
 
 namespace good {
@@ -188,7 +187,6 @@ public:
       SurT *psur = *it;
       if (psur->add(rc)) {
         UpdateSurface(psur, rc, img, sur, x, y);
-        NotifyImageManagerSurfaceUpdate();
         return true;
       }
     }
@@ -231,7 +229,6 @@ public:
 
     if (psur->add(rc)) {
       UpdateSurface(psur, rc, img, sur, x, y);
-      NotifyImageManagerSurfaceUpdate();
       return true;
     }
 

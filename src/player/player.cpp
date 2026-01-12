@@ -15,11 +15,6 @@
 #ifdef GOOD_SUPPORT_SDL
 # include "../good/app/sdl_app.h"
 
-void NotifyImageManagerSurfaceUpdate()
-{
-  good::rt::SDLApplication::getInst().handleImageManagerSurfaceUpdate();
-}
-
 void NotifyImageManagerSurfaceReset()
 {
   good::rt::SDLApplication::getInst().handleImageManagerSurfaceReset();
@@ -174,11 +169,6 @@ public:
   }
 };
 
-void NotifyImageManagerSurfaceUpdate()
-{
-  CPlayer::getInst().handleImageManagerSurfaceUpdate();
-}
-
 void NotifyImageManagerSurfaceReset()
 {
   CPlayer::getInst().handleImageManagerSurfaceReset();
@@ -227,11 +217,6 @@ public:
     SetMsgHandled(FALSE);
   }
 };
-
-void NotifyImageManagerSurfaceUpdate()
-{
-  CPlayer::getInst().handleImageManagerSurfaceUpdate();
-}
 
 void NotifyImageManagerSurfaceReset()
 {

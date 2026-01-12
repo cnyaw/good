@@ -852,18 +852,12 @@ public:
     return true;
   }
 
-  void handleImageManagerSurfaceUpdate()
-  {
-    checkAndRestoreSur();
-    mDirty = true;
-  }
-
   void handleImageManagerSurfaceReset()
   {
     for (int i = mActors.first(); -1 != i; i = mActors.next(i)) {
       mActors[i].mImg = ImgT();
     }
-    handleImageManagerSurfaceUpdate();
+    mDirty = true;
   }
 };
 

@@ -1339,7 +1339,12 @@ void updateResTex(int idTex, int x, int y, int idCanvas, int sx, int sy, int sw,
 
   img.draw(x, y, c, sx, sy, sw, sh);
 
-  checkAndRestoreSur();
+  if (mRenderState) {
+    ((T*)this)->gx.restoreSur();
+  } else {
+    mTexDirty = true;
+  }
+
   mDirty = true;
 }
 

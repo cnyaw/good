@@ -12,11 +12,6 @@
 HWND mHwndOutputView;
 HWND mHwndOutputEdit;
 
-void NotifyImageManagerSurfaceUpdate()
-{
-  good::rt::CPlayerWindow::getInst().handleImageManagerSurfaceUpdate();
-}
-
 void NotifyImageManagerSurfaceReset()
 {
   good::rt::CPlayerWindow::getInst().handleImageManagerSurfaceReset();
