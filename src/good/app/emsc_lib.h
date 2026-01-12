@@ -10,6 +10,11 @@
 
 #pragma once
 
+void NotifyImageManagerSurfaceUpdate()
+{
+  app.handleImageManagerSurfaceUpdate();
+}
+
 void NotifyImageManagerSurfaceReset()
 {
   app.handleImageManagerSurfaceReset();

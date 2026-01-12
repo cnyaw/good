@@ -1,5 +1,3 @@
-// player.cpp : main source file for player.exe
-//
 
 #include "stdafx.h"
 
@@ -7,10 +5,7 @@
 #include <atlcrack.h>
 #include <atlmisc.h>
 
-#ifndef _DEBUG
-# define GOOD_SUPPORT_STGE
-#endif
-
+#define GOOD_SUPPORT_STGE
 #define STGE_NO_ERROR_MSG
 
 #include "../good/rt/rt.h"
@@ -19,6 +14,16 @@
 
 #ifdef GOOD_SUPPORT_SDL
 # include "../good/app/sdl_app.h"
+
+void NotifyImageManagerSurfaceUpdate()
+{
+  good::rt::SDLApplication::getInst().handleImageManagerSurfaceUpdate();
+}
+
+void NotifyImageManagerSurfaceReset()
+{
+  good::rt::SDLApplication::getInst().handleImageManagerSurfaceReset();
+}
 
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpstrCmdLine, int nCmdShow)
 {
@@ -169,6 +174,16 @@ public:
   }
 };
 
+void NotifyImageManagerSurfaceUpdate()
+{
+  CPlayer::getInst().handleImageManagerSurfaceUpdate();
+}
+
+void NotifyImageManagerSurfaceReset()
+{
+  CPlayer::getInst().handleImageManagerSurfaceReset();
+}
+
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpstrCmdLine, int nCmdShow)
 {
   CMessageLoop theLoop;
@@ -212,6 +227,16 @@ public:
     SetMsgHandled(FALSE);
   }
 };
+
+void NotifyImageManagerSurfaceUpdate()
+{
+  CPlayer::getInst().handleImageManagerSurfaceUpdate();
+}
+
+void NotifyImageManagerSurfaceReset()
+{
+  CPlayer::getInst().handleImageManagerSurfaceReset();
+}
 
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpstrCmdLine, int nCmdShow)
 {

@@ -852,16 +852,19 @@ public:
     return true;
   }
 
-#ifdef GOOD_SUPPORT_ONLY_ONE_TEXTURE
+  void handleImageManagerSurfaceUpdate()
+  {
+    checkAndRestoreSur();
+    mDirty = true;
+  }
+
   void handleImageManagerSurfaceReset()
   {
     for (int i = mActors.first(); -1 != i; i = mActors.next(i)) {
       mActors[i].mImg = ImgT();
     }
-    checkAndRestoreSur();
-    mDirty = true;
+    handleImageManagerSurfaceUpdate();
   }
-#endif
 };
 
 #ifdef WIN32

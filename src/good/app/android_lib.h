@@ -70,6 +70,16 @@ public:
 
 } // good
 
+void NotifyImageManagerSurfaceUpdate()
+{
+  g.handleImageManagerSurfaceUpdate();
+}
+
+void NotifyImageManagerSurfaceReset()
+{
+  g.handleImageManagerSurfaceReset();
+}
+
 extern "C" {
 
 JNIEXPORT void JNICALL Java_weilican_good_goodJniActivity_setcwd(JNIEnv * env, jobject obj, jstring path)

@@ -59,8 +59,8 @@ extern "C" {
 // #define GOOD_RENDER_WITH_DIRTY_FLAG
 // Render screen only when dirty flag is set.
 //
-// #define GOOD_SUPPORT_ONLY_ONE_TEXTURE
-// If packed texture is full then clean all sub textures to reuse the packed texture.
+// #define GOOD_SUPPORT_NUM_TEXTURES
+// Number textures supports. If packed texture is full then clean all sub textures to reuse the packed texture.
 //
 
 //
@@ -101,6 +101,10 @@ enum GOOD_DRAW_TEXT_FONT
 
 #ifndef GOOD_MAX_STGE_OBJ_MGR
 # define GOOD_MAX_STGE_OBJ_MGR 4
+#endif
+
+#ifndef GOOD_SUPPORT_NUM_TEXTURES
+# define GOOD_SUPPORT_NUM_TEXTURES 1
 #endif
 
 #include "keys.h"

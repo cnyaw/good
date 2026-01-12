@@ -46,6 +46,8 @@ JNIEnv *tmpEnv;
 #include "gx/gx.h"
 
 #include "swUtil.h"
+
+#define GOOD_SUPPORT_NUM_TEXTURES 1
 #include "../gx/imgp_gx.h"
 
 #include "rt/rt.h"

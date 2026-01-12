@@ -14,9 +14,8 @@
 #include "gx.h"
 #include "rcpack.h"
 
-#ifdef GOOD_SUPPORT_ONLY_ONE_TEXTURE
+void NotifyImageManagerSurfaceUpdate();
 void NotifyImageManagerSurfaceReset();
-#endif
 
 namespace good {
 
@@ -189,27 +188,30 @@ public:
       SurT *psur = *it;
       if (psur->add(rc)) {
         UpdateSurface(psur, rc, img, sur, x, y);
+        NotifyImageManagerSurfaceUpdate();
         return true;
       }
     }
 
-#ifdef GOOD_SUPPORT_ONLY_ONE_TEXTURE
-    if (!mSur.empty()) {
-      SurT *psur = mSur[0];
-      if (psur) {
-        mImg.clear();
+    //
+    // If there is no room for the img to pack, try to reset mSur.
+    //
+
+    if (!mSur.empty() && GOOD_SUPPORT_NUM_TEXTURES <= mSur.size()) {
+      for (it = mSur.begin(); it != mSur.end(); ++it) {
+        SurT *psur = *it;
         psur->reset(psur->img.w, psur->img.h);
-        if (psur->add(rc)) {
-          UpdateSurface(psur, rc, img, sur, x, y);
-          NotifyImageManagerSurfaceReset();
-          return true;
-        }
-        NotifyImageManagerSurfaceReset();
       }
+      mImg.clear();
+      SurT *psur = mSur[0];
+      if (psur->add(rc)) {
+        UpdateSurface(psur, rc, img, sur, x, y);
+        NotifyImageManagerSurfaceReset();
+        return true;
+      }
+      NotifyImageManagerSurfaceReset();
       return false;
     }
-    // There is no packed texture created yet, fall through to create one.
-#endif
 
     //
     // Add the image to new texture pack.
@@ -229,6 +231,7 @@ public:
 
     if (psur->add(rc)) {
       UpdateSurface(psur, rc, img, sur, x, y);
+      NotifyImageManagerSurfaceUpdate();
       return true;
     }
 

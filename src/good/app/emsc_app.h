@@ -28,7 +28,7 @@
 
 #include "swUtil.h"
 
-#define GOOD_SUPPORT_ONLY_ONE_TEXTURE
+#define GOOD_SUPPORT_NUM_TEXTURES 1
 #include "../gx/imgp_gx.h"
 
 #define GOOD_SUPPORT_NO_LOGO

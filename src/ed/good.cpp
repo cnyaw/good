@@ -1,5 +1,3 @@
-// good.cpp : main source file for good.exe
-//
 
 #include "stdafx.h"
 
@@ -7,14 +5,22 @@
 
 #include <cstdarg>
 
-#include <sstream>
-
 #include "good.h"
 
 #include "MainFrm.h"
 
 HWND mHwndOutputView;
 HWND mHwndOutputEdit;
+
+void NotifyImageManagerSurfaceUpdate()
+{
+  good::rt::CPlayerWindow::getInst().handleImageManagerSurfaceUpdate();
+}
+
+void NotifyImageManagerSurfaceReset()
+{
+  good::rt::CPlayerWindow::getInst().handleImageManagerSurfaceReset();
+}
 
 void GoodTraceTool(int level, const char* format, va_list args)
 {
