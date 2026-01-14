@@ -21,6 +21,35 @@ namespace gx {
 // Imgp implementation.
 //
 
+struct findNonEmptyPix
+{
+  const char* dat;
+  int w;
+  findNonEmptyPix(const char* d, int aw) : dat(d), w(aw)
+  {
+  }
+  bool operator()(int x, int y) const
+  {
+    int i = x + y * w;
+    return 0 != ((const int*)dat)[i];
+  }
+};
+
+struct findDiffPix
+{
+  const char* img;
+  const char* dat;
+  int w;
+  findDiffPix(const char* i, const char* d, int aw) : img(i), dat(d), w(aw)
+  {
+  }
+  bool operator()(int x, int y) const
+  {
+    int i = x + y * w;
+    return ((const int*)dat)[i] != ((const int*)img)[i];
+  }
+};
+
 class Imgp : public GxImage
 {
 public:
@@ -392,19 +421,14 @@ public:
     return *this;
   }
 
-  bool findNonEmptyPix_i(int x, int y) const
-  {
-    int i = x + y * w;
-    return 0 != ((const int*)dat)[i];
-  }
-
-  bool findBound(int &x, int &y, int &w, int &h) const
+  template<class FindPixT>
+  bool findBound_i(int &x, int &y, int &w, int &h, const FindPixT &f) const
   {
     bool dp = false;
     int maxy = y + h - 1, maxx = x + w - 1, minx = x, miny = y;
     for (int y0 = y + h - 1; y0 >= y; y0--) {
       for (int x0 = x + w - 1; x0 >= x; x0--) {
-        dp = findNonEmptyPix_i(x0, y0);
+        dp = f(x0, y0);
         if (dp) {
           maxy = y0;
           break;
@@ -419,7 +443,7 @@ public:
     }
     for (int x0 = x + w - 1; x0 >= x; x0--) {
       for (int y0 = maxy; y0 >= y; y0--) {
-        dp = findNonEmptyPix_i(x0, y0);
+        dp = f(x0, y0);
         if (dp) {
           maxx = x0;
           break;
@@ -431,7 +455,7 @@ public:
     }
     for (int x0 = x; x0 < maxx; x0++) {
       for (int y0 = maxy; y0 >= y; y0--) {
-        dp = findNonEmptyPix_i(x0, y0);
+        dp = f(x0, y0);
         if (dp) {
           minx = x0;
           break;
@@ -443,7 +467,7 @@ public:
     }
     for (int y0 = y; y0 <= maxy; y0++) {
       for (int x0 = x; x0 <= maxx; x0++) {
-        dp = findNonEmptyPix_i(x0, y0);
+        dp = f(x0, y0);
         if (dp) {
           miny = y0;
           break;
@@ -460,10 +484,9 @@ public:
     return true;
   }
 
-  bool findDiffPix_i(const Imgp &img, int x, int y) const
+  bool findBound(int &x, int &y, int &w, int &h) const
   {
-    int i = x + y * w;
-    return ((const int*)dat)[i] != ((const int*)img.dat)[i];
+    return findBound_i(x, y, w, h, findNonEmptyPix(dat, this->w));
   }
 
   bool findDiffBound(const Imgp &img, int &x, int &y, int &w, int &h) const
@@ -471,64 +494,7 @@ public:
     if (img.w != this->w || img.h != this->h || img.bpp != bpp) {
       return false;
     }
-    bool dp = false;
-    int maxy = y + h - 1, maxx = x + w - 1, minx = x, miny = y;
-    for (int y0 = y + h - 1; y0 >= y; y0--) {
-      for (int x0 = x + w - 1; x0 >= x; x0--) {
-        dp = findDiffPix_i(img, x0, y0);
-        if (dp) {
-          maxy = y0;
-          break;
-        }
-      }
-      if (dp) {
-        break;
-      }
-    }
-    if (!dp) {
-      return false;
-    }
-    for (int x0 = x + w - 1; x0 >= x; x0--) {
-      for (int y0 = maxy; y0 >= y; y0--) {
-        dp = findDiffPix_i(img, x0, y0);
-        if (dp) {
-          maxx = x0;
-          break;
-        }
-      }
-      if (dp) {
-        break;
-      }
-    }
-    for (int x0 = x; x0 < maxx; x0++) {
-      for (int y0 = maxy; y0 >= y; y0--) {
-        dp = findDiffPix_i(img, x0, y0);
-        if (dp) {
-          minx = x0;
-          break;
-        }
-      }
-      if (dp) {
-        break;
-      }
-    }
-    for (int y0 = y; y0 <= maxy; y0++) {
-      for (int x0 = x; x0 <= maxx; x0++) {
-        dp = findDiffPix_i(img, x0, y0);
-        if (dp) {
-          miny = y0;
-          break;
-        }
-      }
-      if (dp) {
-        break;
-      }
-    }
-    x = minx;
-    y = miny;
-    w = (std::min)(w, maxx - minx + 1);
-    h = (std::min)(h, maxy - miny + 1);
-    return true;
+    return findBound_i(x, y, w, h, findDiffPix(img.dat, dat, this->w));
   }
 
   template<class RectT>
