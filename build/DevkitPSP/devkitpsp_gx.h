@@ -52,47 +52,17 @@ public:
   }
 };
 
-class DevkitPSPImage : public Image<DevkitPSPImage, DevkitPSPImageManager>
+class DevkitPSPImage : public ImageImpl<DevkitPSPImage, DevkitPSPImageManager>
 {
 public:
+  typedef ImageImpl<DevkitPSPImage, DevkitPSPImageManager> BaseT;
 
-  const ImageRect *mSur;
-
-  DevkitPSPImage() : mSur(0)
+  DevkitPSPImage() : BaseT()
   {
   }
 
-  DevkitPSPImage(const ImageRect *sur) : mSur(sur)
+  DevkitPSPImage(const ImageRect *sur) : BaseT(sur)
   {
-  }
-
-  bool isValid() const
-  {
-    return 0 != mSur && 0 != mSur->sur && 0 != ((DevkitPSPSurface*)mSur->sur)->img.dat;
-  }
-
-  int getWidth() const
-  {
-    return mSur->w / TEX_SCALE;
-  }
-
-  int getHeight() const
-  {
-    return mSur->h / TEX_SCALE;
-  }
-
-  void draw(int x, int y, const GxImage &c, int sx, int sy, int sw, int sh)
-  {
-    if (isValid()) {
-      ((DevkitPSPSurface*)mSur->sur)->img.draw(mSur->left + x, mSur->top + y, c, sx, sy, sw, sh);
-    }
-  }
-
-  void drawToCanvas(int x, int y, GxImage &c, int sx, int sy, int sw, int sh) const
-  {
-    if (isValid()) {
-      c.draw(x, y, (*(const GxImage*)&(((DevkitPSPSurface*)mSur->sur)->img)), sw, sh, mSur->left + sx, mSur->top + sy);
-    }
   }
 };
 

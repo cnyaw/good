@@ -17,40 +17,11 @@ namespace good {
 
 namespace gx {
 
-template<class ImgT, class ImgMgrT>
 class Image
 {
 public:
-
-  static void clear()
-  {
-    ImgMgrT::inst().clear();
-  }
-
-  static bool existImage(std::string const& name)
-  {
-    return ImgMgrT::inst().existImage(name);
-  }
-
-  static ImgT getImage(std::string const& name)
-  {
-    return ImgT(ImgMgrT::inst().getImage(name));
-  }
-
-  static ImgT getImage(std::string const& name, std::string const& stream)
-  {
-    return ImgT(ImgMgrT::inst().getImage(name, stream));
-  }
-
-  static ImgT getImage(std::string const& name, GxImage &img)
-  {
-    return ImgT(ImgMgrT::inst().getImage(name, img));
-  }
-
   bool isValid() const;
-
   int getWidth() const;
-
   int getHeight() const;
 };
 

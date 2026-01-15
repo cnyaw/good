@@ -115,6 +115,89 @@ public:
   }
 };
 
+template<class ImgT, class ImgMgrT>
+class ImageImpl : public Image
+{
+public:
+
+  const ImageRect *mSur;
+
+  ImageImpl() : mSur(0)
+  {
+  }
+
+  ImageImpl(const ImageRect *sur) : mSur(sur)
+  {
+  }
+
+  bool isValid() const
+  {
+    return 0 != mSur && 0 != mSur->sur && 0 != ((typename ImgMgrT::SurfaceT*)mSur->sur)->img.dat;
+  }
+
+  int getWidth() const
+  {
+    return mSur->ow;
+  }
+
+  int getHeight() const
+  {
+    return mSur->oh;
+  }
+
+  template<class CanvasT>
+  void draw(int x, int y, const CanvasT &c, int sx, int sy, int sw, int sh)
+  {
+    int ox, oy;
+    if (isValid() && mSur->calcBound(ox, oy, sx, sy, sw, sh)) {
+      ((typename ImgMgrT::SurfaceT*)mSur->sur)->img.draw(mSur->left + x + ox, mSur->top + y + oy, c, sx, sy, sw, sh);
+    }
+  }
+
+  template<class CanvasT>
+  void drawToCanvas(int x, int y, CanvasT &c, int sx, int sy, int sw, int sh) const
+  {
+    int ox, oy;
+    if (isValid() && mSur->calcBound(ox, oy, sx, sy, sw, sh)) {
+      c.draw((*(const CanvasT*)&(((typename ImgMgrT::SurfaceT*)mSur->sur)->img)), x + ox, y + oy, sw, sh, mSur->left + sx, mSur->top + sy);
+    }
+  }
+
+  unsigned int getPixel(int x, int y) const
+  {
+    if (isValid()) {
+      return ((typename ImgMgrT::SurfaceT*)mSur->sur)->img.getPixel(mSur->left + x + mSur->ox, mSur->top + y + mSur->oy);
+    } else {
+      return 0;
+    }
+  }
+
+  static void clear()
+  {
+    ImgMgrT::inst().clear();
+  }
+
+  static bool existImage(std::string const& name)
+  {
+    return ImgMgrT::inst().existImage(name);
+  }
+
+  static ImgT getImage(std::string const& name)
+  {
+    return ImgT(ImgMgrT::inst().getImage(name));
+  }
+
+  static ImgT getImage(std::string const& name, std::string const& stream)
+  {
+    return ImgT(ImgMgrT::inst().getImage(name, stream));
+  }
+
+  static ImgT getImage(std::string const& name, GxImage &img)
+  {
+    return ImgT(ImgMgrT::inst().getImage(name, img));
+  }
+};
+
 template<class SurT>
 class ImageManager
 {
@@ -127,6 +210,7 @@ protected:
   }
 
 public:
+  typedef SurT SurfaceT;
 
   ~ImageManager()
   {

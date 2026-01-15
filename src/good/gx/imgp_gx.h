@@ -737,60 +737,17 @@ public:
   }
 };
 
-class ImgpImage : public Image<ImgpImage, ImgpImageResource>
+class ImgpImage : public ImageImpl<ImgpImage, ImgpImageResource>
 {
 public:
+  typedef ImageImpl<ImgpImage, ImgpImageResource> BaseT;
 
-  const ImageRect *mSur;
-
-  ImgpImage() : mSur(0)
+  ImgpImage() : BaseT()
   {
   }
 
-  ImgpImage(const ImageRect *sur) : mSur(sur)
+  ImgpImage(const ImageRect *sur) : BaseT(sur)
   {
-  }
-
-  bool isValid() const
-  {
-    return 0 != mSur && 0 != mSur->sur && 0 != ((ImgpImageSurface*)mSur->sur)->img.dat;
-  }
-
-  int getWidth() const
-  {
-    return mSur->ow;
-  }
-
-  int getHeight() const
-  {
-    return mSur->oh;
-  }
-
-  template<class CanvasT>
-  void draw(int x, int y, const CanvasT &c, int sx, int sy, int sw, int sh)
-  {
-    int ox, oy;
-    if (isValid() && mSur->calcBound(ox, oy, sx, sy, sw, sh)) {
-      ((ImgpImageSurface*)mSur->sur)->img.draw(mSur->left + x + ox, mSur->top + y +oy, c, sx, sy, sw, sh);
-    }
-  }
-
-  template<class CanvasT>
-  void drawToCanvas(int x, int y, CanvasT &c, int sx, int sy, int sw, int sh) const
-  {
-    int ox, oy;
-    if (isValid() && mSur->calcBound(ox, oy, sx, sy, sw, sh)) {
-      c.draw((*(const CanvasT*)&(((ImgpImageSurface*)mSur->sur)->img)), x + ox, y + oy, sw, sh, mSur->left + sx, mSur->top + sy);
-    }
-  }
-
-  unsigned int getPixel(int x, int y) const
-  {
-    if (isValid()) {
-      return ((ImgpImageSurface*)mSur->sur)->img.getPixel(mSur->left + x + mSur->ox, mSur->top + y + mSur->oy);
-    } else {
-      return 0;
-    }
   }
 };
 
