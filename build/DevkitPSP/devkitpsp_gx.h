@@ -32,7 +32,7 @@ struct DevkitPSPSurface : public ImageSurface
   }
 };
 
-class DevkitPSPImageManager : public ImageManager<DevkitPSPImageManager, DevkitPSPSurface>
+class DevkitPSPImageManager : public ImageManager<DevkitPSPSurface>
 {
 public:
 
