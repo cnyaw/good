@@ -1,6 +1,7 @@
 [good]
 version=0.3
 name=mmc
+supportVStickMode=1
 window=176 208
 texs=1
 maps=2

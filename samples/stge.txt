@@ -1,6 +1,7 @@
 [good]
 version=0.3
 name=stge
+supportVStickMode=1
 window=400 400
 texs=4 6
 sprites=5 7 8 9 11

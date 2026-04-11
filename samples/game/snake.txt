@@ -1,6 +1,7 @@
 [good]
 version=0.3
 name=Snake
+supportVStickMode=1
 window=320 320
 texs=1
 maps=2

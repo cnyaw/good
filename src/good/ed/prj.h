@@ -79,6 +79,18 @@ public:
     return true;
   }
 
+  bool setSupportStickMode(bool b) {
+    if (b == mRes.mSupportVStickMode) {
+      return false;
+    }
+
+    mRes.mSupportVStickMode = b;
+
+    mModified = true;
+
+    return true;
+  }
+
   bool setWindowSettings(int w, int h)
   {
     if (w == mRes.mWidth && h == mRes.mHeight) {
@@ -861,6 +873,10 @@ public:
 
     if (!mRes.mName.empty()) {
       secPrj["name"] = mRes.mName;
+    }
+
+    if (mRes.mSupportVStickMode) {
+      secPrj["supportVStickMode"] = true;
     }
 
     //

@@ -885,6 +885,7 @@ public:
     AddProp(prop, PropCreateCategory("Project"));
     AddProp(prop, PropCreateSimple("Name", res.mName.c_str()));
     AddProp(prop, PropCreateSimple("File", res.mFileName.c_str()))->SetEnabled(FALSE);
+    AddProp(prop, PropCreateSimple("SupportVStickMode", res.mSupportVStickMode));
 
     AddProp(prop, PropCreateCategory("Window"));
     AddProp(prop, PropCreateSimple("Frame Rate", res.mFps))->SetEnabled(FALSE);
@@ -905,8 +906,10 @@ public:
 
   virtual void UpdateProperty(CPropertyListCtrl& prop)
   {
-    std::string file = PrjT::inst().mRes.mFileName;
+    PrjT::ResT const& res = PrjT::inst().mRes;
+    std::string file = res.mFileName;
     prop.SetItemValue(propmap["File"], &CComVariant(file.c_str()));
+    prop.SetItemValue(propmap["SupportVStickMode"], &CComVariant((int)res.mSupportVStickMode));
   }
 
   virtual LRESULT OnPropChanging(CPropertyListCtrl& prop, LPNMPROPERTYITEM ppi)
@@ -928,10 +931,12 @@ public:
     PrjT& prj = PrjT::inst();
     PrjT::ResT const &res = prj.mRes;
 
-    std::string s; int i;
+    std::string s; int i; bool b;
 
     if (GetChangedProp(ppi, _T("Name"), s)) {
       prj.setName(s);
+    } else if (GetChangedProp(ppi, _T("SupportVStickMode"), b)) {
+      prj.setSupportStickMode(b);
     } else if (GetChangedProp(ppi, _T("Width"), i)) {
       prj.setWindowSettings(i, res.mHeight);
     } else if (GetChangedProp(ppi, _T("Height"), i)) {

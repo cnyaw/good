@@ -42,6 +42,7 @@ public:
 
   std::string mName;
   std::string mFileName;
+  bool mSupportVStickMode;
 
   sw2::ObjectPool<int,32,true> mId;     // ID manager pool.
 
@@ -192,6 +193,12 @@ public:
     }
 
     mName = sec["name"].value;
+
+    if (sec.find("supportVStickMode")) {
+      mSupportVStickMode = sec["supportVStickMode"];
+    } else {
+      mSupportVStickMode = false;
+    }
 
     mId.clear();
 

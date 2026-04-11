@@ -1,6 +1,7 @@
 [good]
 version=0.3
 name=Weeder
+supportVStickMode=1
 texs=2
 maps=16 35 55 89 124 170 212 269 336 411 493 558
 sprites=4 5 6 7 8 9 10 11 12 13 84 85 86 87 118 121 122 169 495 634

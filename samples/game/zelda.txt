@@ -1,6 +1,7 @@
 [good]
 version=0.3
 name=zelda
+supportVStickMode=1
 window=160 128
 texs=2 4
 maps=1
@@ -113,9 +114,9 @@ loop=1
 
 [level5]
 script=Game
+objects=6 14
 width=2560
 height=2048
-objects=6 14
 
 [object6]
 map=1
