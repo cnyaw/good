@@ -5,6 +5,8 @@
 * API Reference https://smallworld.idv.tw/good-ed/goodapi.html
 * Play some games online https://smallworld.idv.tw
 * HTML5 resource browser (WIP) https://smallworld.idv.tw/game/good/
+* Android player https://github.com/cnyaw/goodbin/tree/master/latest-build-android-apk
+* Games https://github.com/cnyaw/goodbin/tree/master/games
 
 WIN32 Editor
 ![ed](gooded.png)
